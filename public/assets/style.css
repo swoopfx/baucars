@@ -114,7 +114,7 @@
 }
 
 .section-title .title-line {
-	color: #ffd000;
+	color: #31981f;
 	position: relative;
 }
 
@@ -173,7 +173,7 @@
 }
 
 #header-top i {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 15px;
 	margin-right: 2px;
 }
@@ -189,7 +189,7 @@
 #header-area .header-social-icons a:hover i.fa,
 #header-area .mainmenu ul li.active a,
 #header-area .mainmenu ul li:hover a {
-	color: #ffd000;
+	color: #31981f;
 }
 
 header.fixTotop #header-top {
@@ -276,7 +276,7 @@ header.fixTotop #header-bottom {
 
 .mainmenu ul li ul li.active a,
 .mainmenu ul li ul li a:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 #header-bottom .container {
@@ -292,7 +292,7 @@ header.fixTotop #header-bottom {
 }
 
 a.slicknav_btn {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border-radius: 2px;
 	height: 35px;
 	margin: 0;
@@ -329,7 +329,7 @@ a.slicknav_btn {
 
 .slicknav_nav {
 	background-color: #000;
-	border-top: 1px solid #ffd000;
+	border-top: 1px solid #31981f;
 	position: absolute;
 	top: 65px;
 	width: 100%;
@@ -346,7 +346,7 @@ a.slicknav_btn {
 
 .slicknav_nav ul li.slicknav_parent a:hover,
 .slicknav_nav ul li a:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border-radius: 0px;
 }
 
@@ -399,7 +399,7 @@ a.slicknav_btn {
 
 .book-a-car input,
 .book-a-car select {
-	border-color: #ffd000;
+	border-color: #31981f;
 	border-radius: 0;
 	font-size: 14px;
 	height: 45px;
@@ -408,7 +408,7 @@ a.slicknav_btn {
 
 .book-a-car input:focus,
 .book-a-car select:focus {
-	border-color: #ffd000;
+	border-color: #31981f;
 }
 
 .book-a-car input {
@@ -417,7 +417,7 @@ a.slicknav_btn {
 
 .book-a-car .pick-up-date span.input-group-append {
 	background-color: #fff;
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 }
 
 .book-a-car .pick-up-date span.input-group-append {
@@ -425,13 +425,13 @@ a.slicknav_btn {
 }
 
 .book-a-car .pick-up-date span.input-group-append i.fa {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 18px;
 	line-height: 33px;
 }
 
 .book-now-btn {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #222;
 	display: inline-block;
 	font-size: 15px;
@@ -447,12 +447,12 @@ a.slicknav_btn {
 }
 
 .gj-calendar-bootstrap table tr td.today div {
-	color: #ffd000
+	color: #31981f
 }
 
 .gj-calendar-bootstrap table tr td.selected div {
-	background-color: #ffd000;
-	border-color: #ffd000;
+	background-color: #31981f;
+	border-color: #31981f;
 }
 
 .slider-right-text {
@@ -461,7 +461,7 @@ a.slicknav_btn {
 }
 
 .slider-right-text h1 {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 45px;
 	margin-bottom: 10px;
 }
@@ -483,7 +483,7 @@ a.slicknav_btn {
 }
 
 .about-btn a {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border-radius: 50px;
 	color: #fff;
 	display: inline-block;
@@ -557,13 +557,13 @@ a.slicknav_btn {
 
 .service-item i.fa {
 	font-size: 55px;
-	color: #ffd000;
+	color: #31981f;
 }
 
 .service-container-wrap .service-item {
 	-webkit-box-shadow: none;
 	box-shadow: none;
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 	padding: 50px 20px;
 }
 
@@ -588,7 +588,7 @@ a.slicknav_btn {
 }
 
 .service-icon:after {
-	border-left: 1px solid #ffd000;
+	border-left: 1px solid #31981f;
 	content: "";
 	height: 0%;
 	left: 0;
@@ -599,7 +599,7 @@ a.slicknav_btn {
 }
 
 .service-icon:before {
-	border-bottom: 1px solid #ffd000;
+	border-bottom: 1px solid #31981f;
 	content: "";
 	height: 0%;
 	right: 0;
@@ -622,7 +622,7 @@ a.slicknav_btn {
 }
 
 .service-icon span::after {
-	border-top: 1px solid #ffd000;
+	border-top: 1px solid #31981f;
 	content: "";
 	left: 0;
 	position: absolute;
@@ -633,7 +633,7 @@ a.slicknav_btn {
 }
 
 .service-icon span::before {
-	border-right: 1px solid #ffd000;
+	border-right: 1px solid #31981f;
 	content: "";
 	height: 0%;
 	position: absolute;
@@ -688,7 +688,7 @@ a.slicknav_btn {
 }
 
 .funfact-icon {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 50px;
 }
 
@@ -720,7 +720,7 @@ a.slicknav_btn {
 }
 
 .choose-content-wrap .nav-tabs {
-	border-bottom: 3px solid #ffd000;
+	border-bottom: 3px solid #31981f;
 }
 
 .choose-content-wrap .nav-tabs li a {
@@ -737,8 +737,8 @@ a.slicknav_btn {
 }
 
 .choose-content-wrap .nav-tabs li a.active {
-	background-color: #ffd000 !important;
-	background-color: #ffd000 !important;
+	background-color: #31981f !important;
+	background-color: #31981f !important;
 	color: #fff!important;
 }
 
@@ -783,8 +783,8 @@ a.slicknav_btn {
 
 .popucar-menu a:hover,
 .popucar-menu a.active {
-	background-color: #ffd000;
-	border-color: #ffd000;
+	background-color: #31981f;
+	border-color: #31981f;
 	color: #fff;
 }
 
@@ -879,7 +879,7 @@ a.slicknav_btn {
 }
 
 .single-popular-car h3 span.price {
-	color: #ffd000;
+	color: #31981f;
 	float: right;
 	font-size: 14px;
 	font-weight: 700;
@@ -904,9 +904,9 @@ a.slicknav_btn {
 }
 
 .p-car-feature a:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
-	border-color: #ffd000;
+	border-color: #31981f;
 }
 
 
@@ -952,8 +952,8 @@ a.slicknav_btn {
 
 .newcar-menu a:hover,
 .newcar-menu a.active {
-	background-color: #ffd000;
-	border-color: #ffd000;
+	background-color: #31981f;
+	border-color: #31981f;
 	color: #fff;
 }
 
@@ -987,7 +987,7 @@ a.slicknav_btn {
 }
 
 .single-new-car h3 span.price {
-	color: #ffd000;
+	color: #31981f;
 	float: right;
 	font-size: 14px;
 	font-weight: 700;
@@ -1075,7 +1075,7 @@ a.slicknav_btn {
 
 .single-testimonial::after {
 	background-color: #1e2228;
-	border-left: 4px solid #ffd000;
+	border-left: 4px solid #31981f;
 	content: "";
 	height: 100%;
 	left: -48px;
@@ -1088,7 +1088,7 @@ a.slicknav_btn {
 }
 
 .client-logo {
-	border: 4px solid #ffd000;
+	border: 4px solid #31981f;
 	height: 105px;
 	left: -70px;
 	position: absolute;
@@ -1099,7 +1099,7 @@ a.slicknav_btn {
 }
 
 .single-testimonial h3 {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 15px;
 	margin-top: 10px;
 	text-transform: uppercase;
@@ -1111,7 +1111,7 @@ a.slicknav_btn {
 }
 
 .testimonial-content .owl-dots div.owl-dot {
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 	border-radius: 10px;
 	display: inline-block;
 	height: 5px;
@@ -1122,7 +1122,7 @@ a.slicknav_btn {
 }
 
 .testimonial-content .owl-dots div.owl-dot.active {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 
@@ -1155,7 +1155,7 @@ a.slicknav_btn {
 }
 
 .mobile-app-content h2 {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 70px;
 }
 
@@ -1170,7 +1170,7 @@ a.slicknav_btn {
 }
 
 .app-btns a {
-	border: 2px solid #ffd000;
+	border: 2px solid #31981f;
 	border-radius: 50px;
 	color: #fff;
 	display: inline-block;
@@ -1186,7 +1186,7 @@ a.slicknav_btn {
 }
 
 .app-btns a:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 #mobileapp-video-bg {
@@ -1252,15 +1252,15 @@ a.slicknav_btn {
 }
 
 .article-meta a span {
-	color: #ffd000;
+	color: #31981f;
 }
 
 .article-meta a:hover {
-	color: #ffd000;
+	color: #31981f;
 }
 
 .article-date {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border-radius: 3px;
 	color: #fff;
 	font-weight: 700;
@@ -1284,7 +1284,7 @@ a.slicknav_btn {
 
 .readmore-btn {
 	background-color: #222;
-	color: #ffd000;
+	color: #31981f;
 	display: inline-block;
 	font-size: 12px;
 	font-weight: 700;
@@ -1300,7 +1300,7 @@ a.slicknav_btn {
 
 .readmore-btn:focus,
 .readmore-btn:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
 }
 
@@ -1309,7 +1309,7 @@ a.slicknav_btn {
 /*== Footer Area CSS Start ==*/
 
 #footer-area a {
-	color: #ffd000;
+	color: #31981f;
 }
 
 .footer-widget-area {
@@ -1323,7 +1323,7 @@ a.slicknav_btn {
 }
 
 .singlefooter-widget h2 {
-	border-bottom: 1px dashed #ffd000;
+	border-bottom: 1px dashed #31981f;
 	display: inline-block;
 	font-size: 25px;
 	font-weight: 600;
@@ -1359,7 +1359,7 @@ a.slicknav_btn {
 
 .newsletter-area input {
 	background-color: transparent;
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 	border-radius: 2px;
 	color: #fff;
 	height: 55px;
@@ -1369,7 +1369,7 @@ a.slicknav_btn {
 }
 
 .newsletter-area .newsletter-btn {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border: 0 none;
 	color: #fff;
 	cursor: pointer;
@@ -1415,7 +1415,7 @@ a.slicknav_btn {
 }
 
 .recent-post li:hover i {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 .recent-post li {
@@ -1451,12 +1451,12 @@ a.slicknav_btn {
 }
 
 .recent-post li:hover i {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 
 .get-touch {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 15px;
 	font-weight: 600;
 	line-height: 2.5;
@@ -1468,7 +1468,7 @@ a.slicknav_btn {
 }
 
 .map-show {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #000 !important;
 	display: inline-block;
 	font-size: 13px;
@@ -1557,7 +1557,7 @@ body,
 }
 
 .slideshowcontent h1 {
-	color: #ffd000;
+	color: #31981f;
 	margin-bottom: 20px;
 }
 
@@ -1644,15 +1644,15 @@ body,
 }
 
 .bookcar-btn:hover {
-	background-color: #ffd000;
-	border-color: #ffd000;
+	background-color: #31981f;
+	border-color: #31981f;
 }
 
 
 .book-ur-car .input-group-append i.fa {
 	font-size: 15px !important;
 	line-height: 30px;
-	color: #ffd000;
+	color: #31981f;
 }
 
 .book-ur-car select option {
@@ -1691,7 +1691,7 @@ body,
 }
 
 .about-feature-item i.fa {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 25px;
 	-webkit-transition: all 0.4s ease 0s;
 	transition: all 0.4s ease 0s;
@@ -1699,7 +1699,7 @@ body,
 
 .about-feature-item:hover,
 .about-feature-item.active {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
 }
 
@@ -1727,7 +1727,7 @@ body,
 }
 
 .home2-car-filter a.active {
-	color: #ffd000;
+	color: #31981f;
 }
 
 .home2-car-filter a::after {
@@ -1743,7 +1743,7 @@ body,
 }
 
 .home2-car-filter a.active::after {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 /*== Car Choose Area CSS ==*/
@@ -1781,7 +1781,7 @@ body,
 
 #help-desk-page-wrap .team-tab-menu li a.active,
 #team-area .team-tab-menu li a.active {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 #help-desk-page-wrap .team-tab-menu li a.active .team-mem-icon img,
@@ -1795,7 +1795,7 @@ body,
 }
 
 .team-mem-icon img {
-	border: 2px solid #ffd000;
+	border: 2px solid #31981f;
 	border-radius: 50%;
 	height: 100%;
 	width: 100%;
@@ -1840,7 +1840,7 @@ body,
 }
 
 .team-member-info h4 {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 22px;
 	margin-bottom: 10px;
 	text-transform: uppercase;
@@ -1864,7 +1864,7 @@ body,
 }
 
 .team-social-icon a {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
 	display: inline-block;
 	font-size: 18px;
@@ -1926,17 +1926,17 @@ body,
 
 .booka-car-content input,
 .booka-car-content select {
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 	width: 100%;
 }
 
 .booka-car-content input:focus,
 .booka-car-content select:focus {
-	border-color: #ffd000;
+	border-color: #31981f;
 }
 
 .booka-car-content .input-group-append {
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 	border-radius: 2px;
 }
 
@@ -1950,14 +1950,14 @@ body,
 
 .booka-car-content .bookcar-btn button {
 	background-color: #fff;
-	border: 1px solid #ffd000;
+	border: 1px solid #31981f;
 	border-radius: 2px;
 	padding: 8px 0;
 	width: 100%;
 }
 
 .booka-car-content .bookcar-btn button:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 .booka-car-content .bookcar-btn {
@@ -2012,7 +2012,7 @@ body,
 }
 
 .we-do-content h3 {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 22px;
 }
 
@@ -2021,7 +2021,7 @@ body,
 }
 
 .we-do-content a {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border-radius: 2px;
 	color: #000;
 	display: inline-block;
@@ -2062,7 +2062,7 @@ body,
 
 #why-choose-area .nav-tabs li a:hover,
 #why-choose-area .nav-tabs li a.active {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border: 0 none;
 	border-radius: 0;
 	color: #fff;
@@ -2123,7 +2123,7 @@ body,
 /*== Our Cars CSS ==*/
 
 .ourcar-tab-menu .nav {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border: none;
 	display: block;
 	-ms-flex-wrap: inherit;
@@ -2156,7 +2156,7 @@ body,
 }
 
 .ourcar-info h2 {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
 	font-size: 28px;
 	padding: 8px 10px;
@@ -2188,7 +2188,7 @@ body,
 }
 
 .ourcar-info a.bookbtn {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
 	display: block;
 	font-size: 18px;
@@ -2218,7 +2218,7 @@ body,
 /*== Page Title CSS ==*/
 
 #page-title-area {
-	background-image: url("assets/img/page-title.jpg");
+	background-image: url(/assets/img/page-title.jpg);
 	background-position: center center;
 	background-size: cover;
 	padding-top: 220px;
@@ -2243,19 +2243,19 @@ body,
 }
 
 .car-thumb-1 {
-	background-image: url(assets/img/car/car-1.jpg);
+	background-image: url('/assets/img/car/car-1.jpg');
 }
 
 .car-thumb-2 {
-	background-image: url(assets/img/car/car-2.jpg);
+	background-image: url('/assets/img/car/car-2.jpg');
 }
 
 .car-thumb-3 {
-	background-image: url(assets/img/car/car-3.jpg);
+	background-image: url(/assets/img/car/car-3.jpg);
 }
 
 .car-thumb-4 {
-	background-image: url(assets/img/car/car-4.jpg);
+	background-image: url(/assets/img/car/car-4.jpg);
 }
 
 .car-list-thumb {
@@ -2279,7 +2279,7 @@ body,
 
 .car-list-info h5 {
 	border-bottom: 1px solid #ddd;
-	color: #ffd000;
+	color: #31981f;
 	font-size: 15px;
 	margin-bottom: 12px;
 	margin-top: 5px;
@@ -2310,7 +2310,7 @@ body,
 }
 
 .car-info-list li::before {
-	color: #ffd000;
+	color: #31981f;
 	content: "\f14a";
 	font-family: FontAwesome;
 	margin-right: 5px;
@@ -2321,7 +2321,7 @@ body,
 }
 
 .rating {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 13px;
 	position: absolute;
 	right: 15px;
@@ -2333,7 +2333,7 @@ body,
 }
 
 .rating i.unmark:hover {
-	color: #ffd000;
+	color: #31981f;
 }
 
 .rating i.unmark {
@@ -2352,7 +2352,7 @@ body,
 }
 
 .rent-btn:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #fff;
 }
 
@@ -2363,7 +2363,7 @@ body,
 }
 
 .page-pagi nav li a {
-	border-color: #ffd000;
+	border-color: #31981f;
 	color: #000;
 	font-weight: 600;
 	-webkit-transition: all 0.4s ease 0s;
@@ -2371,13 +2371,13 @@ body,
 }
 
 .page-pagi nav ul li.active a {
-	background-color: #ffd000 !important;
-	border-color: #ffd000 !important;
+	background-color: #31981f !important;
+	border-color: #31981f !important;
 }
 
 .page-pagi nav li a:hover {
-	background-color: #ffd000;
-	border-color: #ffd000;
+	background-color: #31981f;
+	border-color: #31981f;
 	color: #fff;
 }
 
@@ -2412,7 +2412,7 @@ body,
 }
 
 .single-sidebar h3 {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #222;
 	font-size: 18px;
 	padding: 12px 5px;
@@ -2430,7 +2430,7 @@ body,
 }
 
 .sidebar-body i.fa {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 17px;
 	margin-right: 4px;
 	text-align: center;
@@ -2438,7 +2438,7 @@ body,
 }
 
 .sidebar-body i.fa {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 17px;
 	margin-right: 4px;
 	text-align: center;
@@ -2485,7 +2485,7 @@ body,
 }
 
 .recent-tip-body a:hover {
-	color: #ffd000;
+	color: #31981f;
 }
 
 .recent-tip-body span {
@@ -2506,8 +2506,8 @@ body,
 }
 
 .sidebar-body .social-icons a i:hover {
-	background-color: #ffd000;
-	border-color: #ffd000;
+	background-color: #31981f;
+	border-color: #31981f;
 	color: #fff;
 }
 
@@ -2516,7 +2516,7 @@ body,
 ================================*/
 
 .car-details-content h2 {
-	border-bottom: 1px solid #ffd000;
+	border-bottom: 1px solid #31981f;
 	font-weight: 400;
 	margin-bottom: 20px;
 	padding-bottom: 10px;
@@ -2581,7 +2581,7 @@ body,
 }
 
 .car-preview-crousel .owl-dots div.active {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 .review-area {
@@ -2618,7 +2618,7 @@ body,
 .review-area input:focus,
 .contact-form textarea:focus,
 .review-area textarea:focus {
-	border-color: #ffd000;
+	border-color: #31981f;
 }
 
 .message-input,
@@ -2632,7 +2632,7 @@ body,
 }
 
 .input-submit button {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border: medium none;
 	cursor: pointer;
 	font-size: 12px;
@@ -2693,7 +2693,7 @@ body,
 }
 
 .service-item-content h3 {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 30px;
 	margin-bottom: 20px;
 	text-transform: uppercase;
@@ -2714,7 +2714,7 @@ body,
 
 .thme-blockquote {
 	background-color: #111;
-	color: #ffd000;
+	color: #31981f;
 	font-size: 13px;
 	font-weight: 600;
 	letter-spacing: 1.6px;
@@ -2765,7 +2765,7 @@ body,
 }
 
 .single-our-facility h3::after {
-	background-color: #ffd000;
+	background-color: #31981f;
 	bottom: 0;
 	content: "";
 	height: 2px;
@@ -2784,7 +2784,7 @@ body,
 }
 
 .single-our-facility ul li::before {
-	color: #ffd000;
+	color: #31981f;
 	content: "\f046";
 	font-family: fontawesome;
 	margin-right: 15px;
@@ -2814,7 +2814,7 @@ body,
 }
 
 .single-faq-sub-content .card-header {
-	background-color: #ffd000;
+	background-color: #31981f;
 	border: medium none;
 	border-radius: 0;
 }
@@ -2881,7 +2881,7 @@ body,
 }
 
 .pricing-details-content .single-pricing-table:hover {
-	background-color: #ffd000;
+	background-color: #31981f;
 }
 
 .pricing-details-content .single-pricing-table:hover h2 {
@@ -2917,7 +2917,7 @@ body,
 }
 
 .login-form {
-	background-color: #ffd000;
+	background-color: #31981f;
 	padding: 50px 20px 15px;
 }
 
@@ -3067,7 +3067,7 @@ body,
 }
 
 .four {
-	color: #ffd000;
+	color: #31981f;
 	font-size: 150px;
 	font-weight: 400;
 	line-height: 100%;
@@ -3098,7 +3098,7 @@ body,
 }
 
 .btn-404-home {
-	background-color: #ffd000;
+	background-color: #31981f;
 	color: #000;
 	display: inline-block;
 	font-size: 13px;

@@ -1,0 +1,114 @@
+
+	
+ <?php
+$this->headtitle("Login");
+$form = $this->form;
+$form->setAttribute('action', '' /* $this->url('login') */
+);
+// $form->setAttribute('class', 'form-signin');
+$form->prepare();
+
+$form->get('usernameOrEmail')->setAttributes(array(
+    'class' => 'form-control',
+    'placeholder' => $this->translate('Phone Number or Email')
+    // 'aria-describedby' => 'basic-addon1'
+));
+
+$form->get('password')->setAttributes(array(
+    'class' => 'form-control',
+    'placeholder' => $this->translate('Password')
+    // 'aria-describedby' => 'basic-addon1'
+));
+
+$form->get('rememberme')->setAttributes(array(
+    'class' => 'remember'
+));
+$form->get('submit')->setAttributes(array(
+    'class' => 'btn btn-primary btn-block btn-signin',
+    // "style"=>"width: 80%",
+    'value' => $this->translate('Sign In')
+));
+
+?>
+
+
+
+		
+
+			
+			
+ 
+	<?php  //echo $this->partial("general-error-ponters")?>
+
+
+
+
+<h3 class="signin-title-secondary">Sign in to continue.</h3>
+<?php
+
+echo $this->form()->openTag($form);
+?>
+
+<div class="form-group">
+				
+<?php echo $this->formElement()->render($form->get('usernameOrEmail'));?>
+
+</div>
+<div style="font-size: 9px; color: red;">
+<?php echo $this->formElementErrors($form->get('usernameOrEmail')); ?></div>
+
+<div class="form-group mg-b-50">
+				
+<?php echo $this->formElement()->render($form->get('password'));?>
+
+</div>
+<div style="font-size: 9px; color: red;">
+<?php echo $this->formElementErrors($form->get('password')); ?></div>
+<div>
+<?php
+
+echo $this->formRow($form->get('rememberme'));
+
+?>
+</div>
+<div style="font-size: 9px; color: red;">
+<?php echo $this->formElementErrors($form->get('password')); ?></div>
+<div>
+<?php echo  $this->formSubmit($form->get('submit'))?>
+</div>
+
+<p>
+	<a
+		href="<?php  echo $this->url("user-register", array("action"=>"reset-password"))?>">Forgot
+		Password</a>
+
+</p>
+
+
+
+	<p class="mg-b-0">
+		Don't have an account? <a
+			href="<?php  echo $this->url('user-register')?>">Sign Up</a>
+	</p>
+
+
+
+
+<?php
+
+if ($this->messages) {
+    echo '<div style="font-size: 14px; color: red;">' . $this->messages . '</div>';
+    echo '<div style="font-size: 14px; color: red;">' . $this->error . '</div>';
+}
+;
+?>
+
+ <?php
+echo $this->formRow($form->get('csrf'));
+echo $this->form()->closeTag();
+?> 
+
+ 
+
+
+

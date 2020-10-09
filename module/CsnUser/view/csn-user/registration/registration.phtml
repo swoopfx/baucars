@@ -1,0 +1,139 @@
+<?php
+echo $this->headtitle('Registration');
+/**
+ * CsnUser - Coolcsn Zend Framework 2 User Module
+ *
+ * @link https://github.com/coolcsn/CsnUser for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 LightSoft 2005 Ltd. Bulgaria
+ * @license https://github.com/coolcsn/CsnUser/blob/master/LICENSE BSDLicense
+ * @author Stoyan Cheresharov <stoyan@coolcsn.com>
+ * @author Svetoslav Chonkov <svetoslav.chonkov@gmail.com>
+ * @author Nikola Vasilev <niko7vasilev@gmail.com>
+ * @author Stoyan Revov <st.revov@gmail.com>
+ * @author Martin Briglia <martin@mgscreativa.com>
+ */
+
+// echo $this->partial('csn-user/layout/nav-menu', array('navMenu' => $this->navMenu, 'user' => $this->identity()));
+$form = $this->form;
+
+/**
+ * Set form fields classes and placeholders here
+ */
+
+$form->setAttributes(array(
+    'class' => 'form'
+));
+
+$form->get('username')->setAttributes(array(
+    'class' => 'form-control inpt-form phone',
+
+    'aria-describedby' => 'basic-addon1',
+    'placeholder' => $this->translate('Phone Number')
+));
+
+$form->get('email')->setAttributes(array(
+    'class' => 'form-control',
+
+    'aria-describedby' => 'basic-addon1',
+    'placeholder' => $this->translate('Email')
+));
+
+$form->get('password')->setAttributes(array(
+
+    'class' => 'form-control',
+
+    'aria-describedby' => 'basic-addon1',
+    'placeholder' => $this->translate('Password')
+));
+
+$form->get('passwordVerify')->setAttributes(array(
+    'class' => 'form-control',
+
+    'aria-describedby' => 'basic-addon1',
+    'placeholder' => $this->translate('Confirm Password')
+));
+
+$form->get('question')->setAttributes(array(
+    'class' => 'form-control'
+));
+
+
+
+$form->get('submit')->setAttributes(array(
+    'class' => 'btn btn-primary btn-block btn-signin',
+    'value' => $this->translate('Sign Up'),
+//     'style' => "width: 80%"
+));
+
+
+
+$form->prepare();
+
+?>
+<?php  //echo $this->partial("general-error-ponters")?>
+
+
+
+
+
+<?php echo $this->form()->openTag($form); ?>
+              
+              
+<h3 class="signin-title-primary">Get Started!</h3>
+<h5 class="signin-title-secondary lh-4">It's free to signup and only
+	takes a minute.</h5>
+
+              
+		
+         <?php echo $this->partial('csnuser-register-snipet', array('form'=>$form));?>
+
+<div>
+                <?php echo  $this->formSubmit($form->get('submit'))?>
+              </div>
+
+
+
+<p class="mg-t-40 mg-b-0">
+	Already have an account? <a
+		href="<?php  echo $this->url('user-index')?>">Sign In</a>
+</p>
+
+
+<!-- <div class="signup-separator"> -->
+<!-- 	<span>or signup using</span> -->
+<!-- </div> -->
+
+<!-- <button class="btn btn-facebook btn-block">Sign Up Using Facebook</button> -->
+<!-- <button class="btn btn-twitter btn-block">Sign Up Using Twitter</button> -->
+
+
+<?php
+
+if ($this->messages) {
+    echo '<div style="font-size: 14px; color: red;">' . $this->messages . '</div>';
+    echo '<div style="font-size: 14px; color: red;">' . $this->error . '</div>';
+}
+;
+?>
+             <?php
+            echo $this->formRow($form->get('csrf'));
+            echo $this->form()->closeTag();
+            ?> 
+        
+
+<?php
+
+echo $this->headScript()->prependFile($this->basePath('js/jquery.mask.min.js'))?>
+
+
+<script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('.phone').mask('00000000000');
+        });
+
+        // for the type of customer
+        
+    </script>
+
