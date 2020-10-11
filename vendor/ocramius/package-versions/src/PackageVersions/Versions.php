@@ -128,7 +128,7 @@ final class Versions
   'zendframework/zend-xmlrpc' => '2.7.0@97e7d70d71b040c8fc94807a911ee9a53dc35ef5',
   'zendframework/zendframework' => '2.5.3@aeb432d59410cd9a4a68166738745387a9bf49ab',
   'zendframework/zendxml' => '1.2.0@eceab37a591c9e140772a1470338258857339e00',
-  'zendframework/skeleton-application' => 'No version set (parsed as 1.0.0)@',
+  'zendframework/skeleton-application' => 'dev-master@4f23b744f9d895f5993ed360f6e7fa42ffda0b97',
 );
 
     private function __construct()

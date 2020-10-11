@@ -24,7 +24,9 @@ class IndexControllerFactory implements FactoryInterface
          * @var GeneralService $generalService
          */
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
+        
         $em = $generalService->getEntityManager();
+      
         $ctr->setTransLator($trans);
         $form = $serviceLocator->getServiceLocator()->get('csnuser_user_form');
 
