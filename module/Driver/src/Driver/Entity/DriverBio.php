@@ -79,6 +79,7 @@ class DriverBio
     private $eyeColor;
     
     private $complexion;
+    
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)

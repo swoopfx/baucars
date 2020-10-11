@@ -2,6 +2,8 @@
 namespace Customer\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Driver\Entity\DriverBio;
+use Application\Entity\Cars;
 
 /**
  * @ORM\Entity
@@ -22,9 +24,20 @@ class CustomerBooking
     
     /**
      * 
-     * @var unknown
+     * @var DriverBio
      */
     private $assignedDriver;
+    
+    /**
+     * 
+     * @var Cars
+     */
+    private $assisnedCar;
+    
+    
+    private $service;
+    
+    private $status;
     
     /**
      * subscription, rental
