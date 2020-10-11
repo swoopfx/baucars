@@ -1,4 +1,5 @@
 <?php
+namespace Driver;
 return array(
     'controllers' => array(
         'invokables' => array(

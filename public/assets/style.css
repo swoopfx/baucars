@@ -364,7 +364,7 @@ a.slicknav_btn {
 /*== Slider Area CSS Start ==*/
 
 .single-slide-item {
-	background-image: url(assets/img/banner.jpg);
+	background-image: url(/assets/img/banner.jpg);
 	background-position: center center;
 	background-size: cover;
 	padding: 80px 0;
@@ -377,7 +377,7 @@ a.slicknav_btn {
 }
 
 .book-a-car select.custom-select {
-	background-image: url("assets/img/caret-cion.png");
+	background-image: url("/assets/img/caret-cion.png");
 	background-position: right 13px center;
 	background-size: 12px auto;
 }
@@ -2648,19 +2648,19 @@ body,
 ================================*/
 
 .ser-thumb-bg-1 {
-	background-image: url(assets/img/car/car-1.jpg);
+	background-image: url(/assets/img/car/car-1.jpg);
 }
 
 .ser-thumb-bg-2 {
-	background-image: url(assets/img/car/car-2.jpg);
+	background-image: url(/assets/img/car/car-2.jpg);
 }
 
 .ser-thumb-bg-3 {
-	background-image: url(assets/img/car/car-3.jpg);
+	background-image: url(/assets/img/car/car-3.jpg);
 }
 
 .ser-thumb-bg-4 {
-	background-image: url(assets/img/car/car-5.jpg);
+	background-image: url(/assets/img/car/car-5.jpg);
 }
 
 .single-service-item {

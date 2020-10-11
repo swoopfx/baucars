@@ -263,18 +263,18 @@ class User
      */
     protected $myFriends;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Support\Entity\Support", mappedBy="user")
-     * 
-     * @var Collection
-     */
-    private $support;
+//     /**
+//      * @ORM\OneToMany(targetEntity="Support\Entity\Support", mappedBy="user")
+//      * 
+//      * @var Collection
+//      */
+//     private $support;
     
-    /**
-     * @ORM\OneToOne(targetEntity="Wallet\Entity\Wallet", mappedBy="user")
-     * @var Wallet
-     */
-    private $wallet;
+//     /**
+//      * @ORM\OneToOne(targetEntity="Wallet\Entity\Wallet", mappedBy="user")
+//      * @var Wallet
+//      */
+//     private $wallet;
 
     /**
      * @ORM\Column(name="is_profiled", type="boolean", nullable=true)
@@ -299,11 +299,11 @@ class User
 //      * @var Collection
 //      */
 
-    /**
-     * @ORM\OneToMany(targetEntity="Training\Entity\UserTraining", mappedBy="user")
-     * @var Collection
-     */
-    private $training;
+//     /**
+//      * @ORM\OneToMany(targetEntity="Training\Entity\UserTraining", mappedBy="user")
+//      * @var Collection
+//      */
+//     private $training;
 
     // /**
     // * @ORM\OneToOne(targetEntity="Users\Entity\BrokerChildProfile", mappedBy="user", cascade={"persist", "remove"})

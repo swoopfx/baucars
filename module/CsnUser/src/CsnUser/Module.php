@@ -60,9 +60,9 @@ class Module
         $shareEventManager = $e->getApplication()
             ->getEventManager()
             ->getSharedManager();
-        $shareEventManager->attach("Zend\Mvc\Controller\AbstractActionController", TriggerService::USER_REGISTER_INITIATED, function ($e) use ($sm) {
-            // Handle all post initiate user register event handler here
+//         $shareEventManager->attach("Zend\Mvc\Controller\AbstractActionController", TriggerService::USER_REGISTER_INITIATED, function ($e) use ($sm) {
+//             // Handle all post initiate user register event handler here
            
-        });
+//         });
     }
 }
