@@ -17,7 +17,7 @@ return array(
                         // the controllers for your module are found
                         '__NAMESPACE__' => 'Customer\Controller',
                         'controller'    => 'Customer',
-                        'action'        => 'index',
+                        'action'        => 'board',
                     ),
                 ),
                 'may_terminate' => true,
@@ -29,9 +29,9 @@ return array(
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action]]',
+                            'route'    => '/[:action[/:id]]',
                             'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(

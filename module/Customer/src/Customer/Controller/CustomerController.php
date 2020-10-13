@@ -10,6 +10,7 @@
 namespace Customer\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class CustomerController extends AbstractActionController
 {
@@ -23,5 +24,10 @@ class CustomerController extends AbstractActionController
         // This shows the :controller and :action parameters in default route
         // are working when you browse to /customer/customer/foo
         return array();
+    }
+    
+    public function boardAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
     }
 }

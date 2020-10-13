@@ -23,13 +23,13 @@ class CustomerBooking
     private $id;
     
     /**
-     * 
+     * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio")
      * @var DriverBio
      */
     private $assignedDriver;
     
     /**
-     * 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Cars")
      * @var Cars
      */
     private $assisnedCar;

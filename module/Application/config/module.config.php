@@ -83,6 +83,7 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
             "layout/login" => __DIR__ . '/../view/layout/login-layout.phtml',
+            "layout/customer" => __DIR__ . '/../view/layout/customer-layout.phtml',
             'layout/footer' => __DIR__ . '/../view/layout/footer.phtml',
             'layout/header' => __DIR__ . '/../view/layout/header.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
