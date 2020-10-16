@@ -133,7 +133,10 @@ return array(
         ),
         'template_map' => array(
             'csnuser-register-snipet' => __DIR__ . '/../view/partial/user-register-snipet.phtml',
-            'csnuser-basic-info-snipet' => __DIR__ . '/../view/partial/user-basic-info-snipet.phtml'
+            'csnuser-basic-info-snipet' => __DIR__ . '/../view/partial/user-basic-info-snipet.phtml',
+            
+            'csnuser-login-snippet' => __DIR__ . '/../view/csn-user/index/login.phtml',
+            'csnuser-register-snippet' => __DIR__ . '/../view/csn-user/registration/registration.phtml',
         )
     ),
     'service_manager' => array(
