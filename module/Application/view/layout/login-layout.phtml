@@ -45,6 +45,8 @@
         <?php
         
         echo $this->headScript()
+            ->prependFile($this->basePath('js/axios.min.js'))
+            ->prependFile($this->basePath('js/vue.js'))
             ->prependFile($this->basePath('js/bootstrap.min.js'))
             ->prependFile($this->basePath('js/jquery.min.js'))
             ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array(
@@ -79,7 +81,8 @@
 							</a>
 						</div>
 						<h1>Come Aboard</h1>
-						<span class="description"> Take the advantage of our unique service </span>
+						<span class="description"> Take the advantage of our unique
+							service </span>
 						<ul class="login-nav nav nav-tabs mt-5 justify-content-center"
 							role="tablist" id="animate-tab">
 							<li><a class="active" data-toggle="tab" href="#singin" role="tab"
