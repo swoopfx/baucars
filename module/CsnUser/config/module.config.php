@@ -131,6 +131,9 @@ return array(
         'template_path_stack' => array(
             'csn-user' => __DIR__ . '/../view'
         ),
+        'strategies' => array(
+            'ViewJsonStrategy'
+        ),
         'template_map' => array(
             'csnuser-register-snipet' => __DIR__ . '/../view/partial/user-register-snipet.phtml',
             'csnuser-basic-info-snipet' => __DIR__ . '/../view/partial/user-basic-info-snipet.phtml',

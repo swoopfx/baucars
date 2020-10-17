@@ -273,7 +273,7 @@ class IndexController extends AbstractActionController
         $jsonModel = new JsonModel();
         $response = new Response();
         $uri = $this->getRequest()->getUri();
-        //         var_dump($uri);
+        // var_dump($uri);
         $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
         // use the generated controllerr plugin for the redirection
         
@@ -351,6 +351,11 @@ class IndexController extends AbstractActionController
                     $user = $this->user->selectUserDQL($phoneOrEmail);
                     if (count($user) > 0) {
                         $user = $user[0];
+                    }else{
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages"=>"The username or email is not valid!"
+                        ]);
                     }
                     // var_dump($user);
                     // var_dump($user);
@@ -412,14 +417,14 @@ class IndexController extends AbstractActionController
                          * to display the required form to fill the profile
                          * if required redirect to the copletinfg profile Page
                          */
-                        $redirect= $fullUrl."/".UserService::routeManager($user);
-//                         $referer = $request->getHeaders("Referer")->getFieldValue();
+                        $redirect = $fullUrl . "/" . UserService::routeManager($user);
+                        // $referer = $request->getHeaders("Referer")->getFieldValue();
                         $response->setStatusCode(Response::STATUS_CODE_200);
                         $jsonModel->setVariables([
-                            "redirect"
+                            "redirect" => $redirect
                         ]);
                         return $jsonModel;
-//                         return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+                        // return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
                     }
                     
                     foreach ($authResult->getMessages() as $message) {
@@ -437,11 +442,12 @@ class IndexController extends AbstractActionController
             }
         }
         
-        return new ViewModel(array(
-            'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
-            'form' => $form,
+        $response->setStatusCode(Response::STATUS_CODE_400);
+        $jsonModel->setVariables([
             'messages' => $messages
-        ));
+        ]);
+        return $jsonModel;
+        
         // 'navMenu' => $this->options->getNavMenu()
     }
 

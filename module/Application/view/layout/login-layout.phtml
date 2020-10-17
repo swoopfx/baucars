@@ -36,6 +36,7 @@
             'type' => 'image/vnd.microsoft.icon',
             'href' => $this->basePath() . '/img/favicon.ico'
         ))
+            ->prependStylesheet("https://cdn.jsdelivr.net/npm/vue-toast-notification/dist/theme-default.css")
             ->prependStylesheet($this->basePath('assets/css/animate/animate.min.css'))
             ->prependStylesheet($this->basePath('admin/assets/vendors/css/base/elisyam-1.5.min.css'))
             ->prependStylesheet($this->basePath('admin/assets/vendors/css/base/bootstrap.min.css'))?>
@@ -45,6 +46,7 @@
         <?php
         
         echo $this->headScript()
+            ->prependFile("https://cdn.jsdelivr.net/npm/vue-toast-notification")
             ->prependFile($this->basePath('js/axios.min.js'))
             ->prependFile($this->basePath('js/vue.js'))
             ->prependFile($this->basePath('js/bootstrap.min.js'))

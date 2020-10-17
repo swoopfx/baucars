@@ -23,6 +23,9 @@ use CsnUser\Options\ModuleOptions;
 use General\Service\GeneralService;
 use CsnUser\Service\UserService;
 use General\Service\TriggerService;
+use Zend\Http\Response;
+use Zend\View\Model\JsonModel;
+use Zend\InputFilter\InputFilter;
 
 /**
  * Registration controller
@@ -159,6 +162,141 @@ class RegistrationController extends AbstractActionController
             }
         }
 
+        $viewModel = new ViewModel(array(
+            'form' => $form,
+            'navMenu' => $this->options->getNavMenu()
+        ));
+        $viewModel->setTemplate('csn-user/registration/registration');
+        return $viewModel;
+    }
+    
+    
+    public function registerjsonAction(){
+        $response = new Response();
+        $jsonModel = new JsonModel();
+        $user = new User();
+//         $form = $this->registerForm->createUserForm($user, 'SignUp');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                'name' => 'phoneOrEmail',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Phone number or email is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'password',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Password is required'
+                            )
+                        )
+                    )
+                )
+            ));
+//             $form->setValidationGroup('username', 'email', 'password', 'passwordVerify', 'question', 'answer', 'csrf');
+//             $post = $request->getPost()->toArray();
+            $inputFilter->setData($post);
+            
+            if ($inputFilter->isValid()) {
+                $entityManager = $this->entityManager;
+                $user->setState($entityManager->find('CsnUser\Entity\State', UserService::USER_STATE_ENABLED));
+                //                 $user->setLanguage($entityManager->find("CsnUser\Entity\Language", GeneralService::LANGUAGE_ENGLISH));
+                $user->setPassword(UserService::encryptPassword($user->getPassword()));
+                $user->setRegistrationToken(md5(uniqid(mt_rand(), true)));
+                $user->setUserUid(UserService::createUserUid());
+                
+                $user->setRole($entityManager->find("CsnUser\Entity\Role", UserService::USER_ROLE_MEMBER));
+                $user->setRegistrationDate(new \DateTime());
+                $user->setEmailConfirmed(false);
+                $user->setIsProfiled(false);
+                
+                try {
+                    $fullLink = $this->url()->fromRoute('user-register', array(
+                        'action' => 'confirm-email',
+                        'id' => $user->getRegistrationToken()
+                    ), array(
+                        'force_canonical' => true
+                    ));
+                    
+                    $logo = $this->url()->fromRoute('home', array(), array(
+                        'force_canonical' => true
+                    )) . "img/logo.png";
+                    
+                    // $mailer = $this->mail;
+                    
+                    $var = [
+                        'logo' => $logo,
+                        'confirmLink' => $fullLink
+                    ];
+                    
+                    $template['template'] = "general-user-confirm-email";
+                    $template['var'] = $var;
+                    
+                    $messagePointer['to'] = $user->getEmail();
+                    $messagePointer['fromName'] = "TANIM FITS";
+                    $messagePointer['subject'] = "TANIM FITS: Confirm Email";
+                    
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    // register on pusher
+                    //                     $this->chatkitService->createUser([
+                    //                         'id' => strval($user->getusername()),
+                    //                         'name' => strval($user->getUsername())
+                    //                     ]);
+                    
+                    $viewModel = new ViewModel(array(
+                        'email' => $user->getEmail(),
+                        'navMenu' => $this->options->getNavMenu()
+                    ));
+                    $viewModel->setTemplate('csn-user/registration/registration-success');
+                    //                     $this->generalService->sendMails($messagePointer, $template); // send email confirmation email
+                    $triggerParams = array(
+                        "user" => $user->getId()
+                    );
+                    $this->getEventManager()->trigger(TriggerService::USER_REGISTER_INITIATED, $this, $triggerParams);
+                    return $viewModel;
+                } catch (\Exception $e) {
+                    return $this->errorView->createErrorView('Something went wrong when trying to send activation email! Please, try again later.', $e, $this->options->getDisplayExceptions());
+                    // $this->options->getNavMenu()
+                }
+            }
+        }
+        
         $viewModel = new ViewModel(array(
             'form' => $form,
             'navMenu' => $this->options->getNavMenu()
