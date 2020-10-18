@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Role
  *
- * @ORM\Table(name="retail_role")
+ * @ORM\Table(name="role")
  * @ORM\Entity
  */
 class Role

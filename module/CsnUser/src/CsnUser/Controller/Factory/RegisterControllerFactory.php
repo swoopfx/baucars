@@ -32,10 +32,11 @@ class RegisterControllerFactory implements FactoryInterface
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
 
         $em = $generalService->getEntityManager();
-        $et = $generalService->getAuth();
-
-        $er = $serviceLocator->getServiceLocator()->get('csnuser_error_view');
        
+        $et = $generalService->getAuth();
+        
+        $er = $serviceLocator->getServiceLocator()->get('csnuser_error_view');
+        
 //         $mailService = $generalService->getMailService();
         $registerForm = $serviceLocator->getServiceLocator()->get('csnuser_user_form');
         $op = $serviceLocator->getServiceLocator()->get('csnuser_module_options');

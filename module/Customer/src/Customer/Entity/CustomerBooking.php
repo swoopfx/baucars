@@ -3,7 +3,11 @@ namespace Customer\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Driver\Entity\DriverBio;
-use Application\Entity\Cars;
+// use Application\Entity\Cars;
+use General\Entity\BookingStatus;
+use General\Entity\BookingType;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -28,20 +32,39 @@ class CustomerBooking
      */
     private $assignedDriver;
     
+    
+    
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Cars")
-     * @var Cars
+     * @ORM\Column(name="start_time", type="datetime", nullable=true)
+     * @var \DateTime
      */
-    private $assisnedCar;
+    private $startTime;
+    
+    /**
+     * @ORM\Column(name="end_time", type="datetime", nulllable=true)
+     * @var \DateTime
+     */
+    private $endTime;
+    
+    /**
+     * 
+     * @var Collection
+     */
+    private $subcriptionDetails;
     
     
     private $service;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="General\Entity\BookingStatus")
+     * @var BookingStatus
+     */
     private $status;
     
     /**
-     * subscription, rental
-     * @var unknown
+     * subscription, booking
+     * @ORM\ManyToOne(targetEntity="General\Entity\BookingType")
+     * @var BookingType
      */
     private $bookingType;
     
@@ -50,7 +73,7 @@ class CustomerBooking
     public function __construct()
     {
         
-        // TODO - Insert your code here
+        $this->subcriptionDetails = new ArrayCollection();
     }
 }
 

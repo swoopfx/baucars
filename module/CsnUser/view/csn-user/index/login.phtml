@@ -69,13 +69,13 @@
 					formData.append("password", this.$refs.password.value);
 					formData.append("phoneOrEmail", this.$refs.phoneOrEmail.value);
 					axios.post("/login/loginjson", formData).then(res => {
-						if (res.status == 204) {
+						if (res.status == 200) {
 							//process redirection 
 							// make a toast notification 
 							this.$toast.open({
-								message: "Test message from Vue",
+								message: "Successfully logged in",
 								type: "success",
-								duration: 5000,
+								duration: 20000,
 								dismissible: true
 							})
 							location.href = res.data.redirect
@@ -83,21 +83,19 @@
 							this.$toast.open({
 								message: res.data.messages,
 								type: "error",
-								duration: 5000,
+								duration: 20000,
 								dismissible: true
 							})
 						}
 						this.isSubmitting = false;
 					}).catch(err => {
-						if (err.status >= 400) {
-							this.$toast.open({
+						this.$toast.open({
 								message: err.response.data.messages,
 								type: "error",
-								duration: 5000,
+								duration: 20000,
 								dismissible: true
 							})
-							// throw error message 
-						}
+						
 						this.isSubmitting = false;
 					});
 				}

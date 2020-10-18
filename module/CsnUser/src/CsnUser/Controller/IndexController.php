@@ -271,7 +271,7 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
         }
         $jsonModel = new JsonModel();
-        $response = new Response();
+        $response = $this->getResponse();
         $uri = $this->getRequest()->getUri();
         // var_dump($uri);
         $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
@@ -342,38 +342,40 @@ class IndexController extends AbstractActionController
                 $phoneOrEmail = $data["phoneOrEmail"];
                 
                 try {
-                    // $user = $this->entityManager
-                    // ->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$usernameOrEmail' OR u.username = '$usernameOrEmail'")
-                    // ->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
+                    $user = $this->entityManager
+                    ->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")
+                    ->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
                     
-                    // $user = $user[0];
+                   
                     
-                    $user = $this->user->selectUserDQL($phoneOrEmail);
-                    if (count($user) > 0) {
-                        $user = $user[0];
-                    }else{
+//                     $user = $this->user->selectUserDQL($phoneOrEmail);
+                    if (count($user) == 0) {
                         $response->setStatusCode(Response::STATUS_CODE_422);
                         return $jsonModel->setVariables([
                             "messages"=>"The username or email is not valid!"
                         ]);
+                    }else{
+                        $user = $user[0];
                     }
+                    
+                   
                     // var_dump($user);
                     // var_dump($user);
-                    if ($user == NULL) {
+//                     if ($user == NULL) {
+                       
+//                         $messages = 'The username or email is not valid!';
+//                         // return new ViewModel(array(
+//                         // 'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
+//                         // 'form' => $form,
+//                         // 'messages' => $messages,
+//                         // 'navMenu' => $this->options->getNavMenu()
+//                         // ));
                         
-                        $messages = 'The username or email is not valid!';
-                        // return new ViewModel(array(
-                        // 'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
-                        // 'form' => $form,
-                        // 'messages' => $messages,
-                        // 'navMenu' => $this->options->getNavMenu()
-                        // ));
-                        
-                        $response->setStatusCode(Response::STATUS_CODE_422);
-                        return $jsonModel->setVariables([
-                            "messages" => $messages
-                        ]);
-                    }
+//                         $response->setStatusCode(Response::STATUS_CODE_422);
+//                         return $jsonModel->setVariables([
+//                             "messages" => $messages
+//                         ]);
+//                     }
                     if (! $user->getEmailConfirmed() == 1) {
                         $messages = $this->translatorHelper->translate('You are yet to confirm your account, please go to the registered email to confirm your account');
                         $response->setStatusCode(Response::STATUS_CODE_422);
@@ -389,7 +391,7 @@ class IndexController extends AbstractActionController
                         ]);
                     }
                     
-                    $adapter->setIdentity($user->getUsername());
+                    $adapter->setIdentity($user->getPhoneNumber());
                     $adapter->setCredential($data["password"]);
                     
                     $authResult = $authService->authenticate();
@@ -442,9 +444,9 @@ class IndexController extends AbstractActionController
             }
         }
         
-        $response->setStatusCode(Response::STATUS_CODE_400);
+        $response->setStatusCode(Response::STATUS_CODE_500);
         $jsonModel->setVariables([
-            'messages' => $messages
+            'messages' => "Some thing went wrong"
         ]);
         return $jsonModel;
         

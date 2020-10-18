@@ -29,6 +29,12 @@ class DriverBio
      * @var string
      */
     private $driverName;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Cars")
+     * @var Cars
+     */
+    private $assisnedCar;
 
     /**
      * @ORM\Column(name="driver_phone", type="string", nullable=false)
@@ -38,7 +44,7 @@ class DriverBio
     private $driverPhone;
 
     /**
-     * @ORM\Column(name="driver_email", type="string", nullable="true")
+     * @ORM\Column(name="driver_email", type="string", nullable=true)
      * 
      * @var string
      */
@@ -72,10 +78,22 @@ class DriverBio
      */
     private $updatedOn;
     
+    /**
+     * 
+     * @var string
+     */
     private $height;
     
+    /**
+     * 
+     * @var string
+     */
     private $weight;
     
+    /**
+     * 
+     * @var unknown
+     */
     private $eyeColor;
     
     private $complexion;

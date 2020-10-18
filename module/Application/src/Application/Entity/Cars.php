@@ -6,6 +6,7 @@ use General\Entity\MotorType;
 use General\Entity\MotorTransmission;
 use General\Entity\MotorFuel;
 use General\Entity\MotorMake;
+use General\Entity\MotorClass;
 
 /**
  * @ORM\Entity
@@ -32,6 +33,12 @@ class Cars
      * @var string
      */
     private $description;
+    
+    /**
+     * @ORM\Column(name="plate_number", type="string", nullable=true)
+     * @var unknown
+     */
+    private $platNumber;
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\MotorMake")
@@ -54,9 +61,16 @@ class Cars
      *
      */
     private $motorColor;
+    
+    /**
+     * Executive or pride
+     * @ORM\ManyToOne(targetEntity="General\Entity\MotorClass")
+     * @var MotorClass
+     */
+    private $motorClass;
 
     /**
-     * @PRM\Column(name="average_rent_price", type="string", nullable=true)
+     * @ORM\Column(name="average_rent_price", type="string", nullable=true)
      * 
      * @var string
      *
@@ -141,14 +155,14 @@ class Cars
     private $isBluetooth;
 
     /**
-     * @ORM\Column(name="created_on", type="Datetime", nullable=true)
+     * @ORM\Column(name="created_on", type="datetime", nullable=true)
      * 
      * @var \DateTime
      */
     private $createdOn;
 
     /**
-     * @ORM\Column(name="updated_on", type="Datetime", nullable=true)
+     * @ORM\Column(name="updated_on", type="datetime", nullable=true)
      * 
      * @var \DateTime
      */
@@ -484,6 +498,40 @@ class Cars
         $this->updatedOn = $updatedOn;
         return $this;
     }
+    /**
+     * @return the $platNumber
+     */
+    public function getPlatNumber()
+    {
+        return $this->platNumber;
+    }
+
+    /**
+     * @return the $motorClass
+     */
+    public function getMotorClass()
+    {
+        return $this->motorClass;
+    }
+
+    /**
+     * @param \Application\Entity\unknown $platNumber
+     */
+    public function setPlatNumber($platNumber)
+    {
+        $this->platNumber = $platNumber;
+        return $this;
+    }
+
+    /**
+     * @param \General\Entity\MotorClass $motorClass
+     */
+    public function setMotorClass($motorClass)
+    {
+        $this->motorClass = $motorClass;
+        return $this;
+    }
+
 
 }
 

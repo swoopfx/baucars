@@ -31,8 +31,8 @@ use Training\Entity\UserTraining;
  * Doctrine ORM implementation of User entity
  *
  * @ORM\Entity(repositoryClass="CsnUser\Entity\Repository\UserRepository")
- * @ORM\Table(name="retail_user",
- * indexes={@ORM\Index(name="search_idx", columns={"username", "email", "user_uid"})}
+ * @ORM\Table(name="user",
+ * indexes={@ORM\Index(name="search_idx", columns={"phone_number", "email", "user_uid"})}
  * )
  * @Annotation\Name("User")
  */
@@ -275,12 +275,12 @@ class User
     // */
     // private $wallet;
     
-    /**
-     * @ORM\Column(name="is_profiled", type="boolean", nullable=true)
-     *
-     * @var boolean
-     */
-    private $isProfiled;
+//     /**
+//      * @ORM\Column(name="is_profiled", type="boolean", nullable=true)
+//      *
+//      * @var boolean
+//      */
+//     private $isProfiled;
 
     /**
      * @ORM\OneToOne(targetEntity="CsnUser\Entity\Lastlogin", mappedBy="user", cascade={"persist", "remove"})
