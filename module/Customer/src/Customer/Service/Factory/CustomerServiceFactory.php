@@ -1,9 +1,9 @@
 <?php
-namespace Customer\Controller\Factory;
+namespace Customer\Service\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Customer\Controller\CustomerController;
+use Customer\Service\CustomerService;
 use General\Service\GeneralService;
 
 /**
@@ -11,7 +11,7 @@ use General\Service\GeneralService;
  * @author otaba
  *        
  */
-class CustomerControllerFactory implements FactoryInterface
+class CustomerServiceFactory implements FactoryInterface
 {
 
     /**
@@ -30,15 +30,16 @@ class CustomerControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $ctr = new CustomerController();
+        
+        $xserv = new CustomerService();
+        
         /**
          * 
          * @var GeneralService $generalService
          */
-        $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
-        $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
-        $ctr->setGeneralService($generalService)->setCustomerService($customerService);
-        return $ctr;
+        $generalService = $serviceLocator->get("General\Service\GeneralService");
+        $xserv->setEntityManager($generalService->getEntityManager())->setAuth($generalService->getAuth());
+        return$xserv;
     }
 }
 

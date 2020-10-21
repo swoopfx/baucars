@@ -16,6 +16,7 @@ namespace CsnUser\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use CsnUser\Service\UserService;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 // use Zend\InputFilter\InputFilter;
 // use Zend\InputFilter\Factory as InputFactory;
 
@@ -28,8 +29,12 @@ use Doctrine\ORM\AbstractQuery;
 class UserRepository extends EntityRepository
 {
 
-    public function findCustomer(){
-        
+    public function findCustomerProfile($id){
+        $dql = "SELECT u FROM CsnUser\Entity\User u WHERE u.id = :id";
+        $query = $this->getEntityManager()->createQuery($dql)->setParameters([
+            "id"=>$id
+        ])->getResult(Query::HYDRATE_ARRAY);
+        return $query;
     }
     
     /**

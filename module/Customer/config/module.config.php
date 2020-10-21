@@ -1,5 +1,7 @@
 <?php
 namespace Customer;
+use Customer\Service\Factory\CustomerServiceFactory;
+
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -49,6 +51,12 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'Customer' => __DIR__ . '/../view',
+        ),
+    ),
+    
+    'service_manager' => array(
+        'factories' => array(
+            "Customer\Service\CustomerService"=>CustomerServiceFactory::class
         ),
     ),
     

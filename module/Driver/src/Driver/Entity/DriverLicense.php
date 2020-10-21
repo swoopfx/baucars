@@ -6,7 +6,7 @@ use General\Entity\Images;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="driver_lecense")
+ * @ORM\Table(name="driver_license")
  * 
  * @author otaba
  *        

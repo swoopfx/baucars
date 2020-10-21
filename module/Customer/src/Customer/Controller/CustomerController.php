@@ -13,6 +13,8 @@ use Zend\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Zend\View\Model\JsonModel;
+use Zend\Http\Response;
+use Customer\Service\CustomerService;
 
 class CustomerController extends AbstractActionController
 {
@@ -28,6 +30,12 @@ class CustomerController extends AbstractActionController
      * @var GeneralService
      */
     private $generalService;
+
+    /**
+     *
+     * @var CustomerService
+     */
+    private $customerService;
 
     public function indexAction()
     {
@@ -46,17 +54,51 @@ class CustomerController extends AbstractActionController
         $viewModel = new ViewModel();
         return $viewModel;
     }
-    
-    public function getBookingHistroryAction(){
+
+    public function bookingHistoryAction()
+    {
         $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        try {
+            $response->setStatusCode(200);
+            $jsonModel->setVariables([
+                "data" => $this->customerService->getBookingHistory()
+            ]);
+        } catch (\Exception $e) {
+            $response->setStatusCode(Response::STATUS_CODE_400);
+            $jsonModel->setVariables([
+                "messages" => $e->getMessage()
+            ]);
+        }
         return $jsonModel;
     }
     
-    public function getSubscribtionAction(){
+    
+    public function profileAction(){
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        try {
+            $response->setStatusCode(200);
+            $jsonModel->setVariables([
+                "datas"=>$this->customerService->getProfile()
+            ]);
+        } catch (\Exception $e) {
+            $response->setStatusCode(Response::STATUS_CODE_400);
+            $jsonModel->setVariables([
+                "messages" => $e->getMessage()
+            ]);
+        }
+        return $jsonModel;
+    }
+
+    public function getSubscribtionAction()
+    {
         $jsonModel = new JsonModel();
         return $jsonModel;
     }
+
     /**
+     *
      * @return the $entityManager
      */
     public function getEntityManager()
@@ -65,6 +107,7 @@ class CustomerController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $generalService
      */
     public function getGeneralService()
@@ -73,7 +116,8 @@ class CustomerController extends AbstractActionController
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @param \Doctrine\ORM\EntityManager $entityManager            
      */
     public function setEntityManager($entityManager)
     {
@@ -82,7 +126,8 @@ class CustomerController extends AbstractActionController
     }
 
     /**
-     * @param \General\Service\GeneralService $generalService
+     *
+     * @param \General\Service\GeneralService $generalService            
      */
     public function setGeneralService($generalService)
     {
@@ -90,4 +135,22 @@ class CustomerController extends AbstractActionController
         return $this;
     }
 
+    /**
+     *
+     * @return the $customerService
+     */
+    public function getCustomerService()
+    {
+        return $this->customerService;
+    }
+
+    /**
+     *
+     * @param \Customer\Service\CustomerService $customerService            
+     */
+    public function setCustomerService($customerService)
+    {
+        $this->customerService = $customerService;
+        return $this;
+    }
 }
