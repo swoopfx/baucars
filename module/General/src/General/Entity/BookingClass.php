@@ -4,12 +4,14 @@ namespace General\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Executive , regular
  * @ORM\Entity
- * @ORM\Table(name="booking_status")
+ * @ORM\Table(name="booking_class")
+ * 
  * @author otaba
  *        
  */
-class BookingStatus
+class BookingClass
 {
 
     /**
@@ -19,13 +21,14 @@ class BookingStatus
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
-     * @ORM\Column(name="status", nullable=true, type="string")
+     * @ORM\Column(name="booking_class", type="string", nullable=true)
+     * 
      * @var string
      */
-    private $status;
-    
+    private $bookingClass;
+
     /**
      */
     public function __construct()
@@ -42,11 +45,11 @@ class BookingStatus
     }
 
     /**
-     * @return the $status
+     * @return the $bookingClass
      */
-    public function getStatus()
+    public function getBookingClass()
     {
-        return $this->status;
+        return $this->bookingClass;
     }
 
     /**
@@ -59,11 +62,11 @@ class BookingStatus
     }
 
     /**
-     * @param string $status
+     * @param string $bookingClass
      */
-    public function setStatus($status)
+    public function setBookingClass($bookingClass)
     {
-        $this->status = $status;
+        $this->bookingClass = $bookingClass;
         return $this;
     }
 

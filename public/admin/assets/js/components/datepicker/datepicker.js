@@ -13,8 +13,9 @@
 
 		//date time picker
 		$('#datetime').daterangepicker({
+			minDate: -1,
 			timePicker: true,
-			timePickerIncrement: 30,
+			timePickerIncrement: 10,
 			locale: {
 				format: 'MM/DD/YYYY h:mm A'
 			}

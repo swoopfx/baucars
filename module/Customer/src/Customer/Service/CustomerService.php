@@ -3,6 +3,7 @@ namespace Customer\Service;
 
 use Customer\Entity\CustomerBooking;
 use CsnUser\Entity\User;
+use Doctrine\ORM\EntityManager;
 
 /**
  *
@@ -16,7 +17,32 @@ class CustomerService
 
     private $generalService;
 
+    /**
+     * 
+     * @var EntityManager
+     */
     private $entityManager;
+    
+    const BOOKING_SUBSCRIPTION = 20;
+    
+    const BOOKING_INSTANT = 50;
+    
+    const BOOKING_STATUS_INITIATED = 5;
+    
+    const BOOKING_STATUS_ACTIVE = 10;
+    
+    const BOOKING_STATUS_CANCELED = 100;
+    
+    const BOOKING_STATUS_PROCESSING = 500;
+    
+    const BOOKING_STATUS_PAID= 20;
+    
+    const BOOKING_STATUS_COMPLETED = 30;
+    
+    const BOOKING_STATUS_UNPAID = 200;
+    
+    const BOOKING_STATUS_PENDING = 300;
+    
 
     /**
      */
@@ -24,6 +50,10 @@ class CustomerService
     {
         
         // TODO - Insert your code here
+    }
+    
+    public static function bookingUid(){
+        return uniqid("book");
     }
     
     public function getBookingHistory(){
@@ -42,6 +72,14 @@ class CustomerService
         $em = $this->entityManager;
         $profile = $em->getRepository(User::class)->findCustomerProfile($this->auth->getIdentity()->getId());
         return $profile;
+    }
+    
+    public function getAllBookingServiceType(){
+        return $this->entityManager->getRepository(CustomerBooking::class)->getAllBookingType();
+    }
+    
+    public function getAllInitiatedBooking(){
+        return $this->entityManager->getRepository(CustomerBooking::class)->findAllInititedBooking($this->auth->getIdentity()->getId());
     }
     
     

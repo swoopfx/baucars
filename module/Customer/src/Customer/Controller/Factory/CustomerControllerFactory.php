@@ -37,7 +37,7 @@ class CustomerControllerFactory implements FactoryInterface
          */
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
         $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
-        $ctr->setGeneralService($generalService)->setCustomerService($customerService);
+        $ctr->setGeneralService($generalService)->setCustomerService($customerService)->setEntityManager($generalService->getEntityManager());
         return $ctr;
     }
 }

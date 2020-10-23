@@ -22,7 +22,7 @@ class CustomerDetails
     private $id;
     
     /**
-     * @O
+     * 
      * @var \DateTime
      */
     private $dob;

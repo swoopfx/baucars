@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use CsnUser\Entity\User;
 
 /**
- * @ORM\Entity(repositoryClass="Customer\Entity\Repository\CustomerBookingRepository")
+ * @ORM\Entity(repositoryClass="Customer\Entity\Repostory\CustomerBookingRepository")
  * @ORM\Table(name="customer_booking")
  *
  * @author otaba
@@ -72,7 +72,7 @@ class CustomerBooking
     private $status;
 
     /**
-     * subscription, booking
+     * subscription, instant booking
      * @ORM\ManyToOne(targetEntity="General\Entity\BookingType")
      *
      * @var BookingType
@@ -284,6 +284,7 @@ class CustomerBooking
     public function setCreatedOn($createdOn)
     {
         $this->createdOn = $createdOn;
+        $this->updatedOn = $createdOn;
         return $this;
     }
 
