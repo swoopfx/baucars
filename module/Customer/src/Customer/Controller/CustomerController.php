@@ -58,12 +58,6 @@ class CustomerController extends AbstractActionController
         $viewModel = new ViewModel();
         return $viewModel;
     }
-    
-    public function calculatePriceAction(){
-        $response = $this->getResponse();
-        $jsonModel = new JsonModel();
-        return $jsonModel;
-    }
 
     public function bookingHistoryAction()
     {
@@ -117,9 +111,10 @@ class CustomerController extends AbstractActionController
         $jsonModel->setVariable("data", $this->customerService->getAllBookingServiceType());
         return $jsonModel;
     }
-    
-    public function bookingClassAction(){
-        $customerService  = $this->customerService;
+
+    public function bookingClassAction()
+    {
+        $customerService = $this->customerService;
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $jsonModel = new JsonModel();
@@ -138,19 +133,20 @@ class CustomerController extends AbstractActionController
         return $jsonModel;
     }
 
-    
-    public function billingMethodAction(){
+    public function billingMethodAction()
+    {
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
         $response->setStatusCode(200);
         $jsonModel->setVariables([
-            "data"=>$this->customerService->getAllBillingMethod()
+            "data" => $this->customerService->getAllBillingMethod()
         ]);
         return $jsonModel;
     }
+
     /**
      * Creates a booking
-     * 
+     *
      * @return \Zend\View\Model\JsonModel
      */
     public function createBookingAction()
@@ -169,31 +165,70 @@ class CustomerController extends AbstractActionController
             $endDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[1]));
             $bookingTypeId = $post["selectedService"];
             $bookingClassId = $post["selectedBookingClass"];
-            try {
-                $booking = new CustomerBooking();
-                
-                $booking->setBookingUid(CustomerService::bookingUid())
-                    ->setCreatedOn(new \DateTime())
-                    ->setEndTime($endDate)
-                    ->setStartTime($startDate)
-                    ->setUser($this->identity())
-                    ->setBookingClass($em->find(BookingClass::class, $bookingClassId))
-                    ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_INITIATED))
-                    ->setBookingType($em->find(BookingType::class, $bookingTypeId));
-                
-                $em->persist($booking);
-                $em->flush();
-                
-                $response->setStatusCode(201);
-                $jsonModel->setVariables([
-                    "messages" => "Successfully initated Your  Booking"
-                ]);
-            } catch (\Exception $e) {
-                $response->setStatusCode(400);
-                $jsonModel->setVariables([
-                    "messages" => $e->getMessage()
-                ]);
-            }
+            $billingMethod = $post['selectedBillingMethod'];
+            
+            $customerService = $this->customerService;
+            $customerService->setBookingStartDate($startDate)
+                ->setBookingEndData($endDate)
+                ->setBookingClass($bookingClassId)
+                ->setBillingMethod($billingMethod);
+            
+            $customerService->calculatePrice();
+            $jsonModel->setVariable("gr", $customerService->calculatePrice());
+            // try {
+            // $booking = new CustomerBooking();
+            
+            // $booking->setBookingUid(CustomerService::bookingUid())
+            // ->setCreatedOn(new \DateTime())
+            // ->setEndTime($endDate)
+            // ->setStartTime($startDate)
+            // ->setUser($this->identity())
+            // ->setBookingClass($em->find(BookingClass::class, $bookingClassId))
+            // ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_INITIATED))
+            // ->setBookingType($em->find(BookingType::class, $bookingTypeId));
+            
+            // $em->persist($booking);
+            // $em->flush();
+            
+            // $response->setStatusCode(201);
+            // $jsonModel->setVariables([
+            // "messages" => "Successfully initated Your Booking"
+            // ]);
+            // } catch (\Exception $e) {
+            // $response->setStatusCode(400);
+            // $jsonModel->setVariables([
+            // "messages" => $e->getMessage()
+            // ]);
+            // }
+        }
+        
+        return $jsonModel;
+    }
+
+    public function calculatePriceAction()
+    {
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $dump = explode("-", $post["bookingDate"]);
+            $startDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[0]));
+            $endDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[1]));
+            $bookingTypeId = $post["selectedService"];
+            $bookingClassId = $post["selectedBookingClass"];
+            $billingMethod = $post['selectedBillingMethod'];
+            
+            $customerService = $this->customerService;
+            $customerService->setBookingStartDate($startDate)
+                ->setBookingEndData($endDate)
+                ->setBookingClass($bookingClassId)
+                ->setBillingMethod($billingMethod);
+            $customerService->calculatePrice();
+            $response->setStatusCode(200);
+            $jsonModel->setVariable("price", $customerService->calculatePrice());
         }
         
         return $jsonModel;

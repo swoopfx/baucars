@@ -103,15 +103,25 @@ class CustomerService
         return $diff->days;
     }
     
-    private function getClassPrice(){
+    private function getClassPrice($classId){
         $em = $this->entityManager;
-        $entity = $em->find(BookingClass::class, $this->bookingClass);
+        $entity = $em->find(BookingClass::class, $classId);
+        return $entity;
     }
 
     public function calculatePrice()
     {
+        $billingClass = $this->getClassPrice($this->bookingClass);
         if($this->billingMethod == self::BILLING_METHOD_HOURLY){
-            
+            $totalHours = $this->calculateTimeInHours();
+            $totalHours  = ($totalHours == 0 ? 1 : $totalHours);
+            $totalPrice = $totalHours * $billingClass->getPricingPerHour();
+            return $totalPrice;
+        }else{
+            $totalDays = $this->calculateTimeInDays();
+            $totalDays = ($totalDays == 0 ? 1 : $totalDays);
+            $totalPrice = $totalDays * $billingClass->getPricingPerDay();
+            return $totalPrice;
         }
     }
 

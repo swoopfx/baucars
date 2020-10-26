@@ -213,21 +213,31 @@ echo $this->headtitle("Customer Board");
 													</div>
 												</div>
 
-												
-												<div  class="form-group row d-flex align-items-center mb-5">
+
+												<div class="form-group row d-flex align-items-center mb-5">
 													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Time</label>
 													<div class="col-lg-8">
 														<input type="text" ref="bookingDatetime" id="datetime" class="form-control" placeholder="">
 													</div>
 												</div>
 
+												<hr>
+												<div v-if="processing">
 
-
-												<div class="text-right">
-													<button @click="createBooking()" :disabled="isSubmittingBookingForm" class="btn btn-gradient-01" type="button">Book NOW</button>
-													<button class="btn btn-shadow" type="reset">Reset</button>
+													<div class="spinner"></div>
+												</div>
+												<div v-else>
+													<div v-if="bookingPrice != '' ">
+														<div class="main-number">{{bookingPrice}}</div>
+													</div>
+													<div class="text-right">
+														<button @click="calculatePrice()" :disabled="isSubmittingBookingForm" class="btn btn-gradient-01" type="button">Calculate Price</button>
+														<button class="btn btn-shadow" type="reset">Reset</button>
+													</div>
 												</div>
 											</form>
+
+
 										</div>
 									</div>
 									<!-- End Form -->
@@ -352,7 +362,7 @@ echo $this->headtitle("Customer Board");
 												</div>
 
 
-												
+
 
 
 
@@ -1026,11 +1036,14 @@ echo $this->headtitle("Customer Board");
 				billingMethod: [],
 
 				// bookingDetails
+				processing: false,
 				isSubmittingBookingForm: false,
 				bookingDatetime: "",
 				selectedServiceType: 50,
 				selectedBookingClass: 10,
 				selectedBillingMethod: 10,
+
+				bookingPrice: "",
 
 				//
 				initializedBooking: []
@@ -1055,7 +1068,7 @@ echo $this->headtitle("Customer Board");
 				}
 			},
 
-			
+
 
 			showBookingForm() {
 				this.isBookingForm = true;
@@ -1156,19 +1169,25 @@ echo $this->headtitle("Customer Board");
 
 			// End Preset function
 
-			calculatePrice(){
-				
+			calculatePrice() {
 
+				this.processing = true;
 				let formData = new FormData();
-					formData.append("bookingDate", this.$refs.bookingDatetime.value);
-					formData.append("selectedService", this.selectedServiceType);
-					formData.append("selectedBookingClass", this.selectedBookingClass);
-					formData.append("selectedBillingMethod", this.selectedBillingMethod);
-					axios.post("/customer/calculate-price").catch().then();
+				formData.append("bookingDate", this.$refs.bookingDatetime.value);
+				formData.append("selectedService", this.selectedServiceType);
+				formData.append("selectedBookingClass", this.selectedBookingClass);
+				formData.append("selectedBillingMethod", this.selectedBillingMethod);
+				axios.post("/customer/calculate-price", formData).then(res => {
+					if (res.status == 200) {
+						this.bookingPrice = res.data.price;
+						this.processing = false;
+					}
+				}).catch();
 			},
 
 			createBooking() {
-				this.isSubmittingBookingForm = true;
+				// this.isSubmittingBookingForm = true;
+				this.processing = true;
 				if (this.selectedServiceType != "") {
 
 					let formData = new FormData();
