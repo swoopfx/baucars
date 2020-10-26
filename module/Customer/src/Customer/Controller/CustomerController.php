@@ -18,6 +18,7 @@ use Customer\Service\CustomerService;
 use General\Entity\BookingType;
 use Customer\Entity\CustomerBooking;
 use General\Entity\BookingStatus;
+use General\Entity\BookingClass;
 
 class CustomerController extends AbstractActionController
 {
@@ -56,6 +57,12 @@ class CustomerController extends AbstractActionController
     {
         $viewModel = new ViewModel();
         return $viewModel;
+    }
+    
+    public function calculatePriceAction(){
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        return $jsonModel;
     }
 
     public function bookingHistoryAction()
@@ -110,6 +117,15 @@ class CustomerController extends AbstractActionController
         $jsonModel->setVariable("data", $this->customerService->getAllBookingServiceType());
         return $jsonModel;
     }
+    
+    public function bookingClassAction(){
+        $customerService  = $this->customerService;
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $jsonModel = new JsonModel();
+        $jsonModel->setVariable("data", $customerService->getAllBookingClass());
+        return $jsonModel;
+    }
 
     public function initiatedBookingAction()
     {
@@ -122,6 +138,16 @@ class CustomerController extends AbstractActionController
         return $jsonModel;
     }
 
+    
+    public function billingMethodAction(){
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $response->setStatusCode(200);
+        $jsonModel->setVariables([
+            "data"=>$this->customerService->getAllBillingMethod()
+        ]);
+        return $jsonModel;
+    }
     /**
      * Creates a booking
      * 
@@ -142,6 +168,7 @@ class CustomerController extends AbstractActionController
             $startDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[0]));
             $endDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[1]));
             $bookingTypeId = $post["selectedService"];
+            $bookingClassId = $post["selectedBookingClass"];
             try {
                 $booking = new CustomerBooking();
                 
@@ -150,6 +177,7 @@ class CustomerController extends AbstractActionController
                     ->setEndTime($endDate)
                     ->setStartTime($startDate)
                     ->setUser($this->identity())
+                    ->setBookingClass($em->find(BookingClass::class, $bookingClassId))
                     ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_INITIATED))
                     ->setBookingType($em->find(BookingType::class, $bookingTypeId));
                 

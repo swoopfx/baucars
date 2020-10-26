@@ -164,7 +164,7 @@ echo $this->headtitle("Customer Board");
 
 
 												<div v-if="bookingServiceType.length" class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Options *</label>
+													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Service *</label>
 													<div class="col-lg-8">
 														<div class="select">
 															<select v-model="selectedServiceType" class="custom-select form-control" required>
@@ -180,7 +180,41 @@ echo $this->headtitle("Customer Board");
 												</div>
 
 
-												<div class="form-group row d-flex align-items-center mb-5">
+
+
+												<div v-if="billingMethod.length" class="form-group row d-flex align-items-center mb-5">
+													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Billing Method</label>
+													<div class="col-sm-8">
+														<div v-for="(type, key) in billingMethod" class="mb-3">
+															<!-- <div class="styled-radio"> -->
+															<input @click="getVal(type.id)" :value="type.id" :key="type.id" v-model="selectedBillingMethod" type="radio" name="radio">
+															<label for="rad-1">{{type.billingMethod}}</label>
+															<!-- </div> -->
+														</div>
+
+
+													</div>
+												</div>
+
+
+												<div v-if="bookingClass.length" class="form-group row d-flex align-items-center mb-5">
+													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Service Class *</label>
+													<div class="col-lg-8">
+														<div class="select">
+															<select v-model="selectedBookingClass" class="custom-select form-control" required>
+
+																<option v-for="type in bookingClass" :value="type.id">{{type.bookingClass}}</option>
+
+															</select>
+															<!-- <div class="invalid-feedback">
+																Please select an option
+															</div> -->
+														</div>
+													</div>
+												</div>
+
+												
+												<div  class="form-group row d-flex align-items-center mb-5">
 													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Time</label>
 													<div class="col-lg-8">
 														<input type="text" ref="bookingDatetime" id="datetime" class="form-control" placeholder="">
@@ -209,91 +243,57 @@ echo $this->headtitle("Customer Board");
 				<div class="col-xl-6 os-animation" data-os-animation="fadeInUp">
 					<!-- Begin Widget 06 -->
 					<div class="col-xl-12 os-animation" data-os-animation="fadeInUp">
-					<!-- Begin Widget 07 -->
-					<div class="widget widget-07 has-shadow">
-						<!-- Begin Widget Header -->
-						<div class="widget-header bordered d-flex align-items-center">
-							<h2>INITIALIZED BOOKING</h2>
+						<!-- Begin Widget 07 -->
+						<div class="widget widget-07 has-shadow">
+							<!-- Begin Widget Header -->
+							<div class="widget-header bordered d-flex align-items-center">
+								<h2>INITIALIZED BOOKING</h2>
 
-						</div>
-						<!-- End Widget Header -->
-						<!-- Begin Widget Body -->
-
-						<div class="widget-body">
-							<div class="table-responsive table-scroll padding-right-10" style="max-height: 520px;">
-								<table class="table table-hover mb-0">
-									<thead>
-										<tr>
-											<th>
-												<div class="styled-checkbox mt-2">
-													<input type="checkbox" name="check-all" id="check-all"> <label for="check-all"></label>
-												</div>
-											</th>
-											<th>Order ID</th>
-											<th>Customer Name</th>
-											<th>Country</th>
-											<th>Ship Date</th>
-											<th><span style="width: 100px;">Status</span></th>
-											<th>Order Total</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr v-if="initializedBooking.length" v-for="booking in initializedBooking">
-											<td style="width: 5%;">
-												<div class="styled-checkbox mt-2">
-													<input type="checkbox" name="cb2" id="cb2"> <label for="cb2"></label>
-												</div>
-											</td>
-											<td><span class="text-primary">021-12-US</span></td>
-											<td>{{booking.bookingUid}}</td>
-											<td>FR</td>
-											<td>10/21/2017</td>
-											<td><span style="width: 100px;"><span class="badge-text badge-text-small info">Paid</span></span></td>
-											<td>$189.00</td>
-											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
-										</tr>
-
-										<tr v-if="initializedBooking.length" v-for="booking in initializedBooking">
-											<td style="width: 5%;">
-												<div class="styled-checkbox mt-2">
-													<input type="checkbox" name="cb2" id="cb2"> <label for="cb2"></label>
-												</div>
-											</td>
-											<td><span class="text-primary">021-12-US</span></td>
-											<td>{{booking.bookingUid}}</td>
-											<td>FR</td>
-											<td>10/21/2017</td>
-											<td><span style="width: 100px;"><span class="badge-text badge-text-small info">Paid</span></span></td>
-											<td>$189.00</td>
-											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
-										</tr>
-
-										<tr v-if="initializedBooking.length" v-for="booking in initializedBooking">
-											<td style="width: 5%;">
-												<div class="styled-checkbox mt-2">
-													<input type="checkbox" name="cb2" id="cb2"> <label for="cb2"></label>
-												</div>
-											</td>
-											<td><span class="text-primary">021-12-US</span></td>
-											<td>{{booking.bookingUid}}</td>
-											<td>FR</td>
-											<td>10/21/2017</td>
-											<td><span style="width: 100px;"><span class="badge-text badge-text-small info">Paid</span></span></td>
-											<td>$189.00</td>
-											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
-										</tr>
-
-
-									</tbody>
-								</table>
 							</div>
-						</div>
-						<!-- End Widget Body -->
+							<!-- End Widget Header -->
+							<!-- Begin Widget Body -->
 
+							<div class="widget-body">
+								<div class="table-responsive table-scroll padding-right-10" style="max-height: 520px;">
+									<table class="table table-hover mb-0">
+										<thead>
+											<tr>
+
+
+
+												<th>Booking Date/Time</th>
+												<th>Ship Date</th>
+												<th>Status</th>
+												<th>Order Total</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-if="initializedBooking.length" v-for="booking in initializedBooking">
+
+												<!-- <td><span class="text-primary">{{booking.bookingUid.toUpperCase()}}</span></td> -->
+												<!-- <td></td> -->
+												<td>{{formatPHPDate(booking.startTime.date)}}</td>
+												<td>{{formatPHPDate(booking.endTime.date)}}</td>
+												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
+												<td>$189.00</td>
+												<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
+											</tr>
+
+
+
+
+
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Widget Body -->
+
+						</div>
+						<!-- End Widget 07 -->
 					</div>
-					<!-- End Widget 07 -->
-				</div>
 				</div>
 			</div>
 
@@ -352,12 +352,7 @@ echo $this->headtitle("Customer Board");
 												</div>
 
 
-												<div class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Time</label>
-													<div class="col-lg-8">
-														<input type="text" ref="bookingDatetime" id="datetime" class="form-control" placeholder="">
-													</div>
-												</div>
+												
 
 
 
@@ -965,6 +960,7 @@ echo $this->headtitle("Customer Board");
 	<!-- End Content -->
 </div>
 <!-- Begin Page Snippets -->
+<script src="https://checkout.flutterwave.com/v3.js"></script>
 <script src="/admin/assets/vendors/js/nicescroll/nicescroll.min.js"></script>
 <script src="/admin/assets/vendors/js/datepicker/moment.min.js"></script>
 <script src="/admin/assets/vendors/js/datepicker/daterangepicker.js"></script>
@@ -974,6 +970,38 @@ echo $this->headtitle("Customer Board");
 
 <!-- End Page Snippets -->
 <script>
+	function makePayment() {
+
+		// if (subs.postPayment) {
+		FlutterwaveCheckout({
+			public_key: subs.public_key,
+			tx_ref: subs.tx_ref,
+			amount: subs.amountPayable,
+			currency: "NGN",
+			country: "NG",
+			payment_options: "card,account,ussd",
+			customer: {
+				email: subs.userEmail,
+				name: subs.userName,
+			},
+			callback: function(response) { // specified callback function
+				if (response.status == "successful") {
+					subs.tx_ref = response.tx_ref;
+					subs.amountPayed = response.amount;
+					subs.verifyPayment();
+				} else {
+					// set error
+				}
+			},
+			customizations: {
+				title: "BAU CARS",
+				description: "BAU cars booking payment",
+
+			},
+		})
+		// }?
+	}
+
 	Vue.use(VueToast, {
 		// One of options
 		position: 'top'
@@ -994,15 +1022,27 @@ echo $this->headtitle("Customer Board");
 
 				isBookingForm: false, // identifies if the booking form should show
 				bookingServiceType: [],
+				bookingClass: [],
+				billingMethod: [],
 
 				// bookingDetails
 				isSubmittingBookingForm: false,
 				bookingDatetime: "",
 				selectedServiceType: 50,
+				selectedBookingClass: 10,
+				selectedBillingMethod: 10,
 
 				//
-				initializedBooking:[]
+				initializedBooking: []
 
+			}
+		},
+
+		filters: {
+			bookingStatus(value) {
+				if (value.id == 5) {
+					return ""
+				}
 			}
 		},
 
@@ -1015,7 +1055,7 @@ echo $this->headtitle("Customer Board");
 				}
 			},
 
-
+			
 
 			showBookingForm() {
 				this.isBookingForm = true;
@@ -1031,6 +1071,17 @@ echo $this->headtitle("Customer Board");
 
 			toggleBookingForm() {
 				this.isBookingForm = !this.isBookingForm;
+			},
+
+			bookingStatus(value) {
+				if (value == 5) {
+					return "badge-text badge-text-small warning";
+				}
+			},
+
+			formatPHPDate(date) {
+				myDate = date.replace(/-/g, "/");
+				return new Date(myDate);
 			},
 			// Begin Present function 
 			getBookingHistory() {
@@ -1061,6 +1112,23 @@ echo $this->headtitle("Customer Board");
 				}).catch();
 			},
 
+
+			getBookingClass() {
+				axios.get("/customer/booking-class").then(res => {
+					if (res.status == 200) {
+						this.bookingClass = res.data.data
+					}
+				}).catch();
+			},
+
+			getBillingMethod() {
+				axios.get("/customer/billing-method").then(res => {
+					if (res.status == 200) {
+						this.billingMethod = res.data.data;
+					}
+				}).catch();
+			},
+
 			//gets all pending initiated booking
 			getInitiatedBooking() {
 				axios.get("/customer/initiated-booking").then(res => {
@@ -1071,18 +1139,33 @@ echo $this->headtitle("Customer Board");
 				}).catch();
 			},
 
-			testtoast() {
-				console.log("LLLLLL");
-				this.$toast.open({
-					message: "res.data.messages",
-					type: "success",
-					duration: 5000,
-					dismissible: true
-				});
-				console.log("NNNNNNN");
+			getVal(tes) {
+				// console.log(tes);
 			},
 
+			// testtoast() {
+			// 	console.log("LLLLLL");
+			// 	this.$toast.open({
+			// 		message: "res.data.messages",
+			// 		type: "success",
+			// 		duration: 5000,
+			// 		dismissible: true
+			// 	});
+			// 	console.log("NNNNNNN");
+			// },
+
 			// End Preset function
+
+			calculatePrice(){
+				
+
+				let formData = new FormData();
+					formData.append("bookingDate", this.$refs.bookingDatetime.value);
+					formData.append("selectedService", this.selectedServiceType);
+					formData.append("selectedBookingClass", this.selectedBookingClass);
+					formData.append("selectedBillingMethod", this.selectedBillingMethod);
+					axios.post("/customer/calculate-price").catch().then();
+			},
 
 			createBooking() {
 				this.isSubmittingBookingForm = true;
@@ -1091,6 +1174,8 @@ echo $this->headtitle("Customer Board");
 					let formData = new FormData();
 					formData.append("bookingDate", this.$refs.bookingDatetime.value);
 					formData.append("selectedService", this.selectedServiceType);
+					formData.append("selectedBookingClass", this.selectedBookingClass);
+					formData.append("selectedBillingMethod", this.selectedBillingMethod);
 
 					axios.post("/customer/create-booking", formData).then(res => {
 						if (res.status == 201) {
@@ -1127,6 +1212,8 @@ echo $this->headtitle("Customer Board");
 			this.getProfile();
 			this.getInitiatedBooking();
 			this.getBookingServiceType();
+			this.getBookingClass();
+			this.getBillingMethod();
 		},
 	});
 </script>

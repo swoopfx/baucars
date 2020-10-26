@@ -9,6 +9,7 @@ use General\Entity\BookingType;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use CsnUser\Entity\User;
+use General\Entity\BookingClass;
 
 /**
  * @ORM\Entity(repositoryClass="Customer\Entity\Repostory\CustomerBookingRepository")
@@ -30,7 +31,7 @@ class CustomerBooking
 
     /**
      * @ORM\Column(name="booking_uid", type="string", nullable=true, unique=true)
-     * 
+     *
      * @var string
      */
     private $bookingUid;
@@ -62,8 +63,12 @@ class CustomerBooking
      */
     private $subcriptionDetails;
 
-    // private $service;
-    
+    /**
+     * @ORM\ManyToOne(targetEntity="General\Entity\BookingClass")
+     * @var BookingClass
+     */
+    private $bookingClass;
+
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\BookingStatus")
      *
@@ -297,7 +302,9 @@ class CustomerBooking
         $this->updatedOn = $updatedOn;
         return $this;
     }
+
     /**
+     *
      * @return the $bookingUid
      */
     public function getBookingUid()
@@ -306,11 +313,28 @@ class CustomerBooking
     }
 
     /**
-     * @param string $bookingUid
+     *
+     * @param string $bookingUid            
      */
     public function setBookingUid($bookingUid)
     {
         $this->bookingUid = $bookingUid;
+        return $this;
+    }
+    /**
+     * @return the $bookingClass
+     */
+    public function getBookingClass()
+    {
+        return $this->bookingClass;
+    }
+
+    /**
+     * @param \General\Entity\BookingClass $bookingClass
+     */
+    public function setBookingClass($bookingClass)
+    {
+        $this->bookingClass = $bookingClass;
         return $this;
     }
 

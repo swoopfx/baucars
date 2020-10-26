@@ -27,10 +27,12 @@ class CustomerBookingRepository extends EntityRepository
         
         return $entity;
     }
+    
+    
 
     public function findAllInititedBooking($user)
     {
-        $dql = "SELECT b FROM Customer\Entity\CustomerBooking b  LEFT JOIN b.assignedDriver d WHERE b.user = :user AND b.status = :status ORDER BY b.id";
+        $dql = "SELECT b, d, u, s FROM Customer\Entity\CustomerBooking b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s WHERE b.user = :user AND b.status = :status ORDER BY b.id";
         $result = $this->getEntityManager()
             ->createQuery($dql)
             ->setParameters([
@@ -47,6 +49,18 @@ class CustomerBookingRepository extends EntityRepository
         $entity = $this->getEntityManager()
             ->createQuery($dql)
             ->getResult(Query::HYDRATE_ARRAY);
+        return $entity;
+    }
+    
+    public function findAllBookingClass(){
+        $dql = "SELECT c FROM General\Entity\BookingClass c ";
+        $entity = $this->getEntityManager()->createQuery($dql)->getResult(Query::HYDRATE_ARRAY);
+        return $entity;
+    }
+    
+    public function findBillingMethod(){
+        $dql = "SELECT b FROM General\Entity\BillingMethod b";
+        $entity = $this->getEntityManager()->createQuery($dql)->getResult(Query::HYDRATE_ARRAY);
         return $entity;
     }
 }
