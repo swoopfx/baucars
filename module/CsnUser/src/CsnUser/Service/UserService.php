@@ -92,7 +92,7 @@ class UserService
     public static function routeManager($user)
     {
         if ($user->getRole()->getId() == self::USER_ROLE_ADMIN) {
-            return "admin";
+            return "controller";
         } elseif($user->getRole()->getId() == self::USER_ROLE_CUSTOMER) {
             return "customer";
         }elseif($user->getRole()->getId() == self::USER_ROLE_DRIVER){

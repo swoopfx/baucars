@@ -19,6 +19,7 @@ use General\Entity\BookingType;
 use Customer\Entity\CustomerBooking;
 use General\Entity\BookingStatus;
 use General\Entity\BookingClass;
+use General\Service\FlutterwaveService;
 
 class CustomerController extends AbstractActionController
 {
@@ -40,6 +41,13 @@ class CustomerController extends AbstractActionController
      * @var CustomerService
      */
     private $customerService;
+
+    /**
+     * Provides logic and wrapper for flutterwave service and API
+     *
+     * @var FlutterwaveService
+     */
+    private $flutterwaveService;
 
     public function indexAction()
     {
@@ -234,6 +242,80 @@ class CustomerController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function initiatepaymentAction()
+    {
+        $em = $this->entityManager;
+        $flutterwaveService = $this->flutterwaveService;
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $dump = explode("-", $post["bookingDate"]);
+            $startDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[0]));
+            $endDate = \DateTime::createFromFormat("m/d/Y h:i A", trim($dump[1]));
+            $bookingTypeId = $post["selectedService"];
+            $bookingClassId = $post["selectedBookingClass"];
+            $billingMethod = $post['selectedBillingMethod'];
+            
+            $customerService = $this->customerService;
+            $customerService->setBookingStartDate($startDate)
+                ->setBookingEndData($endDate)
+                ->setBookingClass($bookingClassId)
+                ->setBillingMethod($billingMethod);
+            $price = $customerService->calculatePrice();
+            $response->setStatusCode(200);
+            
+            $jsonModel->setVariables([
+                "price" => $price,
+                "txref" => FlutterwaveService::generateTransaction(),
+                "public_key" => $this->flutterwaveService->getFlutterwavePublicKey()
+            
+            ]);
+        }
+        return $jsonModel;
+    }
+
+    public function concludepaymentAction()
+    {
+        $flutterwaveService = $this->flutterwaveService;
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $txRef = $post["txRef"];
+            $amountPayed = $post["amountPayed"];
+            try {
+                $verifyData = $flutterwaveService->setTxRef($txRef)->verifyPayment();
+                // var_dump($verifyData);
+                if ($verifyData->status == "success" && $verifyData->data->chargedamount >= $amountPayed) {
+                    $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)
+                        ->setTxRef($verifyData->data->txref)
+                        ->setFlwId($verifyData->data->txid)
+                        ->setFlwRef($verifyData->data->flwref)
+                        ->setSettledAmount($verifyData->data->amountsettledforthistransaction)
+                        ->setTransactStatus(FlutterwaveService::TRANSACTION_STATUS_PAID)
+                        ->setTransactUser($this->identity()
+                        ->getId())
+                        ->hydrateTransaction();
+                    
+                    $response->SetStatusCode(201);
+                    $this->flashmessenger()->addSuccessMessage("{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
+                    $jsonModel->setVariables([
+                        "data" => $verifyData->data->chargedamount
+                    ]);
+                    // initiate transfer
+                }
+            } catch (\Exception $e) {
+                $response->setStatusCode(400);
+                $jsonModel->setVariable("message", $e->getMessage());
+            }
+        }
+        return $jsonModel;
+    }
+
     public function getSubscribtionAction()
     {
         $jsonModel = new JsonModel();
@@ -294,6 +376,25 @@ class CustomerController extends AbstractActionController
     public function setCustomerService($customerService)
     {
         $this->customerService = $customerService;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $flutterwaveService
+     */
+    public function getFlutterwaveService()
+    {
+        return $this->flutterwaveService;
+    }
+
+    /**
+     *
+     * @param \General\Service\FlutterwaveService $flutterwaveService            
+     */
+    public function setFlutterwaveService($flutterwaveService)
+    {
+        $this->flutterwaveService = $flutterwaveService;
         return $this;
     }
 }

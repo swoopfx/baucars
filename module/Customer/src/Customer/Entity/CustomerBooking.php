@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use CsnUser\Entity\User;
 use General\Entity\BookingClass;
+use Application\Entity\Transactions;
 
 /**
  * @ORM\Entity(repositoryClass="Customer\Entity\Repostory\CustomerBookingRepository")
@@ -104,6 +105,12 @@ class CustomerBooking
      * @var \DateTime
      */
     private $updatedOn;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Application\Entity\Transactions", mappedBy="booking")
+     * @var Transactions
+     */
+    private $transaction;
 
     /**
      */

@@ -10,9 +10,36 @@
 namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Doctrine\ORM\EntityManager;
+use General\Service\GeneralService;
+use Customer\Service\CustomerService;
 
 class AdminController extends AbstractActionController
 {
+    /**
+     * 
+     * @var EntityManager
+     */
+    private $entityManager;
+    
+    /**
+     * 
+     * @var GeneralService
+     */
+    private $generalService;
+    
+    /**
+     * 
+     * @var CustomerService
+     */
+    private $customerService;
+    
+    private $customerBookingService;
+    
+    private $driverService;
+    
+//     private $
     public function indexAction()
     {
         return array();
@@ -24,4 +51,115 @@ class AdminController extends AbstractActionController
         // are working when you browse to /admin/admin/foo
         return array();
     }
+    
+    
+    public function bookingAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    
+    public function customersAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    
+    public function driversAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    
+    public function carsAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    
+    public function settingsAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    /**
+     * @return the $entityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @return the $generalService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     * @param field_type $entityManager
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+        return $this;
+    }
+
+    /**
+     * @param field_type $generalService
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
+        return $this;
+    }
+    /**
+     * @return the $customerService
+     */
+    public function getCustomerService()
+    {
+        return $this->customerService;
+    }
+
+    /**
+     * @return the $customerBookingService
+     */
+    public function getCustomerBookingService()
+    {
+        return $this->customerBookingService;
+    }
+
+    /**
+     * @return the $driverService
+     */
+    public function getDriverService()
+    {
+        return $this->driverService;
+    }
+
+    /**
+     * @param \Customer\Service\CustomerService $customerService
+     */
+    public function setCustomerService($customerService)
+    {
+        $this->customerService = $customerService;
+        return $this;
+    }
+
+    /**
+     * @param field_type $customerBookingService
+     */
+    public function setCustomerBookingService($customerBookingService)
+    {
+        $this->customerBookingService = $customerBookingService;
+        return $this;
+    }
+
+    /**
+     * @param field_type $driverService
+     */
+    public function setDriverService($driverService)
+    {
+        $this->driverService = $driverService;
+        return $this;
+    }
+
+
 }

@@ -32,12 +32,16 @@ class CustomerControllerFactory implements FactoryInterface
     {
         $ctr = new CustomerController();
         /**
-         * 
+         *
          * @var GeneralService $generalService
          */
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
         $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
-        $ctr->setGeneralService($generalService)->setCustomerService($customerService)->setEntityManager($generalService->getEntityManager());
+        $flutterwaveService = $serviceLocator->getServiceLocator()->get("General\Service\FlutterwaveService");
+        $ctr->setGeneralService($generalService)
+            ->setCustomerService($customerService)
+            ->setEntityManager($generalService->getEntityManager())
+            ->setFlutterwaveService($flutterwaveService);
         return $ctr;
     }
 }

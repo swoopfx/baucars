@@ -1,6 +1,7 @@
 <?php
 namespace Customer;
 use Customer\Service\Factory\CustomerServiceFactory;
+use Customer\Service\Factory\BookingServiceFactory;
 
 return array(
     'controllers' => array(
@@ -56,7 +57,8 @@ return array(
     
     'service_manager' => array(
         'factories' => array(
-            "Customer\Service\CustomerService"=>CustomerServiceFactory::class
+            "Customer\Service\CustomerService"=>CustomerServiceFactory::class,
+            "Customer\Service\BookingService"=>BookingServiceFactory::class
         ),
     ),
     

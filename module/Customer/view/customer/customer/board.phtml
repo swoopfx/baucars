@@ -2,7 +2,20 @@
 echo $this->headtitle("Customer Board");
 
 ?>
-
+<?php
+$flashMessenger = $this->flashMessenger()
+    ->setMessageOpenFormat('<div%s>
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+         &times;
+     </button>
+     <ul><li>')
+    ->setMessageSeparatorString('</li><li>')
+    ->setMessageCloseString('</li></ul></div>');
+?>
+<?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
+ <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
+ <?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
+ <?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
 
 <div class="page-content" id="cutomerPage">
 
@@ -221,17 +234,35 @@ echo $this->headtitle("Customer Board");
 													</div>
 												</div>
 
-												<hr>
+
 												<div v-if="processing">
 
 													<div class="spinner"></div>
 												</div>
 												<div v-else>
 													<div v-if="bookingPrice != '' ">
-														<div class="main-number">{{bookingPrice}}</div>
+														<div class="widget widget-16 has-shadow">
+															<div class="widget-body">
+																<div class="row">
+																	<div class="col-xl-8 d-flex flex-column justify-content-center align-items-center">
+																		<div class="counter">&#8358; {{bookingPrice}}</div>
+																		<!-- <div class="total-views"></div> -->
+																	</div>
+																	<div class="col-xl-4 d-flex justify-content-center align-items-center">
+																		<div class="pages-views">
+																			<div class="percent"></div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+
 													</div>
 													<div class="text-right">
+														<button v-if="bookingPrice != ''" @click="makePayment()" :disabled="isSubmittingBookingForm" class="btn  btn-success" type="button">Make PAYMENT</button>
+
 														<button @click="calculatePrice()" :disabled="isSubmittingBookingForm" class="btn btn-gradient-01" type="button">Calculate Price</button>
+
 														<button class="btn btn-shadow" type="reset">Reset</button>
 													</div>
 												</div>
@@ -316,72 +347,7 @@ echo $this->headtitle("Customer Board");
 			<div class="row flex-row">
 				<div class="col-xl-6  os-animation" data-os-animation="fadeInUp">
 					<!-- Begin Widget 05 -->
-					<div class="widget widget-05 has-shadow">
-						<!-- Begin Widget Header -->
-						<div class="widget-header bordered d-flex align-items-center">
-							<h2>Booking Form</h2>
-							<div class="widget-options">
-								<div class="dropdown">
-									<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">
-										<i class="la la-ellipsis-h"></i>
-									</button>
 
-								</div>
-							</div>
-						</div>
-						<!-- End Widget Header -->
-						<!-- Begin Widget Body -->
-						<div class="widget-body no-padding hidden">
-
-							<div class="row flex-row">
-								<div class="col-xl-12">
-									<!-- Form -->
-
-									<div class="widget has-shadow">
-
-
-
-										<div class="widget-body">
-											<form class="needs-validation" novalidate>
-
-
-												<div v-if="bookingServiceType.length" class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Options *</label>
-													<div class="col-lg-8">
-														<div class="select">
-															<select v-model="selectedServiceType" class="custom-select form-control" required>
-
-																<option v-for="type in bookingServiceType" :value="type.id">{{type.bookingType}}</option>
-
-															</select>
-															<!-- <div class="invalid-feedback">
-																Please select an option
-															</div> -->
-														</div>
-													</div>
-												</div>
-
-
-
-
-
-
-												<div class="text-right">
-													<button @click="createBooking()" :disabled="isSubmittingBookingForm" class="btn btn-gradient-01" type="button">Book NOW</button>
-													<button class="btn btn-shadow" type="reset">Reset</button>
-												</div>
-											</form>
-										</div>
-									</div>
-									<!-- End Form -->
-								</div>
-							</div>
-
-						</div>
-
-						<!-- End Widget Body -->
-					</div>
-					<!-- End Widget 05 -->
 				</div>
 				<div class="col-xl-6 os-animation" data-os-animation="fadeInUp">
 					<!-- Begin Widget 06 -->
@@ -980,31 +946,31 @@ echo $this->headtitle("Customer Board");
 
 <!-- End Page Snippets -->
 <script>
-	function makePayment() {
+	function makeFlutterwavePayment() {
 
 		// if (subs.postPayment) {
 		FlutterwaveCheckout({
-			public_key: subs.public_key,
-			tx_ref: subs.tx_ref,
-			amount: subs.amountPayable,
+			public_key: cutomerboard.public_key,
+			tx_ref: cutomerboard.tx_ref,
+			amount: cutomerboard.amountPayable,
 			currency: "NGN",
 			country: "NG",
-			payment_options: "card,account,ussd",
+			payment_options: "card,account",
 			customer: {
-				email: subs.userEmail,
-				name: subs.userName,
+				email: cutomerboard.profileEmail,
+				name: cutomerboard.profileName,
 			},
 			callback: function(response) { // specified callback function
 				if (response.status == "successful") {
-					subs.tx_ref = response.tx_ref;
-					subs.amountPayed = response.amount;
-					subs.verifyPayment();
+					cutomerboard.tx_ref = response.tx_ref;
+					cutomerboard.amountPayed = response.amount;
+					cutomerboard.concludepayment();
 				} else {
 					// set error
 				}
 			},
 			customizations: {
-				title: "BAU CARS",
+				title: "BAU CARS LIMITED",
 				description: "BAU cars booking payment",
 
 			},
@@ -1021,6 +987,11 @@ echo $this->headtitle("Customer Board");
 		el: "#cutomerPage",
 		data() {
 			return {
+				//Payment
+				public_key: "",
+				tx_ref: "",
+				amountPayable: 0,
+				//Profile
 				profileName: "",
 				profileDob: "",
 				profilePhone: "",
@@ -1112,7 +1083,8 @@ echo $this->headtitle("Customer Board");
 				axios.get("/customer/profile").then(res => {
 					if (res.status == 200) {
 
-						this.profileName = res.data.datas[0].fullName
+						this.profileName = res.data.datas[0].fullName;
+						this.profileEmail = res.data.datas[0].email;
 					}
 				}).catch();
 			},
@@ -1168,6 +1140,38 @@ echo $this->headtitle("Customer Board");
 			// },
 
 			// End Preset function
+
+			makePayment() {
+				this.processing = true;
+				let formData = new FormData();
+				formData.append("bookingDate", this.$refs.bookingDatetime.value);
+				formData.append("selectedService", this.selectedServiceType);
+				formData.append("selectedBookingClass", this.selectedBookingClass);
+				formData.append("selectedBillingMethod", this.selectedBillingMethod);
+				axios.post("/customer/initiatepayment", formData).then(res => {
+					if (res.status == 200) {
+						this.bookingPrice = res.data.price;
+						this.processing = false;
+						this.public_key = res.data.public_key;
+						this.tx_ref = res.data.txref;
+						this.amountPayable = res.data.price;
+
+						makeFlutterwavePayment();
+					}
+				}).catch();
+			},
+
+			concludepayment() {
+				let formData = new FormData();
+				formData.append("txRef", this.tx_ref);
+				formData.append("amountPayed", this.amountPayed);
+
+				axios.post("/customer/concludepayment", formData).then(res => {
+					if (res.status == 201) {
+						location.reload();
+					}
+				}).catch();
+			},
 
 			calculatePrice() {
 

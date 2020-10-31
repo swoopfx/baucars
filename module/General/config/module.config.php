@@ -2,6 +2,7 @@
 namespace General;
 
 use General\Service\Factory\GeneralServiceFactory;
+use General\Service\Factory\FlutterwaveServiceFactory;
 
 return array(
     'controllers' => array(
@@ -11,7 +12,8 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            "General\Service\GeneralService"=>GeneralServiceFactory::class
+            "General\Service\GeneralService"=>GeneralServiceFactory::class,
+            "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
         ),
     ),
     'router' => array(

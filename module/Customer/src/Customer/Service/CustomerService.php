@@ -23,9 +23,9 @@ class CustomerService
      * @var EntityManager
      */
     private $entityManager;
-    
+
     const BILLING_METHOD_HOURLY = 10;
-    
+
     const BILLING_METHOD_DAILY = 100;
 
     const BOOKING_CLASS_REGULAR = 10;
@@ -71,7 +71,7 @@ class CustomerService
     private $billingMethod;
 
     /**
-     * 
+     *
      * @var string
      */
     private $bookingClass;
@@ -93,8 +93,8 @@ class CustomerService
     private function calculateTimeInHours()
     {
         $diff = $this->bookingEndData->diff($this->bookingStartDate);
-        $hours =  $diff->h;
-        return $hours + ($diff->days*24);
+        $hours = $diff->h;
+        return $hours + ($diff->days * 24);
     }
 
     private function calculateTimeInDays()
@@ -102,8 +102,9 @@ class CustomerService
         $diff = $this->bookingEndData->diff($this->bookingStartDate);
         return $diff->days;
     }
-    
-    private function getClassPrice($classId){
+
+    private function getClassPrice($classId)
+    {
         $em = $this->entityManager;
         $entity = $em->find(BookingClass::class, $classId);
         return $entity;
@@ -112,12 +113,12 @@ class CustomerService
     public function calculatePrice()
     {
         $billingClass = $this->getClassPrice($this->bookingClass);
-        if($this->billingMethod == self::BILLING_METHOD_HOURLY){
+        if ($this->billingMethod == self::BILLING_METHOD_HOURLY) {
             $totalHours = $this->calculateTimeInHours();
-            $totalHours  = ($totalHours == 0 ? 1 : $totalHours);
+            $totalHours = ($totalHours == 0 ? 1 : $totalHours);
             $totalPrice = $totalHours * $billingClass->getPricingPerHour();
             return $totalPrice;
-        }else{
+        } else {
             $totalDays = $this->calculateTimeInDays();
             $totalDays = ($totalDays == 0 ? 1 : $totalDays);
             $totalPrice = $totalDays * $billingClass->getPricingPerDay();
@@ -171,6 +172,19 @@ class CustomerService
     public function getAllBillingMethod()
     {
         return $this->entityManager->getRepository(CustomerBooking::class)->findBillingMethod();
+    }
+
+    public function getAllCustomerCount()
+    {
+        $em = $this->entityManager;
+        $repo = $em->getRepository(User::class);
+        $result = $repo->createQueryBuilder('a')
+            ->where('a.role=30')
+            ->select('count(a.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        return $result;
     }
 
     // public function
@@ -230,7 +244,9 @@ class CustomerService
         $this->entityManager = $entityManager;
         return $this;
     }
+
     /**
+     *
      * @return the $bookingStartDate
      */
     public function getBookingStartDate()
@@ -239,6 +255,7 @@ class CustomerService
     }
 
     /**
+     *
      * @return the $bookingEndData
      */
     public function getBookingEndData()
@@ -247,6 +264,7 @@ class CustomerService
     }
 
     /**
+     *
      * @return the $billingMethod
      */
     public function getBillingMethod()
@@ -255,6 +273,7 @@ class CustomerService
     }
 
     /**
+     *
      * @return the $bookingClass
      */
     public function getBookingClass()
@@ -263,6 +282,7 @@ class CustomerService
     }
 
     /**
+     *
      * @return the $bookingService
      */
     public function getBookingService()
@@ -271,7 +291,8 @@ class CustomerService
     }
 
     /**
-     * @param DateTime $bookingStartDate
+     *
+     * @param DateTime $bookingStartDate            
      */
     public function setBookingStartDate($bookingStartDate)
     {
@@ -280,7 +301,8 @@ class CustomerService
     }
 
     /**
-     * @param DateTime $bookingEndData
+     *
+     * @param DateTime $bookingEndData            
      */
     public function setBookingEndData($bookingEndData)
     {
@@ -289,7 +311,8 @@ class CustomerService
     }
 
     /**
-     * @param string $billingMethod
+     *
+     * @param string $billingMethod            
      */
     public function setBillingMethod($billingMethod)
     {
@@ -298,7 +321,8 @@ class CustomerService
     }
 
     /**
-     * @param string $bookingClass
+     *
+     * @param string $bookingClass            
      */
     public function setBookingClass($bookingClass)
     {
@@ -307,13 +331,13 @@ class CustomerService
     }
 
     /**
-     * @param string $bookingService
+     *
+     * @param string $bookingService            
      */
     public function setBookingService($bookingService)
     {
         $this->bookingService = $bookingService;
         return $this;
     }
-
 }
 
