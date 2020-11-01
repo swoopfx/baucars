@@ -5,6 +5,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Doctrine\ORM\EntityManager;
 use Zend\View\Model\JsonModel;
 use Customer\Service\BookingService;
+use Zend\View\Model\ViewModel;
+use Customer\Entity\CustomerBooking;
 
 /**
  *
@@ -25,6 +27,8 @@ class BookingController extends AbstractActionController
      * @var EntityManager
      */
     private $entityManager;
+    
+   
 
     /**
      */
@@ -32,6 +36,32 @@ class BookingController extends AbstractActionController
     {
         
         // TODO - Insert your code here
+    }
+    
+    public function boardAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    
+    
+    public function viewAction(){
+        $em = $this->entityManager;
+        $viewModel = new ViewModel();
+        $bookingUid = $this->params()->fromRoute("id", NULL);
+        if($bookingUid == NULL){
+            return $this->redirect()->toRoute("admin/default", array("controller"=>"booking", "action"=>"board"));
+        }else{
+//            var_dump($bookingUid);
+            $data = $em->getRepository(CustomerBooking::class)->findOneBy([
+                "bookingUid"=>$bookingUid
+            ]);
+            
+           
+            $viewModel->setVariables([ "data"=>$data]);
+        }
+       
+        
+        return $viewModel;
     }
     
     public function initiatedbookingcountAction(){

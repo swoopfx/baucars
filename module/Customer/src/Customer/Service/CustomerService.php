@@ -5,6 +5,10 @@ use Customer\Entity\CustomerBooking;
 use CsnUser\Entity\User;
 use Doctrine\ORM\EntityManager;
 use General\Entity\BookingClass;
+use Zend\Session\Container;
+use Zend\Authentication\AuthenticationService;
+use General\Entity\BookingStatus;
+use General\Entity\BookingType;
 
 /**
  *
@@ -14,6 +18,10 @@ use General\Entity\BookingClass;
 class CustomerService
 {
 
+    /**
+     * 
+     * @var AuthenticationService
+     */
     private $auth;
 
     private $generalService;
@@ -81,6 +89,21 @@ class CustomerService
      * @var string
      */
     private $bookingService;
+    
+    /**
+     * 
+     * @var Container
+     */
+    private $bookingSession;
+    
+    
+    
+    
+   
+    
+    private $bookingType;
+    
+    
 
     /**
      */
@@ -124,6 +147,21 @@ class CustomerService
             $totalPrice = $totalDays * $billingClass->getPricingPerDay();
             return $totalPrice;
         }
+    }
+    
+    
+    public function  createBooking(){
+        $booking = new CustomerBooking();
+        $em = $this->entityManager;
+        $booking->setCreatedOn(new \DateTime())
+        ->setEndTime($this->bookingEndData)
+        ->setBookingUid(self::bookingUid())
+        ->setStartTime($this->bookingStartDate)
+        ->setUser($this->auth->getIdentity())
+        ->setBookingClass($em->find(BookingClass::class, $this->bookingClass))
+        ->setStatus($em->find(BookingStatus::class, self::BOOKING_STATUS_INITIATED))
+        ->setBookingType($em->find(BookingType::class, $this->bookingType));
+        return $booking;
     }
 
     public static function bookingUid()
@@ -339,5 +377,39 @@ class CustomerService
         $this->bookingService = $bookingService;
         return $this;
     }
+    /**
+     * @return the $bookingSession
+     */
+    public function getBookingSession()
+    {
+        return $this->bookingSession;
+    }
+
+    /**
+     * @param \Zend\Session\Container $bookingSession
+     */
+    public function setBookingSession($bookingSession)
+    {
+        $this->bookingSession = $bookingSession;
+        return $this;
+    }
+    /**
+     * @return the $bookingType
+     */
+    public function getBookingType()
+    {
+        return $this->bookingType;
+    }
+
+    /**
+     * @param field_type $bookingType
+     */
+    public function setBookingType($bookingType)
+    {
+        $this->bookingType = $bookingType;
+        return $this;
+    }
+
+
 }
 

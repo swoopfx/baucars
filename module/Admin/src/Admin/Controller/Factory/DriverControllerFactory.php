@@ -1,18 +1,17 @@
 <?php
-namespace Customer\Service\Factory;
+namespace Admin\Controller\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Customer\Service\CustomerService;
+use Admin\Controller\DriverController;
 use General\Service\GeneralService;
-use Zend\Session\Container;
 
 /**
  *
  * @author otaba
  *        
  */
-class CustomerServiceFactory implements FactoryInterface
+class DriverControllerFactory implements FactoryInterface
 {
 
     /**
@@ -31,18 +30,18 @@ class CustomerServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $xserv = new CustomerService();
-        $bookingSession = new Container("booking_session");
+        
+        $ctr = new DriverController();
         
         /**
          *
          * @var GeneralService $generalService
          */
-        $generalService = $serviceLocator->get("General\Service\GeneralService");
-        $xserv->setEntityManager($generalService->getEntityManager())
-            ->setAuth($generalService->getAuth())
-            ->setBookingSession($bookingSession);
-        return $xserv;
+        $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
+        // $generalService = $serviceLocator->getServiceLocator()->get("");
+        
+        $ctr->setEntityManager($generalService->getEntityManager());
+        return $ctr;
     }
 }
 

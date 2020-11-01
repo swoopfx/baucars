@@ -69,13 +69,13 @@ class Cars
      */
     private $motorClass;
 
-    /**
-     * @ORM\Column(name="average_rent_price", type="string", nullable=true)
-     * 
-     * @var string
-     *
-     */
-    private $averageRentPrice;
+//     /**
+//      * @ORM\Column(name="average_rent_price", type="string", nullable=true)
+//      * 
+//      * @var string
+//      *
+//      */
+//     private $averageRentPrice;
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\MotorTransmission")

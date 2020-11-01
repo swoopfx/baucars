@@ -23,12 +23,12 @@ class DriverBio
      */
     private $id;
 
-    /**
-     * @ORM\Column(name="driver_name", type="string", nullable=false)
-     * 
-     * @var string
-     */
-    private $driverName;
+//     /**
+//      * @ORM\Column(name="driver_name", type="string", nullable=false)
+//      * 
+//      * @var string
+//      */
+//     private $driverName;
     
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Cars")
@@ -36,19 +36,19 @@ class DriverBio
      */
     private $assisnedCar;
 
-    /**
-     * @ORM\Column(name="driver_phone", type="string", nullable=false)
-     * 
-     * @var string
-     */
-    private $driverPhone;
+//     /**
+//      * @ORM\Column(name="driver_phone", type="string", nullable=false)
+//      * 
+//      * @var string
+//      */
+//     private $driverPhone;
 
-    /**
-     * @ORM\Column(name="driver_email", type="string", nullable=true)
-     * 
-     * @var string
-     */
-    private $driverEmail;
+//     /**
+//      * @ORM\Column(name="driver_email", type="string", nullable=true)
+//      * 
+//      * @var string
+//      */
+//     private $driverEmail;
 
     /**
      * @ORM\Column(name="driver_since", type="datetime", nullable=true)

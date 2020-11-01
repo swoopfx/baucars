@@ -836,28 +836,28 @@ class User
         return $this;
     }
 
-    public function getSupport()
-    {
-        return $this->support;
-    }
+//     public function getSupport()
+//     {
+//         return $this->support;
+//     }
 
-    public function addSupport(Support $support)
-    {
-        if (! $this->support->contains($support)) {
-            $this->support[] = $support;
-            $support->setUser($this);
-        }
-        return $this;
-    }
+//     public function addSupport(Support $support)
+//     {
+//         if (! $this->support->contains($support)) {
+//             $this->support[] = $support;
+//             $support->setUser($this);
+//         }
+//         return $this;
+//     }
 
-    public function removeSupport(Support $support)
-    {
-        if ($this->support->contains($support)) {
-            $this->support->removeElement($support);
-            $support->setUser(NULL);
-        }
-        return $this;
-    }
+//     public function removeSupport(Support $support)
+//     {
+//         if ($this->support->contains($support)) {
+//             $this->support->removeElement($support);
+//             $support->setUser(NULL);
+//         }
+//         return $this;
+//     }
 
     /**
      *
@@ -878,42 +878,42 @@ class User
         return $this;
     }
 
-    /**
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraining()
-    {
-        return $this->training;
-    }
+//     /**
+//      *
+//      * @return \Doctrine\Common\Collections\Collection
+//      */
+//     public function getTraining()
+//     {
+//         return $this->training;
+//     }
 
-    /**
-     *
-     * @param UserTraining $training            
-     * @return \CsnUser\Entity\User
-     */
-    public function adddTraining(UserTraining $training)
-    {
-        if (! $this->training->contains($training)) {
-            $this->training[] = $training;
-            $training->setUser($this);
-        }
-        return $this;
-    }
+//     /**
+//      *
+//      * @param UserTraining $training            
+//      * @return \CsnUser\Entity\User
+//      */
+//     public function adddTraining(UserTraining $training)
+//     {
+//         if (! $this->training->contains($training)) {
+//             $this->training[] = $training;
+//             $training->setUser($this);
+//         }
+//         return $this;
+//     }
 
-    /**
-     *
-     * @param UserTraining $training            
-     * @return \CsnUser\Entity\User
-     */
-    public function removeTraining(UserTraining $training)
-    {
-        if ($this->training->contains($training)) {
-            $this->training->removeElement($training);
-            $training->setUser(NULL);
-        }
-        return $this;
-    }
+//     /**
+//      *
+//      * @param UserTraining $training            
+//      * @return \CsnUser\Entity\User
+//      */
+//     public function removeTraining(UserTraining $training)
+//     {
+//         if ($this->training->contains($training)) {
+//             $this->training->removeElement($training);
+//             $training->setUser(NULL);
+//         }
+//         return $this;
+//     }
     /**
      * @return the $phoneNumber
      */

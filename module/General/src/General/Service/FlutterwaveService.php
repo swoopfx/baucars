@@ -7,6 +7,7 @@ use Zend\Session\Container;
 use Application\Entity\Transactions;
 use General\Entity\TransactionStatus;
 use CsnUser\Entity\User;
+use Customer\Entity\CustomerBooking;
 
 /**
  *
@@ -82,6 +83,12 @@ class FlutterwaveService
 
     private $transactUser;
 
+    /**
+     *
+     * @var CustomerBooking
+     */
+    private $booking;
+
     private $header = [];
 
     const TRANSACTION_STATUS_PAID = 100;
@@ -132,6 +139,10 @@ class FlutterwaveService
         }
     }
 
+    /**
+     *
+     * @return \Application\Entity\Transactions
+     */
     public function hydrateTransaction()
     {
         $em = $this->entityManager;
@@ -144,10 +155,12 @@ class FlutterwaveService
             ->setStatus($em->find(TransactionStatus::class, $this->transactStatus))
             ->setSettledAmount($this->settledAmount)
             ->setTxRef($this->txRef)
+            ->setBooking($this->booking)
             ->setUser($em->find(User::class, $this->transactUser));
         
         $em->persist($transactionEntity);
-        $em->flush();
+        
+        return $transactionEntity;
         
         // send transaction mail
     }
@@ -442,7 +455,9 @@ class FlutterwaveService
         $this->transactUser = $transactUser;
         return $this;
     }
+
     /**
+     *
      * @return the $settledAmount
      */
     public function getSettledAmount()
@@ -451,11 +466,28 @@ class FlutterwaveService
     }
 
     /**
-     * @param field_type $settledAmount
+     *
+     * @param field_type $settledAmount            
      */
     public function setSettledAmount($settledAmount)
     {
         $this->settledAmount = $settledAmount;
+        return $this;
+    }
+    /**
+     * @return the $booking
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
+
+    /**
+     * @param \Customer\Entity\CustomerBooking $booking
+     */
+    public function setBooking($booking)
+    {
+        $this->booking = $booking;
         return $this;
     }
 

@@ -344,6 +344,23 @@ class CustomerBooking
         $this->bookingClass = $bookingClass;
         return $this;
     }
+    /**
+     * @return the $transaction
+     */
+    public function getTransaction()
+    {
+        return $this->transaction;
+    }
+
+    /**
+     * @param \Application\Entity\Transactions $transaction
+     */
+    public function setTransaction($transaction)
+    {
+        $this->transaction = $transaction;
+        return $this;
+    }
+
 
 }
 

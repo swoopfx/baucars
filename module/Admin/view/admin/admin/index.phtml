@@ -198,162 +198,45 @@
 			<div class="col-xl-9">
 				<div class="panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">INITIATED BOOKING</h3>
+						<h3 class="panel-title">INITIATED BOOKING </h3>
 
 						<div class="dropdown">
 							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
-							<ul class="dropdown-menu">
-								<li><a href="#"><i class="fa fa-sync"></i>Update Data</a></li>
-								<li><a href="#"><i class="fa fa-cogs"></i>Settings</a></li>
-								<li><a href="#"><i class="fa fa-times"></i>Remove Panel</a></li>
-							</ul>
+
 						</div>
 					</div>
 
 					<div class="panel-body">
 						<div class="table-responsive">
-							<table class="table style--1">
+							<table class="table style--2">
+								<thead>
+									<tr>
+										<th>TRACKING ID</th>
+										<th>ACTIVE PERIOD</th>
+										<!-- <th>AMOUNT PAID</th> -->
+										<th>BOOKING CLASS</th>
+										<th>BOOKING TYPE</th>
+										<th>STATUS</th>
+										<th>ACTION</th>
+									</tr>
+								</thead>
 								<tbody>
 									<!-- Table Row Start -->
-									<tr v-for = "data in splashInitiatedBooking">
-										<td>
-											<div class="media">
-												<div class="media--img">
-													<img src="assets/img/projects/thumb-01.jpg" alt="">
-												</div>
-											</div>
-										</td>
-
-										<td>
-											<div class="media">
-												<div class="media--info">
-													<h3 class="media--name h5">Project Title</h3>
-													<p class="media--desc">Menz Products</p>
-												</div>
-											</div>
-										</td>
-
-										<td>
-											<p>
-												Last Updated <strong class="fw--600 text-muted">Today at 4:24
-													AM</strong>
-											</p>
-										</td>
-
-										<td>|</td>
-
-										<td>
-											<p>
-												<strong class="fw--600 text-muted">May 6, 2017</strong><br>8:30
-											</p>
-										</td>
-
-										<td>
-											<p class="text-right">30% Completed</p>
-
-											<div class="progress">
-												<div class="progress-bar bg-red w-25"></div>
-											</div>
-										</td>
-
-										<td><a href="#" class="remove btn-link fs--18">&times;</a></td>
+									<tr v-for="data in splashInitiatedBooking ">
+										<!-- <td><img src="assets/img/products/thumb-01.jpg" alt=""></td> -->
+										<td>{{data.bookingUid.toUpperCase()}}</td>
+										<td><a href="#" class="btn-link">{{formatPHPDate(data.startTime.date)}} - {{formatPHPDate(data.endTime.date)}}</a></td>
+										<td>{{data.bookingClass.bookingClass}}</td>
+										<td>{{data.bookingType.bookingType}}</td>
+										<td><span class="label label-success">{{data.status.status}}</span></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
-									<!-- Table Row Start -->
-									<tr>
-										<td>
-											<div class="media">
-												<div class="media--img">
-													<img src="assets/img/projects/thumb-02.jpg" alt="">
-												</div>
-											</div>
-										</td>
-
-										<td>
-											<div class="media">
-												<div class="media--info">
-													<h3 class="media--name h5">Project Title</h3>
-													<p class="media--desc">Menz Products</p>
-												</div>
-											</div>
-										</td>
-
-										<td>
-											<p>
-												Last Updated <strong class="fw--600 text-muted">Today at 4:24
-													AM</strong>
-											</p>
-										</td>
-
-										<td>|</td>
-
-										<td>
-											<p>
-												<strong class="fw--600 text-muted">May 6, 2017</strong><br>8:30
-											</p>
-										</td>
-
-										<td>
-											<p class="text-right">50% Completed</p>
-
-											<div class="progress">
-												<div class="progress-bar bg-blue w-50"></div>
-											</div>
-										</td>
-
-										<td><a href="#" class="remove btn-link fs--18">&times;</a></td>
-									</tr>
-									<!-- Table Row End -->
-
-									<!-- Table Row Start -->
-									<tr>
-										<td>
-											<div class="media">
-												<div class="media--img">
-													<img src="assets/img/projects/thumb-03.jpg" alt="">
-												</div>
-											</div>
-										</td>
-
-										<td>
-											<div class="media">
-												<div class="media--info">
-													<h3 class="media--name h5">Project Title</h3>
-													<p class="media--desc">Menz Products</p>
-												</div>
-											</div>
-										</td>
-
-										<td>
-											<p>
-												Last Updated <strong class="fw--600 text-muted">Today at 4:24
-													AM</strong>
-											</p>
-										</td>
-
-										<td>|</td>
-
-										<td>
-											<p>
-												<strong class="fw--600 text-muted">May 6, 2017</strong><br>8:30
-											</p>
-										</td>
-
-										<td>
-											<p class="text-right">80% Completed</p>
-
-											<div class="progress">
-												<div class="progress-bar bg-green w-75"></div>
-											</div>
-										</td>
-
-										<td><a href="#" class="remove btn-link fs--18">&times;</a></td>
-									</tr>
-									<!-- Table Row End -->
+									
 								</tbody>
 							</table>
 						</div>
@@ -859,6 +742,15 @@
 			}
 		},
 		methods: {
+			formatPHPDate(date) {
+				myDate = date.replace(/-/g, "/");
+				return new Date(myDate);
+			},
+
+			initiateBookingListLink(uid){
+				return "/controller/booking/view/"+uid
+			},
+
 			getCustomerCount(){
 				axios.get('/controller/customer/allcustomercount').then(res=>{
 					if(res.status == 200){

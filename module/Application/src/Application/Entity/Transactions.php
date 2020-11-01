@@ -68,7 +68,7 @@ class Transactions
     private $user;
     
     /**
-     * @ORM\OneToOne(targetEntity="", inversedBy="transaction")
+     * @ORM\OneToOne(targetEntity="Customer\Entity\CustomerBooking", inversedBy="transaction")
      * @var CustomerBooking
      */
     private $booking;
@@ -242,6 +242,7 @@ class Transactions
     public function setCreatedOn($createdOn)
     {
         $this->createdOn = $createdOn;
+        $this->updatedOn = $createdOn;
         return $this;
     }
 
@@ -289,6 +290,23 @@ class Transactions
         $this->settledAmount = $settledAmount;
         return $this;
     }
+    /**
+     * @return the $booking
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
+
+    /**
+     * @param \Customer\Entity\CustomerBooking $booking
+     */
+    public function setBooking($booking)
+    {
+        $this->booking = $booking;
+        return $this;
+    }
+
 
 }
 

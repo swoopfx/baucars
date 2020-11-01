@@ -4,6 +4,7 @@ namespace Admin\Controller\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Admin\Controller\BookingController;
+use General\Service\GeneralService;
 
 /**
  *
@@ -31,8 +32,13 @@ class BookingControllerFactory implements FactoryInterface
     {
         
         $ctr = new BookingController();
+        /**
+         * 
+         * @var GeneralService $generalService
+         */
+        $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
         $bookingService = $serviceLocator->getServiceLocator()->get("Customer\Service\BookingService");
-        $ctr->setBookingService($bookingService);
+        $ctr->setBookingService($bookingService)->setEntityManager($generalService->getEntityManager());
         
         return $ctr;
     }

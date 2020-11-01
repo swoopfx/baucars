@@ -265,11 +265,19 @@ class CustomerController extends AbstractActionController
                 ->setBookingClass($bookingClassId)
                 ->setBillingMethod($billingMethod);
             $price = $customerService->calculatePrice();
+            $txRef = FlutterwaveService::generateTransaction();
+            $bookingSession = $customerService->getBookingSession();
+            $bookingSession->bookingStartDate = $startDate;
+            $bookingSession->bookingEndDate = $endDate;
+            $bookingSession->bookingClass = $bookingClassId;
+            $bookingSession->billingMethod = $billingMethod;
+            $bookingSession->bookingType = $bookingTypeId;
+            
             $response->setStatusCode(200);
             
             $jsonModel->setVariables([
                 "price" => $price,
-                "txref" => FlutterwaveService::generateTransaction(),
+                "txref" => $txRef,
                 "public_key" => $this->flutterwaveService->getFlutterwavePublicKey()
             
             ]);
@@ -280,6 +288,8 @@ class CustomerController extends AbstractActionController
     public function concludepaymentAction()
     {
         $flutterwaveService = $this->flutterwaveService;
+        $bookingSession = $this->customerService->getBookingSession();
+        $em = $this->entityManager;
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
@@ -291,16 +301,30 @@ class CustomerController extends AbstractActionController
                 $verifyData = $flutterwaveService->setTxRef($txRef)->verifyPayment();
                 // var_dump($verifyData);
                 if ($verifyData->status == "success" && $verifyData->data->chargedamount >= $amountPayed) {
-                    $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)
+                    
+                    $bookinEntity = $this->customerService->setBookingClass($bookingSession->bookingClass)
+                        ->setBookingStartDate($bookingSession->bookingStartDate)
+                        ->setBookingEndData($bookingSession->bookingEndDate)
+                        ->setBookingType($bookingSession->bookingType)
+                        ->createBooking();
+                    
+                    $transactionEntity = $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)
                         ->setTxRef($verifyData->data->txref)
                         ->setFlwId($verifyData->data->txid)
                         ->setFlwRef($verifyData->data->flwref)
+                        ->setBooking($bookinEntity)
                         ->setSettledAmount($verifyData->data->amountsettledforthistransaction)
                         ->setTransactStatus(FlutterwaveService::TRANSACTION_STATUS_PAID)
                         ->setTransactUser($this->identity()
                         ->getId())
                         ->hydrateTransaction();
                     
+                    $em->persist($bookinEntity);
+                    $em->persist($transactionEntity);
+                    
+                    $em->flush();
+                    
+                    // generate booking
                     $response->SetStatusCode(201);
                     $this->flashmessenger()->addSuccessMessage("{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
                     $jsonModel->setVariables([
@@ -310,7 +334,7 @@ class CustomerController extends AbstractActionController
                 }
             } catch (\Exception $e) {
                 $response->setStatusCode(400);
-                $jsonModel->setVariable("message", $e->getMessage());
+                $jsonModel->setVariable("message", $e->getTrace());
             }
         }
         return $jsonModel;

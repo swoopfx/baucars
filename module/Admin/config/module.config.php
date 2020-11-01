@@ -2,16 +2,18 @@
 use Admin\Controller\Factory\AdminControllerFactory;
 use Admin\Controller\Factory\CustomerControllerFactory;
 use Admin\Controller\Factory\BookingControllerFactory;
+use Admin\Controller\Factory\DriverControllerFactory;
 
 return array(
     'controllers' => array(
         'invokables' => array(
-            // 'Admin\Controller\Admin' => 'Admin\Controller\AdminController',
+            // 'Admin\Controller\Driver' => 'Admin\Controller\DriverController',
         ),
         'factories' => array(
             'Admin\Controller\Admin' => AdminControllerFactory::class,
             "Admin\Controller\Customer" => CustomerControllerFactory::class,
-            "Admin\Controller\Booking"=>BookingControllerFactory::class,
+            "Admin\Controller\Booking" => BookingControllerFactory::class,
+            "Admin\Controller\Driver" => DriverControllerFactory::class
         )
     ),
     'router' => array(
@@ -57,6 +59,6 @@ return array(
         ),
         'strategies' => array(
             'ViewJsonStrategy'
-        ),
+        )
     )
 );
