@@ -17,6 +17,8 @@ use Doctrine\ORM\EntityRepository;
 use CsnUser\Service\UserService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
+use CsnUser\Entity\User;
+
 // use Zend\InputFilter\InputFilter;
 // use Zend\InputFilter\Factory as InputFactory;
 
@@ -29,66 +31,103 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository
 {
 
-    public function findCustomerProfile($id){
+    public function findCustomerProfile($id)
+    {
         $dql = "SELECT u FROM CsnUser\Entity\User u WHERE u.id = :id";
-        $query = $this->getEntityManager()->createQuery($dql)->setParameters([
-            "id"=>$id
-        ])->getResult(Query::HYDRATE_ARRAY);
+        $query = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters([
+            "id" => $id
+        ])
+            ->getResult(Query::HYDRATE_ARRAY);
         return $query;
     }
-    
+
     /**
-     * 
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
+     *
      * @see \Doctrine\ORM\EntityRepository::count()
      */
-    public function count($criteria = NULL){
+    public function count($criteria = NULL)
+    {
         $query = $this->getEntityManager()->createQueryBuilder();
-        $query->select(array('c.id'))
-        ->from('CsnUser\Entity\User', 'c')
-           ->where("c.role != :role")
-           ->setParameter("role", UserService::USER_ROLE_ADMIN)
+        $query->select(array(
+            'c.id'
+        ))
+            ->from('CsnUser\Entity\User', 'c')
+            ->where("c.role != :role")
+            ->setParameter("role", UserService::USER_ROLE_ADMIN)
             ->orderBy("c.id", "DESC");
-
         
         $result = $query->getQuery()->getResult();
         
         return count($result);
     }
-    
-    public function countblackList(){
-        
-    }
-    
+
+    public function countblackList()
+    {}
+
     public function getItems($offset, $itemCountPerPage)
     {
         $dql = "Select u, s FROM CsnUser\Entity\User u JOIN u.state s where u.role != :role ORDER BY u.id DESC";
         $em = $this->getEntityManager();
-        $query = $em->createQuery($dql)->setParameters(array(
-            "role"=>UserService::USER_ROLE_ADMIN
-        ))->setFirstResult($offset)->setMaxResults($itemCountPerPage);
+        $query = $em->createQuery($dql)
+            ->setParameters(array(
+            "role" => UserService::USER_ROLE_ADMIN
+        ))
+            ->setFirstResult($offset)
+            ->setMaxResults($itemCountPerPage);
         return $query->getResult(AbstractQuery::HYDRATE_ARRAY);
         
-//         $query = $this->getEntityManager()->createQueryBuilder();
-//         $query->select(array('u.id', 'u.username', 'u.registrationDate', 'u.isProfiled', "u.userUid", "u.state"))
-//         ->from('CsnUser\Entity\User', 'u')
-//            ->where("u.role != :role")
-//        ->setParameter("role", UserService::USER_ROLE_ADMIN)
-//         ->setFirstResult($offset)
-//         ->setMaxResults($itemCountPerPage);
+        // $query = $this->getEntityManager()->createQueryBuilder();
+        // $query->select(array('u.id', 'u.username', 'u.registrationDate', 'u.isProfiled', "u.userUid", "u.state"))
+        // ->from('CsnUser\Entity\User', 'u')
+        // ->where("u.role != :role")
+        // ->setParameter("role", UserService::USER_ROLE_ADMIN)
+        // ->setFirstResult($offset)
+        // ->setMaxResults($itemCountPerPage);
         
-//         $result = $query->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
+        // $result = $query->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
         
-//         return $result;
+        // return $result;
     }
-    
-    public function getBlackListItems(){
-        
+
+    public function getBlackListItems()
+    {}
+
+    public function getCustomerCount($criteria = NULL)
+    {
+        $repo = $this->getEntityManager()->getRepository(User::class);
+        $query = $repo->createQueryBuilder("c")
+            ->select("count(c.id)")
+            ->where("c.role = " . UserService::USER_ROLE_CUSTOMER)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $query;
     }
-    
-    
-    
-    public function getCountNewCustomerThisMonth(){
+
+    public function getCustomerItems($offset, $itemPerPage)
+    {
+        $repo = $this->getEntityManager()->getRepository(User::class);
+        $query = $repo->createQueryBuilder("c")
+            ->select([
+            "c",
+            "st",
+            "l"
+        ])
+            ->leftJoin("c.state", "st")
+            ->leftJoin("c.lastLogin", "l")
+            ->setFirstResult($offset)
+            ->setMaxResults($itemPerPage)
+            ->orderBy("c.id", "DESC")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        return $query;
+    }
+
+    public function getCountNewCustomerThisMonth()
+    {
         $dql = "SELECT count(u) FROM CsnUser\Entity\User u WHERE ";
     }
 }

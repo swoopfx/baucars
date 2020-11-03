@@ -199,22 +199,22 @@
 				<ul>
 					<li>
 						<ul>
-							<li class="active"><a href="index.html"> <i class="fa fa-home"></i>
+							<li class="active"><a href="<?php echo $this->url("admin/default", ["controller"=>"admin"])?>" > <i class="fa fa-home"></i>
 									<span>Dashboard</span>
 							</a></li>
-							<li class="active"><a href="index.html"> <i class="fa fa-home"></i>
+							<li class="active"><a href="<?php echo $this->url("admin/default", ["controller"=>"booking", "action"=>"board"]) ?>"> <i class="fa fa-road"></i>
 									<span>Bookings</span>
 							</a></li>
-							<li class="active"><a href="index.html"> <i class="fa fa-home"></i>
+							<li class="active"><a href="<?php echo $this->url("admin/default", ["controller"=>"customer", "action"=>"board"])?>"> <i class="fa fa-user"></i>
 									<span>Customers</span>
 							</a></li>
-							<li class="active"><a href="<?php  echo $this->url("admin/default", ["controller"=>"driver", "action"=>"drivers"])?>"> <i class="fa fa-home"></i>
+							<li class="active"><a href="<?php  echo $this->url("admin/default", ["controller"=>"driver", "action"=>"drivers"])?>"> <i class="fa fa-spinner"></i>
 									<span>Driver</span>
 							</a></li>
-							<li class="active"><a href="index.html"> <i class="fa fa-home"></i>
+							<li class="active"><a href="<?php  echo $this->url("admin/default", ["controller"=>"car", "action"=>"index"]) ?>"> <i class="fa fa-car"></i>
 									<span>Cars</span>
 							</a></li>
-							<li class="active"><a href="index.html"> <i class="fa fa-home"></i>
+							<li class="active"><a href="<?php echo $this->url("admin/default", ["controller"=>"settings", "action"=>"config"])?>"> <i class="fa fa-wrench"></i>
 									<span>Settings</span>
 							</a></li>
 							

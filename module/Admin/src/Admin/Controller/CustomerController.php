@@ -35,6 +35,12 @@ class CustomerController extends AbstractActionController
     public function indexAction(){
         return  new ViewModel();
     }
+
+    public function boardAction(){
+        $em = $this->entityManager;
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
     
     public function allcustomercountAction(){
         $jsonModel = new JsonModel();

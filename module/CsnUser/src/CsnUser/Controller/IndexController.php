@@ -427,6 +427,12 @@ class IndexController extends AbstractActionController
                         ]);
                         return $jsonModel;
                         // return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+                    }else{
+                        $messages = $this->translatorHelper->translate('Invalid Credentials');
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages" => $messages
+                        ]);
                     }
                     
                     foreach ($authResult->getMessages() as $message) {

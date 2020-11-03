@@ -4,6 +4,7 @@ namespace Customer\Entity\Repostory;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Customer\Service\CustomerService;
+use Customer\Entity\CustomerBooking;
 
 /**
  *
@@ -63,5 +64,7 @@ class CustomerBookingRepository extends EntityRepository
         $entity = $this->getEntityManager()->createQuery($dql)->getResult(Query::HYDRATE_ARRAY);
         return $entity;
     }
+    
+   
 }
 
