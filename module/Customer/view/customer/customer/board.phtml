@@ -4,18 +4,18 @@ echo $this->headtitle("Customer Board");
 ?>
 <?php
 $flashMessenger = $this->flashMessenger()
-    ->setMessageOpenFormat('<div%s>
+	->setMessageOpenFormat('<div%s>
      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
          &times;
      </button>
      <ul><li>')
-    ->setMessageSeparatorString('</li><li>')
-    ->setMessageCloseString('</li></ul></div>');
+	->setMessageSeparatorString('</li><li>')
+	->setMessageCloseString('</li></ul></div>');
 ?>
 <?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
- <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
- <?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
- <?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
+<?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
+<?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
+<?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
 
 <div class="page-content" id="cutomerPage">
 
@@ -305,7 +305,7 @@ $flashMessenger = $this->flashMessenger()
 												<th>Booking Date/Time</th>
 												<th>Ship Date</th>
 												<th>Status</th>
-												<th>Order Total</th>
+												<th>Amount Paid</th>
 												<th>Actions</th>
 											</tr>
 										</thead>
@@ -317,8 +317,8 @@ $flashMessenger = $this->flashMessenger()
 												<td>{{formatPHPDate(booking.startTime.date)}}</td>
 												<td>{{formatPHPDate(booking.endTime.date)}}</td>
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
-												<td>$189.00</td>
-												<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
+												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
+												<td class="td-actions"> <a href="#"><i class="la la-close delete"></i></a></td>
 											</tr>
 
 
@@ -452,33 +452,27 @@ $flashMessenger = $this->flashMessenger()
 								<table class="table table-hover mb-0">
 									<thead>
 										<tr>
-											<th>
-												<div class="styled-checkbox mt-2">
-													<input type="checkbox" name="check-all" id="check-all"> <label for="check-all"></label>
-												</div>
-											</th>
+											
 											<th>Order ID</th>
-											<th>Customer Name</th>
-											<th>Country</th>
-											<th>Ship Date</th>
+											<th>Booking Type</th>
+											<th>Booking Class</th>
+											<th>Start Date</th>
+											<th>End  Date</th>
 											<th><span style="width: 100px;">Status</span></th>
-											<th>Order Total</th>
+											<th>Amount Paid</th>
 											<th>Actions</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr v-if="!bookingHistory.length" v-for="booking in bookingHistory">
-											<td style="width: 5%;">
-												<div class="styled-checkbox mt-2">
-													<input type="checkbox" name="cb2" id="cb2"> <label for="cb2"></label>
-												</div>
-											</td>
-											<td><span class="text-primary">021-12-US</span></td>
-											<td>{{booking.user}}</td>
-											<td>FR</td>
-											<td>10/21/2017</td>
-											<td><span style="width: 100px;"><span class="badge-text badge-text-small info">Paid</span></span></td>
-											<td>$189.00</td>
+										<tr v-if="bookingHistory.length" v-for="booking in bookingHistory">
+											
+											<td><span class="text-primary">{{booking.bookingUid}}</span></td>
+											<td>{{booking.bookingType.bookingType}}</td>
+											<td>{{booking.bookingClass.bookingClass}}</td>
+											<td>{{formatPHPDate(booking.startTime.date)}}</td>
+											<td>{{formatPHPDate(booking.endTime.date)}}</td>
+											<td><span style="width: 100px;"><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
+											<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
 											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
 										</tr>
 
@@ -1058,14 +1052,23 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 			bookingStatus(value) {
-				if (value == 5) {
-					return "badge-text badge-text-small warning";
+				if (value == 5  || value == 10 || value == 20 || value == 30) {
+					return "badge-text badge-text-small success";
+				}else if( value == 100 || value == 200 || value == 300){
+					return "badge-text badge-text-small  danger";
+				}else if(value == 600 || value == 500){
+					return "badge-text badge-text-small info";
 				}
 			},
 
 			formatPHPDate(date) {
-				myDate = date.replace(/-/g, "/");
-				return new Date(myDate);
+				// myDate = date.replace(/-/g, "/");
+				return new Date(date);
+			},
+
+			formatPrice(value) {
+				let val = (value / 1).toFixed(2).replace(',', '.')
+				return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 			},
 			// Begin Present function 
 			getBookingHistory() {

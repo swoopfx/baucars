@@ -28,7 +28,7 @@ class Cars
     private $id;
 
     /**
-     * @ORM\Column(name="description", type="text", nullable=false)
+     * @ORM\Column(name="description", type="text", nullable=true)
      * 
      * @var string
      */

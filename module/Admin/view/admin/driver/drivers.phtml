@@ -1,6 +1,22 @@
 <?php
 echo $this->headtitle("Drivers");
 ?>
+
+<?php
+$flashMessenger = $this->flashMessenger()
+    ->setMessageOpenFormat('<div%s>
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+         &times;
+     </button>
+     <ul><li>')
+    ->setMessageSeparatorString('</li><li>')
+    ->setMessageCloseString('</li></ul></div>');
+?>
+<?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
+ <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
+ <?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
+ <?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
+
 <div id="drivers">
 	<section class="page--header">
 		<div class="container-fluid">
@@ -109,9 +125,11 @@ echo $this->headtitle("Drivers");
 
 
 
+<div v-if="creatingDriver">
+<div class="spinner"></div></div>
 
 
-					<button :disabled="submitStatus" @click="createDriver()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Register Now</button>
+					<button v-else :disabled="submitStatus" @click="createDriver()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Register Now</button>
 						
 				</div>
 			</div>
@@ -149,49 +167,57 @@ echo $this->headtitle("Drivers");
 		</div>
 
 		<div class="panel">
-			<!-- Records List Start -->
-			<div class="records--list" data-title="Product Listing">
-				<table id="recordsListView">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th class="not-sortable">Image</th>
-							<th>Product Name</th>
-							<th>Category</th>
-							<th>Price</th>
-							<th>Quantity</th>
-							<th>Created Date</th>
-							<th>Status</th>
-							<th class="not-sortable">Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><a href="#" class="btn-link">#315321</a></td>
-							<td><a href="#" class="btn-link"> <img src="assets/img/products/thumb-80x60.jpg" alt="">
-								</a></td>
-							<td><a href="#" class="btn-link">Baby Dress</a></td>
-							<td><a href="#" class="btn-link">Baby Products</a></td>
-							<td>$12.00</td>
-							<td>1</td>
-							<td>12 June 2017</td>
-							<td><span class="label label-success">Approved</span></td>
-							<td>
-								<div class="dropleft">
-									<a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Registered Drivers
+                                </h3>
 
-									<div class="dropdown-menu">
-										<a href="#" class="dropdown-item">Edit</a> <a href="#" class="dropdown-item">Delete</a>
-									</div>
-								</div>
-							</td>
-						</tr>
+                                <div class="dropdown">
+                                    
 
-					</tbody>
-				</table>
-			</div>
-			<!-- Records List End -->
-		</div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table style--2">
+                                        <thead>
+                                            <tr>
+                                               
+                                                <th>Driver UID</th>
+                                                <th>Driver Name</th>
+                                                <th>Driveing Since</th>
+<!--                                                 <th>Quantity</th> -->
+<!--                                                 <th>Tracking No.</th> -->
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table Row Start -->
+                                            <?php 
+                                            if(count($drivers) > 0):
+                                            foreach ($drivers as $driver):?>
+                                            <tr>
+                                               
+                                                <td><?php echo strtoupper($driver["diverUid"])?></td>
+                                                <td><a href="#" class="btn-link"><?php  echo $driver["user"]["fullName"]?></a></td>
+                                                <td><?php echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM)?></td>
+<!--                                                 <td>2</td> -->
+<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
+                                                <td><i class="fa fa-edit"></i> Edit</td>
+                                            </tr>
+                                            <?php endforeach;
+                                            endif;
+                                            ?>
+                                            <!-- Table Row End -->
+
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 	</section>
 </div>
 
@@ -201,6 +227,7 @@ echo $this->headtitle("Drivers");
 		data() {
 			return {
 				phoneNumber: "",
+				creatingDriver:false,
 				email: "",
 				reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
 				fullname: "",
@@ -219,7 +246,7 @@ echo $this->headtitle("Drivers");
 
 		computed: {
 			submitStatus() {
-				if (this.phoneNumber == "" || this.email == "" || this.fullname == "" || !this.isEmailValid) {
+				if (this.phoneNumber == ""  || this.fullname == "" || this.driver_dob == "" || this.driving_since == "" ) {
 					return true;
 				} else {
 					return false;
@@ -240,6 +267,7 @@ echo $this->headtitle("Drivers");
 				})
 			},
 			createDriver() {
+				this.creatingDriver = true;
 				let formData = new FormData();
 				formData.append("fullname", this.fullname);
 				formData.append("email", this.email);
@@ -251,9 +279,14 @@ echo $this->headtitle("Drivers");
 				formData.append("carType", this.carType);
 				axios.post("/controller/driver/createdriver", formData).then(res=>{
 					if(res.status == 201){
-						
+						this.creatingDriver = false;
+						window.location.reload();
 					}
-				}).catch();
+				}).catch(err=>{
+					
+						console.log(err.response.data.message);
+					
+				});
 			},
 
 			acceptNumber() {

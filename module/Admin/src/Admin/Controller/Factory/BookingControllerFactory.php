@@ -30,16 +30,18 @@ class BookingControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        
         $ctr = new BookingController();
+        // var_dump("HHHHH");
+        $bookingPaginator = $serviceLocator->getServiceLocator()->get("allBookingPaginator");
         /**
-         * 
+         *
          * @var GeneralService $generalService
          */
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
         $bookingService = $serviceLocator->getServiceLocator()->get("Customer\Service\BookingService");
-        $ctr->setBookingService($bookingService)->setEntityManager($generalService->getEntityManager());
-        
+        $ctr->setBookingService($bookingService)
+            ->setEntityManager($generalService->getEntityManager())
+            ->setAllBookingPaginator($bookingPaginator);
         return $ctr;
     }
 }

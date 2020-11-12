@@ -1,2 +1,117 @@
 <?php
 echo $this->headtitle("Booking");
+?>
+
+
+<section class="page--header">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-6">
+				<!-- Page Title Start -->
+				<h2 class="page--title h5">Bookings</h2>
+				<!-- Page Title End -->
+
+				<ul class="breadcrumb">
+					<li class="breadcrumb-item"><a href="ecommerce.html"></a></li>
+					<li class="breadcrumb-item active"><span>Products</span></li>
+				</ul>
+			</div>
+
+			
+		</div>
+	</div>
+</section>
+
+
+<section class="main--content">
+	<div class="panel">
+		<!-- Records Header Start -->
+		<div class="records--header">
+			<div class="title fa-shopping-bag">
+				<h3 class="h3">
+					Ecommerce Products <a href="#" class="btn btn-sm btn-outline-info">Manage
+						Products</a>
+				</h3>
+				<p>Found Total 1,330 Products</p>
+			</div>
+
+			<div class="actions">
+				<form action="#" class="search flex-wrap flex-md-nowrap">
+					<input type="text" class="form-control"
+						placeholder="Product Name..." required> <select name="select"
+						class="form-control">
+						<option value="" selected>Product Category</option>
+					</select>
+					<button type="submit" class="btn btn-rounded">
+						<i class="fa fa-search"></i>
+					</button>
+				</form>
+				
+
+				<a href="#" class="addProduct btn btn-lg btn-rounded btn-warning">Add
+					Product</a>
+			</div>
+		</div>
+		<!-- Records Header End -->
+	</div>
+
+	
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <select name="filter" data-trigger="selectmenu" data-minimum-results-for-search="-1">
+                                        <option value="top-search">Recent Orders</option>
+                                        <option value="average-search">Latest Orders</option>
+                                    </select>
+                                </h3>
+
+                                <div class="dropdown">
+                                    <button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-ellipsis-v"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#"><i class="fa fa-sync"></i>Update Data</a></li>
+                                        <li><a href="#"><i class="fa fa-cogs"></i>Settings</a></li>
+                                        <li><a href="#"><i class="fa fa-times"></i>Remove Panel</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table style--2">
+                                        <thead>
+                                            <tr>
+                                               
+                                                <th>Product ID</th>
+                                                <th>Customer Name</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Tracking No.</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table Row Start -->
+                                            <?php foreach ($allBooking as $booking):?>
+                                            <tr>
+                                               
+                                                <td><?php  echo strtoupper($booking["bookingUid"])?></td>
+                                                <td><a href="#" class="btn-link"><?php  echo $booking["bookingClass"]["bookingClass"]?></a></td>
+                                                <td><?php echo $this->myCurrency($booking["transaction"]['amount'])?></td>
+                                                <td>2</td>
+                                                <td><span class="text-muted">#BG6R9853lP</span></td>
+                                                <td><span class="label label-success">Paid</span></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                            <!-- Table Row End -->
+
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                   
+</section>

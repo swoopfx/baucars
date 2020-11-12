@@ -1,5 +1,7 @@
 <?php
 namespace Driver;
+use Driver\Paginator\Factory\DriverAdapterInterface;
+
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -48,7 +50,11 @@ return array(
             'Driver' => __DIR__ . '/../view',
         ),
     ),
-    
+    'service_manager' => array(
+        'factories' => array(
+            "allDriverPaginator"=>DriverAdapterInterface::class
+        ),
+    ),
     'doctrine' => array(
         'driver' => array(
             __NAMESPACE__ . '_driver' => array(

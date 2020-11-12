@@ -97,6 +97,8 @@ class UserService
             return "customer";
         }elseif($user->getRole()->getId() == self::USER_ROLE_DRIVER){
             return "driver";
+        }else{
+            return "logout";
         }
     }
 }

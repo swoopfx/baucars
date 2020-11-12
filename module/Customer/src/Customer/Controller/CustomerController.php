@@ -119,6 +119,17 @@ class CustomerController extends AbstractActionController
         $jsonModel->setVariable("data", $this->customerService->getAllBookingServiceType());
         return $jsonModel;
     }
+    
+    public function getop50bookingAction(){
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $data = $em->getRepository(CustomerBooking::class)->findCustomersBooking($this->identity()->getId());
+        $response->setStatusCode(200);
+        $jsonModel = new JsonModel([
+            "data"=>$data
+        ]);
+        return $jsonModel;
+    }
 
     public function bookingClassAction()
     {

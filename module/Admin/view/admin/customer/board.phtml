@@ -1,8 +1,8 @@
 <?php
 echo $this->headtitle("Customer");
 ?>
-
-<section class="page--header">
+<div id="customerb">
+	<section class="page--header">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-lg-6">
@@ -38,3 +38,96 @@ echo $this->headtitle("Customer");
 			</div>
 		</div>
 	</section>
+
+
+	<section class="main--content">
+		<div class="panel">
+			<!-- Records Header Start -->
+			<div class="records--header">
+				<div class="title fa-shopping-bag">
+					<h3 class="h3">
+						Registered Customer <a href="#"
+							class="btn btn-sm btn-outline-info">Register A Customer</a>
+					</h3>
+					<p>Found Total 1,330 Products</p>
+				</div>
+
+				<div class="actions">
+					<form action="#" class="search flex-wrap flex-md-nowrap">
+						<input type="text" class="form-control"
+							placeholder="Product Name..." required> <select name="select"
+							class="form-control">
+							<option value="" selected>Product Category</option>
+						</select>
+						<button type="submit" class="btn btn-rounded">
+							<i class="fa fa-search"></i>
+						</button>
+					</form>
+
+
+				</div>
+			</div>
+			<!-- Records Header End -->
+		</div>
+
+		<div class="panel">
+			<!-- Records List Start -->
+			<div class="table-responsive">
+				<table class="table style--2">
+					<thead>
+						<tr>
+							<th>ID</th>
+
+							<th>Customer Name</th>
+							<th>Category</th>
+							<th>Registered On</th>
+							<th>Last Login</th>
+							
+							<th>Status</th>
+							<th class="not-sortable">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($customers as $customer) : ?>
+							<tr>
+							<td><a href="#" class="btn-link"><?php echo strtoupper($customer["userUid"]) ?></a></td>
+
+							<td><a href="#" class="btn-link"><?php echo $customer["fullName"] ?></a></td>
+							<td><a href="#" class="btn-link"><?php echo $customer["phoneNumber"] ?></a></td>
+							<td><?php echo $this->dateformat($customer["registrationDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
+							<td><?php echo $this->dateformat($customer["lastlogin"]["lastlogin"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
+							
+							<td><?php echo $this->userStateHelper($customer["state"])?></td>
+							<td>
+								<div class="dropleft">
+									<a href="#" class="btn-link" data-toggle="dropdown"><i
+										class="fa fa-ellipsis-v"></i></a>
+
+									<div class="dropdown-menu">
+										<a href="#" class="dropdown-item">Edit</a> <a href="#"
+											class="dropdown-item">Delete</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+			<!-- Records List End -->
+		</div>
+	</section>
+</div>
+<script>
+	let customerb = new Vue({
+		el: "",
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		},
+	});
+</script>

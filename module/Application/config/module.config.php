@@ -48,7 +48,18 @@ return array(
                         )
                     )
                 )
-            )
+            ),
+            
+            'dashboard' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route' => '/dashboard',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'dashboard'
+                    )
+                )
+            ), 
         )
     ),
     'service_manager' => array(

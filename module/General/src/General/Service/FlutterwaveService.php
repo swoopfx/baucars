@@ -8,6 +8,9 @@ use Application\Entity\Transactions;
 use General\Entity\TransactionStatus;
 use CsnUser\Entity\User;
 use Customer\Entity\CustomerBooking;
+use Zend\Http\Request;
+use Application\Entity\InitatedTransfer;
+use Application\Entity\TransferStatus;
 
 /**
  *
@@ -16,6 +19,12 @@ use Customer\Entity\CustomerBooking;
  */
 class FlutterwaveService
 {
+
+    const TRANSFER_STATUS_INITIATED = 10;
+
+    const TRANSFER_STATUS_COMPLETED = 200;
+
+    const TRANSFER_STATUS_FAILED = 300;
 
     private $jsonContent = "application/json";
 
@@ -91,6 +100,14 @@ class FlutterwaveService
 
     private $header = [];
 
+    private $transferRecipientAcc;
+
+    private $transaferRecipientBank;
+
+    private $transferAmount;
+
+    private $transferResponseRaveRef;
+
     const TRANSACTION_STATUS_PAID = 100;
 
     const TRANSACTION_STATUS_FAILED = 200;
@@ -165,12 +182,52 @@ class FlutterwaveService
         // send transaction mail
     }
 
-    public function transferFunds()
+    public function transaferCost()
     {
-        $endPoint = "https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify";
+        $endpoint = "https://api.ravepay.co/v2/gpx/transfers/fee";
+        $params = [
+            "seckey" => $this->flutterwaveSecretKey,
+            "currency" => "NGN",
+            "amount" => $this->settledAmount
+        ];
+        
+        // $this->header["Content-Type"] = $this->jsonContent;
+        $client = new Client();
+        $client->setMethod(Request::METHOD_GET);
+        $client->setUri($endpoint);
+        $client->setHeaders($this->header);
+        $client->setParameterGet($params);
+        // $client->setRawBody(json_encode($params));
+        $response = $client->send();
+        if ($response->isSuccess()) {
+            $rBody = json_decode($response->getBody());
+            return $rBody;
+        } else {
+            $rBody = json_decode($response->getBody());
+            throw new \Exception($rBody->message);
+        }
+    }
+
+    private function transferUid()
+    {
+        return uniqid("transfer");
+    }
+
+    public function initiateTrasnfer()
+    {
+        $transfercost = $this->transaferCost();
+        $transferCharge = $transfercost->data[0]->fee + 15;
+        $uid = $this->transferUid();
+        $transferAmount = $this->settledAmount - $transferCharge;
+        $endPoint = "https://api.ravepay.co/v2/gpx/transfers/create";
         $body = [
-            "txref" => $this->txRef,
-            "SECKEY" => $this->flutterwaveSecretKey
+            "account_bank" => "058",
+            "account_number" => "0571517010",
+            "amount" => $transferAmount,
+            "currency" => "NGN",
+            "narration" => "Booking Remittance",
+            "reference" => $uid,
+            "seckey" => $this->flutterwaveSecretKey
         ];
         $this->header["Content-Type"] = $this->jsonContent;
         $client = new Client();
@@ -182,11 +239,25 @@ class FlutterwaveService
         
         if ($response->isSuccess()) {
             $rBody = json_decode($response->getBody());
+            
             return $rBody;
         } else {
             $rBody = json_decode($response->getBody());
             throw new \Exception($rBody->message);
         }
+    }
+
+    public function hydrateTransferInitiate()
+    {
+        $em = $this->entityManager;
+        $init = new InitatedTransfer();
+        $init->setCreatedOn(new \DateTime())
+            ->setRaveRef($this->transferResponseRaveRef)
+            ->setTransferAmount($this->transferAmount)
+            ->setTransferStatus($em->find(TransferStatus::class, self::TRANSFER_STATUS_INITIATED))
+            ->setTransferUid(self::transferUid());
+        $em->persist($init);
+        return $init;
     }
 
     /**
@@ -474,7 +545,9 @@ class FlutterwaveService
         $this->settledAmount = $settledAmount;
         return $this;
     }
+
     /**
+     *
      * @return the $booking
      */
     public function getBooking()
@@ -483,7 +556,8 @@ class FlutterwaveService
     }
 
     /**
-     * @param \Customer\Entity\CustomerBooking $booking
+     *
+     * @param \Customer\Entity\CustomerBooking $booking            
      */
     public function setBooking($booking)
     {
@@ -491,5 +565,61 @@ class FlutterwaveService
         return $this;
     }
 
+    /**
+     *
+     * @return the $transferRecipientAcc
+     */
+    public function getTransferRecipientAcc()
+    {
+        return $this->transferRecipientAcc;
+    }
+
+    /**
+     *
+     * @return the $transaferRecipientBank
+     */
+    public function getTransaferRecipientBank()
+    {
+        return $this->transaferRecipientBank;
+    }
+
+    /**
+     *
+     * @return the $transferAmount
+     */
+    public function getTransferAmount()
+    {
+        return $this->transferAmount;
+    }
+
+    /**
+     *
+     * @param field_type $transferRecipientAcc            
+     */
+    public function setTransferRecipientAcc($transferRecipientAcc)
+    {
+        $this->transferRecipientAcc = $transferRecipientAcc;
+        return $this;
+    }
+
+    /**
+     *
+     * @param field_type $transaferRecipientBank            
+     */
+    public function setTransaferRecipientBank($transaferRecipientBank)
+    {
+        $this->transaferRecipientBank = $transaferRecipientBank;
+        return $this;
+    }
+
+    /**
+     *
+     * @param field_type $transferAmount            
+     */
+    public function setTransferAmount($transferAmount)
+    {
+        $this->transferAmount = $transferAmount;
+        return $this;
+    }
 }
 

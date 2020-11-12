@@ -116,8 +116,9 @@ class UserRepository extends EntityRepository
             "st",
             "l"
         ])
+            ->where("c.role =" . UserService::USER_ROLE_CUSTOMER)
             ->leftJoin("c.state", "st")
-            ->leftJoin("c.lastLogin", "l")
+            ->leftJoin("c.lastlogin", "l")
             ->setFirstResult($offset)
             ->setMaxResults($itemPerPage)
             ->orderBy("c.id", "DESC")

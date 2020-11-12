@@ -32,12 +32,14 @@ class CustomerControllerFactory implements FactoryInterface
     {
         
         $ctr = new CustomerController();
+        $customerpaginator = $serviceLocator->getServiceLocator()->get("CustomerPaginator");
+        $allBooking = $serviceLocator->getServicelocator()->get("allBookingPaginator");
         /**
          * 
          * @var CustomerService $customerService
          */
         $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
-        $ctr->setCustomerService($customerService);
+        $ctr->setCustomerService($customerService)->setCustomerPaginator($customerpaginator);
         return $ctr;
     }
 }

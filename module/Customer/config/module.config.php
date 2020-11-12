@@ -2,6 +2,8 @@
 namespace Customer;
 use Customer\Service\Factory\CustomerServiceFactory;
 use Customer\Service\Factory\BookingServiceFactory;
+use Customer\Paginator\Factory\CustomerAdapterInterface;
+use Customer\Paginator\Factory\AllBookingAdapterInterface;
 
 return array(
     'controllers' => array(
@@ -58,7 +60,10 @@ return array(
     'service_manager' => array(
         'factories' => array(
             "Customer\Service\CustomerService"=>CustomerServiceFactory::class,
-            "Customer\Service\BookingService"=>BookingServiceFactory::class
+            "Customer\Service\BookingService"=>BookingServiceFactory::class,
+            
+            "CustomerPaginator"=>CustomerAdapterInterface::class,
+            "allBookingPaginator"=>AllBookingAdapterInterface::class,
         ),
     ),
     

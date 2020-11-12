@@ -1,11 +1,11 @@
 <?php
-namespace Customer\Paginator\Factory;
+namespace Driver\Paginator\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Customer\Paginator\CustomerAdapter;
+use Driver\Paginator\DriverAdapter;
 use Doctrine\ORM\EntityManager;
-use CsnUser\Entity\User;
+use Driver\Entity\DriverBio;
 use Zend\Paginator\Paginator;
 
 /**
@@ -13,7 +13,7 @@ use Zend\Paginator\Paginator;
  * @author otaba
  *        
  */
-class CustomerAdapterInterface implements FactoryInterface
+class DriverAdapterInterface implements FactoryInterface
 {
 
     /**
@@ -32,16 +32,15 @@ class CustomerAdapterInterface implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $adapter = new CustomerAdapter();
-        
+        $adapter = new DriverAdapter();
         $generalService = $serviceLocator->get("General\Service\GeneralService");
         /**
          *
          * @var EntityManager $entityManager
          */
         $entityManager = $generalService->getEntityManager();
-        $userRepository = $entityManager->getRepository(User::class);
-        $adapter->setCustomerRepository($userRepository);
+        $driverRepository = $entityManager->getRepository(DriverBio::class);
+        $adapter->setDriverRepository($driverRepository);
         
         $page = $serviceLocator->get("Application")
             ->getMvcEvent()

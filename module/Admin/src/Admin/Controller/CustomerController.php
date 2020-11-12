@@ -18,6 +18,12 @@ class CustomerController extends AbstractActionController
     
     /**
      * 
+     * @var 
+     */
+    private $customerPaginator;
+    
+    /**
+     * 
      * @var CustomerService
      */
     private $customerService;
@@ -38,7 +44,10 @@ class CustomerController extends AbstractActionController
 
     public function boardAction(){
         $em = $this->entityManager;
-        $viewModel = new ViewModel();
+//         var_dump($this->customerPaginator);
+        $viewModel = new ViewModel([
+            "customers"=>$this->customerPaginator
+        ]);
         return $viewModel;
     }
     
@@ -82,6 +91,23 @@ class CustomerController extends AbstractActionController
         $this->customerService = $customerService;
         return $this;
     }
+    /**
+     * @return the $customerPaginator
+     */
+    public function getCustomerPaginator()
+    {
+        return $this->customerPaginator;
+    }
+
+    /**
+     * @param field_type $customerPaginator
+     */
+    public function setCustomerPaginator($customerPaginator)
+    {
+        $this->customerPaginator = $customerPaginator;
+        return $this;
+    }
+
 
 }
 

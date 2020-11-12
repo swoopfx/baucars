@@ -29,15 +29,19 @@ class DriverBioRepository extends EntityRepository
             ->createQueryBuilder("d")
             ->select([
             "d",
-            "c"
+            "c",
+            "u"
         ])
             ->from("Driver\Entity\DriverBio", "d")
-            ->leftJoin("d.assisnedCar", "ac")
+            ->leftJoin("d.assisnedCar", "c")
+            ->leftJoin("d.user", "u")
             ->setMaxResults($itemCountPerPage)
             ->setFirstResult($offset)
-            ->orderBy("d.id", "DESC")->getQuery()->getResult(Query::HYDRATE_ARRAY);
+            ->orderBy("d.id", "DESC")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
         
-            return $query;
+        return $query;
     }
 }
 

@@ -12,15 +12,15 @@ use Driver\Entity\DriverBio;
  */
 class DriverService
 {
-    
+
     /**
-     * 
+     *
      * @var GeneralService
      */
     private $generalService;
-    
+
     /**
-     * 
+     *
      * @var EntityManager
      */
     private $entityManager;
@@ -34,7 +34,10 @@ class DriverService
         
         // TODO - Insert your code here
     }
-    
-   
+
+    public static function driverUid()
+    {
+        return uniqid();
+    }
 }
 

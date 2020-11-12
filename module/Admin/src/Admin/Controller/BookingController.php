@@ -7,6 +7,7 @@ use Zend\View\Model\JsonModel;
 use Customer\Service\BookingService;
 use Zend\View\Model\ViewModel;
 use Customer\Entity\CustomerBooking;
+use Customer\Paginator\AllBookingAdapter;
 
 /**
  *
@@ -17,18 +18,22 @@ class BookingController extends AbstractActionController
 {
 
     /**
-     * 
-     * @var  BookingService
+     *
+     * @var BookingService
      */
     private $bookingService;
 
     /**
-     * 
+     *
      * @var EntityManager
      */
     private $entityManager;
-    
-   
+
+    /**
+     *
+     * @var AllBookingAdapter
+     */
+    private $allBookingPaginator;
 
     /**
      */
@@ -37,59 +42,71 @@ class BookingController extends AbstractActionController
         
         // TODO - Insert your code here
     }
-    
-    public function boardAction(){
-        $viewModel = new ViewModel();
+
+    public function boardAction()
+    {
+//         var_dump(count($this->entityManager->getRepository(CustomerBooking::class)->findBookingItems(0, 10)));
+        $allBooking = $this->allBookingPaginator;
+//         var_dump($allBooking);
+        $viewModel = new ViewModel([
+            "allBooking" => $allBooking
+        ]);
         return $viewModel;
     }
-    
-    
-    public function viewAction(){
+
+    public function viewAction()
+    {
         $em = $this->entityManager;
         $viewModel = new ViewModel();
         $bookingUid = $this->params()->fromRoute("id", NULL);
-        if($bookingUid == NULL){
-            return $this->redirect()->toRoute("admin/default", array("controller"=>"booking", "action"=>"board"));
-        }else{
-//            var_dump($bookingUid);
+        if ($bookingUid == NULL) {
+            return $this->redirect()->toRoute("admin/default", array(
+                "controller" => "booking",
+                "action" => "board"
+            ));
+        } else {
+            // var_dump($bookingUid);
             $data = $em->getRepository(CustomerBooking::class)->findOneBy([
-                "bookingUid"=>$bookingUid
+                "bookingUid" => $bookingUid
             ]);
             
-           
-            $viewModel->setVariables([ "data"=>$data]);
+            $viewModel->setVariables([
+                "data" => $data
+            ]);
         }
-       
         
         return $viewModel;
     }
-    
-    public function initiatedbookingcountAction(){
+
+    public function initiatedbookingcountAction()
+    {
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $jsonModel->setVariable("count", $this->bookingService->getAllInititedBookingCount());
         return $jsonModel;
     }
-    
-    
-   public function splashinitiatedbookingAction(){
-       $jsonModel = new JsonModel();
-       $response = $this->getResponse();
-       $response->setStatusCode(200);
-       $jsonModel->setVariable("data", $this->bookingService->getSplashInitiatedBooking());
-       return $jsonModel;
-   }
-    
-    public function testAction(){
+
+    public function splashinitiatedbookingAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $jsonModel->setVariable("data", $this->bookingService->getSplashInitiatedBooking());
+        return $jsonModel;
+    }
+
+    public function testAction()
+    {
         return new JsonModel([
-            "count"=>7
+            "count" => 7
         ]);
     }
-    
-    // public function
 
+    // public function
+    
     /**
+     *
      * @return the $bookingService
      */
     public function getBookingService()
@@ -98,6 +115,7 @@ class BookingController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $entityManager
      */
     public function getEntityManager()
@@ -106,7 +124,8 @@ class BookingController extends AbstractActionController
     }
 
     /**
-     * @param \Admin\Controller\BookingService $bookingService
+     *
+     * @param \Admin\Controller\BookingService $bookingService            
      */
     public function setBookingService($bookingService)
     {
@@ -115,11 +134,31 @@ class BookingController extends AbstractActionController
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @param \Doctrine\ORM\EntityManager $entityManager            
      */
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $allBookingPaginator
+     */
+    public function getAllBookingPaginator()
+    {
+        return $this->allBookingPaginator;
+    }
+
+    /**
+     *
+     * @param \Customer\Paginator\AllBookingAdapter $allBookingPaginator            
+     */
+    public function setAllBookingPaginator($allBookingPaginator)
+    {
+        $this->allBookingPaginator = $allBookingPaginator;
         return $this;
     }
 }

@@ -13,6 +13,8 @@
  */
 namespace CsnUser;
 
+use CsnUser\View\Helper\UserStatusHelper;
+
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -25,6 +27,11 @@ return array(
 
             'CsnUser\Controller\Index' => 'CsnUser\Controller\Factory\IndexControllerFactory'
         )
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            "userStateHelper"=>UserStatusHelper::class
+        ),
     ),
     'router' => array(
         'routes' => array(

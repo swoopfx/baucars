@@ -1,13 +1,14 @@
 <?php
 namespace Driver\Entity;
 
+use CsnUser\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\Images;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Driver\Entity\Factory\DriverBioRepository")
  * @ORM\Table(name="driver_bio")
- * 
+ *
  * @author otaba
  *        
  */
@@ -22,89 +23,102 @@ class DriverBio
      *     
      */
     private $id;
-
-//     /**
-//      * @ORM\Column(name="driver_name", type="string", nullable=false)
-//      * 
-//      * @var string
-//      */
-//     private $driverName;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Cars")
+     * @ORM\Column(name="driver_uid", type="string", nullable=false)
+     * @var string
+     */
+    private $diverUid;
+
+    // /**
+    // * @ORM\Column(name="driver_name", type="string", nullable=false)
+    // *
+    // * @var string
+    // */
+    // private $driverName;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Application\Entity\Cars")
+     * 
      * @var Cars
      */
     private $assisnedCar;
 
-//     /**
-//      * @ORM\Column(name="driver_phone", type="string", nullable=false)
-//      * 
-//      * @var string
-//      */
-//     private $driverPhone;
-
-//     /**
-//      * @ORM\Column(name="driver_email", type="string", nullable=true)
-//      * 
-//      * @var string
-//      */
-//     private $driverEmail;
-
+    // /**
+    // * @ORM\Column(name="driver_phone", type="string", nullable=false)
+    // *
+    // * @var string
+    // */
+    // private $driverPhone;
+    
+    // /**
+    // * @ORM\Column(name="driver_email", type="string", nullable=true)
+    // *
+    // * @var string
+    // */
+    // private $driverEmail;
+    
     /**
      * @ORM\Column(name="driver_since", type="datetime", nullable=true)
-     * 
+     *
      * @var \DateTime
      */
     private $driverSince;
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Images")
-     * 
+     *
      * @var Images
      */
     private $driverImage;
 
     /**
      * @ORM\Column(name="driver_dob", type="datetime", nullable=true)
-     * 
+     *
      * @var unknown
      */
     private $driverDob;
 
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * 
+     *
      * @var \DateTime
      */
     private $updatedOn;
-    
+
     /**
-     * 
+     *
      * @var string
      */
     private $height;
-    
+
     /**
-     * 
+     *
      * @var string
      */
     private $weight;
-    
+
     /**
-     * 
+     *
      * @var unknown
      */
     private $eyeColor;
-    
+
     private $complexion;
-    
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     * 
+     *
      * @var \DateTime
      */
     private $createdOn;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
+     * 
+     * @var User
+     */
+    private $user;
 
     /**
      */
@@ -122,27 +136,11 @@ class DriverBio
     }
 
     /**
-     * @return the $driverName
+     * @return the $assisnedCar
      */
-    public function getDriverName()
+    public function getAssisnedCar()
     {
-        return $this->driverName;
-    }
-
-    /**
-     * @return the $driverPhone
-     */
-    public function getDriverPhone()
-    {
-        return $this->driverPhone;
-    }
-
-    /**
-     * @return the $driverEmail
-     */
-    public function getDriverEmail()
-    {
-        return $this->driverEmail;
+        return $this->assisnedCar;
     }
 
     /**
@@ -178,11 +176,51 @@ class DriverBio
     }
 
     /**
+     * @return the $height
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @return the $weight
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @return the $eyeColor
+     */
+    public function getEyeColor()
+    {
+        return $this->eyeColor;
+    }
+
+    /**
+     * @return the $complexion
+     */
+    public function getComplexion()
+    {
+        return $this->complexion;
+    }
+
+    /**
      * @return the $createdOn
      */
     public function getCreatedOn()
     {
         return $this->createdOn;
+    }
+
+    /**
+     * @return the $user
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
@@ -195,29 +233,11 @@ class DriverBio
     }
 
     /**
-     * @param string $driverName
+     * @param \Driver\Entity\Cars $assisnedCar
      */
-    public function setDriverName($driverName)
+    public function setAssisnedCar($assisnedCar)
     {
-        $this->driverName = $driverName;
-        return $this;
-    }
-
-    /**
-     * @param string $driverPhone
-     */
-    public function setDriverPhone($driverPhone)
-    {
-        $this->driverPhone = $driverPhone;
-        return $this;
-    }
-
-    /**
-     * @param string $driverEmail
-     */
-    public function setDriverEmail($driverEmail)
-    {
-        $this->driverEmail = $driverEmail;
+        $this->assisnedCar = $assisnedCar;
         return $this;
     }
 
@@ -258,6 +278,42 @@ class DriverBio
     }
 
     /**
+     * @param string $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+        return $this;
+    }
+
+    /**
+     * @param string $weight
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+        return $this;
+    }
+
+    /**
+     * @param \Driver\Entity\unknown $eyeColor
+     */
+    public function setEyeColor($eyeColor)
+    {
+        $this->eyeColor = $eyeColor;
+        return $this;
+    }
+
+    /**
+     * @param field_type $complexion
+     */
+    public function setComplexion($complexion)
+    {
+        $this->complexion = $complexion;
+        return $this;
+    }
+
+    /**
      * @param DateTime $createdOn
      */
     public function setCreatedOn($createdOn)
@@ -265,6 +321,32 @@ class DriverBio
         $this->createdOn = $createdOn;
         return $this;
     }
+
+    /**
+     * @param \CsnUser\Entity\User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+    /**
+     * @return the $diverUid
+     */
+    public function getDiverUid()
+    {
+        return $this->diverUid;
+    }
+
+    /**
+     * @param string $diverUid
+     */
+    public function setDiverUid($diverUid)
+    {
+        $this->diverUid = $diverUid;
+        return $this;
+    }
+
 
 }
 

@@ -3,17 +3,17 @@ namespace Customer\Paginator\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Customer\Paginator\CustomerAdapter;
-use Doctrine\ORM\EntityManager;
-use CsnUser\Entity\User;
+use Customer\Paginator\AllBookingAdapter;
+use General\Service\GeneralService;
 use Zend\Paginator\Paginator;
+use Customer\Entity\CustomerBooking;
 
 /**
  *
  * @author otaba
  *        
  */
-class CustomerAdapterInterface implements FactoryInterface
+class AllBookingAdapterInterface implements FactoryInterface
 {
 
     /**
@@ -32,24 +32,27 @@ class CustomerAdapterInterface implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $adapter = new CustomerAdapter();
+        $adapter = new AllBookingAdapter();
         
-        $generalService = $serviceLocator->get("General\Service\GeneralService");
         /**
          *
-         * @var EntityManager $entityManager
+         * @var GeneralService $generalService
          */
+        $generalService = $serviceLocator->get("General\Service\GeneralService");
+        
         $entityManager = $generalService->getEntityManager();
-        $userRepository = $entityManager->getRepository(User::class);
-        $adapter->setCustomerRepository($userRepository);
+        
+        $bookingRepository = $entityManager->getRepository(CustomerBooking::class);
+        $adapter->setBookingRepository($bookingRepository);
         
         $page = $serviceLocator->get("Application")
             ->getMvcEvent()
             ->getRouteMatch()
             ->getParam("page");
-        $paginator = new Paginator($adapter);
         
+        $paginator = new Paginator($adapter);
         $paginator->setCurrentPageNumber($page)->setItemCountPerPage(50);
+        
         return $paginator;
     }
 }
