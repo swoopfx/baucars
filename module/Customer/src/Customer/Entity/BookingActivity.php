@@ -27,6 +27,12 @@ class BookingActivity
     private $information;
     
     /**
+     * @ORM\ManyToOne(targetEntity="CustomerBooking")
+     * @var CustomerBooking
+     */
+    private $booking;
+    
+    /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
      * @var \DateTime
      */
@@ -112,6 +118,23 @@ class BookingActivity
         $this->updatedOn = $updatedOn;
         return $this;
     }
+    /**
+     * @return the $booking
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
+
+    /**
+     * @param \Customer\Entity\CustomerBooking $booking
+     */
+    public function setBooking($booking)
+    {
+        $this->booking = $booking;
+        return $this;
+    }
+
 
 }
 

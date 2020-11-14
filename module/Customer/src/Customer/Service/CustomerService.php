@@ -51,6 +51,8 @@ class CustomerService
     const BOOKING_STATUS_CANCELED = 100;
 
     const BOOKING_STATUS_PROCESSING = 500;
+    
+    const BOOKING_STATUS_ASSIGN = 501;
 
     const BOOKING_STATUS_PAID = 20;
 

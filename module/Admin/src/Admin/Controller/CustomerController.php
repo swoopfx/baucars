@@ -58,6 +58,8 @@ class CustomerController extends AbstractActionController
         $jsonModel->setVariable("count", $this->customerService->getAllCustomerCount());
         return $jsonModel;
     }
+    
+    
     /**
      * @return the $entityManager
      */

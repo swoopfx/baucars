@@ -63,7 +63,7 @@ class Cars
     private $motorColor;
     
     /**
-     * Executive or pride
+     * Executive or regular
      * @ORM\ManyToOne(targetEntity="General\Entity\MotorClass")
      * @var MotorClass
      */

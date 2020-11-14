@@ -4,6 +4,7 @@ namespace General;
 use General\Service\Factory\GeneralServiceFactory;
 use General\Service\Factory\FlutterwaveServiceFactory;
 use General\View\Helper\MyCurrency;
+use General\View\Helper\StatusHelper;
 
 return array(
     'controllers' => array(
@@ -78,7 +79,8 @@ return array(
     ),
     'view_helpers' => array(
         'invokables' => array(
-            "myCurrency"=>MyCurrency::class
+            "myCurrency"=>MyCurrency::class,
+            "statusHelper"=>StatusHelper::class,
         ),
     ),
 );

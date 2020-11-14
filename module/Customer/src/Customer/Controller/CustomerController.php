@@ -151,6 +151,12 @@ class CustomerController extends AbstractActionController
         ]);
         return $jsonModel;
     }
+    
+    public function canceledbookingActin(){
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        
+    }
 
     public function billingMethodAction()
     {

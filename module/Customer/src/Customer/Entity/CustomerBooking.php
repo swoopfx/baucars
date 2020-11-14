@@ -38,7 +38,7 @@ class CustomerBooking
     private $bookingUid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio")
+     * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio", inversedBy="booking")
      *
      * @var DriverBio
      */
@@ -66,6 +66,7 @@ class CustomerBooking
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\BookingClass")
+     * 
      * @var BookingClass
      */
     private $bookingClass;
@@ -105,9 +106,10 @@ class CustomerBooking
      * @var \DateTime
      */
     private $updatedOn;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="Application\Entity\Transactions", mappedBy="booking")
+     * 
      * @var Transactions
      */
     private $transaction;
@@ -328,7 +330,9 @@ class CustomerBooking
         $this->bookingUid = $bookingUid;
         return $this;
     }
+
     /**
+     *
      * @return the $bookingClass
      */
     public function getBookingClass()
@@ -337,14 +341,17 @@ class CustomerBooking
     }
 
     /**
-     * @param \General\Entity\BookingClass $bookingClass
+     *
+     * @param \General\Entity\BookingClass $bookingClass            
      */
     public function setBookingClass($bookingClass)
     {
         $this->bookingClass = $bookingClass;
         return $this;
     }
+
     /**
+     *
      * @return the $transaction
      */
     public function getTransaction()
@@ -353,14 +360,13 @@ class CustomerBooking
     }
 
     /**
-     * @param \Application\Entity\Transactions $transaction
+     *
+     * @param \Application\Entity\Transactions $transaction            
      */
     public function setTransaction($transaction)
     {
         $this->transaction = $transaction;
         return $this;
     }
-
-
 }
 

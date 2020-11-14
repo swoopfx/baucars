@@ -6,7 +6,7 @@
 			<input type="text" v-model="phoneOrEmail" ref="phoneOrEmail" required> <span class="highlight"></span> <span class="bar"></span> <label>Email</label>
 		</div>
 		<div class="group material-input">
-			<input type="password" v-model="password" ref="password" required> <span class="highlight"></span> <span class="bar"></span> <label>Password</label>
+			<input @keyup.enter="login()" type="password" v-model="password" ref="password" required> <span class="highlight"></span> <span class="bar"></span> <label>Password</label>
 		</div>
 	</form>
 	<div class="row">

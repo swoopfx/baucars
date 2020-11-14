@@ -16,6 +16,10 @@ use CsnUser\Service\UserService;
 use CsnUser\Entity\State;
 use Driver\Paginator\DriverAdapter;
 use Driver\Service\DriverService;
+use Customer\Entity\CustomerBooking;
+use Customer\Entity\BookingActivity;
+use General\Entity\BookingStatus;
+use Customer\Service\CustomerService;
 
 /**
  *
@@ -36,6 +40,12 @@ class DriverController extends AbstractActionController
      * @var DriverAdapter
      */
     private $driverPaginator;
+
+    /**
+     *
+     * @var DriverService
+     */
+    private $driverService;
 
     // private
     
@@ -136,7 +146,7 @@ class DriverController extends AbstractActionController
                     
                     $data = $inputFilter->getValues();
                     $phoneStipped = str_replace("-", "", $data["phoneNumber"]);
-                    $email = $post["email"] == "" ?  "{$phoneStipped}@baucars.com" : $post["email"];
+                    $email = $post["email"] == "" ? "{$phoneStipped}@baucars.com" : $post["email"];
                     $userEntity = new User();
                     $userEntity->setEmail($email)
                         ->setEmailConfirmed(TRUE)
@@ -191,6 +201,67 @@ class DriverController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function inactivedriverAction()
+    {
+        $response = $this->getResponse();
+        $drivers = $this->driverService->findAllInactiveDrivers();
+        $response->setStatusCode(200);
+        $jsonModel = new JsonModel([
+            "drivers" => $drivers
+        ]);
+        return $jsonModel;
+    }
+
+    public function assigndriverAction()
+    {
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        // changes the status of the booking from
+        // send notification to driver
+        // send notification to customer
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $bookingId = $post["bookingId"];
+            $driverId = $post["driver"];
+            /**
+             *
+             * @var CustomerBooking $bookingEntity
+             */
+            $bookingEntity = $em->find(CustomerBooking::class, $bookingId);
+            $bookingEntity->setAssignedDriver($em->find(DriverBio::class, $driverId))
+            ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ASSIGN))
+                ->setUpdatedOn(new \DateTime());
+            /**
+             *
+             * @var DriverBio $driverEntity
+             */
+            $driverEntity = $em->find(DriverBio::class, $driverId);
+            $bookingAvtivityEntity = new BookingActivity();
+            $bookingAvtivityEntity->setBooking($bookingEntity)
+                ->setCreatedOn(new \DateTime())
+                
+                ->setInformation("Assigned Driver {$driverEntity->getUser()->getFullName()}");
+            
+            $em->persist($bookingEntity);
+            $em->persist($bookingAvtivityEntity);
+            // send Email to driver
+            // send mail to customer
+            $em->flush();
+            
+            $this->flashmessenger()->addSuccessMessage("Successfully Assigned Driver to Booking");
+            $response->setStatusCode(201);
+            
+        }
+        return $jsonModel;
+    }
+    
+    public function reassigndriverAction(){
+        $jsonModel = new JsonModel();
+        return $jsonModel;
+    }
+
     /**
      *
      * @return the $entityManager
@@ -226,6 +297,25 @@ class DriverController extends AbstractActionController
     public function setDriverPaginator($driverPaginator)
     {
         $this->driverPaginator = $driverPaginator;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $driverService
+     */
+    public function getDriverService()
+    {
+        return $this->driverService;
+    }
+
+    /**
+     *
+     * @param \Driver\Service\DriverService $driverService            
+     */
+    public function setDriverService($driverService)
+    {
+        $this->driverService = $driverService;
         return $this;
     }
 }

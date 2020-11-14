@@ -30,7 +30,6 @@ class DriverControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        
         $ctr = new DriverController();
         $allDriverPaginator = $serviceLocator->getServiceLocator()->get("allDriverPaginator");
         
@@ -39,9 +38,12 @@ class DriverControllerFactory implements FactoryInterface
          * @var GeneralService $generalService
          */
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
+        $driverService = $serviceLocator->getServiceLocator()->get("driverService");
         // $generalService = $serviceLocator->getServiceLocator()->get("");
         
-        $ctr->setEntityManager($generalService->getEntityManager())->setDriverPaginator($allDriverPaginator);
+        $ctr->setEntityManager($generalService->getEntityManager())
+            ->setDriverPaginator($allDriverPaginator)
+            ->setDriverService($driverService);
         return $ctr;
     }
 }

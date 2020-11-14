@@ -4,6 +4,8 @@ namespace Driver\Entity;
 use CsnUser\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\Images;
+use Application\Entity\Cars;
+use Customer\Entity\CustomerBooking;
 
 /**
  * @ORM\Entity(repositoryClass="Driver\Entity\Factory\DriverBioRepository")
@@ -23,12 +25,28 @@ class DriverBio
      *     
      */
     private $id;
-    
+
     /**
      * @ORM\Column(name="driver_uid", type="string", nullable=false)
+     *
      * @var string
      */
     private $diverUid;
+    
+    
+
+//     /**
+//      * @ORM\ManyToOne(targetEntity="ActiveDriver", inversedBy="driver")
+//      *
+//      * @var ActiveDriver
+//      */
+//     private $activeSession;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Customer\Entity\CustomerBooking", mappedBy="assignedDriver")
+     * @var CustomerBooking
+     */
+    private $booking;
 
     // /**
     // * @ORM\Column(name="driver_name", type="string", nullable=false)
@@ -39,7 +57,7 @@ class DriverBio
     
     /**
      * @ORM\OneToOne(targetEntity="Application\Entity\Cars")
-     * 
+     *
      * @var Cars
      */
     private $assisnedCar;
@@ -115,7 +133,7 @@ class DriverBio
 
     /**
      * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
-     * 
+     *
      * @var User
      */
     private $user;
@@ -127,7 +145,9 @@ class DriverBio
         
         // TODO - Insert your code here
     }
+
     /**
+     *
      * @return the $id
      */
     public function getId()
@@ -136,6 +156,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $assisnedCar
      */
     public function getAssisnedCar()
@@ -144,6 +165,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $driverSince
      */
     public function getDriverSince()
@@ -152,6 +174,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $driverImage
      */
     public function getDriverImage()
@@ -160,6 +183,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $driverDob
      */
     public function getDriverDob()
@@ -168,6 +192,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $updatedOn
      */
     public function getUpdatedOn()
@@ -176,6 +201,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $height
      */
     public function getHeight()
@@ -184,6 +210,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $weight
      */
     public function getWeight()
@@ -192,6 +219,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $eyeColor
      */
     public function getEyeColor()
@@ -200,6 +228,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $complexion
      */
     public function getComplexion()
@@ -208,6 +237,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $createdOn
      */
     public function getCreatedOn()
@@ -216,6 +246,7 @@ class DriverBio
     }
 
     /**
+     *
      * @return the $user
      */
     public function getUser()
@@ -224,7 +255,8 @@ class DriverBio
     }
 
     /**
-     * @param number $id
+     *
+     * @param number $id            
      */
     public function setId($id)
     {
@@ -233,7 +265,8 @@ class DriverBio
     }
 
     /**
-     * @param \Driver\Entity\Cars $assisnedCar
+     *
+     * @param \Driver\Entity\Cars $assisnedCar            
      */
     public function setAssisnedCar($assisnedCar)
     {
@@ -242,7 +275,8 @@ class DriverBio
     }
 
     /**
-     * @param DateTime $driverSince
+     *
+     * @param DateTime $driverSince            
      */
     public function setDriverSince($driverSince)
     {
@@ -251,7 +285,8 @@ class DriverBio
     }
 
     /**
-     * @param \General\Entity\Images $driverImage
+     *
+     * @param \General\Entity\Images $driverImage            
      */
     public function setDriverImage($driverImage)
     {
@@ -260,7 +295,8 @@ class DriverBio
     }
 
     /**
-     * @param \Driver\Entity\unknown $driverDob
+     *
+     * @param \Driver\Entity\unknown $driverDob            
      */
     public function setDriverDob($driverDob)
     {
@@ -269,7 +305,8 @@ class DriverBio
     }
 
     /**
-     * @param DateTime $updatedOn
+     *
+     * @param DateTime $updatedOn            
      */
     public function setUpdatedOn($updatedOn)
     {
@@ -278,7 +315,8 @@ class DriverBio
     }
 
     /**
-     * @param string $height
+     *
+     * @param string $height            
      */
     public function setHeight($height)
     {
@@ -287,7 +325,8 @@ class DriverBio
     }
 
     /**
-     * @param string $weight
+     *
+     * @param string $weight            
      */
     public function setWeight($weight)
     {
@@ -296,7 +335,8 @@ class DriverBio
     }
 
     /**
-     * @param \Driver\Entity\unknown $eyeColor
+     *
+     * @param \Driver\Entity\unknown $eyeColor            
      */
     public function setEyeColor($eyeColor)
     {
@@ -305,7 +345,8 @@ class DriverBio
     }
 
     /**
-     * @param field_type $complexion
+     *
+     * @param field_type $complexion            
      */
     public function setComplexion($complexion)
     {
@@ -314,7 +355,8 @@ class DriverBio
     }
 
     /**
-     * @param DateTime $createdOn
+     *
+     * @param DateTime $createdOn            
      */
     public function setCreatedOn($createdOn)
     {
@@ -323,14 +365,17 @@ class DriverBio
     }
 
     /**
-     * @param \CsnUser\Entity\User $user
+     *
+     * @param \CsnUser\Entity\User $user            
      */
     public function setUser($user)
     {
         $this->user = $user;
         return $this;
     }
+
     /**
+     *
      * @return the $diverUid
      */
     public function getDiverUid()
@@ -339,14 +384,30 @@ class DriverBio
     }
 
     /**
-     * @param string $diverUid
+     *
+     * @param string $diverUid            
      */
     public function setDiverUid($diverUid)
     {
         $this->diverUid = $diverUid;
         return $this;
     }
+    /**
+     * @return the $booking
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
 
+    /**
+     * @param \Customer\Entity\CustomerBooking $booking
+     */
+    public function setBooking($booking)
+    {
+        $this->booking = $booking;
+        return $this;
+    }
 
 }
 

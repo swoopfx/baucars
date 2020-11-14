@@ -1,6 +1,7 @@
 <?php
 namespace Driver;
 use Driver\Paginator\Factory\DriverAdapterInterface;
+use Driver\Service\Factory\DriverServiceFactory;
 
 return array(
     'controllers' => array(
@@ -52,7 +53,9 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            "allDriverPaginator"=>DriverAdapterInterface::class
+            "allDriverPaginator"=>DriverAdapterInterface::class,
+            "driverService"=>DriverServiceFactory::class,
+            
         ),
     ),
     'doctrine' => array(

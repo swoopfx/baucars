@@ -32,6 +32,7 @@ class DriverServiceFactory implements FactoryInterface
         
        $xserv = new DriverService();
        $generalService = $serviceLocator->get("General\Service\GeneralService");
+       $xserv->setEntityManager($generalService->getEntityManager());
        return $xserv;
     }
 }
