@@ -59,8 +59,13 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'Admin' => __DIR__ . '/../view'
+            'Admin' => __DIR__ . '/../view',
+            
+            
         ),
+        "template_map"=>[
+            'booking-menu-list' => __DIR__ . '/../view/admin/booking/partial/booking_menu_list.phtml'
+        ],
         'strategies' => array(
             'ViewJsonStrategy'
         )

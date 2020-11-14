@@ -172,7 +172,8 @@
 				</div>
 
 				<div class="profile--name">
-					<a href="profile.html" class="btn-link"><?php  echo $this->identity()->getFullName()?></a>
+					<a href="profile.html" class="btn-link"><?php  
+					echo ($this->identity() != null ? $this->identity()->getFullName() : "")?></a>
 				</div>
 
 				<div class="profile--nav">

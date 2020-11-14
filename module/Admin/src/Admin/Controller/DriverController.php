@@ -20,6 +20,7 @@ use Customer\Entity\CustomerBooking;
 use Customer\Entity\BookingActivity;
 use General\Entity\BookingStatus;
 use Customer\Service\CustomerService;
+use Zend\Mvc\MvcEvent;
 
 /**
  *
@@ -48,6 +49,13 @@ class DriverController extends AbstractActionController
     private $driverService;
 
     // private
+    
+    public function onDispatch(MvcEvent $e){
+        $response = parent::onDispatch($e);
+        $this->redirectPlugin()->redirectToLogout();
+        
+        return $response;
+    }
     
     /**
      */

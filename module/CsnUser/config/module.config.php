@@ -14,6 +14,7 @@
 namespace CsnUser;
 
 use CsnUser\View\Helper\UserStatusHelper;
+use CsnUser\Controller\Plugin\Factory\RedirectPluginFactory;
 
 return array(
     'controllers' => array(
@@ -164,6 +165,11 @@ return array(
             'CsnUser\Form\Fieldset\UserSecurityQuestionFieldset' => 'CsnUser\Form\Fieldset\Factory\UserSecurityQuestionFieldsetFactory',
             'CsnUser\Form\Fieldset\UserBasicFieldset' => 'CsnUser\Form\Fieldset\Factory\UserBasicFieldsetFactory'
         )
+    ),
+    'controller_plugins' => array(
+        'factories' => array(
+            "redirectPlugin"=>RedirectPluginFactory::class
+        ),
     ),
     'doctrine' => array(
         'configuration' => array(

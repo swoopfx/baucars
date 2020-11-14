@@ -8,6 +8,9 @@ use Customer\Service\BookingService;
 use Zend\View\Model\ViewModel;
 use Customer\Entity\CustomerBooking;
 use Customer\Paginator\AllBookingAdapter;
+use Zend\Mvc\MvcEvent;
+use Customer\Service\CustomerService;
+use Doctrine\ORM\Query;
 
 /**
  *
@@ -43,14 +46,40 @@ class BookingController extends AbstractActionController
         // TODO - Insert your code here
     }
 
+    public function onDispatch(MvcEvent $e)
+    {
+        $response = parent::onDispatch($e);
+        $this->redirectPlugin()->redirectToLogout();
+        
+        return $response;
+    }
+
     public function boardAction()
     {
-//         var_dump(count($this->entityManager->getRepository(CustomerBooking::class)->findBookingItems(0, 10)));
+        // var_dump(count($this->entityManager->getRepository(CustomerBooking::class)->findBookingItems(0, 10)));
         $allBooking = $this->allBookingPaginator;
-//         var_dump($allBooking);
+        // var_dump($allBooking);
         $viewModel = new ViewModel([
             "allBooking" => $allBooking
         ]);
+        return $viewModel;
+    }
+    
+    /**
+     * A list of active trip in decing order 
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function activeAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+    
+    /**
+     * A list of canceld  booking in descending order
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function cancelAction(){
+        $viewModel = new ViewModel();
         return $viewModel;
     }
 
@@ -93,6 +122,22 @@ class BookingController extends AbstractActionController
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $jsonModel->setVariable("data", $this->bookingService->getSplashInitiatedBooking());
+        return $jsonModel;
+    }
+
+    public function splashcanceledbookingAction()
+    {
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $repo = $em->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("c")
+            ->where("c.status =" . CustomerService::BOOKING_STATUS_CANCELED)
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        
+        $response = $this->getResponse();
+        $jsonModel->setVariable("data", $result);
         return $jsonModel;
     }
 

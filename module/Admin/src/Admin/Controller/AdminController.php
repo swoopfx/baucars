@@ -14,6 +14,7 @@ use Zend\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Customer\Service\CustomerService;
+use Zend\Mvc\MvcEvent;
 
 class AdminController extends AbstractActionController
 {
@@ -38,6 +39,13 @@ class AdminController extends AbstractActionController
     private $customerBookingService;
     
     private $driverService;
+    
+    public function onDispatch(MvcEvent $e){
+        $response = parent::onDispatch($e);
+        $this->redirectPlugin()->redirectToLogout();
+       
+        return $response;
+    }
     
 //     private $
     public function indexAction()

@@ -20,6 +20,8 @@ use Customer\Entity\CustomerBooking;
 use General\Entity\BookingStatus;
 use General\Entity\BookingClass;
 use General\Service\FlutterwaveService;
+use Zend\Mvc\MvcEvent;
+use Doctrine\ORM\Query;
 
 class CustomerController extends AbstractActionController
 {
@@ -48,6 +50,14 @@ class CustomerController extends AbstractActionController
      * @var FlutterwaveService
      */
     private $flutterwaveService;
+
+    public function onDispatch(MvcEvent $e)
+    {
+        $response = parent::onDispatch($e);
+        $this->redirectPlugin()->redirectToLogout();
+        
+        return $response;
+    }
 
     public function indexAction()
     {
@@ -119,17 +129,23 @@ class CustomerController extends AbstractActionController
         $jsonModel->setVariable("data", $this->customerService->getAllBookingServiceType());
         return $jsonModel;
     }
-    
-    public function getop50bookingAction(){
+
+    public function getop50bookingAction()
+    {
         $em = $this->entityManager;
         $response = $this->getResponse();
-        $data = $em->getRepository(CustomerBooking::class)->findCustomersBooking($this->identity()->getId());
+        $data = $em->getRepository(CustomerBooking::class)->findCustomersBooking($this->identity()
+            ->getId());
         $response->setStatusCode(200);
         $jsonModel = new JsonModel([
-            "data"=>$data
+            "data" => $data
         ]);
         return $jsonModel;
     }
+    
+    
+    
+    
 
     public function bookingClassAction()
     {
@@ -152,11 +168,17 @@ class CustomerController extends AbstractActionController
         return $jsonModel;
     }
     
-    public function canceledbookingActin(){
+    /**
+     * A quisk ist of active trips
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function activeBookingAction(){
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
-        
+        return $jsonModel;
     }
+
+   
 
     public function billingMethodAction()
     {
