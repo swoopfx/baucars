@@ -12,17 +12,17 @@ use General\Service\GeneralService;
  */
 class GeneralServiceFactory implements FactoryInterface
 {
-    
+
     private $em;
-    
+
     /**
      *
      * @var AuthenticationService
      */
     private $auth;
-    
+
     private $userId;
-    
+
     private $userEntity;
 
     /**
@@ -43,27 +43,30 @@ class GeneralServiceFactory implements FactoryInterface
     {
         $xserv = new GeneralService();
         $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
-       
-        
+        $mailService = $serviceLocator->get("acmailer.mailservice.default");
+        $viewRenderer = $serviceLocator->get("ViewRenderer");
         $auth = $serviceLocator->get('Zend\Authentication\AuthenticationService');
         $viewRenderer = $serviceLocator->get("ViewRenderer");
         $this->em = $em;
         $this->auth = $auth;
-        $xserv->setEntityManager($em)->setAuth($auth);
+        $xserv->setEntityManager($em)
+            ->setAuth($auth)
+            ->setMailService($mailService)
+            ->setRenderer($viewRenderer);
         return $xserv;
     }
-    
+
     private function getUserRole()
     {
         if ($this->auth->hasIdentity()) {
             $data = $this->auth->getIdentity()
-            ->getRole()
-            ->getId();
+                ->getRole()
+                ->getId();
             $this->userRole = $data;
             return $data;
         }
     }
-    
+
     private function getUserId()
     {
         if ($this->auth->hasIdentity()) {
@@ -72,8 +75,9 @@ class GeneralServiceFactory implements FactoryInterface
             return $this->userId;
         }
     }
-    
-    private function getUserEntity(){
+
+    private function getUserEntity()
+    {
         if ($this->auth->hasIdentity()) {
             $this->userEntity = $this->auth->getIdentity();
             

@@ -345,8 +345,61 @@ $flashMessenger = $this->flashMessenger()
 
 
 			<div class="row flex-row">
+
+
 				<div class="col-xl-6  os-animation" data-os-animation="fadeInUp">
-					<!-- Begin Widget 05 -->
+					<div class="col-xl-12 os-animation" data-os-animation="fadeInUp">
+						<!-- Begin Widget 07 -->
+						<div class="widget widget-07 has-shadow">
+							<!-- Begin Widget Header -->
+							<div class="widget-header bordered d-flex align-items-center">
+								<h2>ACTIVE TRIP</h2>
+
+							</div>
+							<!-- End Widget Header -->
+							<!-- Begin Widget Body -->
+
+							<div class="widget-body">
+								<div class="table-responsive table-scroll padding-right-10" style="max-height: 520px;">
+									<table class="table table-hover mb-0">
+										<thead>
+											<tr>
+
+
+
+												<th>Booking Date/Time</th>
+												<th>Ship Date</th>
+												<th>Status</th>
+												<th>Amount Paid</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-if="initializedBooking.length" v-for="booking in initializedBooking">
+
+												<!-- <td><span class="text-primary">{{booking.bookingUid.toUpperCase()}}</span></td> -->
+												<!-- <td></td> -->
+												<td>{{formatPHPDate(booking.startTime.date)}}</td>
+												<td>{{formatPHPDate(booking.endTime.date)}}</td>
+												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
+												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
+												<td class="td-actions"> <a href="#"><i class="la la-close delete"></i></a></td>
+											</tr>
+
+
+
+
+
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Widget Body -->
+
+						</div>
+						<!-- End Widget 07 -->
+					</div>
 
 				</div>
 				<div class="col-xl-6 os-animation" data-os-animation="fadeInUp">
@@ -370,7 +423,7 @@ $flashMessenger = $this->flashMessenger()
 						<div class="widget-body no-padding hidden">
 
 							<div class="author-avatar">
-								<span class="badge-pulse-green"></span> <img src="/admin/assets/img/avatar/avatar-03.jpg" alt="..." class="img-fluid rounded-circle">
+								<span class="badge-pulse-green"></span> <img src="/img/avatar.png" alt="..." class="img-fluid rounded-circle">
 							</div>
 							<div class="author-name">
 								{{profileName}} <span>{{profileEmail}}</span>
@@ -387,38 +440,14 @@ $flashMessenger = $this->flashMessenger()
 													</div>
 												</div>
 											</div>
-											<div class="col-3 no-padding text-center">
-												<div class="chart-text">
-													<span class="heading">Sales</span> <span class="number">364</span> <span class="cxg text-green">+35%</span>
-												</div>
-											</div>
+
 											<!-- End Chart -->
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="social-stats">
-								<div class="row d-flex justify-content-between">
-									<div class="col-4 text-center">
-										<i class="la la-users followers"></i>
-										<div class="counter">+124</div>
-										<div class="heading">Followers</div>
-									</div>
-									<div class="col-4 text-center">
-										<i class="la la-dribbble dribbble"></i>
-										<div class="counter">+357</div>
-										<div class="heading">Likes</div>
-									</div>
-									<div class="col-4 text-center">
-										<i class="la la-behance behance"></i>
-										<div class="counter">+98</div>
-										<div class="heading">Followers</div>
-									</div>
-								</div>
-							</div>
-							<div class="actions text-center">
-								<a @click="testtoast()" class="btn btn-gradient-01">Book a Ride</a>
-							</div>
+
+
 						</div>
 						<!-- End Widget Body -->
 					</div>
@@ -441,7 +470,7 @@ $flashMessenger = $this->flashMessenger()
 					<div class="widget widget-07 has-shadow">
 						<!-- Begin Widget Header -->
 						<div class="widget-header bordered d-flex align-items-center">
-							<h2>Booking History</h2>
+							<h2>Booking </h2>
 
 						</div>
 						<!-- End Widget Header -->
@@ -452,12 +481,12 @@ $flashMessenger = $this->flashMessenger()
 								<table class="table table-hover mb-0">
 									<thead>
 										<tr>
-											
+
 											<th>Order ID</th>
 											<th>Booking Type</th>
 											<th>Booking Class</th>
 											<th>Start Date</th>
-											<th>End  Date</th>
+											<th>End Date</th>
 											<th><span style="width: 100px;">Status</span></th>
 											<th>Amount Paid</th>
 											<th>Actions</th>
@@ -465,7 +494,7 @@ $flashMessenger = $this->flashMessenger()
 									</thead>
 									<tbody>
 										<tr v-if="bookingHistory.length" v-for="booking in bookingHistory">
-											
+
 											<td><span class="text-primary">{{booking.bookingUid}}</span></td>
 											<td>{{booking.bookingType.bookingType}}</td>
 											<td>{{booking.bookingClass.bookingClass}}</td>
@@ -473,7 +502,7 @@ $flashMessenger = $this->flashMessenger()
 											<td>{{formatPHPDate(booking.endTime.date)}}</td>
 											<td><span style="width: 100px;"><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
 											<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
-											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a href="#"><i class="la la-close delete"></i></a></td>
+											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
 										</tr>
 
 
@@ -1010,8 +1039,9 @@ $flashMessenger = $this->flashMessenger()
 
 				bookingPrice: "",
 
-				//
+				// Booking
 				initializedBooking: []
+
 
 			}
 		},
@@ -1052,11 +1082,11 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 			bookingStatus(value) {
-				if (value == 5  || value == 10 || value == 20 || value == 30) {
+				if (value == 5 || value == 10 || value == 20 || value == 30) {
 					return "badge-text badge-text-small success";
-				}else if( value == 100 || value == 200 || value == 300){
+				} else if (value == 100 || value == 200 || value == 300) {
 					return "badge-text badge-text-small  danger";
-				}else if(value == 600 || value == 500){
+				} else if (value == 600 || value == 500) {
 					return "badge-text badge-text-small info";
 				}
 			},
@@ -1228,6 +1258,30 @@ $flashMessenger = $this->flashMessenger()
 						dismissible: true
 					})
 				}
+			},
+
+
+
+			// Booking
+			onCancelBooking(id) {
+				swal({
+					title: "Are you Sure",
+					text: "You are aboout to cancel you booking",
+					icon: "warning",
+					button: "Continue!",
+				}).then(res => {
+					this.cancelbooking(id);
+				});
+			},
+
+			cancelbooking(id) {
+				let formData = new FormData();
+				formData.append("bookingId", id);
+				axios.post("/customer/cancelbooking", formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+					}
+				}).catch();
 			}
 
 

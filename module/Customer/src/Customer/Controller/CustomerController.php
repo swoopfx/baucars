@@ -22,6 +22,7 @@ use General\Entity\BookingClass;
 use General\Service\FlutterwaveService;
 use Zend\Mvc\MvcEvent;
 use Doctrine\ORM\Query;
+use Customer\Entity\BookingActivity;
 
 class CustomerController extends AbstractActionController
 {
@@ -142,10 +143,6 @@ class CustomerController extends AbstractActionController
         ]);
         return $jsonModel;
     }
-    
-    
-    
-    
 
     public function bookingClassAction()
     {
@@ -167,18 +164,18 @@ class CustomerController extends AbstractActionController
         ]);
         return $jsonModel;
     }
-    
+
     /**
      * A quisk ist of active trips
+     *
      * @return \Zend\View\Model\JsonModel
      */
-    public function activeBookingAction(){
+    public function activeBookingAction()
+    {
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
         return $jsonModel;
     }
-
-   
 
     public function billingMethodAction()
     {
@@ -188,6 +185,51 @@ class CustomerController extends AbstractActionController
         $jsonModel->setVariables([
             "data" => $this->customerService->getAllBillingMethod()
         ]);
+        return $jsonModel;
+    }
+
+    public function cancelbookingAction()
+    {
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $id = $post["bookingId"];
+            
+            try {
+                
+            
+            /**
+             *
+             * @var CustomerBooking $bookingEntity
+             */
+            $bookingEntity = $em->find(CustomerBooking::class, $id);
+            // var_dump($id);
+            $bookingEntity->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_CANCELED))
+                ->setUpdatedOn(new \DateTime());
+            $bookingActivity = new BookingActivity();
+            $bookingActivity->setBooking($bookingEntity)
+                ->setCreatedOn(new \DateTime())
+                ->setInformation("Booking {$bookingEntity->getBookingUid()} has been canceled");
+            
+            // send email
+            $em->persist($bookingEntity);
+            $em->persist($bookingActivity);
+            
+            $em->flush();
+            
+            // integrate funds return logic
+            
+            $this->flashmessenger()->addSuccessMessage("Booking {$bookingEntity->getBookingUid()} has been canceled");
+            $response->setStatusCode(200);
+            
+            $jsonModel->setVariable("data", $bookingEntity->getBookUid());
+            } catch (\Exception $e) {
+                return var_dump($e->getMessage());
+            }
+        }
         return $jsonModel;
     }
 
