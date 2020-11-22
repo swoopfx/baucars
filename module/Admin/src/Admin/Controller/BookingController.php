@@ -64,21 +64,25 @@ class BookingController extends AbstractActionController
         ]);
         return $viewModel;
     }
-    
+
     /**
-     * A list of active trip in decing order 
+     * A list of active trip in decing order
+     *
      * @return \Zend\View\Model\ViewModel
      */
-    public function activeAction(){
+    public function activeAction()
+    {
         $viewModel = new ViewModel();
         return $viewModel;
     }
-    
+
     /**
-     * A list of canceld  booking in descending order
+     * A list of canceld booking in descending order
+     *
      * @return \Zend\View\Model\ViewModel
      */
-    public function cancelAction(){
+    public function cancelAction()
+    {
         $viewModel = new ViewModel();
         return $viewModel;
     }
@@ -130,13 +134,39 @@ class BookingController extends AbstractActionController
         $em = $this->entityManager;
         $jsonModel = new JsonModel();
         $repo = $em->getRepository(CustomerBooking::class);
-        $result = $repo->createQueryBuilder("c")
-            ->where("c.status =" . CustomerService::BOOKING_STATUS_CANCELED)
+        $result = $repo->createQueryBuilder("a")
+            ->select('a, s, bt, bc')
+            ->leftJoin("a.status", "s")
+            ->leftJoin("a.bookingType", "bt")
+            ->leftJoin("a.bookingClass", "bc")
+            ->where("a.status =" . CustomerService::BOOKING_STATUS_CANCELED)
             ->setMaxResults(50)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
         
         $response = $this->getResponse();
+        $response->setStatusCode(200);
+        $jsonModel->setVariable("data", $result);
+        return $jsonModel;
+    }
+
+    public function splashtransitbookingAction()
+    {
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $repo = $em->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("a")
+            ->select('a, s, bt, bc')
+            ->leftJoin("a.status", "s")
+            ->leftJoin("a.bookingType", "bt")
+            ->leftJoin("a.bookingClass", "bc")
+            ->where("a.status =" . CustomerService::BOOKING_STATUS_IN_TRANSIT)
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        
+        $response = $this->getResponse();
+        $response->setStatusCode(200);
         $jsonModel->setVariable("data", $result);
         return $jsonModel;
     }

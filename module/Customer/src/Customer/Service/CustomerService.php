@@ -9,6 +9,7 @@ use Zend\Session\Container;
 use Zend\Authentication\AuthenticationService;
 use General\Entity\BookingStatus;
 use General\Entity\BookingType;
+use General\Service\GeneralService;
 
 /**
  *
@@ -24,6 +25,10 @@ class CustomerService
      */
     private $auth;
 
+    /**
+     * 
+     * @var GeneralService
+     */
     private $generalService;
 
     /**
@@ -47,6 +52,8 @@ class CustomerService
     const BOOKING_STATUS_INITIATED = 5;
 
     const BOOKING_STATUS_ACTIVE = 10;
+    
+    const BOOKING_STATUS_IN_TRANSIT = 600;
 
     const BOOKING_STATUS_CANCELED = 100;
 
@@ -154,6 +161,7 @@ class CustomerService
     
     public function  createBooking(){
         $booking = new CustomerBooking();
+        $auth = $this->auth;
         $em = $this->entityManager;
         $booking->setCreatedOn(new \DateTime())
         ->setEndTime($this->bookingEndData)
@@ -163,7 +171,21 @@ class CustomerService
         ->setBookingClass($em->find(BookingClass::class, $this->bookingClass))
         ->setStatus($em->find(BookingStatus::class, self::BOOKING_STATUS_INITIATED))
         ->setBookingType($em->find(BookingType::class, $this->bookingType));
+        
+        $generalService = $this->generalService;
+        $pointer["to"] = $auth->getIdentity()->getEmail();
+        $pointer["fromName"] = "Bau Cars Limited";
+        $pointer['subject'] = "Booking Initiated";
+        
+        $template['template'] = "";
+        $template["var"] = [
+            
+        ];
+        
+        $generalService->sendMails($pointer, $template);
         return $booking;
+        
+        // Send Booking mail
     }
 
     public static function bookingUid()

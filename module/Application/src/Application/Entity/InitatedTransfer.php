@@ -6,60 +6,65 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="initated_transfer")
+ * 
  * @author otaba
  *        
  */
 class InitatedTransfer
 {
-    
+
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer")
      *      @ORM\Id
      *      @ORM\GeneratedValue(strategy="IDENTITY")
-     *
+     *     
      */
     private $id;
-    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Transactions")
+     * 
+     * @var Transactions
+     */
+    private $transaction;
+
     /**
      * @ORM\Column(name="transfer_uid", type="string", nullable=true)
+     * 
      * @var string
      */
     private $transferUid;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="TransferStatus")
+     * 
      * @var TransferStatus
      */
     private $transferStatus;
-    
-    /**
-     * @ORM\Column(name="rave_ref", type="string", nullable=true)
-     * @var string
-     */
-    private $raveRef;
-    
+
     /**
      * @ORM\Column(name="transfer_amount", type="string", nullable=true)
+     * 
      * @var unknown
      */
     private $transferAmount;
-    
+
     /**
      * ORM\Column(name="created_on", type="datetime", nullable=true)
+     * 
      * @var Datetime
      */
     private $createdOn;
-    
+
     /**
      * ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * @var \DateTime
      * 
+     * @var \DateTime
+     *
      */
     private $updatedOn;
 
-    
-    
     /**
      */
     public function __construct()
@@ -67,7 +72,9 @@ class InitatedTransfer
         
         // TODO - Insert your code here
     }
+
     /**
+     *
      * @return the $id
      */
     public function getId()
@@ -76,6 +83,7 @@ class InitatedTransfer
     }
 
     /**
+     *
      * @return the $transferUid
      */
     public function getTransferUid()
@@ -84,6 +92,7 @@ class InitatedTransfer
     }
 
     /**
+     *
      * @return the $transferStatus
      */
     public function getTransferStatus()
@@ -92,6 +101,7 @@ class InitatedTransfer
     }
 
     /**
+     *
      * @return the $raveRef
      */
     public function getRaveRef()
@@ -100,6 +110,7 @@ class InitatedTransfer
     }
 
     /**
+     *
      * @return the $transferAmount
      */
     public function getTransferAmount()
@@ -108,6 +119,7 @@ class InitatedTransfer
     }
 
     /**
+     *
      * @return the $createdOn
      */
     public function getCreatedOn()
@@ -116,6 +128,7 @@ class InitatedTransfer
     }
 
     /**
+     *
      * @return the $updatedOn
      */
     public function getUpdatedOn()
@@ -124,7 +137,8 @@ class InitatedTransfer
     }
 
     /**
-     * @param number $id
+     *
+     * @param number $id            
      */
     public function setId($id)
     {
@@ -133,7 +147,8 @@ class InitatedTransfer
     }
 
     /**
-     * @param string $transferUid
+     *
+     * @param string $transferUid            
      */
     public function setTransferUid($transferUid)
     {
@@ -142,7 +157,8 @@ class InitatedTransfer
     }
 
     /**
-     * @param \Application\Entity\TransferStatus $transferStatus
+     *
+     * @param \Application\Entity\TransferStatus $transferStatus            
      */
     public function setTransferStatus($transferStatus)
     {
@@ -151,7 +167,8 @@ class InitatedTransfer
     }
 
     /**
-     * @param string $raveRef
+     *
+     * @param string $raveRef            
      */
     public function setRaveRef($raveRef)
     {
@@ -160,7 +177,8 @@ class InitatedTransfer
     }
 
     /**
-     * @param \Application\Entity\unknown $transferAmount
+     *
+     * @param \Application\Entity\unknown $transferAmount            
      */
     public function setTransferAmount($transferAmount)
     {
@@ -169,7 +187,8 @@ class InitatedTransfer
     }
 
     /**
-     * @param \Application\Entity\Datetime $createdOn
+     *
+     * @param \Application\Entity\Datetime $createdOn            
      */
     public function setCreatedOn($createdOn)
     {
@@ -178,11 +197,28 @@ class InitatedTransfer
     }
 
     /**
-     * @param DateTime $updatedOn
+     *
+     * @param DateTime $updatedOn            
      */
     public function setUpdatedOn($updatedOn)
     {
         $this->updatedOn = $updatedOn;
+        return $this;
+    }
+    /**
+     * @return the $transaction
+     */
+    public function getTransaction()
+    {
+        return $this->transaction;
+    }
+
+    /**
+     * @param \Application\Entity\Transactions $transaction
+     */
+    public function setTransaction($transaction)
+    {
+        $this->transaction = $transaction;
         return $this;
     }
 

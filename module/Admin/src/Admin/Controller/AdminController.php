@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Customer\Service\CustomerService;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Model\JsonModel;
 
 class AdminController extends AbstractActionController
 {
@@ -85,6 +86,14 @@ class AdminController extends AbstractActionController
         $viewModel = new ViewModel();
         return $viewModel;
     }
+    
+    
+    public function featuresnippetAction(){
+        $jsonModel = new JsonModel();
+        return $jsonModel;
+    }
+    
+   
     /**
      * @return the $entityManager
      */

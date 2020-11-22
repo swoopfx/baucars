@@ -2,16 +2,14 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CsnUser\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="support")
- * 
+ * @ORM\Table(name="support_messages")
  * @author otaba
  *        
  */
-class Support
+class SupportMessages
 {
 
     /**
@@ -24,44 +22,30 @@ class Support
     private $id;
 
     /**
-     * @ORM\Column(name="topic", type="string", nullable=true)
-     * 
+     *
+     * @ORM\Column(name="message", type="text", nullable=true)
+     *
      * @var string
      */
-    private $topic;
+    private $message;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SupportMessages")
-     * 
-     * @var SupportMessages
-     */
-    private $messages;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
-     * 
-     * @var User
+     * Sender or reciever
+     * @ORM\ManyToOne(targetEntity="SupportRoute")
      *
+     * @var SupportRoute
      */
-    private $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="SupportStatus")
-     * 
-     * @var SupportStatus
-     */
-    private $supportStatus;
+    private $route;
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     * 
      * @var \DateTime
+     *
      */
     private $createdOn;
 
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * 
      * @var \DateTime
      */
     private $updatedOn;
@@ -82,35 +66,19 @@ class Support
     }
 
     /**
-     * @return the $topic
+     * @return the $message
      */
-    public function getTopic()
+    public function getMessage()
     {
-        return $this->topic;
+        return $this->message;
     }
 
     /**
-     * @return the $messages
+     * @return the $route
      */
-    public function getMessages()
+    public function getRoute()
     {
-        return $this->messages;
-    }
-
-    /**
-     * @return the $user
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @return the $supportStatus
-     */
-    public function getSupportStatus()
-    {
-        return $this->supportStatus;
+        return $this->route;
     }
 
     /**
@@ -139,38 +107,20 @@ class Support
     }
 
     /**
-     * @param string $topic
+     * @param string $message
      */
-    public function setTopic($topic)
+    public function setMessage($message)
     {
-        $this->topic = $topic;
+        $this->message = $message;
         return $this;
     }
 
     /**
-     * @param \Application\Entity\SupportMessages $messages
+     * @param \Application\Entity\SupportRoute $route
      */
-    public function setMessages($messages)
+    public function setRoute($route)
     {
-        $this->messages = $messages;
-        return $this;
-    }
-
-    /**
-     * @param \CsnUser\Entity\User $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    /**
-     * @param \Application\Entity\SupportStatus $supportStatus
-     */
-    public function setSupportStatus($supportStatus)
-    {
-        $this->supportStatus = $supportStatus;
+        $this->route = $route;
         return $this;
     }
 

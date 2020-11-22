@@ -2,16 +2,15 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CsnUser\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="support")
+ * @ORM\Table(name="concluded_transfer")
  * 
  * @author otaba
  *        
  */
-class Support
+class ConcludedTransfer
 {
 
     /**
@@ -24,33 +23,39 @@ class Support
     private $id;
 
     /**
-     * @ORM\Column(name="topic", type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="InitatedTransfer")
+     * 
+     * @var InitatedTransfer
+     */
+    private $initiateId;
+
+    /**
+     * @ORM\Column(name="rave_ref", type="string", nullable=true)
      * 
      * @var string
      */
-    private $topic;
+    private $raveRef;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SupportMessages")
+     * @ORM\Column(name="amount_transfered", type="string", nullable=true)
      * 
-     * @var SupportMessages
+     * @var string
      */
-    private $messages;
+    private $amountTransfered;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
+     * @ORM\Column(name="rave_message", type="string", nullable=true)
      * 
-     * @var User
-     *
+     * @var string
      */
-    private $user;
+    private $raveMessage;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SupportStatus")
+     * @ORM\Column(name="rave_id", type="string", nullable=true)
      * 
-     * @var SupportStatus
+     * @var string
      */
-    private $supportStatus;
+    private $raveId;
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
@@ -66,6 +71,8 @@ class Support
      */
     private $updatedOn;
 
+    // TODO - Insert your code here
+    
     /**
      */
     public function __construct()
@@ -82,35 +89,43 @@ class Support
     }
 
     /**
-     * @return the $topic
+     * @return the $initiateId
      */
-    public function getTopic()
+    public function getInitiateId()
     {
-        return $this->topic;
+        return $this->initiateId;
     }
 
     /**
-     * @return the $messages
+     * @return the $raveRef
      */
-    public function getMessages()
+    public function getRaveRef()
     {
-        return $this->messages;
+        return $this->raveRef;
     }
 
     /**
-     * @return the $user
+     * @return the $amountTransfered
      */
-    public function getUser()
+    public function getAmountTransfered()
     {
-        return $this->user;
+        return $this->amountTransfered;
     }
 
     /**
-     * @return the $supportStatus
+     * @return the $raveMessage
      */
-    public function getSupportStatus()
+    public function getRaveMessage()
     {
-        return $this->supportStatus;
+        return $this->raveMessage;
+    }
+
+    /**
+     * @return the $raveId
+     */
+    public function getRaveId()
+    {
+        return $this->raveId;
     }
 
     /**
@@ -139,38 +154,47 @@ class Support
     }
 
     /**
-     * @param string $topic
+     * @param \Application\Entity\InitatedTransfer $initiateId
      */
-    public function setTopic($topic)
+    public function setInitiateId($initiateId)
     {
-        $this->topic = $topic;
+        $this->initiateId = $initiateId;
         return $this;
     }
 
     /**
-     * @param \Application\Entity\SupportMessages $messages
+     * @param string $raveRef
      */
-    public function setMessages($messages)
+    public function setRaveRef($raveRef)
     {
-        $this->messages = $messages;
+        $this->raveRef = $raveRef;
         return $this;
     }
 
     /**
-     * @param \CsnUser\Entity\User $user
+     * @param string $amountTransfered
      */
-    public function setUser($user)
+    public function setAmountTransfered($amountTransfered)
     {
-        $this->user = $user;
+        $this->amountTransfered = $amountTransfered;
         return $this;
     }
 
     /**
-     * @param \Application\Entity\SupportStatus $supportStatus
+     * @param string $raveMessage
      */
-    public function setSupportStatus($supportStatus)
+    public function setRaveMessage($raveMessage)
     {
-        $this->supportStatus = $supportStatus;
+        $this->raveMessage = $raveMessage;
+        return $this;
+    }
+
+    /**
+     * @param string $raveId
+     */
+    public function setRaveId($raveId)
+    {
+        $this->raveId = $raveId;
         return $this;
     }
 

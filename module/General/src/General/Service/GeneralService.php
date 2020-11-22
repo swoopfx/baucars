@@ -67,7 +67,7 @@ class GeneralService
         }
         
         $mailService->setTemplate($template['template'], $template['var']);
-        $mailService->send();
+//         $mailService->send();
     }
 
     /**

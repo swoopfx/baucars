@@ -23,6 +23,7 @@ use General\Service\FlutterwaveService;
 use Zend\Mvc\MvcEvent;
 use Doctrine\ORM\Query;
 use Customer\Entity\BookingActivity;
+use Application\Entity\Support;
 
 class CustomerController extends AbstractActionController
 {
@@ -200,34 +201,33 @@ class CustomerController extends AbstractActionController
             
             try {
                 
-            
-            /**
-             *
-             * @var CustomerBooking $bookingEntity
-             */
-            $bookingEntity = $em->find(CustomerBooking::class, $id);
-            // var_dump($id);
-            $bookingEntity->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_CANCELED))
-                ->setUpdatedOn(new \DateTime());
-            $bookingActivity = new BookingActivity();
-            $bookingActivity->setBooking($bookingEntity)
-                ->setCreatedOn(new \DateTime())
-                ->setInformation("Booking {$bookingEntity->getBookingUid()} has been canceled");
-            
-            // send email
-            $em->persist($bookingEntity);
-            $em->persist($bookingActivity);
-            
-            $em->flush();
-            
-            // integrate funds return logic
-            
-            $this->flashmessenger()->addSuccessMessage("Booking {$bookingEntity->getBookingUid()} has been canceled");
-            $response->setStatusCode(200);
-            
-            $jsonModel->setVariable("data", $bookingEntity->getBookUid());
+                /**
+                 *
+                 * @var CustomerBooking $bookingEntity
+                 */
+                $bookingEntity = $em->find(CustomerBooking::class, $id);
+                // var_dump($id);
+                $bookingEntity->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_CANCELED))
+                    ->setUpdatedOn(new \DateTime());
+                $bookingActivity = new BookingActivity();
+                $bookingActivity->setBooking($bookingEntity)
+                    ->setCreatedOn(new \DateTime())
+                    ->setInformation("Booking {$bookingEntity->getBookingUid()} has been canceled");
+                
+                // send email
+                $em->persist($bookingEntity);
+                $em->persist($bookingActivity);
+                
+                $em->flush();
+                
+                // integrate funds return logic
+                
+                $this->flashmessenger()->addSuccessMessage("Booking {$bookingEntity->getBookingUid()} has been canceled");
+                $response->setStatusCode(201);
+                
+                $jsonModel->setVariable("data", $bookingEntity->getBookUid());
             } catch (\Exception $e) {
-                return var_dump($e->getMessage());
+                $response->setStatusCode(500);
             }
         }
         return $jsonModel;
@@ -371,6 +371,7 @@ class CustomerController extends AbstractActionController
         $flutterwaveService = $this->flutterwaveService;
         $bookingSession = $this->customerService->getBookingSession();
         $em = $this->entityManager;
+        $user = $this->identity();
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
@@ -402,16 +403,27 @@ class CustomerController extends AbstractActionController
                     
                     $em->persist($bookinEntity);
                     $em->persist($transactionEntity);
-                    
+                   
                     $em->flush();
-                    
-                    // generate booking
+                    $flutterwaveService->setTransactionId($transactionEntity->getId());
+                    $flutterwaveService->initiateTrasnfer();
                     $response->SetStatusCode(201);
                     $this->flashmessenger()->addSuccessMessage("{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
                     $jsonModel->setVariables([
                         "data" => $verifyData->data->chargedamount
                     ]);
-                    // initiate transfer
+
+                    // Notify Controller
+                    $generalService = $this->generalService;
+                    $pointer["to"] = "admin@baucars.com";
+                    $pointer["fromName"] = "System Robot";
+                    $pointer['subject'] = "New Booking";
+                    
+                    $template['template'] = "";
+                    $template["var"] = [
+                        
+                    ];
+                    $generalService->sendMails($pointer, $template);
                 }
             } catch (\Exception $e) {
                 $response->setStatusCode(400);
@@ -420,6 +432,31 @@ class CustomerController extends AbstractActionController
         }
         return $jsonModel;
     }
+
+    public function getsupportsnippetAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $userEntity = $this->identity();
+        $repo = $em->getRepository(Support::class);
+        $data = $repo->createQueryBuilder("s")
+            ->select("s, st")
+            ->setMaxResults(10)
+            ->where("s.user =" . $userEntity->getId())
+            ->leftJoin("s.supportStatus", "st")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        $response->setStatusCode(200);
+        $jsonModel->setVariable("data", $data);
+        return $jsonModel;
+    }
+
+    public function createsupportticketAction()
+    {}
+
+    public function sendsupportmessageAction()
+    {}
 
     public function getSubscribtionAction()
     {

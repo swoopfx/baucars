@@ -11,6 +11,8 @@ use Customer\Entity\CustomerBooking;
 use Zend\Http\Request;
 use Application\Entity\InitatedTransfer;
 use Application\Entity\TransferStatus;
+use Application\Entity\ConcludedTransfer;
+use Zend\Authentication\AuthenticationService;
 
 /**
  *
@@ -27,6 +29,12 @@ class FlutterwaveService
     const TRANSFER_STATUS_FAILED = 300;
 
     private $jsonContent = "application/json";
+    
+    /**
+     * 
+     * @var AuthenticationService
+     */
+    private $auth;
 
     /**
      *
@@ -40,6 +48,10 @@ class FlutterwaveService
      */
     private $flutterSession;
 
+    /**
+     * 
+     * @var GeneralService
+     */
     private $generalService;
 
     private $flutterwaveConfig;
@@ -71,6 +83,12 @@ class FlutterwaveService
      * @var string
      */
     private $txRef;
+
+    /**
+     *
+     * @var int
+     */
+    private $transactionId;
 
     /**
      *
@@ -107,6 +125,8 @@ class FlutterwaveService
     private $transferAmount;
 
     private $transferResponseRaveRef;
+
+    private $initiatedTransferId;
 
     const TRANSACTION_STATUS_PAID = 100;
 
@@ -163,6 +183,7 @@ class FlutterwaveService
     public function hydrateTransaction()
     {
         $em = $this->entityManager;
+        $auth = $this->auth;
         $transactionEntity = new Transactions();
         $flutterSession = $this->flutterSession;
         $transactionEntity->setCreatedOn(new \DateTime())
@@ -176,7 +197,17 @@ class FlutterwaveService
             ->setUser($em->find(User::class, $this->transactUser));
         
         $em->persist($transactionEntity);
-        
+       $generalService = $this->generalService;
+       $pointer["to"] = $auth->getIdentity()->getEmail();
+       $pointer["fromName"] = "Bau Cars Limited";
+       $pointer['subject'] = "Successfull Transaction";
+       
+       $template['template'] = "";
+       $template["var"] = [
+           
+       ];
+       $generalService->sendMails($pointer, $template);
+        // send transaction mail to customer
         return $transactionEntity;
         
         // send transaction mail
@@ -216,13 +247,15 @@ class FlutterwaveService
     public function initiateTrasnfer()
     {
         $transfercost = $this->transaferCost();
+       
+        $this->initiatedTransferId = $this->hydrateTransferInitiate();
         $transferCharge = $transfercost->data[0]->fee + 15;
         $uid = $this->transferUid();
         $transferAmount = $this->settledAmount - $transferCharge;
         $endPoint = "https://api.ravepay.co/v2/gpx/transfers/create";
         $body = [
             "account_bank" => "058",
-            "account_number" => "0571517010",
+            "account_number" => "0018666738",
             "amount" => $transferAmount,
             "currency" => "NGN",
             "narration" => "Booking Remittance",
@@ -240,6 +273,11 @@ class FlutterwaveService
         if ($response->isSuccess()) {
             $rBody = json_decode($response->getBody());
             
+            if ($rBody->status == "success") {
+                $rData = $rBody->data;
+                $this->hydrateTransferConclude($rBody);
+            }
+            
             return $rBody;
         } else {
             $rBody = json_decode($response->getBody());
@@ -252,12 +290,27 @@ class FlutterwaveService
         $em = $this->entityManager;
         $init = new InitatedTransfer();
         $init->setCreatedOn(new \DateTime())
-            ->setRaveRef($this->transferResponseRaveRef)
+            ->setTransaction($em->find(Transactions::class, $this->getTransactionId()))
             ->setTransferAmount($this->transferAmount)
             ->setTransferStatus($em->find(TransferStatus::class, self::TRANSFER_STATUS_INITIATED))
             ->setTransferUid(self::transferUid());
         $em->persist($init);
-        return $init;
+        $em->flush();
+        return $init->getId();
+    }
+
+    public function hydrateTransferConclude($data)
+    {
+        $em = $this->entityManager;
+        $conclude = new ConcludedTransfer();
+        $conclude->setCreatedOn(new \DateTime())
+            ->setAmountTransfered($data->data->amount)
+            ->setInitiateId($em->find(InitatedTransfer::class, $this->initiatedTransferId))
+            ->setRaveId($data->data->id)
+            ->setRaveMessage($data->message)
+            ->setRaveRef($data->data->reference);
+        $em->persist($conclude);
+        $em->flush();
     }
 
     /**
@@ -621,5 +674,60 @@ class FlutterwaveService
         $this->transferAmount = $transferAmount;
         return $this;
     }
+
+    /**
+     *
+     * @return the $initiatedTransferId
+     */
+    public function getInitiatedTransferId()
+    {
+        return $this->initiatedTransferId;
+    }
+
+    /**
+     *
+     * @param field_type $initiatedTransferId            
+     */
+    public function setInitiatedTransferId($initiatedTransferId)
+    {
+        $this->initiatedTransferId = $initiatedTransferId;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $transactionId
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+    /**
+     *
+     * @param number $transactionId            
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
+        return $this;
+    }
+    /**
+     * @return the $auth
+     */
+    public function getAuth()
+    {
+        return $this->auth;
+    }
+
+    /**
+     * @param \Zend\Authentication\AuthenticationService $auth
+     */
+    public function setAuth($auth)
+    {
+        $this->auth = $auth;
+        return $this;
+    }
+
 }
 

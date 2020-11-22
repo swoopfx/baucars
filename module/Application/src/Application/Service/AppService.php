@@ -9,7 +9,9 @@ namespace Application\Service;
 class AppService
 {
 
-    // TODO - Insert your code here
+    const SUPPORT_MESSAGE_SENDER = 10;
+    
+    const SUPPORT_MESSAGE_RECEIVER = 20;
     
     /**
      */

@@ -38,6 +38,7 @@ class FlutterwaveServiceFactory implements FactoryInterface
         $xserv = new FlutterwaveService();
         $xserv->setGeneralService($generalService)
             ->setEntityManager($generalService->getEntityManager())
+            ->setAuth($generalService->getAuth())
             ->setFlutterSession($flutterSession)
             ->setFlutterwavePublicKey($flutterwaveConfig["public_key"])
             ->setFlutterwaveEncrypKey($flutterwaveConfig["encryption_key"])
