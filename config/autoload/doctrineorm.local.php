@@ -12,7 +12,7 @@ return array(
                 'params' => array(
                     
                     'host' => $host,
-                    'port' => '3308',
+                    'port' => '3306',
                     'user' => $username,
                     'password' => $password,
                     'dbname' => 'baucars',

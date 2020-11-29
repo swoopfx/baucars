@@ -34,7 +34,7 @@ return [
              *
              * Default value is \Zend\Mail\Transport\Sendmail
              */
-            'mail_adapter' => '\Zend\Mail\Transport\Sendmail',
+            'mail_adapter' => 'smtp',
 
             /**
              * An alias for the 'mail_adapter' option. Use just one or another.
@@ -205,14 +205,14 @@ return [
                  *
                  * Default value is localhost
                  */
-                //'host' => 'localhost',
+                'host' => 'smtp.mailtrap.io',
 
                 /**
                  * Port of the mail server.
                  *
                  * Default value is 25
                  */
-                //'port' => 25,
+                'port' => 2525,
 
                 /**
                  * The connection class used for authentication.
@@ -220,23 +220,23 @@ return [
                  *
                  * Default value is 'smtp'.
                  */
-                //'connection_class' => 'smtp',
+                'connection_class' => 'crammd5',
 
-                //'connection_config' => [
+                'connection_config' => [
                     /**
                      * The SMTP authentication identity.
                      * If this is not set, the 'from' option of the message will be used.
                      *
                      * Default value is an empty string
                      */
-                    //'username' => '',
+                    'username' => '0083a75ee91f96',
 
                     /**
                      * The SMTP authentication credential.
                      *
                      * Default value is an empty string
                      */
-                    //'password' => '',
+                    'password' => '17c05d8483f2b4',
 
                     /**
                      * This defines the encryption type to be used, 'ssl' or 'tls'.
@@ -244,8 +244,8 @@ return [
                      *
                      * Default value is null
                      */
-                    //'ssl' => null,
-                //],
+                    'ssl' => null,
+                ],
             ],
 
 

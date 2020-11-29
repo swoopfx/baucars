@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use CsnUser\Entity\User;
 use General\Entity\BookingClass;
 use Application\Entity\Transactions;
+use Application\Entity\Feedback;
 
 /**
  * @ORM\Entity(repositoryClass="Customer\Entity\Repostory\CustomerBookingRepository")
@@ -66,7 +67,7 @@ class CustomerBooking
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\BookingClass")
-     * 
+     *
      * @var BookingClass
      */
     private $bookingClass;
@@ -109,10 +110,17 @@ class CustomerBooking
 
     /**
      * @ORM\OneToOne(targetEntity="Application\Entity\Transactions", mappedBy="booking")
-     * 
+     *
      * @var Transactions
      */
     private $transaction;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Application\Entity\Feedback", mappedBy="booking")
+     * 
+     * @var Feedback
+     */
+    private $feedback;
 
     /**
      */

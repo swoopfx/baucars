@@ -29,9 +29,9 @@ class FlutterwaveService
     const TRANSFER_STATUS_FAILED = 300;
 
     private $jsonContent = "application/json";
-    
+
     /**
-     * 
+     *
      * @var AuthenticationService
      */
     private $auth;
@@ -49,7 +49,7 @@ class FlutterwaveService
     private $flutterSession;
 
     /**
-     * 
+     *
      * @var GeneralService
      */
     private $generalService;
@@ -171,8 +171,9 @@ class FlutterwaveService
             // insert into transation table
             return $rBody;
         } else {
+            // store in database information about the booking 
             $rBody = json_decode($response->getBody());
-            throw new \Exception($rBody->message);
+            throw new \Exception("Verification Error");
         }
     }
 
@@ -197,16 +198,19 @@ class FlutterwaveService
             ->setUser($em->find(User::class, $this->transactUser));
         
         $em->persist($transactionEntity);
-       $generalService = $this->generalService;
-       $pointer["to"] = $auth->getIdentity()->getEmail();
-       $pointer["fromName"] = "Bau Cars Limited";
-       $pointer['subject'] = "Successfull Transaction";
-       
-       $template['template'] = "";
-       $template["var"] = [
-           
-       ];
-       $generalService->sendMails($pointer, $template);
+        $generalService = $this->generalService;
+        $pointer["to"] = $auth->getIdentity()->getEmail();
+        $pointer["fromName"] = "Bau Cars Limited";
+        $pointer['subject'] = "Successfull Transaction";
+        
+        $template['template'] = "general-mail-transaction-success";
+        $template["var"] = [
+            "amount" => $this->amountPayed,
+            "fullname" => $this->booking->getUser()->getFullName(),
+            "logo" => "kkkk",
+            "bookingUid" => $this->booking->getBookingUid()
+        ];
+        $generalService->sendMails($pointer, $template);
         // send transaction mail to customer
         return $transactionEntity;
         
@@ -247,7 +251,7 @@ class FlutterwaveService
     public function initiateTrasnfer()
     {
         $transfercost = $this->transaferCost();
-       
+        
         $this->initiatedTransferId = $this->hydrateTransferInitiate();
         $transferCharge = $transfercost->data[0]->fee + 15;
         $uid = $this->transferUid();
@@ -712,7 +716,9 @@ class FlutterwaveService
         $this->transactionId = $transactionId;
         return $this;
     }
+
     /**
+     *
      * @return the $auth
      */
     public function getAuth()
@@ -721,13 +727,13 @@ class FlutterwaveService
     }
 
     /**
-     * @param \Zend\Authentication\AuthenticationService $auth
+     *
+     * @param \Zend\Authentication\AuthenticationService $auth            
      */
     public function setAuth($auth)
     {
         $this->auth = $auth;
         return $this;
     }
-
 }
 

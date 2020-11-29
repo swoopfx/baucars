@@ -21,6 +21,7 @@ use Customer\Entity\BookingActivity;
 use General\Entity\BookingStatus;
 use Customer\Service\CustomerService;
 use Zend\Mvc\MvcEvent;
+use General\Service\GeneralService;
 
 /**
  *
@@ -48,15 +49,21 @@ class DriverController extends AbstractActionController
      */
     private $driverService;
 
+    /**
+     *
+     * @var GeneralService
+     */
+    private $generalService;
+
     // private
-    
-    public function onDispatch(MvcEvent $e){
+    public function onDispatch(MvcEvent $e)
+    {
         $response = parent::onDispatch($e);
         $this->redirectPlugin()->redirectToLogout();
         
         return $response;
     }
-    
+
     /**
      */
     public function __construct()
@@ -225,6 +232,7 @@ class DriverController extends AbstractActionController
         $em = $this->entityManager;
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
+        // $generalService = $this->g
         $request = $this->getRequest();
         // changes the status of the booking from
         // send notification to driver
@@ -239,7 +247,7 @@ class DriverController extends AbstractActionController
              */
             $bookingEntity = $em->find(CustomerBooking::class, $bookingId);
             $bookingEntity->setAssignedDriver($em->find(DriverBio::class, $driverId))
-            ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ASSIGN))
+                ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ASSIGN))
                 ->setUpdatedOn(new \DateTime());
             /**
              *
@@ -249,8 +257,8 @@ class DriverController extends AbstractActionController
             $bookingAvtivityEntity = new BookingActivity();
             $bookingAvtivityEntity->setBooking($bookingEntity)
                 ->setCreatedOn(new \DateTime())
-                
-                ->setInformation("Assigned Driver {$driverEntity->getUser()->getFullName()}");
+                ->
+            setInformation("Assigned Driver {$driverEntity->getUser()->getFullName()}");
             
             $em->persist($bookingEntity);
             $em->persist($bookingAvtivityEntity);
@@ -258,14 +266,28 @@ class DriverController extends AbstractActionController
             // send mail to customer
             $em->flush();
             
+            $generalService = $this->generalService;
+            $pointer["to"] = "admin@baucars.com";
+            $pointer["fromName"] = "Bau Cars Controller";
+            $pointer['subject'] = "Assigned Driver";
+            
+            $template['template'] = "general-customer-assigned-driver";
+            $template["var"] = [
+                "logo" => "lll",
+                "fullname" => $driverEntity->getUser()->getFullName(),
+                "phone"=>$driverEntity->getUser()->getPhoneNumber()
+            
+            ];
+            $generalService->sendMails($pointer, $template);
+            
             $this->flashmessenger()->addSuccessMessage("Successfully Assigned Driver to Booking");
             $response->setStatusCode(201);
-            
         }
         return $jsonModel;
     }
-    
-    public function reassigndriverAction(){
+
+    public function reassigndriverAction()
+    {
         $jsonModel = new JsonModel();
         return $jsonModel;
     }
@@ -324,6 +346,25 @@ class DriverController extends AbstractActionController
     public function setDriverService($driverService)
     {
         $this->driverService = $driverService;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $generalService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     *
+     * @param \General\Service\GeneralService $generalService            
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
         return $this;
     }
 }

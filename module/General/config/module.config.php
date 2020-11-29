@@ -59,6 +59,11 @@ return array(
         'template_path_stack' => array(
             'General' => __DIR__ . '/../view',
         ),
+        'template_map' => array(
+            "general-mail-transaction-success" => __DIR__ . '/../view/mail/general-transaction-success.phtml',
+            "general-customer-assigned-driver" => __DIR__ . '/../view/mail/general-customer-assigned-todriver-mail.phtml',
+            
+        ),
     ),
     
     'doctrine' => array(

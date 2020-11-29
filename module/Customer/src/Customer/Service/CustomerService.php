@@ -172,17 +172,17 @@ class CustomerService
         ->setStatus($em->find(BookingStatus::class, self::BOOKING_STATUS_INITIATED))
         ->setBookingType($em->find(BookingType::class, $this->bookingType));
         
-        $generalService = $this->generalService;
-        $pointer["to"] = $auth->getIdentity()->getEmail();
-        $pointer["fromName"] = "Bau Cars Limited";
-        $pointer['subject'] = "Booking Initiated";
+//         $generalService = $this->generalService;
+//         $pointer["to"] = $auth->getIdentity()->getEmail();
+//         $pointer["fromName"] = "Bau Cars Limited";
+//         $pointer['subject'] = "Booking Initiated";
         
-        $template['template'] = "";
-        $template["var"] = [
+//         $template['template'] = "";
+//         $template["var"] = [
             
-        ];
+//         ];
         
-        $generalService->sendMails($pointer, $template);
+//         $generalService->sendMails($pointer, $template);
         return $booking;
         
         // Send Booking mail

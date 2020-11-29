@@ -419,9 +419,12 @@ class CustomerController extends AbstractActionController
                     $pointer["fromName"] = "System Robot";
                     $pointer['subject'] = "New Booking";
                     
-                    $template['template'] = "";
+                    $template['template'] = "admin-new-booking";
                     $template["var"] = [
-                        
+                        "logo"=>"ll",
+                        "bookingUid"=>$transactionEntity->getBooking()->getBookingUid(),
+                        "fullname"=>$transactionEntity->getBooking()->getUser()->getFullName(),
+                        "amount"=>$transactionEntity->getAmount()
                     ];
                     $generalService->sendMails($pointer, $template);
                 }

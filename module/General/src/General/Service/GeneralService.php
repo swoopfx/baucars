@@ -47,6 +47,7 @@ class GeneralService
      */
     public function sendMails($messagePointers = array(), $template = array(), $replyTo = "", $addCc = "", $addBcc = "")
     {
+        
         $mailService = $this->mailService;
         // $der = new Message();
         $message = $mailService->getMessage();
@@ -67,7 +68,8 @@ class GeneralService
         }
         
         $mailService->setTemplate($template['template'], $template['var']);
-//         $mailService->send();
+        
+        $mailService->send();
     }
 
     /**

@@ -3,6 +3,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Customer\Entity\ActiveTrip;
+use Customer\Entity\CustomerBooking;
 
 /**
  * @ORM\Entity
@@ -22,6 +23,12 @@ class Feedback
      *     
      */
     private $id;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Customer\Entity\CustomerBooking", inversedBy="feedback")
+     * @var CustomerBooking
+     */
+    private $booking;
 
     /**
      * @ORM\Column(name="feeback_count", type="integer", nullable=true)

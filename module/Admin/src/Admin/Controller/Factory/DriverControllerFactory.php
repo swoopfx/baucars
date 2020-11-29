@@ -43,6 +43,7 @@ class DriverControllerFactory implements FactoryInterface
         
         $ctr->setEntityManager($generalService->getEntityManager())
             ->setDriverPaginator($allDriverPaginator)
+            ->setGeneralService($generalService)
             ->setDriverService($driverService);
         return $ctr;
     }

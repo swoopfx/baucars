@@ -64,7 +64,10 @@ return array(
             
         ),
         "template_map"=>[
-            'booking-menu-list' => __DIR__ . '/../view/admin/booking/partial/booking_menu_list.phtml'
+            'booking-menu-list' => __DIR__ . '/../view/admin/booking/partial/booking_menu_list.phtml',
+            
+            // email
+            'admin-new-booking' => __DIR__ . '/../view/email/admin-user-new-booking.phtml'
         ],
         'strategies' => array(
             'ViewJsonStrategy'

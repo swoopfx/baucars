@@ -65,6 +65,10 @@ class RegistrationController extends AbstractActionController
 
     private $mailService;
 
+    /**
+     * 
+     * @var GeneralService
+     */
     private $generalService;
 
     private $chatkitService;
@@ -172,7 +176,6 @@ class RegistrationController extends AbstractActionController
 
     public function registerjsonAction()
     {
-        
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
         $user = new User();
@@ -181,7 +184,7 @@ class RegistrationController extends AbstractActionController
         if ($request->isPost()) {
             
             $post = $request->getPost()->toArray();
-           
+            
             $inputFilter = new InputFilter();
             $inputFilter->add(array(
                 'name' => 'phoneNumber',
@@ -297,7 +300,7 @@ class RegistrationController extends AbstractActionController
                 $user->setRegistrationDate(new \DateTime());
                 $user->setUpdatedOn(new \DateTime());
                 $user->setEmailConfirmed(false);
-//                 var_dump("LLLa");
+                // var_dump("LLLa");
                 
                 try {
                     $fullLink = $this->url()->fromRoute('user-register', array(
@@ -309,7 +312,7 @@ class RegistrationController extends AbstractActionController
                     
                     $logo = $this->url()->fromRoute('home', array(), array(
                         'force_canonical' => true
-                    )) . "img/logo.png";
+                    )) . "assets/img/logo.png";
                     
                     // $mailer = $this->mail;
                     
@@ -318,7 +321,7 @@ class RegistrationController extends AbstractActionController
                         'confirmLink' => $fullLink
                     ];
                     
-                    $template['template'] = "general-user-confirm-email";
+                    $template['template'] = "email-app-user-registration";
                     $template['var'] = $var;
                     
                     $messagePointer['to'] = $user->getEmail();
@@ -344,10 +347,31 @@ class RegistrationController extends AbstractActionController
                     // "user" => $user->getId()
                     // );
                     // $this->getEventManager()->trigger(TriggerService::USER_REGISTER_INITIATED, $this, $triggerParams);
-                   
-                    $response->setStatusCode(Response::STATUS_CODE_201);
-                    return $jsonModel;
                     
+                    $response->setStatusCode(Response::STATUS_CODE_201);
+                    
+                    // $generalService = $this->generalService;
+                    // $pointer["to"] = $auth->getIdentity()->getEmail();
+                    // $pointer["fromName"] = "Bau Cars Limited";
+                    // $pointer['subject'] = "";
+                    
+                    // $template['template'] = "";
+                    // $template["var"] = [
+                    
+                    // ];
+                    
+                    // $generalService->sendMails($pointer, $template); $generalService = $this->generalService;
+                    // $pointer["to"] = $auth->getIdentity()->getEmail();
+                    // $pointer["fromName"] = "Bau Cars Limited";
+                    // $pointer['subject'] = "Booking Initiated";
+                    
+                    // $template['template'] = "";
+                    // $template["var"] = [
+                    
+                    // ];
+                    
+                    $this->generalService->sendMails($messagePointer, $template);
+                    return $jsonModel;
                 } catch (\Exception $e) {
                     $response->setStatusCode(Response::STATUS_CODE_400);
                     $jsonModel->setVariables([
@@ -366,7 +390,7 @@ class RegistrationController extends AbstractActionController
             ]);
         }
         
-//        return $jsonModel;
+        // return $jsonModel;
     }
 
     /**
