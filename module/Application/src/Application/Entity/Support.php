@@ -22,6 +22,12 @@ class Support
      *     
      */
     private $id;
+    
+    /**
+     * @ORM\Column(name="support_uid", type="string", nullable=true, unique=true,)
+     * @var string
+     */
+    private $supportUid;
 
     /**
      * @ORM\Column(name="topic", type="string", nullable=true)
@@ -118,6 +124,7 @@ class Support
      */
     public function getCreatedOn()
     {
+       
         return $this->createdOn;
     }
 
@@ -179,6 +186,7 @@ class Support
      */
     public function setCreatedOn($createdOn)
     {
+        $this->updatedOn = $createdOn;
         $this->createdOn = $createdOn;
         return $this;
     }
@@ -191,6 +199,23 @@ class Support
         $this->updatedOn = $updatedOn;
         return $this;
     }
+    /**
+     * @return the $supportUid
+     */
+    public function getSupportUid()
+    {
+        return $this->supportUid;
+    }
+
+    /**
+     * @param string $supportUid
+     */
+    public function setSupportUid($supportUid)
+    {
+        $this->supportUid = $supportUid;
+        return $this;
+    }
+
 
 }
 

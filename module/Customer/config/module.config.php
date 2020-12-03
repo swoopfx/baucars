@@ -55,6 +55,9 @@ return array(
         'template_path_stack' => array(
             'Customer' => __DIR__ . '/../view',
         ),
+        'template_map' => array(
+            "customer-booking-details-snippet"=> __DIR__ . '/../view/customer/partials/booking-details-snippet.phtml'
+        ),
     ),
     
     'service_manager' => array(

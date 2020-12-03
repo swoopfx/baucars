@@ -1,0 +1,132 @@
+<?php
+?>
+<button class="btn btn-block btn-primary"> Edit Booking</button>
+<div v-if="editabledBooking">
+	
+</div>
+<div v-if="isBookingEdit">Hey</div>
+<div v-else>
+
+	<div class="col-xl-12">
+
+		<div class="widget has-shadow">
+			<div class="widget-header bordered no-actions d-flex align-items-center">
+				<h4>Booking Information</h4>
+			</div>
+			<div class="widget-body">
+				<div class="table-responsive">
+					<table class="table table-bordered mb-0">
+
+						<tbody>
+							<tr>
+								<th>Booking Class</th>
+								<td>{{bookingDetails.bookingClass.bookingClass}}</td>
+
+							</tr>
+
+							<tr>
+								<th>Transaction Reference</th>
+								<td>{{bookingDetails.bookingType.bookingType}}</td>
+
+							</tr>
+
+							<tr>
+								<th>Service Method</th>
+								<td>{{bookingDetails.billingMethod.billingMethod}}</td>
+
+							</tr>
+
+							<tr>
+								<th>Start Date</th>
+								<td>{{formatPHPDate(bookingDetails.startTime.date)}}</td>
+
+							</tr>
+
+							<tr>
+								<th>End Date</th>
+								<td>{{formatPHPDate(bookingDetails.endTime.date)}}</td>
+
+							</tr>
+
+							<tr>
+								<th>Status</th>
+								<td><span style="width: 100px;" :class='bookingStatus(bookingDetails.status.id)'> {{bookingDetails.status.status}} </span></td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- End Border -->
+	</div>
+
+	<div class="col-xl-12">
+
+		<div class="widget has-shadow">
+			<div class="widget-header bordered no-actions d-flex align-items-center">
+				<h4>Transaction Information</h4>
+			</div>
+			<div class="widget-body">
+				<div class="table-responsive">
+					<table class="table table-bordered mb-0">
+
+						<tbody>
+							<tr>
+								<th>Amount Paid</th>
+								<td>&#8358;{{formatPrice(bookingDetails.transaction.amount)}}</td>
+
+							</tr>
+							<tr>
+								<th>Transaction reference</th>
+								<td>{{bookingDetails.transaction.txRef}}</td>
+
+							</tr>
+
+							<tr>
+								<th>Paid On</th>
+								<td>{{formatPHPDate(bookingDetails.transaction.createdOn.date)}}</td>
+
+							</tr>
+
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- End Border -->
+	</div>
+	<div v-if="bookingDetails.assignedDriver != null" class="col-xl-12">
+
+		<div class="widget has-shadow">
+			<div class="widget-header bordered no-actions d-flex align-items-center">
+				<h4>Assigned Driver </h4>
+			</div>
+			<div class="widget-body">
+				<div class="table-responsive">
+					<table class="table table-bordered mb-0">
+
+						<tbody>
+							<tr>
+								<th>Driver Name</th>
+								<td>&#8358;{{bookingDetails.assignedDriver.user.fullName}}</td>
+
+							</tr>
+							<tr>
+								<th>Driver Number</th>
+								<td>{{bookingDetails.assignedDriver.user.phoneNumber}}</td>
+
+							</tr>
+
+
+
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- End Border -->
+	</div>
+</div>

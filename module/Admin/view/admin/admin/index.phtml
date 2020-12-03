@@ -201,7 +201,8 @@
 						<h3 class="panel-title">INITIATED BOOKING</h3>
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle"
+								data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -233,7 +234,8 @@
 										<td>{{data.bookingClass.bookingClass}}</td>
 										<td>{{data.bookingType.bookingType}}</td>
 										<td><span class="label label-success">{{data.status.status}}</span></td>
-										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
+												class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -248,22 +250,23 @@
 			<div class="col-xl-3">
 				<div class="panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">To-Do List</h3>
+						<!-- <h3 class="panel-title">To-Do List</h3> -->
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle"
+								data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
 							<ul class="dropdown-menu">
-								<li><a href="#"><i class="fa fa-sync"></i>Update Data</a></li>
-								<li><a href="#"><i class="fa fa-times"></i>Remove Panel</a></li>
+								<!-- <li><a href="#"><i class="fa fa-sync"></i>Update Data</a></li>
+								<li><a href="#"><i class="fa fa-times"></i>Remove Panel</a></li> -->
 							</ul>
 						</div>
 					</div>
 
 					<div class="todo--panel">
-						<form action="#">
+						<!-- <form action="#">
 							<ul class="list-group" data-trigger="scrollbar">
 								<li class="list-group-item"><label class="todo--label"> <input type="checkbox" name="todo_id" value="1" class="todo--input" checked> <span class="todo--text">Schedule Meeting</span>
 									</label> <a href="#" class="todo--remove">&times;</a></li>
@@ -287,7 +290,7 @@
 									<button type="submit" class="btn-link">+</button>
 								</div>
 							</div>
-						</form>
+						</form> -->
 					</div>
 				</div>
 			</div>
@@ -298,7 +301,8 @@
 						<h3 class="panel-title">IN TRANSIT</h3>
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle"
+								data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -330,7 +334,8 @@
 										<td>{{data.bookingClass.bookingClass}}</td>
 										<td>{{data.bookingType.bookingType}}</td>
 										<td><span class="label label-success">{{data.status.status}}</span></td>
-										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
+												class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -345,33 +350,34 @@
 			<div class="col-xl-3 col-md-6">
 				<div class="panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">Total Overdue</h3>
+						<!-- <h3 class="panel-title">Total Overdue</h3> -->
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle"
+								data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
-							<ul class="dropdown-menu">
+							<!-- <ul class="dropdown-menu">
 								<li><a href="#"><i class="fa fa-sync"></i>Update Data</a></li>
 								<li><a href="#"><i class="fa fa-cogs"></i>Settings</a></li>
 								<li><a href="#"><i class="fa fa-times"></i>Remove Panel</a></li>
-							</ul>
+							</ul> -->
 						</div>
 					</div>
 
 					<div class="panel-chart">
 						<div class="chart--title text-blue">
-							<h2 class="h2">$14,200,000</h2>
+							<!-- <h2 class="h2">$14,200,000</h2> -->
 						</div>
 
 						<!-- Morris Line Chart 03 Start -->
-						<div id="morrisLineChart03" class="chart--body line--chart style--3"></div>
+						<!-- <div id="morrisLineChart03" class="chart--body line--chart style--3"></div> -->
 						<!-- Morris Line Chart 03 End -->
 
-						<div class="chart--action">
+						<!-- <div class="chart--action">
 							<a href="#" class="btn-link">Export PDF <i class="fa fa-long-arrow-right"></i></a>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -384,7 +390,8 @@
 						<h3 class="panel-title">CANCELED BOOKING</h3>
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle"
+								data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -416,7 +423,8 @@
 										<td>{{data.bookingClass.bookingClass}}</td>
 										<td>{{data.bookingType.bookingType}}</td>
 										<td><span class="label label-success">{{data.status.status}}</span></td>
-										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
+												class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -431,43 +439,37 @@
 			<div class="col-xl-3 col-md-6">
 				<div class="panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">Total Overdue</h3>
+						<!-- <h3 class="panel-title">Total Overdue</h3> -->
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle"
+								data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
-							<ul class="dropdown-menu">
+							<!-- <ul class="dropdown-menu">
 								<li><a href="#"><i class="fa fa-sync"></i>Update Data</a></li>
 								<li><a href="#"><i class="fa fa-cogs"></i>Settings</a></li>
 								<li><a href="#"><i class="fa fa-times"></i>Remove Panel</a></li>
-							</ul>
+							</ul> -->
 						</div>
 					</div>
 
 					<div class="panel-chart">
 						<div class="chart--title text-blue">
-							<h2 class="h2">$14,200,000</h2>
+							<!-- <h2 class="h2">$14,200,000</h2> -->
 						</div>
 
 						<!-- Morris Line Chart 03 Start -->
-						<div id="morrisLineChart03" class="chart--body line--chart style--3"></div>
+						<!-- <div id="morrisLineChart03" class="chart--body line--chart style--3"></div> -->
 						<!-- Morris Line Chart 03 End -->
 
 						<div class="chart--action">
-							<a href="#" class="btn-link">Export PDF <i class="fa fa-long-arrow-right"></i></a>
+							<!-- <a href="#" class="btn-link">Export PDF <i class="fa fa-long-arrow-right"></i></a> -->
 						</div>
 					</div>
 				</div>
 			</div>
-
-
-
-
-
-
-
 
 
 
@@ -484,7 +486,7 @@
 
 					<div class="feeds-panel">
 						<ul class="nav">
-							<li><span class="time">2 mins</span> <i class="fa fa-shopping-cart text-white bg-blue"></i> <span class="text">New Order Received</span></li>
+							<!-- <li><span class="time">2 mins</span> <i class="fa fa-shopping-cart text-white bg-blue"></i> <span class="text">New Order Received</span></li>
 							<li><span class="time">10 mins</span> <i class="fa fa-user text-white bg-orange"></i> <span class="text">Updated
 									Profile Picture</span></li>
 							<li><span class="time">20 mins</span> <i class="fa fa-comment text-white bg-red"></i> <span class="text"><a href="#">John Doe</a> Commented on <a href="#">News #123</a></span>
@@ -502,7 +504,7 @@
 							<li><span class="time">4 hours</span> <i class="fa fa-shopping-cart text-white bg-blue"></i> <span class="text">New Order Received</span></li>
 							<li><span class="time">8 hours</span> <i class="fa fa-user text-white bg-green"></i> <span class="text">New
 									User Registered</span></li>
-							<li><span class="time">22 hours</span> <i class="fa fa-shopping-cart text-white bg-blue"></i> <span class="text">New Order Received</span></li>
+							<li><span class="time">22 hours</span> <i class="fa fa-shopping-cart text-white bg-blue"></i> <span class="text">New Order Received</span></li> -->
 						</ul>
 					</div>
 				</div>
@@ -517,56 +519,33 @@
 					</div>
 
 					<div class="comments-panel">
-						<ul>
-							<li>
+						<ul v-if="splashSupport.length">
+							<li v-for="support in splashSupport">
 								<div class="img">
-									<img src="assets/img/avatars/02_40x40.png" alt="" class="rounded-circle">
+									<img src="assets/img/avatars/04_40x40.png" alt=""
+										class="rounded-circle">
 								</div>
 
 								<div class="info">
-									<h3 class="h6">John Doe</h3>
+									<h3 class="h6">{{support.user.fullName}}</h3>
 
-									<p>Lorem ipsum dolor sit elit, sed do eiusmod tempor.</p>
+									<p>{{support.topic}}</p>
 
 									<div class="action">
-										<span class="status text-orange">Pending</span> <a href="#" class="btn btn-sm btn-info">Delete</a>
+										<span class="status text-orange">{{support.supportStatus.status}}</span>
+										<a href="/" class="btn btn-sm btn-info">Delete</a>
 									</div>
 								</div>
 							</li>
-							<li>
-								<div class="img">
-									<img src="assets/img/avatars/03_40x40.png" alt="" class="rounded-circle">
-								</div>
 
-								<div class="info">
-									<h3 class="h6">Jane Doe</h3>
 
-									<p>Lorem ipsum dolor sit elit, sed do eiusmod tempor.</p>
-
-									<div class="action">
-										<span class="status text-blue">Approved</span> <a href="#" class="btn btn-sm btn-info">Delete</a>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="img">
-									<img src="assets/img/avatars/04_40x40.png" alt="" class="rounded-circle">
-								</div>
-
-								<div class="info">
-									<h3 class="h6">Harry Johnson</h3>
-
-									<p>Lorem ipsum dolor sit elit, sed do eiusmod tempor.</p>
-
-									<div class="action">
-										<span class="status text-red">Rejected</span> <a href="#" class="btn btn-sm btn-info">Delete</a>
-									</div>
-								</div>
-							</li>
 						</ul>
 
 						<div class="nav">
-							<a href="#" class="next btn-link">Older Comments <i class="fa fa-angle-double-right"></i></a>
+							<a
+								href="<?php echo $this->url("admin/default", array("controller"=>"admin", "action"=>"support"))?>"
+								class="next btn-link">Older Comments <i
+								class="fa fa-angle-double-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -585,7 +564,7 @@
 			this.getSplashInTransitBooking();
 
 			// Support
-
+			this.getSplashSupport();
 
 		},
 		data() {
@@ -661,7 +640,11 @@
 			},
 
 			getSplashSupport() {
-
+				axios.get("/controller/admin/getSplashSupport").then(res=>{
+					if(res.status == 200){
+						this.splashSupport = res.data.data;
+					}
+				}).catch();
 			}
 		},
 	});

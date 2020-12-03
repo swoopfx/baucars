@@ -10,6 +10,7 @@ use Zend\Authentication\AuthenticationService;
 use General\Entity\BookingStatus;
 use General\Entity\BookingType;
 use General\Service\GeneralService;
+use General\Entity\BillingMethod;
 
 /**
  *
@@ -166,6 +167,7 @@ class CustomerService
         $booking->setCreatedOn(new \DateTime())
         ->setEndTime($this->bookingEndData)
         ->setBookingUid(self::bookingUid())
+        ->setBillingMethod($em->find(BillingMethod::class, $this->billingMethod))
         ->setStartTime($this->bookingStartDate)
         ->setUser($this->auth->getIdentity())
         ->setBookingClass($em->find(BookingClass::class, $this->bookingClass))

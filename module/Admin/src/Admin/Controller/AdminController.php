@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
 namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -16,39 +15,43 @@ use General\Service\GeneralService;
 use Customer\Service\CustomerService;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\JsonModel;
+use Application\Entity\Support;
+use Doctrine\ORM\Query;
 
 class AdminController extends AbstractActionController
 {
+
     /**
-     * 
+     *
      * @var EntityManager
      */
     private $entityManager;
-    
+
     /**
-     * 
+     *
      * @var GeneralService
      */
     private $generalService;
-    
+
     /**
-     * 
+     *
      * @var CustomerService
      */
     private $customerService;
-    
+
     private $customerBookingService;
-    
+
     private $driverService;
-    
-    public function onDispatch(MvcEvent $e){
+
+    public function onDispatch(MvcEvent $e)
+    {
         $response = parent::onDispatch($e);
         $this->redirectPlugin()->redirectToLogout();
-       
+        
         return $response;
     }
-    
-//     private $
+
+    // private $
     public function indexAction()
     {
         return array();
@@ -60,41 +63,69 @@ class AdminController extends AbstractActionController
         // are working when you browse to /admin/admin/foo
         return array();
     }
-    
-    
-    public function bookingAction(){
+
+    public function getSplashSupportAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $repo = $em->getRepository(Support::class);
+        $data = $repo->createQueryBuilder("s")
+            ->select("s, st, u")
+            ->setMaxResults(5)
+            ->leftJoin("s.supportStatus", "st")
+            ->leftJoin("s.user", "u")
+            ->orderBy("s.id", "desc")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        $response->setStatusCode(200);
+        $jsonModel->setVariable("data", $data);
+        return $jsonModel;
+    }
+
+    public function bookingAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function customersAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function driversAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function carsAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function settingsAction()
+    {
         $viewModel = new ViewModel();
         return $viewModel;
     }
     
-    public function customersAction(){
+    public function supportAction(){
         $viewModel = new ViewModel();
         return $viewModel;
     }
-    
-    public function driversAction(){
-        $viewModel = new ViewModel();
-        return $viewModel;
-    }
-    
-    public function carsAction(){
-        $viewModel = new ViewModel();
-        return $viewModel;
-    }
-    
-    public function settingsAction(){
-        $viewModel = new ViewModel();
-        return $viewModel;
-    }
-    
-    
-    public function featuresnippetAction(){
+
+    public function featuresnippetAction()
+    {
         $jsonModel = new JsonModel();
         return $jsonModel;
     }
-    
-   
+
     /**
+     *
      * @return the $entityManager
      */
     public function getEntityManager()
@@ -103,6 +134,7 @@ class AdminController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $generalService
      */
     public function getGeneralService()
@@ -111,7 +143,8 @@ class AdminController extends AbstractActionController
     }
 
     /**
-     * @param field_type $entityManager
+     *
+     * @param field_type $entityManager            
      */
     public function setEntityManager($entityManager)
     {
@@ -120,14 +153,17 @@ class AdminController extends AbstractActionController
     }
 
     /**
-     * @param field_type $generalService
+     *
+     * @param field_type $generalService            
      */
     public function setGeneralService($generalService)
     {
         $this->generalService = $generalService;
         return $this;
     }
+
     /**
+     *
      * @return the $customerService
      */
     public function getCustomerService()
@@ -136,6 +172,7 @@ class AdminController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $customerBookingService
      */
     public function getCustomerBookingService()
@@ -144,6 +181,7 @@ class AdminController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $driverService
      */
     public function getDriverService()
@@ -152,7 +190,8 @@ class AdminController extends AbstractActionController
     }
 
     /**
-     * @param \Customer\Service\CustomerService $customerService
+     *
+     * @param \Customer\Service\CustomerService $customerService            
      */
     public function setCustomerService($customerService)
     {
@@ -161,7 +200,8 @@ class AdminController extends AbstractActionController
     }
 
     /**
-     * @param field_type $customerBookingService
+     *
+     * @param field_type $customerBookingService            
      */
     public function setCustomerBookingService($customerBookingService)
     {
@@ -170,13 +210,12 @@ class AdminController extends AbstractActionController
     }
 
     /**
-     * @param field_type $driverService
+     *
+     * @param field_type $driverService            
      */
     public function setDriverService($driverService)
     {
         $this->driverService = $driverService;
         return $this;
     }
-
-
 }

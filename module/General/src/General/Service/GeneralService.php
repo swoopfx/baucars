@@ -71,6 +71,17 @@ class GeneralService
         
         $mailService->send();
     }
+    
+    
+    public function bauWhiteLogo(){
+                $basePath = $this->renderer->get('basePath');
+                return $basePath("assets/img/logo.png");
+    }
+                
+    public function bauBlackLogo(){
+        $basePath = $this->renderer->get("basPath");
+        return $basePath("assets/img/logo-black.png");
+    }
 
     /**
      *

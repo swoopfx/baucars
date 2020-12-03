@@ -20,6 +20,13 @@ class SupportMessages
      *     
      */
     private $id;
+    
+    
+    /**
+     * @ORM\Column(name="message_uid", type="string", nullable=true, unique=true)
+     * @var string
+     */
+    private $messagesUid;
 
     /**
      *
@@ -141,6 +148,23 @@ class SupportMessages
         $this->updatedOn = $updatedOn;
         return $this;
     }
+    /**
+     * @return the $messagesUid
+     */
+    public function getMessagesUid()
+    {
+        return $this->messagesUid;
+    }
+
+    /**
+     * @param string $messagesUid
+     */
+    public function setMessagesUid($messagesUid)
+    {
+        $this->messagesUid = $messagesUid;
+        return $this;
+    }
+
 
 }
 

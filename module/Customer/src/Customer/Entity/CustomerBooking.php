@@ -12,6 +12,7 @@ use CsnUser\Entity\User;
 use General\Entity\BookingClass;
 use Application\Entity\Transactions;
 use Application\Entity\Feedback;
+use General\Entity\BillingMethod;
 
 /**
  * @ORM\Entity(repositoryClass="Customer\Entity\Repostory\CustomerBookingRepository")
@@ -32,11 +33,18 @@ class CustomerBooking
     private $id;
 
     /**
-     * @ORM\Column(name="booking_uid", type="string", nullable=true, unique=true)
+     * @ORM\Column(name="booking_uid", type="string", nullable=false)
      *
      * @var string
      */
     private $bookingUid;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="General\Entity\BillingMethod")
+     * 
+     * @var BillingMethod
+     */
+    private $billingMethod;
 
     /**
      * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio", inversedBy="booking")
@@ -117,10 +125,17 @@ class CustomerBooking
 
     /**
      * @ORM\OneToOne(targetEntity="Application\Entity\Feedback", mappedBy="booking")
-     * 
+     *
      * @var Feedback
      */
     private $feedback;
+
+    /**
+     * @ORM\Column(name="pickup_addresss", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $pickupAddress;
 
     /**
      */
@@ -376,5 +391,60 @@ class CustomerBooking
         $this->transaction = $transaction;
         return $this;
     }
+
+    /**
+     *
+     * @return the $feedback
+     */
+    public function getFeedback()
+    {
+        return $this->feedback;
+    }
+
+    /**
+     *
+     * @return the $pickupAddress
+     */
+    public function getPickupAddress()
+    {
+        return $this->pickupAddress;
+    }
+
+    /**
+     *
+     * @param \Application\Entity\Feedback $feedback            
+     */
+    public function setFeedback($feedback)
+    {
+        $this->feedback = $feedback;
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $pickupAddress            
+     */
+    public function setPickupAddress($pickupAddress)
+    {
+        $this->pickupAddress = $pickupAddress;
+        return $this;
+    }
+    /**
+     * @return the $billingMethod
+     */
+    public function getBillingMethod()
+    {
+        return $this->billingMethod;
+    }
+
+    /**
+     * @param \General\Entity\BillingMethod $billingMethod
+     */
+    public function setBillingMethod($billingMethod)
+    {
+        $this->billingMethod = $billingMethod;
+        return $this;
+    }
+
 }
 

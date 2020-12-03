@@ -277,7 +277,7 @@ $flashMessenger = $this->flashMessenger()
 											</tr>
 										</thead>
 										<tbody>
-											<tr v-if="initializedBooking.length" v-for="booking in initializedBooking">
+											<tr v-if="activeTrip.length" v-for="booking in activeTrip">
 
 												<!-- <td><span class="text-primary">{{booking.bookingUid.toUpperCase()}}</span></td> -->
 												<!-- <td></td> -->
@@ -374,13 +374,38 @@ $flashMessenger = $this->flashMessenger()
 
 
 
+			<div id="booking-details" class="modal fade">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content room-details">
+						<div class="modal-header border-0">
+							<h3 class="modal-title"><i class="la la-glass la-2x align-middle pr-2"></i>Booking Details</h3>
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span>
+								<span class="sr-only">close</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div v-if="!isFetchBookingDetails">
 
+								<div class="spinner"></div>
+							</div>
+							<div v-else>
+								<?php echo $this->partial("customer-booking-details-snippet") ?>
+							</div>
+						</div>
+						<div class="modal-footer border-0">
+							<button type="button" class="btn btn-shadow" data-dismiss="modal">Cancel</button>
+							<button type="button" :disabled="isSubmittingTicket" class="btn btn-gradient-01" data-dismiss="modal">Create Ticket</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
 
 
 
 			<!-- End Row -->
-			<div class="row flex-row" v-if="!gettingBookingHistory">
+			<div class="row flex-row">
 				<div class="col-xl-12 os-animation" data-os-animation="fadeInUp">
 					<!-- Begin Widget 07 -->
 					<div class="widget widget-07 has-shadow">
@@ -411,14 +436,14 @@ $flashMessenger = $this->flashMessenger()
 									<tbody>
 										<tr v-if="bookingHistory.length" v-for="booking in bookingHistory">
 
-											<td><span class="text-primary">{{booking.bookingUid}}</span></td>
+											<td><a @click="getBookingDetails(booking.bookingUid)" data-toggle="modal" data-target="#booking-details"><span class="text-primary">{{booking.bookingUid.toUpperCase()}}</span></a></td>
 											<td>{{booking.bookingType.bookingType}}</td>
 											<td>{{booking.bookingClass.bookingClass}}</td>
 											<td>{{formatPHPDate(booking.startTime.date)}}</td>
 											<td>{{formatPHPDate(booking.endTime.date)}}</td>
-											<td><span style="width: 100px;"><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
+											<td><span style="width: 100px;" :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></td>
 											<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
-											<td class="td-actions"><a href="#"><i class="la la-edit edit"></i></a> <a @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
+											<td class="td-actions"><a @click="getBookingDetails(booking.bookingUid)" data-toggle="modal" data-target="#booking-details"><i class="la la-edit edit"></i></a> <a @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
 										</tr>
 
 
@@ -432,7 +457,73 @@ $flashMessenger = $this->flashMessenger()
 					<!-- End Widget 07 -->
 				</div>
 			</div>
+
+
+			<div id="support-ticket" class="modal fade">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content room-details">
+						<div class="modal-header border-0">
+							<h3 class="modal-title"><i class="la la-glass la-2x align-middle pr-2"></i>Support Ticket Form</h3>
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span>
+								<span class="sr-only">close</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form class="needs-validation" novalidate>
+								<div class="form-group row d-flex align-items-center mb-5">
+									<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Ticket Title</label>
+									<div class="col-lg-8">
+										<input type="text" v-model="ticketTitle" ref="ticketTitle" class="form-control" placeholder="">
+									</div>
+								</div>
+
+								<div class="form-group row d-flex align-items-center mb-5">
+									<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Ticket Message</label>
+									<div class="col-lg-8">
+										<textarea v-model="ticketMessage" ref="ticketMessage" class="form-control" placeholder=""></textarea>
+									</div>
+								</div>
+
+							</form>
+
+						</div>
+						<div class="modal-footer border-0">
+							<button type="button" class="btn btn-shadow" data-dismiss="modal">Cancel</button>
+							<button type="button" :disabled="isSubmittingTicket" @click="createTicket()" class="btn btn-gradient-01" data-dismiss="modal">Create Ticket</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			
+
+
+
+
+			<div id="ticket-details" class="modal fade">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content room-details">
+						<div class="modal-header border-0">
+							<h3 class="modal-title"><i class="la la-glass la-2x align-middle pr-2"></i>Ticket Details</h3>
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span>
+								<span class="sr-only">close</span>
+							</button>
+						</div>
+						<div class="modal-body">
+
+
+						</div>
+						<div class="modal-footer border-0">
+							<button type="button" class="btn btn-shadow" data-dismiss="modal">Cancel</button>
+							<button type="button" :disabled="isSubmittingTicket" @click="createTicket()" class="btn btn-gradient-01" data-dismiss="modal">Create Ticket</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 			<div class="row flex-row">
 				<div class="col-xl-6  os-animation" data-os-animation="fadeInUp">
 					<!-- Begin Widget 04 -->
@@ -469,18 +560,22 @@ $flashMessenger = $this->flashMessenger()
 										<!-- 01 -->
 										<div v-if="supportTickets.length">
 											<li v-for="ticket in supportTickets" class="list-group-item">
+
 												<div class="media">
 
 													<div class="media-body align-self-center">
 														<div class="username">
-															<h4></h4>
+															<h4>{{ticket.topic.toUpperCase()}}</h4>
 														</div>
-
-														<div class="status">
-															<span class="open mr-2">Open</span>
+														<div class="msg">
+															<p>
+																<a @click="ticketdetails(ticket.id)" data-toggle="modal" data-target="#ticket-details"> {{ticket.supportUid.toUpperCase()}}</a>
+															</p>
 														</div>
+														<div class="status"><span :class="supportStatus(ticket.supportStatus.id)">{{ticket.supportStatus.status}} </span> {{statusDate(ticket.createdOn.date)}}</div>
 													</div>
 												</div>
+
 											</li>
 										</div>
 										<!-- End 01 -->
@@ -496,7 +591,7 @@ $flashMessenger = $this->flashMessenger()
 							</div>
 							<!-- Begin Write Comment -->
 							<div class="input-group mt-5">
-								<button class="btn btn-primary btn-block"> OPEN TICKETS</button>
+								<button data-toggle="modal" data-target="#support-ticket" class="btn btn-primary btn-block"> OPEN TICKETS</button>
 							</div>
 							<!-- End Write Comment -->
 						</div>
@@ -515,7 +610,7 @@ $flashMessenger = $this->flashMessenger()
 					<div class="widget widget-04 has-shadow">
 						<!-- Begin Widget Header -->
 						<div class="widget-header bordered d-flex align-items-center">
-							<h2>Support Tickets</h2>
+							<h2>Feedback</h2>
 							<div class="widget-options">
 								<div class="dropdown">
 									<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">
@@ -724,6 +819,54 @@ $flashMessenger = $this->flashMessenger()
 		position: 'top'
 	});
 
+
+	Date.prototype.datee = function() {
+		var mm = "";
+
+		if (this.getMonth() == 0) {
+			mm = "January"
+		};
+		if (this.getMonth() == 1) {
+			mm = "February"
+		};
+		if (this.getMonth() == 2) {
+			mm = "March"
+		};
+		if (this.getMonth() == 3) {
+			mm = "April"
+		};
+		if (this.getMonth() == 4) {
+			mm = "May"
+		};
+		if (this.getMonth() == 5) {
+			mm = "June"
+		};
+		if (this.getMonth() == 6) {
+			mm = "July"
+		};
+		if (this.getMonth() == 7) {
+			mm = "August"
+		};
+		if (this.getMonth() == 8) {
+			mm = "September"
+		};
+		if (this.getMonth() == 9) {
+			mm = "October"
+		};
+		if (this.getMonth() == 10) {
+			mm = "November"
+		};
+		if (this.getMonth() == 11) {
+			mm = "December"
+		};
+		var dd = this.getDate();
+
+		return [this.getFullYear(),
+			(mm > 9 ? '' : ' ') + mm,
+			(dd > 9 ? '' : ' ') + " " + dd
+		].join('');
+	};
+
 	let cutomerboard = new Vue({
 		el: "#cutomerPage",
 		data() {
@@ -757,12 +900,24 @@ $flashMessenger = $this->flashMessenger()
 
 				bookingPrice: "",
 
+
+
 				// Booking
 				initializedBooking: [],
+				activeTrip: [],
+				bookingDetails: "",
+				isFetchBookingDetails: false,
+				isBookingEdit: false,
+
+				editabledBooking:false,
 
 				// Support
 
 				supportTickets: [],
+				ticketTitle: "",
+				ticketMessage: "",
+				isSubmittingTicket: false,
+
 
 
 			}
@@ -813,9 +968,26 @@ $flashMessenger = $this->flashMessenger()
 				}
 			},
 
+			supportStatus(value) {
+				if (value == 10) {
+					return "badge-text badge-text-small success";
+				} else if (value == 20) {
+					return "badge-text badge-text-small  danger";
+				} else if (value == 30) {
+					return "badge-text badge-text-small info";
+				}
+			},
+
+			statusDate(date) {
+				dat = new Date(date);
+				return dat.datee();
+			},
+
+
 			formatPHPDate(date) {
 				// myDate = date.replace(/-/g, "/");
 				return new Date(date);
+
 			},
 
 			formatPrice(value) {
@@ -876,6 +1048,14 @@ $flashMessenger = $this->flashMessenger()
 						this.initializedBooking = res.data.data
 					}
 
+				}).catch();
+			},
+
+			getActiveTrip() {
+				axios.get("/customer/activebooking").then(res => {
+					if (res.status == 200) {
+						this.activeTrip = res.data.data;
+					}
 				}).catch();
 			},
 
@@ -944,6 +1124,77 @@ $flashMessenger = $this->flashMessenger()
 				}).catch();
 			},
 
+
+			// Support
+
+			getSupportSnippet() {
+				axios.get("/customer/getsupportsnippet").then(res => {
+					if (res.status == 200) {
+						this.supportTickets = res.data.data;
+					}
+				});
+			},
+
+			ticketdetails(id) {
+				axios.get().then();
+			},
+
+			createTicket() {
+				if (this.ticketTitle == "" || this.ticketMessage == "") {
+
+				} else {
+					this.isSubmittingTicket = true;
+					let formData = new FormData();
+					formData.append("title", this.ticketTitle);
+					formData.append("message", this.ticketMessage);
+					axios.post("/customer/createsupportticket", formData).then(res => {
+						this.getSupportSnippet();
+
+						swal({
+							title: "Support Created",
+							text: "A support ticket has been created",
+							icon: "success",
+							button: "Continue!",
+						}).then(res => {
+							window.location.reload();
+
+						});
+
+					}).catch(err => {
+						this.isSubmittingTicket = false;
+					})
+				}
+
+			},
+
+
+
+			// Booking
+			onCancelBooking(id) {
+				swal({
+					title: "Are you Sure",
+					text: "You are about to cancel you booking",
+					icon: "warning",
+					button: "Continue!",
+				}).then(res => {
+					this.cancelbooking(id);
+				});
+			},
+
+			cancelbooking(id) {
+				console.log(id);
+				let formData = new FormData();
+				formData.append("bookingId", id);
+				axios.post("/customer/cancelbooking", formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+					}
+				}).catch(err => {
+
+				});
+			},
+
+
 			createBooking() {
 				// this.isSubmittingBookingForm = true;
 				this.processing = true;
@@ -983,40 +1234,17 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 
-			// Support
-
-			getSupportSnippet() {
-				axios.get("/customer/getsupportsnippet").then(res => {
+			getBookingDetails(id) {
+				this.isFetchBookingDetails = false;
+				axios.get("/customer/getbookingdetails/" + id).then(res => {
 					if (res.status == 200) {
-						this.supportTickets = res.data.data;
-					}
-				});
-			},
+						this.isFetchBookingDetails = true;
+						this.bookingDetails = res.data.data;
 
-
-
-			// Booking
-			onCancelBooking(id) {
-				swal({
-					title: "Are you Sure",
-					text: "You are about to cancel you booking",
-					icon: "warning",
-					button: "Continue!",
-				}).then(res => {
-					this.cancelbooking(id);
-				});
-			},
-
-			cancelbooking(id) {
-				console.log(id);
-				let formData = new FormData();
-				formData.append("bookingId", id);
-				axios.post("/customer/cancelbooking", formData).then(res => {
-					if (res.status == 201) {
-						window.location.reload();
 					}
 				}).catch();
-			}
+			},
+
 
 
 		},
@@ -1028,6 +1256,7 @@ $flashMessenger = $this->flashMessenger()
 			this.getBookingServiceType();
 			this.getBookingClass();
 			this.getBillingMethod();
+			this.getSupportSnippet();
 		},
 	});
 </script>

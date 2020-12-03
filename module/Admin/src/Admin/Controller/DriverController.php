@@ -273,7 +273,11 @@ class DriverController extends AbstractActionController
             
             $template['template'] = "general-customer-assigned-driver";
             $template["var"] = [
-                "logo" => "lll",
+                "logo" => $this->url()->fromRoute('application', [
+                    'action' => 'application'
+                ], [
+                    'force_canonical' => true
+                ]) . "assets/img/logo-black.png",
                 "fullname" => $driverEntity->getUser()->getFullName(),
                 "phone"=>$driverEntity->getUser()->getPhoneNumber()
             

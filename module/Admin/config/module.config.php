@@ -5,6 +5,7 @@ use Admin\Controller\Factory\BookingControllerFactory;
 use Admin\Controller\Factory\DriverControllerFactory;
 use Admin\Controller\Factory\CarControllerFactory;
 use Admin\Controller\Factory\SettingsControllerFactory;
+use Admin\Controller\Factory\SupportControllerFactory;
 
 return array(
     'controllers' => array(
@@ -17,7 +18,8 @@ return array(
             "Admin\Controller\Booking" => BookingControllerFactory::class,
             "Admin\Controller\Driver" => DriverControllerFactory::class,
             "Admin\Controller\Car"=>CarControllerFactory::class,
-            "Admin\Controller\Settings"=>SettingsControllerFactory::class
+            "Admin\Controller\Settings"=>SettingsControllerFactory::class,
+            "Admin\Controller\Support"=>SupportControllerFactory::class,
         )
     ),
     'router' => array(

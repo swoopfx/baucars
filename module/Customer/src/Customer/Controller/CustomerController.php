@@ -24,6 +24,12 @@ use Zend\Mvc\MvcEvent;
 use Doctrine\ORM\Query;
 use Customer\Entity\BookingActivity;
 use Application\Entity\Support;
+use Zend\InputFilter\InputFilter;
+use Application\Entity\SupportMessages;
+use Application\Entity\SupportStatus;
+use Application\Service\AppService;
+use Application\Entity\SupportRoute;
+use CsnUser\Entity\User;
 
 class CustomerController extends AbstractActionController
 {
@@ -155,6 +161,39 @@ class CustomerController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function getbookingdetailsAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $id = $this->params()->fromRoute("id", NULL);
+        if ($id == NULL) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariable("message", "Absent identifier");
+        } else {
+            $repo = $em->getRepository(CustomerBooking::class);
+            $data = $repo->createQueryBuilder("c")
+                ->select("c, st, bc, bt, ad, t, f, bl, dd")
+                ->where('c.bookingUid = :identifier')
+                ->setParameter('identifier', $id)
+                ->leftJoin("c.status", "st")
+                ->leftJoin("c.assignedDriver", "ad")
+                ->leftJoin("ad.user", "dd")
+                ->leftJoin("c.billingMethod", "bl")
+                ->leftJoin("c.bookingClass", "bc")
+                ->leftJoin("c.bookingType", "bt")
+                ->leftJoin("c.transaction", "t")
+                ->leftJoin("c.feedback", "f")
+                ->getQuery()
+                ->getResult(Query::HYDRATE_ARRAY);
+            
+                $response->setStatusCode(200);
+                $jsonModel->setVariable("data", $data[0]);
+        }
+        return $jsonModel;
+    }
+
     public function initiatedBookingAction()
     {
         $response = $this->getResponse();
@@ -171,10 +210,26 @@ class CustomerController extends AbstractActionController
      *
      * @return \Zend\View\Model\JsonModel
      */
-    public function activeBookingAction()
+    public function activebookingAction()
     {
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $userEntity = $this->identity();
+        $repo = $em->getRepository(CustomerBooking::class);
+        $data = $repo->createQueryBuilder("d")
+            ->select("d, st")
+            ->where("d.status = :identfier")
+            ->setParameter("identfier", CustomerService::BOOKING_STATUS_IN_TRANSIT)
+            ->setMaxResults(5)
+            ->andWhere("d.user =" . $userEntity->getId())
+            ->orderBy("d.id", "desc")
+            ->leftJoin("d.status", "st")
+            ->orderBy("d.id", "desc")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        $response->setStatusCode(200);
+        $jsonModel->setVariable("data", $data);
         return $jsonModel;
     }
 
@@ -387,6 +442,7 @@ class CustomerController extends AbstractActionController
                     $bookinEntity = $this->customerService->setBookingClass($bookingSession->bookingClass)
                         ->setBookingStartDate($bookingSession->bookingStartDate)
                         ->setBookingEndData($bookingSession->bookingEndDate)
+                        ->setBillingMethod($bookingSession->billingMethod)
                         ->setBookingType($bookingSession->bookingType)
                         ->createBooking();
                     
@@ -403,7 +459,7 @@ class CustomerController extends AbstractActionController
                     
                     $em->persist($bookinEntity);
                     $em->persist($transactionEntity);
-                   
+                    
                     $em->flush();
                     $flutterwaveService->setTransactionId($transactionEntity->getId());
                     $flutterwaveService->initiateTrasnfer();
@@ -412,7 +468,7 @@ class CustomerController extends AbstractActionController
                     $jsonModel->setVariables([
                         "data" => $verifyData->data->chargedamount
                     ]);
-
+                    
                     // Notify Controller
                     $generalService = $this->generalService;
                     $pointer["to"] = "admin@baucars.com";
@@ -421,10 +477,12 @@ class CustomerController extends AbstractActionController
                     
                     $template['template'] = "admin-new-booking";
                     $template["var"] = [
-                        "logo"=>"ll",
-                        "bookingUid"=>$transactionEntity->getBooking()->getBookingUid(),
-                        "fullname"=>$transactionEntity->getBooking()->getUser()->getFullName(),
-                        "amount"=>$transactionEntity->getAmount()
+                        "logo" => "ll",
+                        "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
+                        "fullname" => $transactionEntity->getBooking()
+                            ->getUser()
+                            ->getFullName(),
+                        "amount" => $transactionEntity->getAmount()
                     ];
                     $generalService->sendMails($pointer, $template);
                 }
@@ -445,8 +503,9 @@ class CustomerController extends AbstractActionController
         $repo = $em->getRepository(Support::class);
         $data = $repo->createQueryBuilder("s")
             ->select("s, st")
-            ->setMaxResults(10)
+            ->setMaxResults(5)
             ->where("s.user =" . $userEntity->getId())
+            ->orderBy("s.id", "desc")
             ->leftJoin("s.supportStatus", "st")
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
@@ -456,7 +515,132 @@ class CustomerController extends AbstractActionController
     }
 
     public function createsupportticketAction()
-    {}
+    {
+        $em = $this->entityManager;
+        /**
+         *
+         * @var User $user
+         */
+        $user = $this->identity();
+        $jsonMdoel = new JsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                'name' => 'title',
+                'required' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Title is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'message',
+                'required' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Title is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                $data = $inputFilter->getValues();
+                try {
+                    
+                    $supportMessageEntity = new SupportMessages();
+                    $supportEntity = new Support();
+                    $supportEntity->setCreatedOn(new \DateTime())
+                        ->setSupportUid(AppService::supportUid())
+                        ->setSupportStatus($em->find(SupportStatus::class, AppService::SUPPORT_STATUS_OPEN))
+                        ->setTopic($data["title"])
+                        ->setUser($this->identity())
+                        ->setMessages($supportMessageEntity);
+                    
+                    $supportMessageEntity->setCreatedOn(new \DateTime())
+                        ->setMessage($data["message"])
+                        ->setMessagesUid(AppService::messageUid())
+                        ->setRoute($em->find(SupportRoute::class, AppService::SUPPORT_MESSAGE_SENDER));
+                    
+                    $em->persist($supportEntity);
+                    $em->persist($supportMessageEntity);
+                    
+                    $em->flush();
+                    
+                    $generalService = $this->generalService;
+                    
+                    // send email to customer
+                    
+                    $pointer["to"] = AppService::APP_ADMIN_EMAIL;
+                    $pointer["fromName"] = "BAU CARS LIMITED";
+                    $pointer['subject'] = "Support Ticket Initiated";
+                    
+                    $template['template'] = "app-support-created-user-mail";
+                    $template["var"] = [
+                        "logo" => $this->url()->fromRoute('application', [
+                            'action' => 'application'
+                        ], [
+                            'force_canonical' => true
+                        ]) . "assets/img/logo.png",
+                        "title" => $supportEntity->getTopic()
+                    
+                    ];
+                    $generalService->sendMails($pointer, $template);
+                    
+                    $pointer["to"] = AppService::APP_ADMIN_EMAIL;
+                    $pointer["fromName"] = "BAU CARS LIMITED";
+                    $pointer['subject'] = "Support Ticket Initiated";
+                    
+                    $template['template'] = "app-support-created-controller-mail";
+                    $template["var"] = [
+                        "logo" => $this->url()->fromRoute('application', [
+                            'action' => 'application'
+                        ], [
+                            'force_canonical' => true
+                        ]) . "assets/img/logo.png",
+                        "title" => $supportEntity->getTopic(),
+                        "fullname" => $user->getFullName()
+                    ];
+                    $generalService->sendMails($pointer, $template);
+                } catch (\Exception $e) {
+                    $response->setStatusCode(400);
+                    $jsonMdoel->setVariable("message", $e->getMessage());
+                }
+            }
+        }
+        return $jsonMdoel;
+    }
 
     public function sendsupportmessageAction()
     {}
@@ -464,6 +648,7 @@ class CustomerController extends AbstractActionController
     public function getSubscribtionAction()
     {
         $jsonModel = new JsonModel();
+        
         return $jsonModel;
     }
 

@@ -4,6 +4,9 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Open 
+ * Close
+ * Waiting Customer Response
  * @ORM\Entity
  * @ORM\Table(name="support_status")
  * @author otaba

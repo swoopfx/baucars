@@ -106,6 +106,8 @@ return array(
             
             // emails 
             'email-app-user-registration' => __DIR__ . '/../view/mail/app-user-registeration.phtml',
+            'app-support-created-controller-mail' => __DIR__ . '/../view/mail/app-support-created-controller-mail.phtml',
+            'app-support-created-user-mail' => __DIR__ . '/../view/mail/app-support-created-user-mail.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view'

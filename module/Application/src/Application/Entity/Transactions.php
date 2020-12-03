@@ -26,6 +26,13 @@ class Transactions
     private $id;
 
     /**
+     * @ORM\Column(name="transaction_uid", type="string", nullable=true)
+     * 
+     * @var string
+     */
+    private $transactionUid;
+
+    /**
      * @ORM\Column(name="tx_ref", type="string", nullable=true)
      *
      * @var string
@@ -34,7 +41,7 @@ class Transactions
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\TransactionStatus")
-     * 
+     *
      * @var TransactionStatus
      */
     private $status;
@@ -48,7 +55,7 @@ class Transactions
 
     /**
      * @ORM\Column(name="flw_id", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $flwId;
@@ -66,9 +73,10 @@ class Transactions
      * @var User
      */
     private $user;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="Customer\Entity\CustomerBooking", inversedBy="transaction")
+     * 
      * @var CustomerBooking
      */
     private $booking;
@@ -76,7 +84,7 @@ class Transactions
     /**
      * This is the amount left after deductions
      * @ORM\Column(name="settled_amount", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $settledAmount;
@@ -274,7 +282,9 @@ class Transactions
         $this->flwId = $flwId;
         return $this;
     }
+
     /**
+     *
      * @return the $settledAmount
      */
     public function getSettledAmount()
@@ -283,14 +293,17 @@ class Transactions
     }
 
     /**
-     * @param string $settledAmount
+     *
+     * @param string $settledAmount            
      */
     public function setSettledAmount($settledAmount)
     {
         $this->settledAmount = $settledAmount;
         return $this;
     }
+
     /**
+     *
      * @return the $booking
      */
     public function getBooking()
@@ -299,14 +312,30 @@ class Transactions
     }
 
     /**
-     * @param \Customer\Entity\CustomerBooking $booking
+     *
+     * @param \Customer\Entity\CustomerBooking $booking            
      */
     public function setBooking($booking)
     {
         $this->booking = $booking;
         return $this;
     }
+    /**
+     * @return the $transactionUid
+     */
+    public function getTransactionUid()
+    {
+        return $this->transactionUid;
+    }
 
+    /**
+     * @param string $transactionUid
+     */
+    public function setTransactionUid($transactionUid)
+    {
+        $this->transactionUid = $transactionUid;
+        return $this;
+    }
 
 }
 
