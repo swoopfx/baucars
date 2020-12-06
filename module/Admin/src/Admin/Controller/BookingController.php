@@ -38,6 +38,12 @@ class BookingController extends AbstractActionController
      */
     private $allBookingPaginator;
 
+    private $initiTitedBooking;
+
+    private $activeBooking;
+
+    private $cancelBooking;
+
     /**
      */
     public function __construct()
@@ -59,6 +65,15 @@ class BookingController extends AbstractActionController
         // var_dump(count($this->entityManager->getRepository(CustomerBooking::class)->findBookingItems(0, 10)));
         $allBooking = $this->allBookingPaginator;
         // var_dump($allBooking);
+        $viewModel = new ViewModel([
+            "allBooking" => $allBooking
+        ]);
+        return $viewModel;
+    }
+
+    public function initiatedAction()
+    {
+        $allBooking = $this->initiTitedBooking;
         $viewModel = new ViewModel([
             "allBooking" => $allBooking
         ]);
@@ -236,5 +251,56 @@ class BookingController extends AbstractActionController
         $this->allBookingPaginator = $allBookingPaginator;
         return $this;
     }
+    /**
+     * @return the $initiTitedBooking
+     */
+    public function getInitiTitedBooking()
+    {
+        return $this->initiTitedBooking;
+    }
+
+    /**
+     * @return the $activeBooking
+     */
+    public function getActiveBooking()
+    {
+        return $this->activeBooking;
+    }
+
+    /**
+     * @return the $cancelBooking
+     */
+    public function getCancelBooking()
+    {
+        return $this->cancelBooking;
+    }
+
+    /**
+     * @param field_type $initiTitedBooking
+     */
+    public function setInitiTitedBooking($initiTitedBooking)
+    {
+        $this->initiTitedBooking = $initiTitedBooking;
+        return $this;
+    }
+
+    /**
+     * @param field_type $activeBooking
+     */
+    public function setActiveBooking($activeBooking)
+    {
+        $this->activeBooking = $activeBooking;
+        return $this;
+    }
+
+    /**
+     * @param field_type $cancelBooking
+     */
+    public function setCancelBooking($cancelBooking)
+    {
+        $this->cancelBooking = $cancelBooking;
+        return $this;
+    }
+
 }
 

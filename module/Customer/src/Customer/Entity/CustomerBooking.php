@@ -131,7 +131,7 @@ class CustomerBooking
     private $feedback;
 
     /**
-     * @ORM\Column(name="pickup_addresss", type="string", nullable=true)
+     * @ORM\Column(name="pickup_address", type="string", nullable=true)
      *
      * @var string
      */

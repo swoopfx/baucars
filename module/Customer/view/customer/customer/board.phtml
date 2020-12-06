@@ -128,6 +128,12 @@ $flashMessenger = $this->flashMessenger()
 													</div>
 												</div>
 
+												<div class="form-group row d-flex align-items-center mb-5">
+													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Pick Up Address</label>
+													<div class="col-lg-8">
+														<input type="text" ref="pickup" class="form-control" placeholder="Lagos Airport">
+													</div>
+												</div>
 
 												<div class="form-group row d-flex align-items-center mb-5">
 													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Time</label>
@@ -269,8 +275,8 @@ $flashMessenger = $this->flashMessenger()
 
 
 
-												<th>Booking Date/Time</th>
-												<th>Ship Date</th>
+												<th>Start Time</th>
+												<th>End Time</th>
 												<th>Status</th>
 												<th>Amount Paid</th>
 												<th>Actions</th>
@@ -285,7 +291,7 @@ $flashMessenger = $this->flashMessenger()
 												<td>{{formatPHPDate(booking.endTime.date)}}</td>
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
 												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
-												<td class="td-actions"> <a href="#"><i class="la la-close delete"></i></a></td>
+												<td class="td-actions"> <a href="#"><i class="la la-info"></i></a></td>
 											</tr>
 
 
@@ -332,8 +338,8 @@ $flashMessenger = $this->flashMessenger()
 
 
 
-												<th>Booking Date/Time</th>
-												<th>Ship Date</th>
+												<th>Start Time</th>
+												<th>End Time</th>
 												<th>Status</th>
 												<th>Amount Paid</th>
 												<th>Actions</th>
@@ -348,7 +354,7 @@ $flashMessenger = $this->flashMessenger()
 												<td>{{formatPHPDate(booking.endTime.date)}}</td>
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
 												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
-												<td class="td-actions"> <a href="#"><i class="la la-close delete"></i></a></td>
+												<td class="td-actions"> <a href="#"><i class="la la-info delete"></i></a></td>
 											</tr>
 
 
@@ -496,7 +502,7 @@ $flashMessenger = $this->flashMessenger()
 				</div>
 			</div>
 
-			
+
 
 
 
@@ -637,70 +643,14 @@ $flashMessenger = $this->flashMessenger()
 
 								<div class="widget-body no-padding">
 									<ul class="ticket list-group w-100">
-										<!-- 01 -->
-										<li class="list-group-item">
-											<div class="media">
-												<div class="media-left align-self-center pr-4">
-													<img src="assets/img/avatar/avatar-02.jpg" class="user-img rounded-circle" alt="...">
-												</div>
-												<div class="media-body align-self-center">
-													<div class="username">
-														<h4>Brandon Smith</h4>
-													</div>
-													<div class="msg">
-														<p>Hello, Lorem ipsum dolor sit amet, consectetur
-															adipiscing elit, sed do eiusmod tempor incididunt ut
-															labore et mauris sapien sem, ornare id mauris vitae,
-															ultricies volutpat ...</p>
-													</div>
-													<div class="status">
-														<span class="open mr-2">Open</span>(1 hour ago)
-													</div>
-												</div>
-											</div>
-										</li>
-										<!-- End 01 -->
 
-										<!-- 03 -->
-										<li class="list-group-item">
-											<div class="media">
-												<div class="media-left align-self-center pr-4">
-													<img src="assets/img/avatar/avatar-05.jpg" class="user-img rounded-circle" alt="...">
-												</div>
-												<div class="media-body align-self-center">
-													<div class="username">
-														<h4>Megan Duncan</h4>
-													</div>
-													<div class="msg">
-														<p>Hello, Lorem ipsum dolor sit amet, consectetur
-															adipiscing elit, sed do eiusmod tempor incididunt ut
-															labore et mauris sapien sem, ornare id mauris vitae,
-															ultricies volutpat ...</p>
-													</div>
-													<div class="status">
-														<span class="closed mr-2">Closed</span>(1 day ago)
-													</div>
-												</div>
-											</div>
-										</li>
-										<!-- End 03 -->
 									</ul>
 								</div>
 
 							</div>
 							<!-- Begin Write Comment -->
 							<div class="input-group mt-5">
-								<input type="text" class="form-control pr-0" placeholder="Write a comment ...">
-								<span class="input-group-addon">
-									<button class="btn" type="button">
-										<i class="la la-smile-o la-2x"></i>
-									</button>
-								</span>
-								<span class="input-group-addon">
-									<button class="btn pr-3" type="button">
-										<i class="la la-pencil la-2x"></i>
-									</button>
-								</span>
+								
 							</div>
 							<!-- End Write Comment -->
 						</div>
@@ -901,6 +851,8 @@ $flashMessenger = $this->flashMessenger()
 				bookingPrice: "",
 
 
+				// Edited 
+				editedServiceType: "",
 
 				// Booking
 				initializedBooking: [],
@@ -909,7 +861,7 @@ $flashMessenger = $this->flashMessenger()
 				isFetchBookingDetails: false,
 				isBookingEdit: false,
 
-				editabledBooking:false,
+				editabledBooking: false,
 
 				// Support
 
@@ -1078,22 +1030,34 @@ $flashMessenger = $this->flashMessenger()
 
 			makePayment() {
 				this.processing = true;
-				let formData = new FormData();
-				formData.append("bookingDate", this.$refs.bookingDatetime.value);
-				formData.append("selectedService", this.selectedServiceType);
-				formData.append("selectedBookingClass", this.selectedBookingClass);
-				formData.append("selectedBillingMethod", this.selectedBillingMethod);
-				axios.post("/customer/initiatepayment", formData).then(res => {
-					if (res.status == 200) {
-						this.bookingPrice = res.data.price;
+				if (this.$refs.pickup.value == "") {
+					swal({
+						title: "Empty pickup address",
+						text: "PLease fill a pickup address",
+						icon: "error",
+						button: "Continue!",
+					}).then(res => {
 						this.processing = false;
-						this.public_key = res.data.public_key;
-						this.tx_ref = res.data.txref;
-						this.amountPayable = res.data.price;
+					})
+				} else {
+					let formData = new FormData();
+					formData.append("bookingDate", this.$refs.bookingDatetime.value);
+					formData.append("pickupaddress", this.$refs.pickup.value);
+					formData.append("selectedService", this.selectedServiceType);
+					formData.append("selectedBookingClass", this.selectedBookingClass);
+					formData.append("selectedBillingMethod", this.selectedBillingMethod);
+					axios.post("/customer/initiatepayment", formData).then(res => {
+						if (res.status == 200) {
+							this.bookingPrice = res.data.price;
+							this.processing = false;
+							this.public_key = res.data.public_key;
+							this.tx_ref = res.data.txref;
+							this.amountPayable = res.data.price;
 
-						makeFlutterwavePayment();
-					}
-				}).catch();
+							makeFlutterwavePayment();
+						}
+					}).catch();
+				}
 			},
 
 			concludepayment() {
@@ -1111,8 +1075,11 @@ $flashMessenger = $this->flashMessenger()
 			calculatePrice() {
 
 				this.processing = true;
+
+
 				let formData = new FormData();
 				formData.append("bookingDate", this.$refs.bookingDatetime.value);
+
 				formData.append("selectedService", this.selectedServiceType);
 				formData.append("selectedBookingClass", this.selectedBookingClass);
 				formData.append("selectedBillingMethod", this.selectedBillingMethod);
@@ -1122,6 +1089,7 @@ $flashMessenger = $this->flashMessenger()
 						this.processing = false;
 					}
 				}).catch();
+
 			},
 
 
@@ -1243,6 +1211,10 @@ $flashMessenger = $this->flashMessenger()
 
 					}
 				}).catch();
+			},
+
+			changeToEditBooking() {
+				this.isBookingEdit = true;
 			},
 
 

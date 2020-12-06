@@ -1,10 +1,45 @@
 <?php
 ?>
-<button class="btn btn-block btn-primary"> Edit Booking</button>
-<div v-if="editabledBooking">
-	
+<div class="col-xl-12">
+	<button @click="changeToEditBooking()" class="btn btn-block btn-primary"> Edit Booking</button>
 </div>
-<div v-if="isBookingEdit">Hey</div>
+<div class="col-xl-12"><button @click="changeToEditBooking()" class="btn btn-block btn-success"> FeedBack</button></div>
+<div v-if="isBookingEdit">
+
+	<div v-if="bookingServiceType.length" class="form-group row mt-3 mr-0 mb-3 ml-0">
+		<div class="col-xl-12">
+			<label class="form-control-label"></label>
+			<select ref="editedServiceType" class="custom-select form-control" required>
+
+				<option v-for="type in bookingServiceType" :value="bookingDetails.bookingType.bookingType">{{type.bookingType}}</option>
+
+			</select>
+		</div>
+	</div>
+	<div class="form-group row mt-3 mr-0 mb-3 ml-0">
+		<div class="col-xl-12">
+			<label class="form-control-label">Service Class</label>
+			<select ref="editedBookingClass" class="custom-select form-control" required>
+
+				<option v-for="type in bookingClass" :value="type.id">{{type.bookingClass}}</option>
+
+			</select>
+		</div>
+	</div>
+	<div class="form-group row mt-3 mr-0 mb-3 ml-0">
+		<div class="col-xl-12">
+			<label class="form-control-label">Pick Up Address</label>
+			<input type="text" ref="editedPickup" class="form-control" placeholder="Lagos Airport">
+		</div>
+	</div>
+
+	<div class="form-group row mt-3 mr-0 mb-3 ml-0">
+		<div class="col-xl-12">
+			<label class="form-control-label">Pick Up Time</label>
+			<input id="" type="text" id="datetime" class="form-control">
+		</div>
+	</div>
+</div>
 <div v-else>
 
 	<div class="col-xl-12">
@@ -25,7 +60,13 @@
 							</tr>
 
 							<tr>
-								<th>Transaction Reference</th>
+								<th>Booking Type</th>
+								<td>{{bookingDetails.bookingType.bookingType}}</td>
+
+							</tr>
+
+							<tr>
+								<th>Pick Up Address</th>
 								<td>{{bookingDetails.bookingType.bookingType}}</td>
 
 							</tr>

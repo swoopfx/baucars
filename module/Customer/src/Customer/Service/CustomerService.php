@@ -21,13 +21,13 @@ class CustomerService
 {
 
     /**
-     * 
+     *
      * @var AuthenticationService
      */
     private $auth;
 
     /**
-     * 
+     *
      * @var GeneralService
      */
     private $generalService;
@@ -53,13 +53,13 @@ class CustomerService
     const BOOKING_STATUS_INITIATED = 5;
 
     const BOOKING_STATUS_ACTIVE = 10;
-    
+
     const BOOKING_STATUS_IN_TRANSIT = 600;
 
     const BOOKING_STATUS_CANCELED = 100;
 
     const BOOKING_STATUS_PROCESSING = 500;
-    
+
     const BOOKING_STATUS_ASSIGN = 501;
 
     const BOOKING_STATUS_PAID = 20;
@@ -99,21 +99,20 @@ class CustomerService
      * @var string
      */
     private $bookingService;
-    
+
     /**
-     * 
+     *
+     * @var string
+     */
+    private $bookingPickupAddress;
+
+    /**
+     *
      * @var Container
      */
     private $bookingSession;
-    
-    
-    
-    
-   
-    
+
     private $bookingType;
-    
-    
 
     /**
      */
@@ -158,33 +157,35 @@ class CustomerService
             return $totalPrice;
         }
     }
-    
-    
-    public function  createBooking(){
+
+    public function createBooking()
+    {
         $booking = new CustomerBooking();
         $auth = $this->auth;
         $em = $this->entityManager;
+        
         $booking->setCreatedOn(new \DateTime())
-        ->setEndTime($this->bookingEndData)
-        ->setBookingUid(self::bookingUid())
-        ->setBillingMethod($em->find(BillingMethod::class, $this->billingMethod))
-        ->setStartTime($this->bookingStartDate)
-        ->setUser($this->auth->getIdentity())
-        ->setBookingClass($em->find(BookingClass::class, $this->bookingClass))
-        ->setStatus($em->find(BookingStatus::class, self::BOOKING_STATUS_INITIATED))
-        ->setBookingType($em->find(BookingType::class, $this->bookingType));
+            ->setEndTime($this->bookingEndData)
+            ->setBookingUid(self::bookingUid())
+            ->setBillingMethod($em->find(BillingMethod::class, $this->billingMethod))
+            ->setStartTime($this->bookingStartDate)
+            ->setPickupAddress($this->bookingPickupAddress)
+            ->setUser($this->auth->getIdentity())
+            ->setBookingClass($em->find(BookingClass::class, $this->bookingClass))
+            ->setStatus($em->find(BookingStatus::class, self::BOOKING_STATUS_INITIATED))
+            ->setBookingType($em->find(BookingType::class, $this->bookingType));
         
-//         $generalService = $this->generalService;
-//         $pointer["to"] = $auth->getIdentity()->getEmail();
-//         $pointer["fromName"] = "Bau Cars Limited";
-//         $pointer['subject'] = "Booking Initiated";
+        // $generalService = $this->generalService;
+        // $pointer["to"] = $auth->getIdentity()->getEmail();
+        // $pointer["fromName"] = "Bau Cars Limited";
+        // $pointer['subject'] = "Booking Initiated";
         
-//         $template['template'] = "";
-//         $template["var"] = [
-            
-//         ];
+        // $template['template'] = "";
+        // $template["var"] = [
         
-//         $generalService->sendMails($pointer, $template);
+        // ];
+        
+        // $generalService->sendMails($pointer, $template);
         return $booking;
         
         // Send Booking mail
@@ -403,7 +404,9 @@ class CustomerService
         $this->bookingService = $bookingService;
         return $this;
     }
+
     /**
+     *
      * @return the $bookingSession
      */
     public function getBookingSession()
@@ -412,14 +415,17 @@ class CustomerService
     }
 
     /**
-     * @param \Zend\Session\Container $bookingSession
+     *
+     * @param \Zend\Session\Container $bookingSession            
      */
     public function setBookingSession($bookingSession)
     {
         $this->bookingSession = $bookingSession;
         return $this;
     }
+
     /**
+     *
      * @return the $bookingType
      */
     public function getBookingType()
@@ -428,14 +434,30 @@ class CustomerService
     }
 
     /**
-     * @param field_type $bookingType
+     *
+     * @param field_type $bookingType            
      */
     public function setBookingType($bookingType)
     {
         $this->bookingType = $bookingType;
         return $this;
     }
+    /**
+     * @return the $bookingPickupAddress
+     */
+    public function getBookingPickupAddress()
+    {
+        return $this->bookingPickupAddress;
+    }
 
+    /**
+     * @param string $bookingPickupAddress
+     */
+    public function setBookingPickupAddress($bookingPickupAddress)
+    {
+        $this->bookingPickupAddress = $bookingPickupAddress;
+        return $this;
+    }
 
 }
 

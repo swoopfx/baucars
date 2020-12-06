@@ -161,7 +161,7 @@ class User
 
     /**
      *
-     * @var CsnUser\Entity\State @ORM\ManyToOne(targetEntity="CsnUser\Entity\State")
+     * @var State @ORM\ManyToOne(targetEntity="CsnUser\Entity\State")
      *      @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=false)
      *      @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
      *      @Annotation\Filter({"name":"StripTags"})

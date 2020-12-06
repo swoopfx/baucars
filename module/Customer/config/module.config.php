@@ -4,6 +4,7 @@ use Customer\Service\Factory\CustomerServiceFactory;
 use Customer\Service\Factory\BookingServiceFactory;
 use Customer\Paginator\Factory\CustomerAdapterInterface;
 use Customer\Paginator\Factory\AllBookingAdapterInterface;
+use Customer\Paginator\Factory\AdminInitiatedBookingFactory;
 
 return array(
     'controllers' => array(
@@ -67,6 +68,7 @@ return array(
             
             "CustomerPaginator"=>CustomerAdapterInterface::class,
             "allBookingPaginator"=>AllBookingAdapterInterface::class,
+            "adminInitiatedBokkingPaginator"=>AdminInitiatedBookingFactory::class
         ),
     ),
     

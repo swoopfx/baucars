@@ -195,7 +195,7 @@ class FlutterwaveService
             ->setAmount($this->amountPayed)
             ->setFlwId($this->flwId)
             ->setFlwRef($this->flwRef)
-            ->setTransactionUid(FlutterwaveService::transactionUid)
+            ->setTransactionUid(FlutterwaveService::transactionUid())
             ->setStatus($em->find(TransactionStatus::class, $this->transactStatus))
             ->setSettledAmount($this->settledAmount)
             ->setTxRef($this->txRef)

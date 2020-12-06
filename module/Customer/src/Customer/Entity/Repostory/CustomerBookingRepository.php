@@ -123,5 +123,142 @@ class CustomerBookingRepository extends EntityRepository
             ->getResult(Query::HYDRATE_ARRAY);
         return $result;
     }
+
+    /**
+     * Paginated format of all
+     *
+     * @return mixed|\Doctrine\DBAL\Driver\Statement|array|NULL
+     */
+    public function findAdminInitiedCount()
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+            ->select("count(b.id)")
+            ->where("b.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_INITIATED
+        ])
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $result;
+    }
+
+    public function findAdminAllInitiatedBooking($offset, $itemsPerPage)
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+            ->select([
+            "b",
+            "t",
+            "bt",
+            "u",
+            "bc",
+            "s"
+        
+        ])
+            ->leftJoin("b.transaction", "t")
+            ->leftJoin("b.user", "u")
+            ->leftJoin("b.status", "s")
+            ->leftJoin("b.bookingType", "bt")
+            ->leftJoin("b.bookingClass", "bc")
+            ->setFirstResult($offset)
+            ->setMaxResults($itemsPerPage)
+            ->where("b.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_INITIATED
+        ])
+            ->orderBy("b.id", "DESC")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        return $result;
+    }
+
+    public function findAdminActiveTripCount()
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+            ->select("count(b.id)")
+            ->where("b.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_ACTIVE
+        ])
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $result;
+    }
+
+    public function findAdminActiveTrip($offset, $itemsPerPage)
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+            ->select([
+            "b",
+            "t",
+            "bt",
+            "u",
+            "bc"
+        
+        ])
+            ->leftJoin("b.transaction", "t")
+            ->leftJoin("b.user", "u")
+            ->
+        // ->leftJoin("b.status", "s")
+        leftJoin("b.bookingType", "bt")
+            ->leftJoin("b.bookingClass", "bc")
+            ->setFirstResult($offset)
+            ->setMaxResults($itemsPerPage)
+            ->where("b.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_ACTIVE
+        ])
+            ->orderBy("b.id", "DESC")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        return $result;
+    }
+
+    public function findAdminCancelBookingCount()
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+            ->select("count(b.id)")
+            ->where("b.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_CANCELED
+        ])
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $result;
+    }
+
+    public function findAdminCanceledBooking($offset, $itemsPerPage)
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+            ->select([
+            "b",
+            "t",
+            "bt",
+            "u",
+            "bc"
+        
+        ])
+            ->leftJoin("b.transaction", "t")
+            ->leftJoin("b.user", "u")
+            ->
+        // ->leftJoin("b.status", "s")
+        leftJoin("b.bookingType", "bt")
+            ->leftJoin("b.bookingClass", "bc")
+            ->setFirstResult($offset)
+            ->setMaxResults($itemsPerPage)
+            ->where("b.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_CANCELED
+        ])
+            ->orderBy("b.id", "DESC")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        return $result;
+    }
 }
 

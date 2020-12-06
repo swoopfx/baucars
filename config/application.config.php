@@ -10,7 +10,7 @@ return array(
         'Admin',
         'Driver',
         'General',
-        'Customer'
+        'Customer','Job'
     ),
     
     // These are various options for the listeners attached to the ModuleManager
@@ -23,7 +23,7 @@ return array(
             './module',
             './vendor',
             './module',
-            './module'
+            './module','./module'
         ),
         
         // An array of paths from which to glob configuration files after

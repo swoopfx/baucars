@@ -1,5 +1,5 @@
 <?php
-echo $this->headtitle("Customer");
+echo $this->headtitle("Customers");
 ?>
 <div id="customerb">
 	<section class="page--header">
@@ -46,17 +46,14 @@ echo $this->headtitle("Customer");
 			<div class="records--header">
 				<div class="title fa-shopping-bag">
 					<h3 class="h3">
-						Registered Customer <a href="#"
-							class="btn btn-sm btn-outline-info">Register A Customer</a>
+						Registered Customer <a href="#" class="btn btn-sm btn-outline-info">Register A Customer</a>
 					</h3>
 					<p>Found Total 1,330 Products</p>
 				</div>
 
 				<div class="actions">
 					<form action="#" class="search flex-wrap flex-md-nowrap">
-						<input type="text" class="form-control"
-							placeholder="Product Name..." required> <select name="select"
-							class="form-control">
+						<input type="text" class="form-control" placeholder="Product Name..." required> <select name="select" class="form-control">
 							<option value="" selected>Product Category</option>
 						</select>
 						<button type="submit" class="btn btn-rounded">
@@ -82,7 +79,7 @@ echo $this->headtitle("Customer");
 							<th>Category</th>
 							<th>Registered On</th>
 							<th>Last Login</th>
-							
+
 							<th>Status</th>
 							<th class="not-sortable">Actions</th>
 						</tr>
@@ -90,26 +87,26 @@ echo $this->headtitle("Customer");
 					<tbody>
 						<?php foreach ($customers as $customer) : ?>
 							<tr>
-							<td><a href="#" class="btn-link"><?php echo strtoupper($customer["userUid"]) ?></a></td>
+								<td><a href="#" class="btn-link"><?php echo strtoupper($customer["userUid"]) ?></a></td>
 
-							<td><a href="#" class="btn-link"><?php echo $customer["fullName"] ?></a></td>
-							<td><a href="#" class="btn-link"><?php echo $customer["phoneNumber"] ?></a></td>
-							<td><?php echo $this->dateformat($customer["registrationDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
-							<td><?php echo $this->dateformat($customer["lastlogin"]["lastlogin"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
-							
-							<td><?php echo $this->userStateHelper($customer["state"])?></td>
-							<td>
-								<div class="dropleft">
-									<a href="#" class="btn-link" data-toggle="dropdown"><i
-										class="fa fa-ellipsis-v"></i></a>
+								<td><a href="#" class="btn-link"><?php echo $customer["fullName"] ?></a></td>
+								<td><a href="#" class="btn-link"><?php echo $customer["phoneNumber"] ?></a></td>
+								<td><?php echo $this->dateformat($customer["registrationDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
+								<td><?php echo $this->dateformat($customer["lastlogin"]["lastlogin"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
 
-									<div class="dropdown-menu">
-										<a href="#" class="dropdown-item">Edit</a> <a href="#"
-											class="dropdown-item">Delete</a>
+								<td><?php echo $this->userStateHelper($customer["state"]) ?></td>
+								<td>
+									<div class="dropleft">
+										<a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
+
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="<?php echo $this->url("admin/default", ["controller" => "customer", "action" => "view", "id" => $customer["userUid"]]) ?>" class="dropdown-item">View</a>
+											<a href="<?php echo $this->url("admin/default", ["controller" => "customer", "action" => "edit", "id" => $customer["userUid"]]) ?>" class="dropdown-item">Edit</a>
+											<a @click="disableCustomer(<?php echo $customer["id"] ?>)" href="#" class="dropdown-item">Disable</a>
+										</div>
 									</div>
-								</div>
-							</td>
-						</tr>
+								</td>
+							</tr>
 						<?php endforeach; ?>
 					</tbody>
 				</table>
@@ -127,7 +124,17 @@ echo $this->headtitle("Customer");
 			}
 		},
 		methods: {
+			disableCustomer(id) {
+				console.log("Hello");
+				swal({
+					title: "Disable Customer",
+					text: "Are you sure you want to disable "+id ,
+					icon: "warning",
+					button: "Confirm",
+				}).then(function(){
 
+				});
+			}
 		},
 	});
 </script>

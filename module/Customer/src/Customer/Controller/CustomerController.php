@@ -66,6 +66,8 @@ class CustomerController extends AbstractActionController
         
         return $response;
     }
+    
+   
 
     public function indexAction()
     {
@@ -310,10 +312,12 @@ class CustomerController extends AbstractActionController
             $bookingTypeId = $post["selectedService"];
             $bookingClassId = $post["selectedBookingClass"];
             $billingMethod = $post['selectedBillingMethod'];
+            $pickupaddress = $post["pickupaddress"];
             
             $customerService = $this->customerService;
             $customerService->setBookingStartDate($startDate)
                 ->setBookingEndData($endDate)
+                ->setBookingPickupAddress($pickupaddress)
                 ->setBookingClass($bookingClassId)
                 ->setBillingMethod($billingMethod);
             
@@ -394,11 +398,12 @@ class CustomerController extends AbstractActionController
             $bookingTypeId = $post["selectedService"];
             $bookingClassId = $post["selectedBookingClass"];
             $billingMethod = $post['selectedBillingMethod'];
-            
+            $pickupaddress = $post["pickupaddress"];
             $customerService = $this->customerService;
             $customerService->setBookingStartDate($startDate)
                 ->setBookingEndData($endDate)
                 ->setBookingClass($bookingClassId)
+                ->setBookingPickupAddress($pickupaddress)
                 ->setBillingMethod($billingMethod);
             $price = $customerService->calculatePrice();
             $txRef = FlutterwaveService::generateTransaction();
@@ -408,9 +413,9 @@ class CustomerController extends AbstractActionController
             $bookingSession->bookingClass = $bookingClassId;
             $bookingSession->billingMethod = $billingMethod;
             $bookingSession->bookingType = $bookingTypeId;
+            $bookingSession->pickupaddress = $pickupaddress;
             
             $response->setStatusCode(200);
-            
             $jsonModel->setVariables([
                 "price" => $price,
                 "txref" => $txRef,
@@ -444,6 +449,7 @@ class CustomerController extends AbstractActionController
                         ->setBookingEndData($bookingSession->bookingEndDate)
                         ->setBillingMethod($bookingSession->billingMethod)
                         ->setBookingType($bookingSession->bookingType)
+                        ->setBookingPickupAddress($bookingSession->pickupaddress)
                         ->createBooking();
                     
                     $transactionEntity = $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)

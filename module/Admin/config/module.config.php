@@ -68,6 +68,10 @@ return array(
         "template_map"=>[
             'booking-menu-list' => __DIR__ . '/../view/admin/booking/partial/booking_menu_list.phtml',
             
+            // customer partials 
+            'admin-customer-sidebar' => __DIR__ . '/../view/admin/customer/partials/admin-customer-sidebar-snippet.phtml',
+            'admin-customer-top' => __DIR__ . '/../view/admin/customer/partials/admin-customer-top-snippet.phtml',
+            
             // email
             'admin-new-booking' => __DIR__ . '/../view/email/admin-user-new-booking.phtml'
         ],
