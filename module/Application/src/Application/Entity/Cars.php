@@ -7,6 +7,7 @@ use General\Entity\MotorTransmission;
 use General\Entity\MotorFuel;
 use General\Entity\MotorMake;
 use General\Entity\MotorClass;
+use Driver\Entity\DriverBio;
 
 /**
  * @ORM\Entity
@@ -36,7 +37,7 @@ class Cars
     
     /**
      * @ORM\Column(name="plate_number", type="string", nullable=true)
-     * @var unknown
+     * @var string
      */
     private $platNumber;
 
@@ -167,6 +168,12 @@ class Cars
      * @var \DateTime
      */
     private $updatedOn;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="", inversedBy="assisnedCar")
+     * @var DriverBio
+     */
+    private $driver;
 
     /**
      */

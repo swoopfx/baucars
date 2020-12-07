@@ -240,14 +240,14 @@ class CustomerBookingRepository extends EntityRepository
             "t",
             "bt",
             "u",
-            "bc"
+            "bc",
+            "s"
         
         ])
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
-            ->
-        // ->leftJoin("b.status", "s")
-        leftJoin("b.bookingType", "bt")
+            ->leftJoin("b.bookingType", "bt")
+            ->leftJoin("b.status", "s")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)

@@ -30,7 +30,7 @@ class AdminActiveTripAdpater implements AdapterInterface
      */
     public function getItems($offset, $itemCountPerPage)
     {
-        return $this->bookingRepository->findAdminAllInitiatedBooking($offset, $itemCountPerPage);
+        return $this->bookingRepository->findAdminActiveTrip($offset, $itemCountPerPage);
         
     }
 
@@ -40,7 +40,7 @@ class AdminActiveTripAdpater implements AdapterInterface
      */
     public function count()
     {
-        return $this->bookingRepository->findAdminInitiedCount();
+        return $this->bookingRepository->findAdminActiveTripCount();
         
     }
     /**

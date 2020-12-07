@@ -31,7 +31,7 @@ class AdminCanceledBookingAdapter implements AdapterInterface
      */
     public function getItems($offset, $itemCountPerPage)
     {
-        return $this->bookingRepository->findAdminAllInitiatedBooking($offset, $itemCountPerPage);
+        return $this->bookingRepository->findAdminCanceledBooking($offset, $itemCountPerPage);
         
     }
 
@@ -41,9 +41,26 @@ class AdminCanceledBookingAdapter implements AdapterInterface
      */
     public function count()
     {
-        // TODO Auto-generated method stub
+        return $this->bookingRepository->findAdminCancelBookingCount();
         
     }
+    /**
+     * @return the $bookingRepository
+     */
+    public function getBookingRepository()
+    {
+        return $this->bookingRepository;
+    }
+
+    /**
+     * @param \Customer\Entity\Repostory\CustomerBookingRepository $bookingRepository
+     */
+    public function setBookingRepository($bookingRepository)
+    {
+        $this->bookingRepository = $bookingRepository;
+        return $this;
+    }
+
 
 
    

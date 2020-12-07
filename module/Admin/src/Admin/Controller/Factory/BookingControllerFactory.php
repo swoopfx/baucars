@@ -34,8 +34,8 @@ class BookingControllerFactory implements FactoryInterface
         // var_dump("HHHHH");
         $bookingPaginator = $serviceLocator->getServiceLocator()->get("allBookingPaginator");
         $initiatedBooking = $serviceLocator->getServiceLocator()->get("adminInitiatedBokkingPaginator");
-        $activeTrip = $serviceLocator->getServiceLocator()->get("allBookingPaginator");
-        $cancelBooking = $serviceLocator->getServiceLocator()->get("allBookingPaginator");
+        $activeTrip = $serviceLocator->getServiceLocator()->get("adminActiveTripPaginator");
+        $cancelBooking = $serviceLocator->getServiceLocator()->get("adminCanceledBookingPaginator");
         /**
          *
          * @var GeneralService $generalService

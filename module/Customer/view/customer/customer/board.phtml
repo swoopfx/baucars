@@ -650,7 +650,7 @@ $flashMessenger = $this->flashMessenger()
 							</div>
 							<!-- Begin Write Comment -->
 							<div class="input-group mt-5">
-								
+
 							</div>
 							<!-- End Write Comment -->
 						</div>
@@ -1144,8 +1144,18 @@ $flashMessenger = $this->flashMessenger()
 					text: "You are about to cancel you booking",
 					icon: "warning",
 					button: "Continue!",
-				}).then(res => {
-					this.cancelbooking(id);
+				}).then(function(isConfirm) {
+					if (isConfirm) {
+						let formData = new FormData();
+						formData.append("bookingId", id);
+						axios.post("/customer/cancelbooking", formData).then(res => {
+							if (res.status == 201) {
+								window.location.reload();
+							}
+						}).catch(err => {
+
+						});
+					}
 				});
 			},
 

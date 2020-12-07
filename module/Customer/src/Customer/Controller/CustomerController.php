@@ -66,8 +66,6 @@ class CustomerController extends AbstractActionController
         
         return $response;
     }
-    
-   
 
     public function indexAction()
     {
@@ -190,8 +188,8 @@ class CustomerController extends AbstractActionController
                 ->getQuery()
                 ->getResult(Query::HYDRATE_ARRAY);
             
-                $response->setStatusCode(200);
-                $jsonModel->setVariable("data", $data[0]);
+            $response->setStatusCode(200);
+            $jsonModel->setVariable("data", $data[0]);
         }
         return $jsonModel;
     }
@@ -250,6 +248,7 @@ class CustomerController extends AbstractActionController
     {
         $em = $this->entityManager;
         $jsonModel = new JsonModel();
+        $userEntity = $this->identity();
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
@@ -276,6 +275,25 @@ class CustomerController extends AbstractActionController
                 $em->persist($bookingActivity);
                 
                 $em->flush();
+                
+                // Notify Controller
+                $generalService = $this->generalService;
+                $pointer["to"] = $userEntity->getEmail();
+                $pointer["fromName"] = "Bau Cars System";
+                $pointer['subject'] = "Cancelled Booking";
+                
+                $template['template'] = "app-customercancel-booking-user";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png",
+                    "bookingUid" => $bookingEntity->getBookingUid(),
+                    "fullname" => $bookingEntity->getUser()->getFullName(),
+                    "cancelDate" => $bookingEntity->getUpdatedOn()
+                ];
+                $generalService->sendMails($pointer, $template);
                 
                 // integrate funds return logic
                 

@@ -87,7 +87,10 @@ class BookingController extends AbstractActionController
      */
     public function activeAction()
     {
-        $viewModel = new ViewModel();
+        $allBooking = $this->activeBooking;
+        $viewModel = new ViewModel([
+            "allBooking" => $allBooking
+        ]);
         return $viewModel;
     }
 
@@ -98,7 +101,10 @@ class BookingController extends AbstractActionController
      */
     public function cancelAction()
     {
-        $viewModel = new ViewModel();
+        $allBooking = $this->cancelBooking;
+        $viewModel = new ViewModel([
+            "allBooking" => $allBooking
+        ]);
         return $viewModel;
     }
 

@@ -56,7 +56,7 @@ class DriverBio
     // private $driverName;
     
     /**
-     * @ORM\OneToOne(targetEntity="Application\Entity\Cars")
+     * @ORM\OneToOne(targetEntity="Application\Entity\Cars", mappedBy="driver")
      *
      * @var Cars
      */

@@ -1,11 +1,12 @@
 <?php
 namespace Application;
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @link http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 return array(
     'router' => array(
@@ -59,7 +60,7 @@ return array(
                         'action' => 'dashboard'
                     )
                 )
-            ), 
+            )
         )
     ),
     'service_manager' => array(
@@ -103,11 +104,12 @@ return array(
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
             
-            
-            // emails 
+            // emails
             'email-app-user-registration' => __DIR__ . '/../view/mail/app-user-registeration.phtml',
             'app-support-created-controller-mail' => __DIR__ . '/../view/mail/app-support-created-controller-mail.phtml',
             'app-support-created-user-mail' => __DIR__ . '/../view/mail/app-support-created-user-mail.phtml',
+            'app-customercancel-booking-user' => __DIR__ . '/../view/mail/app-customer-cancel-booking-user.phtml'
+        
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view'
