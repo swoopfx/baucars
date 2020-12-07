@@ -21,7 +21,7 @@ class CarRepository extends EntityRepository
   
   public function findRegisteredCars(){
       $repo = $this->getEntityManager()->createQueryBuilder("c");
-      $data = $repo
+      $data = 
   }
 }
 

@@ -170,7 +170,7 @@ class Cars
     private $updatedOn;
     
     /**
-     * @ORM\ManyToOne(targetEntity="", inversedBy="assisnedCar")
+     * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio", inversedBy="assisnedCar")
      * @var DriverBio
      */
     private $driver;
