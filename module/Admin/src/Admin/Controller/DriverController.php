@@ -183,14 +183,17 @@ class DriverController extends AbstractActionController
                         ->setDriverSince(\DateTime::createFromFormat("Y-m-d", $post["driving_since"]));
                     // if()
                     // var_dump($data);
-                    $carEntity = new Cars();
+                   
                     if ($post["car_platenumber"] != "") {
+                        $carEntity = new Cars();
                         $carEntity->setPlatNumber(strip_tags($post["car_platenumber"]))
                             ->setCreatedOn(new \DateTime())
+                            ->setCarUid(uniqid("car"))
+                            ->setDriver($driverEntity)
                             ->setMotorMake($em->find(MotorMake::class, $post["selectedCar"]))
                             ->setMotorName(strip_tags($post["carType"]));
                         
-                        $driverEntity->setAssisnedCar($carEntity);
+//                         $driverEntity->setAssisnedCar($carEntity);
                         
                         $em->persist($carEntity);
                     }

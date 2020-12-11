@@ -31,11 +31,11 @@ class BookingControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $ctr = new BookingController();
-        // var_dump("HHHHH");
         $bookingPaginator = $serviceLocator->getServiceLocator()->get("allBookingPaginator");
         $initiatedBooking = $serviceLocator->getServiceLocator()->get("adminInitiatedBokkingPaginator");
         $activeTrip = $serviceLocator->getServiceLocator()->get("adminActiveTripPaginator");
         $cancelBooking = $serviceLocator->getServiceLocator()->get("adminCanceledBookingPaginator");
+        $upcomingBooking = $serviceLocator->getServiceLocator()->get("adminUpcomingBookingPaginator");
         /**
          *
          * @var GeneralService $generalService
@@ -47,6 +47,7 @@ class BookingControllerFactory implements FactoryInterface
             ->setCancelBooking($cancelBooking)
             ->setActiveBooking($activeTrip)
             ->setInitiTitedBooking($initiatedBooking)
+            ->setUpcomgBooking($upcomingBooking)
             ->setAllBookingPaginator($bookingPaginator);
         return $ctr;
     }

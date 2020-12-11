@@ -10,7 +10,7 @@ use General\Entity\MotorClass;
 use Driver\Entity\DriverBio;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Application\Entity\Repository\CarRepository")
  * @ORM\Table(name="cars")
  * 
  * @author otaba
@@ -27,6 +27,12 @@ class Cars
      *     
      */
     private $id;
+    
+    /**
+     * @ORM\Column(name="car_uid", type="string", nullable=true)
+     * @var string
+     */
+    private $carUid;
 
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -538,6 +544,40 @@ class Cars
         $this->motorClass = $motorClass;
         return $this;
     }
+    /**
+     * @return the $carUid
+     */
+    public function getCarUid()
+    {
+        return $this->carUid;
+    }
+
+    /**
+     * @return the $driver
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    /**
+     * @param string $carUid
+     */
+    public function setCarUid($carUid)
+    {
+        $this->carUid = $carUid;
+        return $this;
+    }
+
+    /**
+     * @param \Driver\Entity\DriverBio $driver
+     */
+    public function setDriver($driver)
+    {
+        $this->driver = $driver;
+        return $this;
+    }
+
 
 
 }

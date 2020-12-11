@@ -4,6 +4,7 @@ namespace Admin\Controller\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Admin\Controller\CarController;
+use General\Service\GeneralService;
 
 /**
  *
@@ -29,9 +30,19 @@ class CarControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $ctr = new CarController();
+        $allCArPaginator = $serviceLocator->getServiceLocator()->get("allcarsRegisteredPaginator");
         
-       $ctr = new CarController();
-       return  $ctr;
+        /**
+         *
+         * @var GeneralService $generalService
+         */
+        $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
+        
+        $ctr->setGeneralService($generalService)
+            ->setAllCarsPaginator($allCArPaginator)
+            ->setEntityManager($generalService->getEntityManager());
+        return $ctr;
     }
 }
 

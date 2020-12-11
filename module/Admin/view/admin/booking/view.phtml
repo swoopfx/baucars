@@ -201,12 +201,17 @@ echo $this->headtitle("Booking");
 
 								if ($data->getAssignedDriver() != null) :
 									if ($data->getAssignedDriver()->getAssisnedCar() != null) :
-										$car = $data->getAssignedDriver()->getAssisnedCar();
+										$cars = $data->getAssignedDriver()->getAssisnedCar();
+// 								var_dump($cars);
+// var_dump(count($cars));
+								foreach ($cars as $car):
+								
 								?>
+								
 										<table class="table table-simple">
 											<tbody>
 												<tr>
-													<td>Plate Number</td>
+													<td>Plate Number</td> 
 													<th><?php echo ($car->getPlatNumber() != null ? $car->getPlatNumber() : "") ?></th>
 												</tr>
 												<tr>
@@ -220,7 +225,9 @@ echo $this->headtitle("Booking");
 
 											</tbody>
 										</table>
-								<?php endif;
+								<?php 
+								endforeach;
+								endif;
 								endif;
 
 

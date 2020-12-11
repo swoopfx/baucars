@@ -2,6 +2,7 @@
 namespace Application\Paginator;
 
 use Zend\Paginator\Adapter\AdapterInterface;
+use Application\Entity\Repository\CarRepository;
 
 /**
  *
@@ -10,7 +11,10 @@ use Zend\Paginator\Adapter\AdapterInterface;
  */
 class CarAdapater implements AdapterInterface
 {
-    
+    /**
+     * 
+     * @var CarRepository
+     */
     private $carRepository;
 
     // TODO - Insert your code here
@@ -28,8 +32,7 @@ class CarAdapater implements AdapterInterface
      */
     public function getItems($offset, $itemCountPerPage)
     {
-        
-        
+        return $this->carRepository->findRegisteredCars($offset, $itemCountPerPage);
     }
 
     /**
@@ -38,9 +41,25 @@ class CarAdapater implements AdapterInterface
      */
     public function count()
     {
-        // TODO Auto-generated method stub
-        
+        return $this->carRepository->count(); 
     }
+    /**
+     * @return the $carRepository
+     */
+    public function getCarRepository()
+    {
+        return $this->carRepository;
+    }
+
+    /**
+     * @param \Application\Entity\Repository\CarRepository $carRepository
+     */
+    public function setCarRepository($carRepository)
+    {
+        $this->carRepository = $carRepository;
+        return $this;
+    }
+
 
 }
 

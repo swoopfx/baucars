@@ -43,6 +43,9 @@ class BookingController extends AbstractActionController
     private $activeBooking;
 
     private $cancelBooking;
+    
+    private $upcomgBooking;
+    
 
     /**
      */
@@ -106,6 +109,18 @@ class BookingController extends AbstractActionController
             "allBooking" => $allBooking
         ]);
         return $viewModel;
+    }
+    
+    /**
+     * Defines all upcoming initite
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function upcomingAction(){
+        $allBooking = $this->upcomgBooking;
+        $viewmodel= new ViewModel([
+            "allBooking" => $allBooking
+        ]);
+        return $viewmodel;
     }
 
     public function viewAction()
@@ -192,12 +207,7 @@ class BookingController extends AbstractActionController
         return $jsonModel;
     }
 
-    public function testAction()
-    {
-        return new JsonModel([
-            "count" => 7
-        ]);
-    }
+  
 
     // public function
     
@@ -307,6 +317,23 @@ class BookingController extends AbstractActionController
         $this->cancelBooking = $cancelBooking;
         return $this;
     }
+    /**
+     * @return the $upcomgBooking
+     */
+    public function getUpcomgBooking()
+    {
+        return $this->upcomgBooking;
+    }
+
+    /**
+     * @param field_type $upcomgBooking
+     */
+    public function setUpcomgBooking($upcomgBooking)
+    {
+        $this->upcomgBooking = $upcomgBooking;
+        return $this;
+    }
+
 
 }
 

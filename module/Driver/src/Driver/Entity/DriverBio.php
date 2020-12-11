@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use General\Entity\Images;
 use Application\Entity\Cars;
 use Customer\Entity\CustomerBooking;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Driver\Entity\Factory\DriverBioRepository")
@@ -32,18 +34,17 @@ class DriverBio
      * @var string
      */
     private $diverUid;
-    
-    
 
-//     /**
-//      * @ORM\ManyToOne(targetEntity="ActiveDriver", inversedBy="driver")
-//      *
-//      * @var ActiveDriver
-//      */
-//     private $activeSession;
-
+    // /**
+    // * @ORM\ManyToOne(targetEntity="ActiveDriver", inversedBy="driver")
+    // *
+    // * @var ActiveDriver
+    // */
+    // private $activeSession;
+    
     /**
      * @ORM\OneToMany(targetEntity="Customer\Entity\CustomerBooking", mappedBy="assignedDriver")
+     * 
      * @var CustomerBooking
      */
     private $booking;
@@ -56,9 +57,9 @@ class DriverBio
     // private $driverName;
     
     /**
-     * @ORM\OneToOne(targetEntity="Application\Entity\Cars", mappedBy="driver")
+     * @ORM\OneToMany(targetEntity="Application\Entity\Cars", mappedBy="driver")
      *
-     * @var Cars
+     * @var Collection
      */
     private $assisnedCar;
 
@@ -142,8 +143,7 @@ class DriverBio
      */
     public function __construct()
     {
-        
-        // TODO - Insert your code here
+        $this->assisnedCar = new ArrayCollection();
     }
 
     /**
@@ -162,6 +162,29 @@ class DriverBio
     public function getAssisnedCar()
     {
         return $this->assisnedCar;
+    }
+
+    /**
+     *
+     * @param Cars $assignedCar            
+     * @return \Driver\Entity\DriverBio
+     */
+    public function addAssisnedCar(Cars $assignedCar)
+    {
+        if (! $this->assisnedCar->contains($assignedCar)) {
+            $this->assisnedCar[] = $assignedCar;
+            $assignedCar->setDriver($this);
+        }
+        return $this;
+    }
+
+    public function removeAssisnedCar(Cars $assisnedCar)
+    {
+        if ($this->assisnedCar->contains($assisnedCar)) {
+            $this->assisnedCar->removeElement($assisnedCar);
+            $assisnedCar->setDriver(NULL);
+        }
+        return $this;
     }
 
     /**
@@ -392,7 +415,9 @@ class DriverBio
         $this->diverUid = $diverUid;
         return $this;
     }
+
     /**
+     *
      * @return the $booking
      */
     public function getBooking()
@@ -401,13 +426,13 @@ class DriverBio
     }
 
     /**
-     * @param \Customer\Entity\CustomerBooking $booking
+     *
+     * @param \Customer\Entity\CustomerBooking $booking            
      */
     public function setBooking($booking)
     {
         $this->booking = $booking;
         return $this;
     }
-
 }
 

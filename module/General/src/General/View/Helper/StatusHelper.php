@@ -33,6 +33,7 @@ class StatusHelper extends AbstractHelper
                 return "<span class='label label-success'>{$status["status"]}</span>";
             
             case CustomerService::BOOKING_STATUS_PROCESSING:
+            case CustomerService::BOOKING_STATUS_ASSIGN:
                 
                 return "<span class='label label-warning'>{$status["status"]}</span>";
         }

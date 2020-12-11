@@ -260,5 +260,60 @@ class CustomerBookingRepository extends EntityRepository
             ->getResult(Query::HYDRATE_ARRAY);
         return $result;
     }
+    
+    
+    
+    public function findAdminUpcomingBookingCount()
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+        ->select("count(b.id)")
+        ->where("b.status = :status")
+        ->orWhere("b.status = :status2")
+        ->orWhere("b.status= :status3")
+        ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_INITIATED,
+            "status2"=>CustomerService::BOOKING_STATUS_ASSIGN,
+            "status3"=>CustomerService::BOOKING_STATUS_PROCESSING,
+        ])
+        ->getQuery()
+        ->getSingleScalarResult();
+        return $result;
+    }
+    
+    
+    public function findAdminUpcomingBooking($offset, $itemsPerPage)
+    {
+        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $result = $repo->createQueryBuilder("b")
+        ->select([
+            "b",
+            "t",
+            "bt",
+            "u",
+            "bc",
+            "s"
+            
+        ])
+        ->leftJoin("b.transaction", "t")
+        ->leftJoin("b.user", "u")
+        ->leftJoin("b.bookingType", "bt")
+        ->leftJoin("b.status", "s")
+        ->leftJoin("b.bookingClass", "bc")
+        ->setFirstResult($offset)
+        ->setMaxResults($itemsPerPage)
+        ->where("b.status = :status")
+        ->orWhere("b.status = :status2")
+        ->orWhere("b.status= :status3")
+        ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_INITIATED,
+            "status2"=>CustomerService::BOOKING_STATUS_ASSIGN,
+            "status3"=>CustomerService::BOOKING_STATUS_PROCESSING,
+        ])
+        ->orderBy("b.startTime", "ASC")
+        ->getQuery()
+        ->getResult(Query::HYDRATE_ARRAY);
+        return $result;
+    }
 }
 

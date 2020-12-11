@@ -8,6 +8,7 @@ use Customer\Paginator\Factory\AdminInitiatedBookingFactory;
 use Customer\Paginator\AdminCanceledBookingAdapter;
 use Customer\Paginator\Factory\AdminCancelBookingAdapterInterface;
 use Customer\Paginator\Factory\AdminActyiveTripAdapterInterface;
+use Customer\Paginator\Factory\AdminUpcomingBookingAdapterInterface;
 
 return array(
     'controllers' => array(
@@ -73,7 +74,8 @@ return array(
             "allBookingPaginator"=>AllBookingAdapterInterface::class,
             "adminInitiatedBokkingPaginator"=>AdminInitiatedBookingFactory::class,
             "adminCanceledBookingPaginator"=>AdminCancelBookingAdapterInterface::class,
-            "adminActiveTripPaginator"=>AdminActyiveTripAdapterInterface::class
+            "adminActiveTripPaginator"=>AdminActyiveTripAdapterInterface::class,
+            "adminUpcomingBookingPaginator"=>AdminUpcomingBookingAdapterInterface::class
         ),
     ),
     

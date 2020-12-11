@@ -3,6 +3,10 @@ namespace Application\Paginator\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Application\Paginator\CarAdapater;
+use General\Service\GeneralService;
+use Application\Entity\Cars;
+use Zend\Paginator\Paginator;
 
 /**
  *
@@ -29,7 +33,25 @@ class CarAdapterInterface implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         
-        // TODO - Insert your code here
+        $adapter = new CarAdapater();
+        /**
+         *
+         * @var GeneralService $generalService
+         */
+        $generalService = $serviceLocator->get("General\Service\GeneralService");
+        $entityManager = $generalService->getEntityManager();
+        $carRepository = $entityManager->getRepository(Cars::class);
+        $adapter->setCarRepository($carRepository);
+        
+        $page = $serviceLocator->get("Application")
+        ->getMvcEvent()
+        ->getRouteMatch()
+        ->getParam("page");
+        
+        $paginator = new Paginator($adapter);
+        $paginator->setCurrentPageNumber($page)->setItemCountPerPage(50);
+        
+        return $paginator;
     }
 }
 

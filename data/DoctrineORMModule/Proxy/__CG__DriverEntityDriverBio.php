@@ -205,6 +205,28 @@ class DriverBio extends \Driver\Entity\DriverBio implements \Doctrine\ORM\Proxy\
     /**
      * {@inheritDoc}
      */
+    public function addAssisnedCar(\Application\Entity\Cars $assignedCar)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addAssisnedCar', [$assignedCar]);
+
+        return parent::addAssisnedCar($assignedCar);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeAssisnedCar(\Application\Entity\Cars $assisnedCar)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeAssisnedCar', [$assisnedCar]);
+
+        return parent::removeAssisnedCar($assisnedCar);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getDriverSince()
     {
 

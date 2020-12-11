@@ -1,6 +1,8 @@
 <?php
 namespace Application;
 
+use Application\Paginator\Factory\CarAdapterInterface;
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -64,13 +66,18 @@ return array(
         )
     ),
     'service_manager' => array(
+        
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory'
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator'
-        )
+        ),
+        
+        'factories' => array(
+            "allcarsRegisteredPaginator"=>CarAdapterInterface::class
+        ),
     ),
     'translator' => array(
         'locale' => 'en_US',

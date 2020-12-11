@@ -4,18 +4,18 @@ echo $this->headtitle("Drivers");
 
 <?php
 $flashMessenger = $this->flashMessenger()
-    ->setMessageOpenFormat('<div%s>
+	->setMessageOpenFormat('<div%s>
      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
          &times;
      </button>
      <ul><li>')
-    ->setMessageSeparatorString('</li><li>')
-    ->setMessageCloseString('</li></ul></div>');
+	->setMessageSeparatorString('</li><li>')
+	->setMessageCloseString('</li></ul></div>');
 ?>
 <?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
- <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
- <?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
- <?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
+<?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
+<?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
+<?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
 
 <div id="drivers">
 	<section class="page--header">
@@ -105,32 +105,33 @@ $flashMessenger = $this->flashMessenger()
 
 					<div class="form-group">
 						<label>
-						<span v-if="cars.length" class="label-text">Car Make</span>
-						<!-- <div class="col-md-10"> -->
+							<span v-if="cars.length" class="label-text">Car Make</span>
+							<!-- <div class="col-md-10"> -->
 							<select name="select" v-model="selectedCar" class="form-control">
-								<option v-for="car in cars"  :key="car.id"  :value="car.id">{{car.carMake}}</option>
-								
+								<option v-for="car in cars" :key="car.id" :value="car.id">{{car.carMake}}</option>
+
 							</select>
-							</label>
+						</label>
 						<!-- </div> -->
 					</div>
 
 
-					
+
 
 					<div class="form-group">
-						<label> <span class="label-text">Car Type</span> <input ref="carType" v-model="carType" type="text"  class="form-control">
+						<label> <span class="label-text">Car Type</span> <input ref="carType" v-model="carType" type="text" class="form-control">
 						</label>
 					</div>
 
 
 
-<div v-if="creatingDriver">
-<div class="spinner"></div></div>
+					<div v-if="creatingDriver">
+						<div class="spinner"></div>
+					</div>
 
 
 					<button v-else :disabled="submitStatus" @click="createDriver()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Register Now</button>
-						
+
 				</div>
 			</div>
 
@@ -167,57 +168,57 @@ $flashMessenger = $this->flashMessenger()
 		</div>
 
 		<div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    Registered Drivers
-                                </h3>
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Registered Drivers
+				</h3>
 
-                                <div class="dropdown">
-                                    
+				<div class="dropdown">
 
-                                    
-                                </div>
-                            </div>
 
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table style--2">
-                                        <thead>
-                                            <tr>
-                                               
-                                                <th>Driver UID</th>
-                                                <th>Driver Name</th>
-                                                <th>Driveing Since</th>
-<!--                                                 <th>Quantity</th> -->
-<!--                                                 <th>Tracking No.</th> -->
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Table Row Start -->
-                                            <?php 
-                                            if(count($drivers) > 0):
-                                            foreach ($drivers as $driver):?>
-                                            <tr>
-                                               
-                                                <td><?php echo strtoupper($driver["diverUid"])?></td>
-                                                <td><a href="#" class="btn-link"><?php  echo $driver["user"]["fullName"]?></a></td>
-                                                <td><?php echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM)?></td>
-<!--                                                 <td>2</td> -->
-<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-                                                <td><i class="fa fa-edit"></i> Edit</td>
-                                            </tr>
-                                            <?php endforeach;
-                                            endif;
-                                            ?>
-                                            <!-- Table Row End -->
 
-                                           
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+				</div>
+			</div>
+
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table style--2">
+						<thead>
+							<tr>
+
+								<th>Driver UID</th>
+								<th>Driver Name</th>
+								<th>Driveing Since</th>
+								<!--                                                 <th>Quantity</th> -->
+								<!--                                                 <th>Tracking No.</th> -->
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Table Row Start -->
+							<?php
+							if (count($drivers) > 0) :
+								foreach ($drivers as $driver) : ?>
+									<tr>
+
+										<td><?php echo strtoupper($driver["diverUid"]) ?></td>
+										<td><a href="#" class="btn-link"><?php echo $driver["user"]["fullName"] ?></a></td>
+										<td><?php echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM) ?></td>
+										<!--                                                 <td>2</td> -->
+										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
+										<td><i class="fa fa-edit"></i> Edit</td>
+									</tr>
+							<?php endforeach;
+							endif;
+							?>
+							<!-- Table Row End -->
+
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</section>
 </div>
 
@@ -227,17 +228,17 @@ $flashMessenger = $this->flashMessenger()
 		data() {
 			return {
 				phoneNumber: "",
-				creatingDriver:false,
+				creatingDriver: false,
 				email: "",
 				reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
 				fullname: "",
-				driver_dob:'',
-				driving_since:'',
-				car_platenumber:'',
-				cars:[],
-				selectedCar:"",
-				carType:'',
-				
+				driver_dob: '',
+				driving_since: '',
+				car_platenumber: '',
+				cars: [],
+				selectedCar: "",
+				carType: '',
+
 			}
 		},
 		mounted() {
@@ -246,7 +247,7 @@ $flashMessenger = $this->flashMessenger()
 
 		computed: {
 			submitStatus() {
-				if (this.phoneNumber == ""  || this.fullname == "" || this.driver_dob == "" || this.driving_since == "" ) {
+				if (this.phoneNumber == "" || this.fullname == "" || this.driver_dob == "" || this.driving_since == "") {
 					return true;
 				} else {
 					return false;
@@ -261,13 +262,13 @@ $flashMessenger = $this->flashMessenger()
 		},
 
 		methods: {
-			getCarMake(){
-				axios.get("/controller/driver/allcarsmake").then(res=>{
+			getCarMake() {
+				axios.get("/controller/driver/allcarsmake").then(res => {
 					this.cars = res.data.data;
 				})
 			},
 			createDriver() {
-				this.creatingDriver = true;
+				// this.creatingDriver = true;
 				let formData = new FormData();
 				formData.append("fullname", this.fullname);
 				formData.append("email", this.email);
@@ -277,15 +278,15 @@ $flashMessenger = $this->flashMessenger()
 				formData.append("selectedCar", this.selectedCar);
 				formData.append("car_platenumber", this.car_platenumber);
 				formData.append("carType", this.carType);
-				axios.post("/controller/driver/createdriver", formData).then(res=>{
-					if(res.status == 201){
-						this.creatingDriver = false;
+				axios.post("/controller/driver/createdriver", formData).then(res => {
+					if (res.status == 201) {
+						// this.creatingDriver = false;
 						window.location.reload();
 					}
-				}).catch(err=>{
-					
-						console.log(err.response.data.message);
-					
+				}).catch(err => {
+
+					console.log(err.response.data.message);
+
 				});
 			},
 
