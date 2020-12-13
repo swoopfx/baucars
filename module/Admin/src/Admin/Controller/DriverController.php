@@ -183,7 +183,7 @@ class DriverController extends AbstractActionController
                         ->setDriverSince(\DateTime::createFromFormat("Y-m-d", $post["driving_since"]));
                     // if()
                     // var_dump($data);
-                   
+                    
                     if ($post["car_platenumber"] != "") {
                         $carEntity = new Cars();
                         $carEntity->setPlatNumber(strip_tags($post["car_platenumber"]))
@@ -193,7 +193,7 @@ class DriverController extends AbstractActionController
                             ->setMotorMake($em->find(MotorMake::class, $post["selectedCar"]))
                             ->setMotorName(strip_tags($post["carType"]));
                         
-//                         $driverEntity->setAssisnedCar($carEntity);
+                        // $driverEntity->setAssisnedCar($carEntity);
                         
                         $em->persist($carEntity);
                     }
@@ -260,8 +260,7 @@ class DriverController extends AbstractActionController
             $bookingAvtivityEntity = new BookingActivity();
             $bookingAvtivityEntity->setBooking($bookingEntity)
                 ->setCreatedOn(new \DateTime())
-                ->
-            setInformation("Assigned Driver {$driverEntity->getUser()->getFullName()}");
+                ->setInformation("Assigned Driver {$driverEntity->getUser()->getFullName()}");
             
             $em->persist($bookingEntity);
             $em->persist($bookingAvtivityEntity);
@@ -282,7 +281,7 @@ class DriverController extends AbstractActionController
                     'force_canonical' => true
                 ]) . "assets/img/logo-black.png",
                 "fullname" => $driverEntity->getUser()->getFullName(),
-                "phone"=>$driverEntity->getUser()->getPhoneNumber()
+                "phone" => $driverEntity->getUser()->getPhoneNumber()
             
             ];
             $generalService->sendMails($pointer, $template);
@@ -292,10 +291,71 @@ class DriverController extends AbstractActionController
         }
         return $jsonModel;
     }
+    
+    public function dispatchAction(){
+        $jsonModel = new JsonModel();
+        return $jsonModel;
+    }
 
     public function reassigndriverAction()
     {
+        $em = $this->entityManager;
+        $response = $this->getResponse();
         $jsonModel = new JsonModel();
+        // $generalService = $this->g
+        $request = $this->getRequest();
+        // changes the status of the booking from
+        // send notification to driver
+        // send notification to customer
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $bookingId = $post["bookingId"];
+            $driverId = $post["driver"];
+            /**
+             *
+             * @var CustomerBooking $bookingEntity
+             */
+            $bookingEntity = $em->find(CustomerBooking::class, $bookingId);
+            $bookingEntity->setAssignedDriver($em->find(DriverBio::class, $driverId))
+                
+                ->setUpdatedOn(new \DateTime());
+            /**
+             *
+             * @var DriverBio $driverEntity
+             */
+            $driverEntity = $em->find(DriverBio::class, $driverId);
+            $bookingAvtivityEntity = new BookingActivity();
+            $bookingAvtivityEntity->setBooking($bookingEntity)
+                ->setCreatedOn(new \DateTime())
+                ->setInformation("Re-Assigned Driver {$driverEntity->getUser()->getFullName()}");
+            
+            $em->persist($bookingEntity);
+            $em->persist($bookingAvtivityEntity);
+            // send Email to driver
+            // send mail to customer
+            $em->flush();
+            
+            $generalService = $this->generalService;
+            $pointer["to"] = "admin@baucars.com";
+            $pointer["fromName"] = "Bau Cars Controller";
+            $pointer['subject'] = "Re-Assigned Driver";
+            
+            $template['template'] = "general-customer-assigned-driver";
+            $template["var"] = [
+                "logo" => $this->url()->fromRoute('application', [
+                    'action' => 'application'
+                ], [
+                    'force_canonical' => true
+                ]) . "assets/img/logo-black.png",
+                "fullname" => $driverEntity->getUser()->getFullName(),
+                "phone" => $driverEntity->getUser()->getPhoneNumber()
+            
+            ];
+            $generalService->sendMails($pointer, $template);
+            
+            $this->flashmessenger()->addSuccessMessage("Successfully Re-Assigned Driver to the booking");
+            $response->setStatusCode(201);
+        }
         return $jsonModel;
     }
 

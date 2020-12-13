@@ -10,6 +10,7 @@
 namespace Driver\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 
 class DriverController extends AbstractActionController
 {
@@ -24,4 +25,11 @@ class DriverController extends AbstractActionController
         // are working when you browse to /driver/driver/foo
         return array();
     }
+    
+//     public function getAssignedDriver(){
+//         $jsonModel = new JsonModel();
+//         $response = $this->getResponse()
+// //         $bookingUid = 
+//         return $jsonModel;
+//     }
 }

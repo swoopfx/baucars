@@ -9,32 +9,140 @@ echo $this->headtitle("Upcoming Booking");
 
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Register A Driver</h5>
+					<h5 class="modal-title">Manage Booking</h5>
 
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 				</div>
 
+				<!-- <div v-if="isWorking">
+					<div class="spinner"></div>
+				</div> -->
 				<div class="modal-body pt-4">
-					<div class="form-group">
+
+					<select v-if="bookingActions.length" v-model="selectedAction" @change="actionLogic($event)" name="select" class="form-control">
+						<option v-for="actio in bookingActions" :value="actio.id" selected>{{actio.bookingAction}}</option>
+					</select>
+
+					<div v-if="isDispatch">
+						<div v-if="bookingdetails.assignedDriver == null">
+							No Driver Assigned
+						</div>
+						<div v-else>
+							<div class="col-md-12">
+								<!-- Pricing Item Start -->
+								<div class="pricing--item text-center mb-4">
+									<hr>
+									<h4>Assigned Driver</h4>
+
+
+									<div class="pricing--features">
+										<ul class="list-unstyled">
+											<li><strong>
+													<th>Driver Name</th>
+												</strong> {{bookingdetails.assignedDriver.user.fullName}}</li>
+											<li><strong>
+													<th>Driver Phone Number</th>
+												</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
+											<!-- <li><strong>Unlimited</strong> integer felis odio</li> -->
+										</ul>
+									</div>
+									<div v-if="isChangeDriverTrigger">
+										<div class="form-group">
+											<label> <span class="label-text">Available Drivers</span> <select v-if="inactiveDivers.length" @change="onChangeDriver()" v-model="selectDriver" name="select" class="form-control">
+													<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
+
+												</select>
+											</label>
+										</div>
+
+										<button type="button" v-if="showAssignButton" :disabled="isAssigningDriver" @click="reAssignDriver()" class="btn btn-sm btn-block btn-rounded btn-success">
+											<div v-if="isAssigningDriver">Processing...</div>
+											<div v-else>Re-Assign Driver</div>
+										</button>
+									</div>
+									<div v-else class="pricing--action">
+										<a href="#" @click="dispatchDriver()" class="btn btn-rounded btn-success">Dispatch Driver</a>
+									</div>
+								</div>
+								<!-- Pricing Item End -->
+							</div>
+						</div>
+					</div>
+					<div v-if="isReassign">
+						<div v-if="bookingdetails.assignedDriver == null">
+							<hr>
+
+							<div v-if="isShowAssignForm">
+								<div class="form-group">
+									<label> <span class="label-text">Available Drivers</span> <select v-if="inactiveDivers.length" @change="onChangeDriver()" v-model="selectDriver" name="select" class="form-control">
+											<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
+
+										</select>
+									</label>
+								</div>
+
+
+								<button type="button" v-if="showAssignButton" :disabled="isAssigningDriver" @click="assignDriver()" class="btn btn-sm btn-block btn-rounded btn-success">
+									<div v-if="isAssigningDriver">Processing...</div>
+									<div v-else>Assign Driver</div>
+								</button>
+							</div>
+							<button v-else @click="showAssignForm()" class="btn btn-outline-success btn-block">Assign A Driver</button>
+						</div>
+						<div v-else>
+
+
+							<div class="col-md-12">
+								<!-- Pricing Item Start -->
+								<div class="pricing--item text-center mb-4">
+									<hr>
+									<h4>Assigned Driver</h4>
+
+
+									<div class="pricing--features">
+										<ul class="list-unstyled">
+											<li><strong>
+													<th>Driver Name</th>
+												</strong> {{bookingdetails.assignedDriver.user.fullName}}</li>
+											<li><strong>
+													<th>Driver Phone Number</th>
+												</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
+											<li><strong>Unlimited</strong> integer felis odio</li>
+										</ul>
+									</div>
+									<div v-if="isChangeDriverTrigger">
+										<div class="form-group">
+											<label> <span class="label-text">Available Drivers</span> <select v-if="inactiveDivers.length" @change="onChangeDriver()" v-model="selectDriver" name="select" class="form-control">
+													<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
+
+												</select>
+											</label>
+										</div>
+
+										<button type="button" v-if="showAssignButton" :disabled="isAssigningDriver" @click="reAssignDriver()" class="btn btn-sm btn-block btn-rounded btn-success">
+											<div v-if="isAssigningDriver">Processing...</div>
+											<div v-else>Re-Assign Driver</div>
+										</button>
+									</div>
+									<div v-else class="pricing--action">
+										<a href="#" @click="triggerChangeDriver()" class="btn btn-rounded btn-success">Change Driver</a>
+									</div>
+								</div>
+								<!-- Pricing Item End -->
+							</div>
+
+						</div>
+					</div>
+
+
+
+					<!-- <div class="form-group">
 						<label> <span class="label-text">Driver Full Name</span> <input type="text" ref="fullname" class="form-control">
 						</label>
-					</div>
+					</div> -->
 
 
-
-
-					<hr>
-
-
-
-
-
-					<div v-if="creatingDriver">
-						<div class="spinner"></div>
-					</div>
-
-
-					<button v-else :disabled="submitStatus" @click="createDriver()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Register Now</button>
+					<!-- <button disabled="submitStatus" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Register Now</button> -->
 
 				</div>
 			</div>
@@ -123,11 +231,11 @@ echo $this->headtitle("Upcoming Booking");
 											<td><?php echo $booking["user"]["fullName"] ?></td>
 											<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
 													<strong>Booking Type :</strong><?php echo $booking["bookingType"]["bookingType"] ?></td>
-											<td><?php echo $this->statusHelper($booking["status"]) ?><br> <strong>Start Date :</strong> <?php echo $this->dateformat($booking["startTime"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
+											<td><?php echo $this->statusHelper($booking["status"]) ?><br> <strong>Pick Up Time :</strong> <?php echo $this->dateformat($booking["startTime"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
 											<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
 
 											<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-											<td><a href="#vCenteredModal" data-toggle="modal"><i class="fa fa-eye"></i></a></td>
+											<td><a href="#vCenteredModal" @click="viewBooking('<?php echo $booking["bookingUid"] ?>')" data-toggle="modal"><i class="fa fa-eye"></i></a></td>
 										</tr>
 									<?php endforeach; ?>
 									<!-- Table Row End -->
@@ -147,21 +255,128 @@ echo $this->headtitle("Upcoming Booking");
 		el: "#upcomingbooking",
 		data() {
 			return {
-				isWorking:false,
-				bookingdetails: {}
+				isWorking: false,
+				bookingdetails: {},
+				bookingActions: [],
+				selectedAction: "",
+
+				// action logic
+				isDispatch: false,
+				isReassign: false,
+				isAssign: false,
+
+				isChangeDriverTrigger: false,
+				inactiveDivers: [],
+				showAssignButton: false,
+				isShowAssignForm: false,
+				isAssigningDriver: false,
+				selectDriver: '',
+
 			}
 		},
-
+		mounted() {
+			this.getBookingActions();
+		},
 		methods: {
 
+
 			viewBooking(id) {
-				this.isWorking = true;
-				axios.get("/customer/getbookingdetails").then(res => {
+				// this.isWorking = true;
+				axios.get("/customer/getbookingdetails/" + id).then(res => {
 					if (res.status == 200) {
-						this.bookingdetails = res.data
+						this.isWorking = false;
+						this.bookingdetails = res.data.data;
 					}
 				}).catch();
+			},
+
+			getBookingActions() {
+				axios.get("/customer/getBookingActions").then(res => {
+					if (res.status == 200) {
+						this.bookingActions = res.data.data;
+					}
+
+				}).catch();
+			},
+
+			resetActions() {
+				this.isAssign = false;
+				this.isDispatch = false;
+				this.isReassign = false;
+			},
+
+			getAllAinactiveDrivers() {
+				axios.get("/controller/driver/inactivedriver").then(res => {
+					if (res.status == 200) {
+						this.inactiveDivers = res.data.drivers
+					}
+				});
+			},
+
+
+			// Begin dispatch 
+			dispatchDriver(){
+
+			},
+			// end dispatch
+
+
+			triggerChangeDriver() {
+				// show reaasinged select form 
+				this.isChangeDriverTrigger = true;
+				this.getAllAinactiveDrivers();
+			},
+
+			onChangeDriver() {
+				if (this.selectDriver != "") {
+					this.showAssignButton = true;
+				}
+			},
+
+			reAssignDriver() {
+				this.isAssigningDriver = true;
+				let formData = new FormData();
+				formData.append("driver", this.selectDriver);
+				formData.append("bookingId", this.bookingdetails.id);
+				axios.post('/controller/driver/reassigndriver', formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+					}
+				});
+			},
+			showAssignForm() {
+				this.isShowAssignForm = true;
+				this.getAllAinactiveDrivers();
+			},
+
+			assignDriver() {
+
+				this.isAssigningDriver = true;
+				let formData = new FormData();
+				formData.append("driver", this.selectDriver);
+				formData.append("bookingId", this.bookingdetails.id);
+				axios.post('/controller/driver/assigndriver', formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+					}
+				});
+			},
+
+			actionLogic(event) {
+				let actionId = event.target.value;
+				this.resetActions();
+				if (actionId == 10) {
+
+					this.isDispatch = true;
+				} else if (actionId == 20) {
+
+					this.isReassign = true;
+				} else if (actionId == 30) {
+					this.isAssign = true;
+				}
 			}
 		},
+
+
 	});
 </script>

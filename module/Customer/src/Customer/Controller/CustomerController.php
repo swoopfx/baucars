@@ -30,6 +30,7 @@ use Application\Entity\SupportStatus;
 use Application\Service\AppService;
 use Application\Entity\SupportRoute;
 use CsnUser\Entity\User;
+use General\Entity\BookingAction;
 
 class CustomerController extends AbstractActionController
 {
@@ -673,6 +674,19 @@ class CustomerController extends AbstractActionController
     {
         $jsonModel = new JsonModel();
         
+        return $jsonModel;
+    }
+    
+    
+    
+    public function getBookingActionsAction(){
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $repo = $em->getRepository(BookingAction::class);
+        $data = $repo->createQueryBuilder("b")->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        $response->setStatusCode(200);
+        $jsonModel->setVariable("data", $data);
         return $jsonModel;
     }
 
