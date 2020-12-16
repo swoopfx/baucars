@@ -62,6 +62,7 @@ return array(
         'template_map' => array(
             "general-mail-transaction-success" => __DIR__ . '/../view/mail/general-transaction-success.phtml',
             "general-customer-assigned-driver" => __DIR__ . '/../view/mail/general-customer-assigned-todriver-mail.phtml',
+            "general-customer-driver-dispatch" => __DIR__ . '/../view/mail/general-customer-driver-dispatched-mail.phtml',
             
         ),
     ),

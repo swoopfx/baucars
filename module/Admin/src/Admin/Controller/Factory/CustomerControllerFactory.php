@@ -48,6 +48,7 @@ class CustomerControllerFactory implements FactoryInterface
         $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
         $ctr->setCustomerService($customerService)
             ->setCustomerPaginator($customerpaginator)
+            ->setGeneralService($generalService)
             ->setEntityManager($generalService->getEntityManager());
         return $ctr;
     }

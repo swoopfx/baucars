@@ -8,47 +8,65 @@ echo $this->headtitle("Customers");
 				<div class="col-lg-6">
 					<!-- Page Title Start -->
 					<h2 class="page--title h5">Customer</h2>
-					<!-- Page Title End -->
 
-					<!-- 				<ul class="breadcrumb"> -->
-					<!-- 					<li class="breadcrumb-item"><a href="ecommerce.html">Ecommerce</a></li> -->
-					<!-- 					<li class="breadcrumb-item active"><span>Products</span></li> -->
-					<!-- 				</ul> -->
 				</div>
 
-				<!--                         <div class="col-lg-6"> -->
-				<!-- Summary Widget Start -->
-				<!--                             <div class="summary--widget"> -->
-				<!--                                 <div class="summary--item"> -->
-				<!--                                     <p class="summary--chart" data-trigger="sparkline" data-type="bar" data-width="5" data-height="38" data-color="#009378">2,9,7,9,11,9,7,5,7,7,9,11</p> -->
 
-				<!--                                     <p class="summary--title">This Month</p> -->
-				<!--                                     <p class="summary--stats text-green">2,371,527</p> -->
-				<!--                                 </div> -->
-
-				<!--                                 <div class="summary--item"> -->
-				<!--                                     <p class="summary--chart" data-trigger="sparkline" data-type="bar" data-width="5" data-height="38" data-color="#e16123">2,3,7,7,9,11,9,7,9,11,9,7</p> -->
-
-				<!--                                     <p class="summary--title">Last Month</p> -->
-				<!--                                     <p class="summary--stats text-orange">2,527,371</p> -->
-				<!--                                 </div> -->
-				<!--                             </div> -->
-				<!-- Summary Widget End -->
-				<!--                         </div> -->
 			</div>
 		</div>
 	</section>
 
+	<!-- Modal Start -->
+	<div id="formInModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Register Customer</h5>
 
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<div class="modal-body pt-4">
+
+					<div class="form-group">
+						<label>
+							<span class="label-text">Full Name</span>
+							<input type="text" v-model='fullname' ref="fullname" required placeholder="Enter Your Fullname" class="form-control">
+						</label>
+					</div>
+
+					<div class="form-group">
+						<label>
+							<span class="label-text">Phone Number</span>
+							<input type="text" v-model="phoneNumber" @input="acceptNumber" ref="phoneNumber" name="phone" placeholder="Enter Phone Number" class="form-control">
+						</label>
+					</div>
+
+					<div class="form-group">
+						<label>
+							<span class="label-text">Email Address</span>
+							<input type="email" v-model="email" ref="email" placeholder="Enter Your Email..." class="form-control">
+						</label>
+					</div>
+
+
+					<button type="button" :disabled="submitStatus" class="btn btn-sm btn-rounded btn-success" @click=""> Create User</button>
+
+					<button type="button" class="btn btn-sm btn-rounded btn-outline-secondary" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal End -->
 	<section class="main--content">
 		<div class="panel">
 			<!-- Records Header Start -->
 			<div class="records--header">
 				<div class="title fa-shopping-bag">
 					<h3 class="h3">
-						Registered Customer <a href="#" class="btn btn-sm btn-outline-info">Register A Customer</a>
+						Registered Customer <a href="#formInModal" data-toggle="modal" class="btn btn-sm btn-outline-info">Register A Customer</a>
 					</h3>
-					<p>Found Total 1,330 Products</p>
+					<!-- <p>Found Total 1,330 Products</p> -->
 				</div>
 
 				<div class="actions">
@@ -117,23 +135,78 @@ echo $this->headtitle("Customers");
 </div>
 <script>
 	let customerb = new Vue({
-		el: "",
+		el: "#customerb",
 		data() {
 			return {
+				isEmailValid: false,
+				phoneNumber: "",
+				email: "",
+				fullname: "",
+				reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
 
 			}
 		},
+		computed: {
+			submitStatus() {
+				if (this.phoneNumber == "" || this.email == "" || this.fullname == "" || !this.isEmailValid) {
+					return true;
+				} else {
+					return false;
+				}
+
+
+			},
+
+			isEmailValid() {
+				return this.reg.test(this.email);
+			}
+		},
 		methods: {
+			acceptNumber() {
+				var x = this.phoneNumber.replace(/\D/g, '').match(/(\d{0,4})(\d{0,3})(\d{0,4})/);
+				this.phoneNumber = !x[2] ? x[1] : '' + x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+			},
 			disableCustomer(id) {
-				console.log("Hello");
+
 				swal({
 					title: "Disable Customer",
-					text: "Are you sure you want to disable "+id ,
+					text: "Are you sure you want to disable " + id,
 					icon: "warning",
 					button: "Confirm",
-				}).then(function(){
+				}).then(function() {
 
 				});
+			},
+
+			createCustomer() {
+
+				let formData = new FormData();
+				formData.append("phoneNumber", this.phoneNumber);
+				formData.append("email", this.email);
+				formData.append("fullname", this.fullname);
+				// formData.append("password", this.password);
+
+				axios.post("/controller/customer/createcustomer", formData).then(res => {
+					if (res.status == 201) {
+						swal({
+							title: "Great job!",
+							text: "You have successfully registered a customer",
+							icon: "success",
+							button: "Continue!",
+						}).then(res => {
+							location.reload();
+						});
+					}
+				}).catch(err => {
+
+					this.$toast.open({
+						message: err.response.data.messages,
+						type: "error",
+						duration: 5000,
+						dismissible: true
+					})
+				});
+
 			}
 		},
 	});

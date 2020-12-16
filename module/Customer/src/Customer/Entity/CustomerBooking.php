@@ -52,6 +52,12 @@ class CustomerBooking
      * @var DriverBio
      */
     private $assignedDriver;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="DispatchDriver", mappedBy="booking")
+     * @var DispatchDriver
+     */
+    private $dispatchActivity;
 
     /**
      * @ORM\Column(name="start_time", type="datetime", nullable=true)
@@ -445,6 +451,23 @@ class CustomerBooking
         $this->billingMethod = $billingMethod;
         return $this;
     }
+    /**
+     * @return the $dispatchActivity
+     */
+    public function getDispatchActivity()
+    {
+        return $this->dispatchActivity;
+    }
+
+    /**
+     * @param \Customer\Entity\DispatchDriver $dispatchActivity
+     */
+    public function setDispatchActivity($dispatchActivity)
+    {
+        $this->dispatchActivity = $dispatchActivity;
+        return $this;
+    }
+
 
 }
 

@@ -38,7 +38,9 @@ echo $this->headtitle("Active Trip");
 
 			<div class="actions">
 				<form action="#" class="search flex-wrap flex-md-nowrap">
-					<input type="text" class="form-control" placeholder="Product Name..." required> <select name="select" class="form-control">
+					<input type="text" class="form-control"
+						placeholder="Product Name..." required> <select name="select"
+						class="form-control">
 						<option value="" selected>Product Category</option>
 					</select>
 					<button type="submit" class="btn btn-rounded">
@@ -82,16 +84,19 @@ echo $this->headtitle("Active Trip");
 								<?php foreach ($allBooking as $booking) : ?>
 									<tr>
 
-										<td><?php echo strtoupper($booking["bookingUid"]) ?></td>
-										<td><?php echo $booking["user"]["fullName"] ?></td>
-										<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
-												<strong>Booking Type :</strong><?php echo $booking["bookingType"]["bookingType"] ?></td>
-										<td><?php echo $this->statusHelper($booking["status"]) ?></td>
-										<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
+									<td><?php echo strtoupper($booking["bookingUid"]) ?></td>
+									<td><?php echo $booking["user"]["fullName"] ?><br> <strong>
+											Pick Up Address:</strong> <?php  echo ($booking["pickupAddress"] != NULL ? $booking["pickupAddress"] : "No Address")?></td>
+									<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
+											<strong>Booking Type :</strong><?php echo $booking["bookingType"]["bookingType"] ?></td>
+									<td><?php echo $this->statusHelper($booking["status"]) ?></td>
+									<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
 
-										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-										<td><a href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-eye"></i></a></td>
-									</tr>
+									<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
+									<td><a
+										href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i
+											class="fa fa-eye"></i></a></td>
+								</tr>
 								<?php endforeach; ?>
 								<!-- Table Row End -->
 

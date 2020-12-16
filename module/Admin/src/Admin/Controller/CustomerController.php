@@ -9,6 +9,11 @@ use Doctrine\ORM\EntityManager;
 use CsnUser\Entity\User;
 use Customer\Entity\CustomerBooking;
 use Zend\InputFilter\InputFilter;
+use Zend\Mvc\MvcEvent;
+use CsnUser\Service\UserService;
+use CsnUser\Entity\Role;
+use CsnUser\Entity\State;
+use General\Service\GeneralService;
 
 /**
  *
@@ -17,6 +22,12 @@ use Zend\InputFilter\InputFilter;
  */
 class CustomerController extends AbstractActionController
 {
+
+    /**
+     *
+     * @var GeneralService
+     */
+    private $generalService;
 
     /**
      *
@@ -44,7 +55,14 @@ class CustomerController extends AbstractActionController
     private $userForm;
 
     // TODO - Insert your code here
-    
+    public function onDispatch(MvcEvent $e)
+    {
+        $response = parent::onDispatch($e);
+        $this->redirectPlugin()->redirectToLogout();
+        
+        return $response;
+    }
+
     /**
      */
     public function __construct()
@@ -56,6 +74,134 @@ class CustomerController extends AbstractActionController
     public function indexAction()
     {
         return new ViewModel();
+    }
+
+    public function creatcustomerAction()
+    {
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                'name' => 'email',
+                'required' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Email is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'fullName',
+                'required' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Full Name is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'phoneNumber',
+                'required' => true,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Phoone Number is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            if ($inputFilter->isValid()) {
+                $data = $inputFilter->getValues();
+                $customerEntity = new User();
+                $customerEntity->setRegistrationDate(new \DateTime())
+                    ->setEmail($data["email"])
+                    ->setPhoneNumber(str_replace("-", "", $data["phoneNumber"]))
+                    ->setFullName($data["fullName"])
+                    ->setPassword(UserService::encryptPassword("123456"))
+                    ->setRole($em->find(Role::class, UserService::USER_ROLE_CUSTOMER))
+                    ->setUpdatedOn(new \DateTime())
+                    ->setEmailConfirmed(false)
+                    ->setUserUid(UserService::createUserUid())
+                    ->setState($em->find(State::class, UserService::USER_STATE_ENABLED))
+                    ->setRegistrationToken(md5(uniqid(mt_rand(), true)));
+                
+                try {
+                    $em->persist($customerEntity);
+                    $em->flush();
+                    
+                    $fullLink = $this->url()->fromRoute('user-register', array(
+                        'action' => 'confirm-email',
+                        'id' => $customerEntity->getRegistrationToken()
+                    ), array(
+                        'force_canonical' => true
+                    ));
+                    
+                    $logo = $this->url()->fromRoute('home', array(), array(
+                        'force_canonical' => true
+                    )) . "assets/img/logo.png";
+                    
+                    // $mailer = $this->mail;
+                    
+                    $var = [
+                        'logo' => $logo,
+                        'confirmLink' => $fullLink
+                    ];
+                    
+                    $template['template'] = "email-app-user-registration";
+                    $template['var'] = $var;
+                    
+                    $messagePointer['to'] = $customerEntity->getEmail();
+                    $messagePointer['fromName'] = "BAU CARS";
+                    $messagePointer['subject'] = "BAU CARS: Confirm Email";
+                    $response->setStatusCode(201);
+                    $this->generalService->sendMails($messagePointer, $template);
+                } catch (\Exception $e) {}
+            }
+        }
+        return $jsonModel;
     }
 
     public function viewAction()
@@ -200,7 +346,6 @@ class CustomerController extends AbstractActionController
                     $em->flush();
                     
                     $response->setStatusCode(201);
-                    
                     
                     // notify customer via mail
                 } catch (\Exception $e) {
@@ -356,6 +501,25 @@ class CustomerController extends AbstractActionController
     public function setCustomerPaginator($customerPaginator)
     {
         $this->customerPaginator = $customerPaginator;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $generalService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     *
+     * @param \General\Service\GeneralService $generalService            
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
         return $this;
     }
 }

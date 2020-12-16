@@ -22,6 +22,7 @@ use General\Entity\BookingStatus;
 use Customer\Service\CustomerService;
 use Zend\Mvc\MvcEvent;
 use General\Service\GeneralService;
+use Customer\Entity\DispatchDriver;
 
 /**
  *
@@ -291,9 +292,63 @@ class DriverController extends AbstractActionController
         }
         return $jsonModel;
     }
-    
-    public function dispatchAction(){
+
+    public function dispatchAction()
+    {
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $request = $this->getRequest();
         $jsonModel = new JsonModel();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $bookingId = $post["bookingId"];
+            try {
+                /**
+                 *
+                 * @var CustomerBooking $bookingEntity
+                 */
+                $bookingEntity = $em->find(CustomerBooking::class, $bookingId);
+                $dispatchEntity = new DispatchDriver();
+                $dispatchEntity->setCreatedOn(new \DateTime())->setBooking($bookingEntity);
+                
+                $bookingEntity->setUpdatedOn(new \DateTime())
+                    ->setDispatchActivity($dispatchEntity)
+                    ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ACTIVE));
+                
+                $em->persist($dispatchEntity);
+                $em->persist($bookingEntity);
+                
+                $em->flush();
+                $this->flashmessenger()->addSuccessMessage("Successfully dispatched drvier ");
+                
+                // Send a mail to customer
+                
+                $generalService = $this->generalService;
+                $pointer["to"] = "admin@baucars.com";
+                $pointer["fromName"] = "Bau Cars Controller";
+                $pointer['subject'] = "Dispacthed Driver";
+                
+                $template['template'] = "general-customer-driver-dispatch";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo-black.png",
+                    "fullname" => $bookingEntity->getAssignedDriver()
+                        ->getUser()
+                        ->getFullName(),
+                    "address"=>$bookingEntity->getPickupAddress(),
+                    "phone" => $bookingEntity->getAssignedDriver()
+                        ->getUser()
+                        ->getPhoneNumber()
+                
+                ];
+                $generalService->sendMails($pointer, $template);
+                
+                $response->setStatusCode(201);
+            } catch (\Exception $e) {}
+        } else {}
         return $jsonModel;
     }
 
@@ -317,7 +372,6 @@ class DriverController extends AbstractActionController
              */
             $bookingEntity = $em->find(CustomerBooking::class, $bookingId);
             $bookingEntity->setAssignedDriver($em->find(DriverBio::class, $driverId))
-                
                 ->setUpdatedOn(new \DateTime());
             /**
              *

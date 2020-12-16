@@ -23,7 +23,7 @@ class DispatchDriver
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CustomerBooking")
+     * @ORM\ManyToOne(targetEntity="CustomerBooking", inversedBy="dispatchActivity")
      * 
      * @var CustomerBooking
      */

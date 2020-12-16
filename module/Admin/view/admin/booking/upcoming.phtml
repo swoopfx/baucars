@@ -2,6 +2,22 @@
 echo $this->headtitle("Upcoming Booking");
 ?>
 
+<?php
+$flashMessenger = $this->flashMessenger()
+	->setMessageOpenFormat('<div%s>
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+         &times;
+     </button>
+     <ul><li>')
+	->setMessageSeparatorString('</li><li>')
+	->setMessageCloseString('</li></ul></div>');
+?>
+<?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
+<?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
+<?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
+<?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
+
+
 <div id="upcomingbooking">
 
 	<div id="vCenteredModal" class="modal fade">
@@ -24,9 +40,8 @@ echo $this->headtitle("Upcoming Booking");
 					</select>
 
 					<div v-if="isDispatch">
-						<div v-if="bookingdetails.assignedDriver == null">
-							No Driver Assigned
-						</div>
+						<div v-if="bookingdetails.assignedDriver == null">No Driver
+							Assigned</div>
 						<div v-else>
 							<div class="col-md-12">
 								<!-- Pricing Item Start -->
@@ -61,7 +76,10 @@ echo $this->headtitle("Upcoming Booking");
 										</button>
 									</div>
 									<div v-else class="pricing--action">
-										<a href="#" @click="dispatchDriver()" class="btn btn-rounded btn-success">Dispatch Driver</a>
+										<a href="" @click="dispatchDriver()" :disabled="isProcessingDispatch" class="btn btn-rounded btn-success">
+											<div v-if="isProcessingDispatch">Processing...</div>
+											<div v-else>Dispatch Driver</div>
+										</a>
 									</div>
 								</div>
 								<!-- Pricing Item End -->
@@ -107,7 +125,7 @@ echo $this->headtitle("Upcoming Booking");
 											<li><strong>
 													<th>Driver Phone Number</th>
 												</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
-											<li><strong>Unlimited</strong> integer felis odio</li>
+											<!-- <li><strong>Unlimited</strong> integer felis odio</li> -->
 										</ul>
 									</div>
 									<div v-if="isChangeDriverTrigger">
@@ -231,11 +249,12 @@ echo $this->headtitle("Upcoming Booking");
 											<td><?php echo $booking["user"]["fullName"] ?></td>
 											<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
 													<strong>Booking Type :</strong><?php echo $booking["bookingType"]["bookingType"] ?></td>
-											<td><?php echo $this->statusHelper($booking["status"]) ?><br> <strong>Pick Up Time :</strong> <?php echo $this->dateformat($booking["startTime"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
+											<td><?php echo $this->statusHelper($booking["status"]) ?><br>
+												<strong>Pick Up Time :</strong> <?php echo $this->dateformat($booking["startTime"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
 											<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
 
 											<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-											<td><a href="#vCenteredModal" @click="viewBooking('<?php echo $booking["bookingUid"] ?>')" data-toggle="modal"><i class="fa fa-eye"></i></a></td>
+											<td><a href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-eye"></i></a> | <a href="#vCenteredModal" @click="viewBooking('<?php echo $booking["bookingUid"] ?>')" data-toggle="modal"><i class="fa fa-wrench"></i></a></td>
 										</tr>
 									<?php endforeach; ?>
 									<!-- Table Row End -->
@@ -262,6 +281,7 @@ echo $this->headtitle("Upcoming Booking");
 
 				// action logic
 				isDispatch: false,
+				isProcessingDispatch: false,
 				isReassign: false,
 				isAssign: false,
 
@@ -315,8 +335,16 @@ echo $this->headtitle("Upcoming Booking");
 
 
 			// Begin dispatch 
-			dispatchDriver(){
-
+			dispatchDriver() {
+				this.isProcessingDispatch = true;
+				let formData = new FormData();
+				formData.append("bookingId", this.bookingdetails.id);
+				axios.post("/controller/driver/dispatch", formData).then(res => {
+					if (res.status == 201) {
+						this.isProcessingDispatch = false;
+						window.location.reload();
+					}
+				}).catch();
 			},
 			// end dispatch
 
