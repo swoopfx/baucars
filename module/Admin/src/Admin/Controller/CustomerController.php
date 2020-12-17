@@ -76,6 +76,30 @@ class CustomerController extends AbstractActionController
         return new ViewModel();
     }
 
+    public function disablecustomerAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            /**
+             *
+             * @var User $userEntity
+             */
+            $userEntity = $em->find(User::class, $post["userId"]);
+            $userEntity->setState($em->find(State::class, UserService::USER_STATE_DISABLED))
+                ->setUpdatedOn(new \DateTime());
+            
+            $em->persist($userEntity);
+            $em->flush();
+            
+            $response->setStatusCOde(201);
+        }
+        return $jsonModel;
+    }
+
     public function creatcustomerAction()
     {
         $em = $this->entityManager;

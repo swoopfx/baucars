@@ -50,9 +50,22 @@ return array(
                             'constraints' => array(
                                 'id' => '[a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*'
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                               
                             ),
                             'defaults' => array()
+                        )
+                    ),
+                    "paginator" => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:controller[/:action[/page[/:page]]]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                "page" => "[0-9]+"
+                            )
+                            
                         )
                     )
                 )
@@ -73,7 +86,10 @@ return array(
             'admin-customer-top' => __DIR__ . '/../view/admin/customer/partials/admin-customer-top-snippet.phtml',
             
             // email
-            'admin-new-booking' => __DIR__ . '/../view/email/admin-user-new-booking.phtml'
+            'admin-new-booking' => __DIR__ . '/../view/email/admin-user-new-booking.phtml',
+            
+            // Page Count
+            "admin-driver-pagecount"=>__DIR__ . '/../view/partials/admin-driver-pagecount.phtml'
         ],
         'strategies' => array(
             'ViewJsonStrategy'

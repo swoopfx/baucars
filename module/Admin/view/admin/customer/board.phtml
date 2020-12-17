@@ -71,9 +71,7 @@ echo $this->headtitle("Customers");
 
 				<div class="actions">
 					<form action="#" class="search flex-wrap flex-md-nowrap">
-						<input type="text" class="form-control" placeholder="Product Name..." required> <select name="select" class="form-control">
-							<option value="" selected>Product Category</option>
-						</select>
+						<input type="text" class="form-control" placeholder="Product Name..." required>
 						<button type="submit" class="btn btn-rounded">
 							<i class="fa fa-search"></i>
 						</button>
@@ -120,7 +118,7 @@ echo $this->headtitle("Customers");
 										<div class="dropdown-menu">
 											<a class="dropdown-item" href="<?php echo $this->url("admin/default", ["controller" => "customer", "action" => "view", "id" => $customer["userUid"]]) ?>" class="dropdown-item">View</a>
 											<a href="<?php echo $this->url("admin/default", ["controller" => "customer", "action" => "edit", "id" => $customer["userUid"]]) ?>" class="dropdown-item">Edit</a>
-											<a @click="disableCustomer(<?php echo $customer["id"] ?>)" href="#" class="dropdown-item">Disable</a>
+											<a @click="disableCustomer('<?php echo $customer["fullName"] ?>', <?php echo $customer["id"] ?>)" href="#" class="dropdown-item">Disable</a>
 										</div>
 									</div>
 								</td>
@@ -166,15 +164,26 @@ echo $this->headtitle("Customers");
 				var x = this.phoneNumber.replace(/\D/g, '').match(/(\d{0,4})(\d{0,3})(\d{0,4})/);
 				this.phoneNumber = !x[2] ? x[1] : '' + x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
 			},
-			disableCustomer(id) {
+			disableCustomer(name, id) {
+
 
 				swal({
 					title: "Disable Customer",
-					text: "Are you sure you want to disable " + id,
+					text: "Are you sure you want to disable " + name,
 					icon: "warning",
-					button: "Confirm",
-				}).then(function() {
+					button: "Continue!",
+				}).then(function(isConfirm) {
+					if (isConfirm) {
+						let formData = new FormData();
+						formData.append("userId", id);
+						axios.post("/controller/customer/disablecustomer", formData).then(res => {
+							if (res.status == 201) {
+								window.location.reload();
+							}
+						}).catch(err => {
 
+						});
+					}
 				});
 			},
 
