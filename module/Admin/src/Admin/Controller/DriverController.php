@@ -338,7 +338,7 @@ class DriverController extends AbstractActionController
                     "fullname" => $bookingEntity->getAssignedDriver()
                         ->getUser()
                         ->getFullName(),
-                    "address"=>$bookingEntity->getPickupAddress(),
+                    "address" => $bookingEntity->getPickupAddress(),
                     "phone" => $bookingEntity->getAssignedDriver()
                         ->getUser()
                         ->getPhoneNumber()
@@ -410,6 +410,25 @@ class DriverController extends AbstractActionController
             $this->flashmessenger()->addSuccessMessage("Successfully Re-Assigned Driver to the booking");
             $response->setStatusCode(201);
         }
+        return $jsonModel;
+    }
+
+    public function getdriverAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $id = $this->params()->fromRoute();
+        $repo = $em->getRepository(DriverBio::class);
+        $data = $repo->createQueryBuilder("d")
+            ->where("d.diverUid = :uid")
+            ->setParameters([
+                "uid"=>$id
+            ])
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+            $jsonModel->setVariable("data", $data);
+            $response->setStatusCode(200);
         return $jsonModel;
     }
 

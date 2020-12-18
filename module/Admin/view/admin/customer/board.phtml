@@ -50,7 +50,10 @@ echo $this->headtitle("Customers");
 					</div>
 
 
-					<button type="button" :disabled="submitStatus" class="btn btn-sm btn-rounded btn-success" @click=""> Create User</button>
+					<button type="button" :disabled="isCreatingCustomer" class="btn btn-sm btn-rounded btn-success" @click="createCustomer()">
+						<div v-if="isCreatingCustomer">Processing</div>
+						<div v-else>Create User</div>
+					</button>
 
 					<button type="button" class="btn btn-sm btn-rounded btn-outline-secondary" data-dismiss="modal">Cancel</button>
 				</div>
@@ -136,7 +139,8 @@ echo $this->headtitle("Customers");
 		el: "#customerb",
 		data() {
 			return {
-				isEmailValid: false,
+				isCreatingCustomer: false,
+				// isEmailValid: false,
 				phoneNumber: "",
 				email: "",
 				fullname: "",
@@ -145,15 +149,15 @@ echo $this->headtitle("Customers");
 			}
 		},
 		computed: {
-			submitStatus() {
-				if (this.phoneNumber == "" || this.email == "" || this.fullname == "" || !this.isEmailValid) {
-					return true;
-				} else {
-					return false;
-				}
+			// submitStatus() {
+			// 	if (this.phoneNumber == "" || this.email == "" || this.fullname == "" || !this.isEmailValid) {
+			// 		return true;
+			// 	} else {
+			// 		return false;
+			// 	}
 
 
-			},
+			// },
 
 			isEmailValid() {
 				return this.reg.test(this.email);
@@ -188,33 +192,47 @@ echo $this->headtitle("Customers");
 			},
 
 			createCustomer() {
+				if (this.phoneNumber == "" || this.email == "" || this.fullname == "") {
+					swal({
+								title: "Ohh No!",
+								text: "Your form is invalid",
+								icon: "error",
+								button: "Continue!",
+							}).then(res => {
+								// location.reload();
+							});
+				} else {
 
-				let formData = new FormData();
-				formData.append("phoneNumber", this.phoneNumber);
-				formData.append("email", this.email);
-				formData.append("fullname", this.fullname);
-				// formData.append("password", this.password);
 
-				axios.post("/controller/customer/createcustomer", formData).then(res => {
-					if (res.status == 201) {
+					this.isCreatingCustomer = true;
+					let formData = new FormData();
+					formData.append("phoneNumber", this.phoneNumber);
+					formData.append("email", this.email);
+					formData.append("fullname", this.fullname);
+					// formData.append("password", this.password);
+
+					axios.post("/controller/customer/creatcustomer", formData).then(res => {
+						if (res.status == 201) {
+							this.isCreatingCustomer = false;
+							swal({
+								title: "Great job!",
+								text: "You have successfully registered a customer",
+								icon: "success",
+								button: "Continue!",
+							}).then(res => {
+								location.reload();
+							});
+						}
+					}).catch(err => {
+						this.isCreatingCustomer = false;
 						swal({
-							title: "Great job!",
-							text: "You have successfully registered a customer",
-							icon: "success",
-							button: "Continue!",
-						}).then(res => {
-							location.reload();
-						});
-					}
-				}).catch(err => {
-
-					this.$toast.open({
-						message: err.response.data.messages,
-						type: "error",
-						duration: 5000,
-						dismissible: true
-					})
-				});
+								title: "Ohh No!",
+								text: err.response.data.message,
+								icon: "error",
+								button: "Continue!",
+							})
+					});
+				}
 
 			}
 		},

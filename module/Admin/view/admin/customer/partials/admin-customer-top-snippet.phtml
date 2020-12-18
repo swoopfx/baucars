@@ -9,13 +9,13 @@
 	</div>
 
 	<div class="profile-cover__action" data-bg-img="/assets/img/covers/01_800x150.jpg" data-overlay="0.3">
-		<button class="btn btn-rounded btn-info">
-			<i class="fa fa-plus"></i> <span>Follow</span>
-		</button>
+		<a href="<?php echo $this->url("admin/default", ["controller"=>"customer", "action"=>"edit", "id"=>$user->getUserUid()]) ?>" class="btn btn-rounded btn-info">
+			<i class="fa fa-edit"></i> <span>Edit</span>
+		</a>
 
-		<button class="btn btn-rounded btn-info">
-			<i class="fa fa-comment"></i> <span>Message</span>
-		</button>
+		<a href="<?php echo $this->url("admin/default", ["controller"=>"customer", "action"=>"view", "id"=>$user->getUserUid()])?>" class="btn btn-rounded btn-info">
+			<i class="fa fa-eye"></i> <span>View</span>
+		</a>
 	</div>
 
 	<div class="profile-cover__info">

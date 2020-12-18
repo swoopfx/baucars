@@ -137,8 +137,9 @@ class FlutterwaveService
     {
         return uniqid("booking");
     }
-    
-    public static function transactionUid(){
+
+    public static function transactionUid()
+    {
         return uniqid("transact");
     }
 
@@ -175,7 +176,7 @@ class FlutterwaveService
             // insert into transation table
             return $rBody;
         } else {
-            // store in database information about the booking 
+            // store in database information about the booking
             $rBody = json_decode($response->getBody());
             throw new \Exception("Verification Error");
         }
@@ -253,6 +254,12 @@ class FlutterwaveService
         return uniqid("transfer");
     }
 
+    /**
+     * This function initiates transfer of funds to the account of the company
+     *
+     * @throws \Exception
+     * @return mixed
+     */
     public function initiateTrasnfer()
     {
         $transfercost = $this->transaferCost();
@@ -264,7 +271,7 @@ class FlutterwaveService
         $endPoint = "https://api.ravepay.co/v2/gpx/transfers/create";
         $body = [
             "account_bank" => "058",
-            "account_number" => "0018666738",
+            "account_number" => "0018666738", // 0571517010
             "amount" => $transferAmount,
             "currency" => "NGN",
             "narration" => "Booking Remittance",
@@ -289,6 +296,7 @@ class FlutterwaveService
             
             return $rBody;
         } else {
+            // Signa
             $rBody = json_decode($response->getBody());
             throw new \Exception($rBody->message);
         }
@@ -311,14 +319,22 @@ class FlutterwaveService
     public function hydrateTransferConclude($data)
     {
         $em = $this->entityManager;
+        /**
+         *
+         * @var InitatedTransfer $initiatedTransafer
+         */
+        $initiatedTransafer = $em->find(InitatedTransfer::class, $this->initiatedTransferId);
         $conclude = new ConcludedTransfer();
         $conclude->setCreatedOn(new \DateTime())
             ->setAmountTransfered($data->data->amount)
-            ->setInitiateId($em->find(InitatedTransfer::class, $this->initiatedTransferId))
+            ->setInitiateId($initiatedTransafer)
             ->setRaveId($data->data->id)
             ->setRaveMessage($data->message)
             ->setRaveRef($data->data->reference);
+        
+        $initiatedTransafer->setUpdatedOn(new \DateTime())->setTransferStatus($em->find(TransferStatus::class, self::TRANSFER_STATUS_COMPLETED));
         $em->persist($conclude);
+        $em->persist($initiatedTransafer);
         $em->flush();
     }
 

@@ -79,6 +79,63 @@ class CustomerController extends AbstractActionController
         // are working when you browse to /customer/customer/foo
         return array();
     }
+    
+    
+    public function editprofileAction(){
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $post = $request->getPost()->toArray();
+            $inputfilter = new InputFilter();
+            $inputfilter->add(array(
+                'name' => 'fullname',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Your Full Name is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            $inputfilter->setData($post);
+            if($inputfilter->isValid()){
+                $data = $inputfilter->getValues();
+                try {
+                    /**
+                     * 
+                     * @var User $userEntity
+                     */
+                    $userEntity = $this->identity();
+                    $userEntity->setFullName($data["fullname"])->setUpdatedOn(new \DateTime());
+                    
+                    $em->persist($userEntity);
+                    $em->flush();
+                    
+                    $response->setStatusCode(201);
+                    $this->flashmessenger()->addSuccessMessage("Successfully updated your profile");
+                    
+                } catch (\Exception $e) {
+                    $response->setStatusCode(400);
+                }
+            }
+            
+        }
+        $jsonModel = new JsonModel();
+    }
 
     public function boardAction()
     {
@@ -221,9 +278,12 @@ class CustomerController extends AbstractActionController
         $data = $repo->createQueryBuilder("d")
             ->select("d, st")
             ->where("d.status = :identfier")
-            ->setParameter("identfier", CustomerService::BOOKING_STATUS_IN_TRANSIT)
+            ->andWhere("d.user = :user")
+            ->setParameters([
+            "identfier" => CustomerService::BOOKING_STATUS_ACTIVE,
+            "user" => $userEntity->getId()
+        ])
             ->setMaxResults(5)
-            ->andWhere("d.user =" . $userEntity->getId())
             ->orderBy("d.id", "desc")
             ->leftJoin("d.status", "st")
             ->orderBy("d.id", "desc")
@@ -487,9 +547,9 @@ class CustomerController extends AbstractActionController
                     
                     $em->flush();
                     $flutterwaveService->setTransactionId($transactionEntity->getId());
-                    $flutterwaveService->initiateTrasnfer();
+                    // $flutterwaveService->initiateTrasnfer();
                     $response->SetStatusCode(201);
-                    $this->flashmessenger()->addSuccessMessage("{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
+                    $this->flashmessenger()->addSuccessMessage("N{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
                     $jsonModel->setVariables([
                         "data" => $verifyData->data->chargedamount
                     ]);
@@ -502,7 +562,11 @@ class CustomerController extends AbstractActionController
                     
                     $template['template'] = "admin-new-booking";
                     $template["var"] = [
-                        "logo" => "ll",
+                        "logo" => $this->url()->fromRoute('application', [
+                            'action' => 'application'
+                        ], [
+                            'force_canonical' => true
+                        ]) . "assets/img/logo.png",
                         "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
                         "fullname" => $transactionEntity->getBooking()
                             ->getUser()
@@ -513,9 +577,39 @@ class CustomerController extends AbstractActionController
                 }
             } catch (\Exception $e) {
                 $response->setStatusCode(400);
-                $jsonModel->setVariable("message", $e->getTrace());
+                $jsonModel->setVariables([
+                    "message" => $e->getTrace(),
+                    "data" => $verifyData
+                ]);
             }
         }
+        return $jsonModel;
+    }
+
+    /**
+     *
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function bookingErrorAction()
+    {
+        $em = $this->entityManager;
+        // $request = $this->getRequest();
+        // if ($request->isPost()) {
+        // try {
+        
+        // $transactionEntity = $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)
+        // ->setTxRef($verifyData->data->txref)
+        // ->setFlwId($verifyData->data->txid)
+        // ->setFlwRef($verifyData->data->flwref)
+        // ->setBooking($bookinEntity)
+        // ->setSettledAmount($verifyData->data->amountsettledforthistransaction)
+        // ->setTransactStatus(FlutterwaveService::TRANSACTION_STATUS_PAID)
+        // ->setTransactUser($this->identity()
+        // ->getId())
+        // ->hydrateTransaction();
+        // } catch (\Exception $e) {}
+        // }
+        // $jsonModel = new JsonModel();
         return $jsonModel;
     }
 
@@ -676,15 +770,16 @@ class CustomerController extends AbstractActionController
         
         return $jsonModel;
     }
-    
-    
-    
-    public function getBookingActionsAction(){
+
+    public function getBookingActionsAction()
+    {
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
         $em = $this->entityManager;
         $repo = $em->getRepository(BookingAction::class);
-        $data = $repo->createQueryBuilder("b")->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        $data = $repo->createQueryBuilder("b")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
         $response->setStatusCode(200);
         $jsonModel->setVariable("data", $data);
         return $jsonModel;

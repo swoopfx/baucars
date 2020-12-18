@@ -133,7 +133,7 @@ class CustomerController extends AbstractActionController
             ));
             
             $inputFilter->add(array(
-                'name' => 'fullName',
+                'name' => 'fullname',
                 'required' => true,
                 'filters' => array(
                     array(
@@ -177,13 +177,14 @@ class CustomerController extends AbstractActionController
                     )
                 )
             ));
+            $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
                 $data = $inputFilter->getValues();
                 $customerEntity = new User();
                 $customerEntity->setRegistrationDate(new \DateTime())
                     ->setEmail($data["email"])
                     ->setPhoneNumber(str_replace("-", "", $data["phoneNumber"]))
-                    ->setFullName($data["fullName"])
+                    ->setFullName($data["fullname"])
                     ->setPassword(UserService::encryptPassword("123456"))
                     ->setRole($em->find(Role::class, UserService::USER_ROLE_CUSTOMER))
                     ->setUpdatedOn(new \DateTime())
@@ -222,7 +223,13 @@ class CustomerController extends AbstractActionController
                     $messagePointer['subject'] = "BAU CARS: Confirm Email";
                     $response->setStatusCode(201);
                     $this->generalService->sendMails($messagePointer, $template);
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariable("message", "Something went wrong");
+                }
+            } else {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("message", "validation Error");
             }
         }
         return $jsonModel;

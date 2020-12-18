@@ -4,13 +4,13 @@ echo $this->headtitle("Drivers");
 
 <?php
 $flashMessenger = $this->flashMessenger()
-    ->setMessageOpenFormat('<div%s>
+	->setMessageOpenFormat('<div%s>
      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
          &times;
      </button>
      <ul><li>')
-    ->setMessageSeparatorString('</li><li>')
-    ->setMessageCloseString('</li></ul></div>');
+	->setMessageSeparatorString('</li><li>')
+	->setMessageCloseString('</li></ul></div>');
 ?>
 <?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
 <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
@@ -68,36 +68,27 @@ $flashMessenger = $this->flashMessenger()
 
 				<div class="modal-body pt-4">
 					<div class="form-group">
-						<label> <span class="label-text">Driver Full Name</span> <input
-							type="text" v-model='fullname' ref="fullname"
-							class="form-control">
+						<label> <span class="label-text">Driver Full Name</span> <input type="text" v-model='fullname' ref="fullname" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Email</span> <input
-							type="email" v-model="email" ref="email" class="form-control">
+						<label> <span class="label-text">Driver Email</span> <input type="email" v-model="email" ref="email" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Phone Number</span> <input
-							type="text" @input="acceptNumber" v-model="phoneNumber"
-							ref="phonenumber" class="form-control">
+						<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="phoneNumber" ref="phonenumber" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Date of Birth</span> <input
-							type="date" v-model="driver_dob" ref="driver_dob"
-							class="form-control">
+						<label> <span class="label-text">Driver Date of Birth</span> <input type="date" v-model="driver_dob" ref="driver_dob" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driving Since</span> <input
-							type="date" v-model="driving_since" ref="driving_since"
-							class="form-control">
+						<label> <span class="label-text">Driving Since</span> <input type="date" v-model="driving_since" ref="driving_since" class="form-control">
 						</label>
 					</div>
 
@@ -108,19 +99,16 @@ $flashMessenger = $this->flashMessenger()
 					<h5>Assign a Car</h5>
 
 					<div class="form-group">
-						<label> <span class="label-text">Car Plate Number</span> <input
-							type="text" v-model="car_platenumber" ref="car_platenumber"
-							placeholder="Car Plate Number" class="form-control">
+						<label> <span class="label-text">Car Plate Number</span> <input type="text" v-model="car_platenumber" ref="car_platenumber" placeholder="Car Plate Number" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
 						<label> <span v-if="cars.length" class="label-text">Car Make</span>
-							<!-- <div class="col-md-10"> --> <select name="select"
-							v-model="selectedCar" class="form-control">
+							<!-- <div class="col-md-10"> --> <select name="select" v-model="selectedCar" class="form-control">
 								<option v-for="car in cars" :key="car.id" :value="car.id">{{car.carMake}}</option>
 
-						</select>
+							</select>
 						</label>
 						<!-- </div> -->
 					</div>
@@ -129,8 +117,7 @@ $flashMessenger = $this->flashMessenger()
 
 
 					<div class="form-group">
-						<label> <span class="label-text">Car Type</span> <input
-							ref="carType" v-model="carType" type="text" class="form-control">
+						<label> <span class="label-text">Car Type</span> <input ref="carType" v-model="carType" type="text" class="form-control">
 						</label>
 					</div>
 
@@ -141,10 +128,54 @@ $flashMessenger = $this->flashMessenger()
 					</div>
 
 
-					<button v-else :disabled="submitStatus" @click="createDriver()"
-						type="button" value="Submit"
-						class="btn btn-lg btn-block btn-rounded btn-success">Register Now</button>
+					<button v-else :disabled="submitStatus" @click="createDriver()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Register Driver</button>
 
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+	<div id="editDriver" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered">
+
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Driver</h5>
+
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<div class="modal-body pt-4">
+				<div class="spinner"></div>
+					<div v-if="!isEditDriver">
+						<div class="spinner"></div>
+					</div>
+					<div v-else>
+						<div class="form-group">
+							<label> <span class="label-text">Driver Full Name</span> <input type="text" v-model='driverDetails.fullname' ref="fullname" class="form-control">
+							</label>
+						</div>
+
+						<div class="form-group">
+							<label> <span class="label-text">Driver Email</span> <input type="email" v-model="driverDetails.email" ref="email" class="form-control">
+							</label>
+						</div>
+
+						<div class="form-group">
+							<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="driverDetails.phoneNumber" ref="phonenumber" class="form-control">
+							</label>
+						</div>
+
+						
+
+
+
+						<button :disabled="submitStatus" @click="postEdit()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Edit Driver</button>
+					</div>
 				</div>
 			</div>
 
@@ -171,8 +202,7 @@ $flashMessenger = $this->flashMessenger()
 					<!-- 						</button> -->
 					<!-- 					</form> -->
 
-					<a href="#vCenteredModal" data-toggle="modal"
-						class=" btn btn-lg  btn-rounded btn-warning">ADD DRIVER</a>
+					<a href="#vCenteredModal" data-toggle="modal" class=" btn btn-lg  btn-rounded btn-warning">ADD DRIVER</a>
 				</div>
 			</div>
 			<!-- Records Header End -->
@@ -203,63 +233,62 @@ $flashMessenger = $this->flashMessenger()
 
 							<!-- Table Row Start -->
 							<?php
-    if (count($drivers) > 0) :
-        foreach ($drivers as $driver) :
-            ?>
+							if (count($drivers) > 0) :
+								foreach ($drivers as $driver) :
+							?>
 									<tr>
 
-								<td><?php echo strtoupper($driver["diverUid"]) ?></td>
-								<td><strong>Name :</strong><a href="#" class="btn-link"><?php echo $driver["user"]["fullName"] ?></a><br>
-									<strong>Driving Since :</strong><?php echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM) ?></td>
-								<td>
-										<?php  if(count($driver["assisnedCar"]) > 0):?>
-										<table class="table style--2">
-										<thead>
-											<tr>
+										<td><?php echo strtoupper($driver["diverUid"]) ?></td>
+										<td><strong>Name :</strong><a href="#" class="btn-link"><?php echo $driver["user"]["fullName"] ?></a><br>
+											<strong>Driving Since :</strong><?php echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM) ?></td>
+										<td>
+											<?php if (count($driver["assisnedCar"]) > 0) : ?>
+												<table class="table style--2">
+													<thead>
+														<tr>
 
-												<th>Plate Number</th>
-												<th>Car Type</th>
-												<th></th>
+															<th>Plate Number</th>
+															<th>Car Type</th>
+															<th></th>
 
-											</tr>
-										</thead>
-										<tbody>
-										<?php foreach ($driver["assisnedCar"] as $car):?>
-											<tr>
-												<td>
-											<?php echo ($car["platNumber"] != NULL ? $car["platNumber"] : "")?>
-											</td>
-												<td>
-											<?php echo ($car["motorMake"] != NULL ? $car["motorMake"]["carMake"] : "")?>
-											</td>
-												<td><a href="" class="btn btn-block btn-primary">Reassign</a>
-												</td>
-											</tr>
-											<?php endforeach; ?>
-										</tbody>
-									</table>
-										<?php endif;?>
+														</tr>
+													</thead>
+													<tbody>
+														<?php foreach ($driver["assisnedCar"] as $car) : ?>
+															<tr>
+																<td>
+																	<?php echo ($car["platNumber"] != NULL ? $car["platNumber"] : "") ?>
+																</td>
+																<td>
+																	<?php echo ($car["motorMake"] != NULL ? $car["motorMake"]["carMake"] : "") ?>
+																</td>
+																<td><a href="" class="btn btn-block btn-primary">Reassign</a>
+																</td>
+															</tr>
+														<?php endforeach; ?>
+													</tbody>
+												</table>
+											<?php endif; ?>
 										</td>
-								<!--                                                 <td>2</td> -->
-								<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-								<td><a href=""><i class="fa fa-edit"></i> Edit</a> 
-<!-- 								| <a href=""><i -->
-<!-- 										class="fa fa-trash"></i> Delete</a> -->
+										<!--                                                 <td>2</td> -->
+										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
+										<td><a href="#editDriver" @click="editDriver('<?php echo $driver["diverUid"]?>'')" data-toggle="modal"><i class="fa fa-edit"></i> Edit</a>
+											<!-- 								| <a href=""><i -->
+											<!-- 										class="fa fa-trash"></i> Delete</a> -->
 										</td>
-							</tr>
+									</tr>
 							<?php
-        endforeach
-        ;
+								endforeach;
 							endif;
-    
-    ?>
+
+							?>
 							<!-- Table Row End -->
 
 
 						</tbody>
 					</table>
-					
-					<?php  echo $this->paginationcontrol($drivers, "sliding", "admin-driver-pagecount") ;?>
+
+					<?php echo $this->paginationcontrol($drivers, "sliding", "admin-driver-pagecount"); ?>
 				</div>
 			</div>
 		</div>
@@ -282,6 +311,10 @@ $flashMessenger = $this->flashMessenger()
 				cars: [],
 				selectedCar: "",
 				carType: '',
+
+
+				isEditDriver: false,
+				driverDetails:{},
 
 			}
 		},
@@ -311,6 +344,15 @@ $flashMessenger = $this->flashMessenger()
 					this.cars = res.data.data;
 				})
 			},
+
+			editDriver(id) {
+				axios.get("/controller/driver/getdriver/"+id).then(res=>{
+					if(res.status == 200){
+						// this.driverDetails.fullname = res.data.data.;
+					}
+				}).catch();
+			},
+
 			createDriver() {
 				// this.creatingDriver = true;
 				let formData = new FormData();

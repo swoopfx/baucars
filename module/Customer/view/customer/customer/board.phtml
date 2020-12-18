@@ -190,7 +190,35 @@ $flashMessenger = $this->flashMessenger()
 					<!-- End Widget 05 -->
 				</div>
 
+				<div id="edit-profile" class="modal fade">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content room-details">
+							<div class="modal-header border-0">
+								<h3 class="modal-title"><i class="la la-glass la-2x align-middle pr-2"></i>Edit Profile</h3>
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">×</span>
+									<span class="sr-only">close</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div>
+									<div class="form-group row d-flex align-items-center mb-5">
+										<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Profile Name</label>
+										<div class="col-lg-8">
+											<input type="text" v-model="profileName" ref="editProfileName" class="form-control" placeholder="">
+										</div>
+									</div>
+								</div>
 
+
+							</div>
+							<div class="modal-footer border-0">
+								<button type="button" class="btn btn-shadow" data-dismiss="modal">Cancel</button>
+								<button type="button" @click="editprofile()" :disabled="isEdittingProfile" class="btn btn-gradient-01"><div v-if="isEdittingProfile">Processing... </div><div v-else>Change Profile Name</div></button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 
 				<div class="col-xl-6 os-animation" data-os-animation="fadeInUp">
@@ -219,17 +247,25 @@ $flashMessenger = $this->flashMessenger()
 							<div class="author-name">
 								{{profileName}} <span>{{profileEmail}}</span>
 							</div>
+
 							<div class="chart">
 								<div class="row no-margin justify-content-center">
-									<div class="col-12 col-xl-8 col-md-8 col-sm-8">
+									<div class="col-6 col-xl-6 col-md-6 col-sm-6">
 										<div class="row no-margin align-items-center">
 											<!-- Begin Chart -->
 											<div class="col-9 no-padding">
-												<div class="chart-graph">
-													<div class="chart">
-														<canvas id="sales-stats"></canvas>
-													</div>
-												</div>
+												<button type="button" data-toggle="modal" data-target="#edit-profile" class="btn btn-primary"> Edit Profile</button>
+											</div>
+
+											<!-- End Chart -->
+										</div>
+									</div>
+
+									<div class="col-6 col-xl-6 col-md-6 col-sm-6">
+										<div class="row no-margin align-items-center">
+											<!-- Begin Chart -->
+											<div class="col-9 no-padding">
+												<button type="button" @click="changePassword()" data-toggle="modal" data-target="#change-profile" class="btn btn-default"> Change Password</button>
 											</div>
 
 											<!-- End Chart -->
@@ -278,7 +314,7 @@ $flashMessenger = $this->flashMessenger()
 												<th>Start Time</th>
 												<th>End Time</th>
 												<th>Status</th>
-												<th>Amount Paid</th>
+												<!-- <th>Amount Paid</th> -->
 												<th>Actions</th>
 											</tr>
 										</thead>
@@ -290,7 +326,7 @@ $flashMessenger = $this->flashMessenger()
 												<td>{{formatPHPDate(booking.startTime.date)}}</td>
 												<td>{{formatPHPDate(booking.endTime.date)}}</td>
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
-												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
+
 												<td class="td-actions"> <a href="#"><i class="la la-info"></i></a></td>
 											</tr>
 
@@ -449,7 +485,7 @@ $flashMessenger = $this->flashMessenger()
 											<td>{{formatPHPDate(booking.endTime.date)}}</td>
 											<td><span style="width: 100px;" :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></td>
 											<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
-											<td class="td-actions"><a @click="getBookingDetails(booking.bookingUid)" data-toggle="modal" data-target="#booking-details"><i class="la la-edit edit"></i></a> <a @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
+											<td class="td-actions"><a v-if="booking.status.id == 5" @click="getBookingDetails(booking.bookingUid)" data-toggle="modal" data-target="#booking-details"><i class="la la-edit edit"></i></a> <a v-if="booking.status.id == 5" @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
 										</tr>
 
 
@@ -746,6 +782,9 @@ $flashMessenger = $this->flashMessenger()
 				email: cutomerboard.profileEmail,
 				name: cutomerboard.profileName,
 			},
+			subaccounts: [{
+				id: "RS_C4B4B84A84BC05F179E5C808BEC0C7A5", // This assumes you have setup your commission on the dashboard.
+			}],
 			callback: function(response) { // specified callback function
 				if (response.status == "successful") {
 					cutomerboard.tx_ref = response.tx_ref;
@@ -870,6 +909,9 @@ $flashMessenger = $this->flashMessenger()
 				ticketMessage: "",
 				isSubmittingTicket: false,
 
+				//Profile
+				isEdittingProfile: false,
+
 
 
 			}
@@ -956,6 +998,24 @@ $flashMessenger = $this->flashMessenger()
 				}).catch(err => {
 
 				});
+			},
+
+			editprofile() {
+				if (this.$refs.editProfileName.value == "") {
+
+				} else {
+					this.isEdittingProfile = true;
+					let formData = new FormData();
+					formData.append("fullname", this.$refs.editProfileName.value);
+					axios.post("/customer/editprofile", formData).then(res=>{
+						if(res.status == 201){
+							window.location.reload();
+							this.isEdittingProfile = false;
+						}
+					}).catch(err=>{
+
+					});
+				}
 			},
 
 			getProfile() {
@@ -1069,7 +1129,9 @@ $flashMessenger = $this->flashMessenger()
 					if (res.status == 201) {
 						location.reload();
 					}
-				}).catch();
+				}).catch(err => {
+					axios.post("/customer/booking-error").then().catch();
+				});
 			},
 
 			calculatePrice() {
@@ -1160,7 +1222,7 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 			cancelbooking(id) {
-				console.log(id);
+				// console.log(id);
 				let formData = new FormData();
 				formData.append("bookingId", id);
 				axios.post("/customer/cancelbooking", formData).then(res => {
@@ -1234,6 +1296,7 @@ $flashMessenger = $this->flashMessenger()
 		mounted() {
 			this.getBookingHistory();
 			this.getProfile();
+			this.getActiveTrip();
 			this.getInitiatedBooking();
 			this.getBookingServiceType();
 			this.getBookingClass();
