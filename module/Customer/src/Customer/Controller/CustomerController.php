@@ -79,13 +79,13 @@ class CustomerController extends AbstractActionController
         // are working when you browse to /customer/customer/foo
         return array();
     }
-    
-    
-    public function editprofileAction(){
+
+    public function editprofileAction()
+    {
         $em = $this->entityManager;
         $response = $this->getResponse();
         $request = $this->getRequest();
-        if($request->isPost()){
+        if ($request->isPost()) {
             $post = $request->getPost()->toArray();
             $inputfilter = new InputFilter();
             $inputfilter->add(array(
@@ -112,11 +112,11 @@ class CustomerController extends AbstractActionController
                 )
             ));
             $inputfilter->setData($post);
-            if($inputfilter->isValid()){
+            if ($inputfilter->isValid()) {
                 $data = $inputfilter->getValues();
                 try {
                     /**
-                     * 
+                     *
                      * @var User $userEntity
                      */
                     $userEntity = $this->identity();
@@ -127,12 +127,10 @@ class CustomerController extends AbstractActionController
                     
                     $response->setStatusCode(201);
                     $this->flashmessenger()->addSuccessMessage("Successfully updated your profile");
-                    
                 } catch (\Exception $e) {
                     $response->setStatusCode(400);
                 }
             }
-            
         }
         $jsonModel = new JsonModel();
     }
@@ -633,6 +631,34 @@ class CustomerController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function getticketdetailsAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $id = $this->params()->fromRoute("id", NULL);
+        if ($id == NULL) {
+            $response->setStatusCode(500);
+            $jsonModel->setVariable("message", "Empty Identifier");
+        } else {
+            $repo = $em->getRepository(Support::class);
+            $data = $repo->createQueryBuilder("s")
+                ->select("s, st, m, r")
+                ->leftJoin("s.supportStatus", "st")
+                ->leftJoin("s.messages", "m")
+                ->leftJoin("m.route", "r")
+                ->where("s.supportUid = :ticket")
+                ->setParameters([
+                'ticket' => $id
+            ])
+                ->getQuery()
+                ->getResult(Query::HYDRATE_ARRAY);
+            $response->setStatusCode(200);
+            $jsonModel->setVariable("data", $data[0]);
+        }
+        return $jsonModel;
+    }
+
     public function createsupportticketAction()
     {
         $em = $this->entityManager;
@@ -704,12 +730,15 @@ class CustomerController extends AbstractActionController
                         ->setSupportUid(AppService::supportUid())
                         ->setSupportStatus($em->find(SupportStatus::class, AppService::SUPPORT_STATUS_OPEN))
                         ->setTopic($data["title"])
-                        ->setUser($this->identity())
-                        ->setMessages($supportMessageEntity);
+                        
+                        ->setUser($this->identity());
+                       
                     
                     $supportMessageEntity->setCreatedOn(new \DateTime())
                         ->setMessage($data["message"])
+                        ->setRouteUser($this->identity())
                         ->setMessagesUid(AppService::messageUid())
+                        ->setSupport($supportEntity)
                         ->setRoute($em->find(SupportRoute::class, AppService::SUPPORT_MESSAGE_SENDER));
                     
                     $em->persist($supportEntity);

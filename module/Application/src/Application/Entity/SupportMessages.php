@@ -2,10 +2,12 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use CsnUser\Entity\User;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="support_messages")
+ * 
  * @author otaba
  *        
  */
@@ -20,10 +22,10 @@ class SupportMessages
      *     
      */
     private $id;
-    
-    
+
     /**
      * @ORM\Column(name="message_uid", type="string", nullable=true, unique=true)
+     * 
      * @var string
      */
     private $messagesUid;
@@ -43,9 +45,16 @@ class SupportMessages
      * @var SupportRoute
      */
     private $route;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
+     * @var  User
+     */
+    private $routeUser;
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
+     * 
      * @var \DateTime
      *
      */
@@ -53,9 +62,17 @@ class SupportMessages
 
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
+     * 
      * @var \DateTime
      */
     private $updatedOn;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Support", inversedBy="messages")
+     * 
+     * @var Support
+     */
+    private $support;
 
     /**
      */
@@ -64,7 +81,9 @@ class SupportMessages
         
         // TODO - Insert your code here
     }
+
     /**
+     *
      * @return the $id
      */
     public function getId()
@@ -73,6 +92,7 @@ class SupportMessages
     }
 
     /**
+     *
      * @return the $message
      */
     public function getMessage()
@@ -81,6 +101,7 @@ class SupportMessages
     }
 
     /**
+     *
      * @return the $route
      */
     public function getRoute()
@@ -89,6 +110,7 @@ class SupportMessages
     }
 
     /**
+     *
      * @return the $createdOn
      */
     public function getCreatedOn()
@@ -97,6 +119,7 @@ class SupportMessages
     }
 
     /**
+     *
      * @return the $updatedOn
      */
     public function getUpdatedOn()
@@ -105,7 +128,8 @@ class SupportMessages
     }
 
     /**
-     * @param number $id
+     *
+     * @param number $id            
      */
     public function setId($id)
     {
@@ -114,7 +138,8 @@ class SupportMessages
     }
 
     /**
-     * @param string $message
+     *
+     * @param string $message            
      */
     public function setMessage($message)
     {
@@ -123,7 +148,8 @@ class SupportMessages
     }
 
     /**
-     * @param \Application\Entity\SupportRoute $route
+     *
+     * @param \Application\Entity\SupportRoute $route            
      */
     public function setRoute($route)
     {
@@ -132,7 +158,8 @@ class SupportMessages
     }
 
     /**
-     * @param DateTime $createdOn
+     *
+     * @param DateTime $createdOn            
      */
     public function setCreatedOn($createdOn)
     {
@@ -141,14 +168,17 @@ class SupportMessages
     }
 
     /**
-     * @param DateTime $updatedOn
+     *
+     * @param DateTime $updatedOn            
      */
     public function setUpdatedOn($updatedOn)
     {
         $this->updatedOn = $updatedOn;
         return $this;
     }
+
     /**
+     *
      * @return the $messagesUid
      */
     public function getMessagesUid()
@@ -157,11 +187,44 @@ class SupportMessages
     }
 
     /**
-     * @param string $messagesUid
+     *
+     * @param string $messagesUid            
      */
     public function setMessagesUid($messagesUid)
     {
         $this->messagesUid = $messagesUid;
+        return $this;
+    }
+    /**
+     * @return the $support
+     */
+    public function getSupport()
+    {
+        return $this->support;
+    }
+
+    /**
+     * @param \Application\Entity\Support $support
+     */
+    public function setSupport($support)
+    {
+        $this->support = $support;
+        return $this;
+    }
+    /**
+     * @return the $routeUser
+     */
+    public function getRouteUser()
+    {
+        return $this->routeUser;
+    }
+
+    /**
+     * @param \CsnUser\Entity\User $routeUser
+     */
+    public function setRouteUser($routeUser)
+    {
+        $this->routeUser = $routeUser;
         return $this;
     }
 

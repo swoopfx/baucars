@@ -3,6 +3,8 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use CsnUser\Entity\User;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -37,9 +39,9 @@ class Support
     private $topic;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SupportMessages")
+     * @ORM\OneToMany(targetEntity="SupportMessages", mappedBy="support")
      * 
-     * @var SupportMessages
+     * @var Collection
      */
     private $messages;
 
@@ -77,7 +79,7 @@ class Support
     public function __construct()
     {
         
-        // TODO - Insert your code here
+        $this->messages = new ArrayCollection();
     }
     /**
      * @return the $id
@@ -102,6 +104,9 @@ class Support
     {
         return $this->messages;
     }
+    
+    
+    
 
     /**
      * @return the $user
@@ -154,12 +159,36 @@ class Support
         return $this;
     }
 
+//     /**
+//      * @param \Application\Entity\SupportMessages $messages
+//      */
+//     public function setMessages($messages)
+//     {
+//         $this->messages = $messages;
+//         return $this;
+//     }
+    
     /**
-     * @param \Application\Entity\SupportMessages $messages
+     * 
+     * @param SupportMessages $messages
      */
-    public function setMessages($messages)
-    {
-        $this->messages = $messages;
+    public function addMessages(SupportMessages $messages){
+        if(!$this->messages->contains($messages)){
+            $this->messages->add($messages);
+            $messages->setSupport($this);
+        }
+        return $this;
+    }
+    
+    /**
+     * 
+     * @param SupportMessages $messages
+     */
+    public function removeMessages(SupportMessages $messages){
+        if($this->messages->contains($messages)){
+            $this->messages->removeElement($messages);
+            $messages->setSupport(NULL);
+        }
         return $this;
     }
 
