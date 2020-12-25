@@ -77,7 +77,8 @@ $flashMessenger = $this->flashMessenger()
 										<div class="widget-body">
 											<form class="needs-validation" novalidate>
 
-
+												<input id="autocomplete" placeholder="Enter your address" type="text"></input>
+												<div id="map"></div>
 												<div v-if="bookingServiceType.length" class="form-group row d-flex align-items-center mb-5">
 													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Service *</label>
 													<div class="col-lg-8">
@@ -610,7 +611,7 @@ $flashMessenger = $this->flashMessenger()
 												</div>
 											</li>
 											<!-- End 01 -->
-											
+
 										</ul>
 									</div>
 									<!-- End Widget Body -->
@@ -820,6 +821,9 @@ $flashMessenger = $this->flashMessenger()
 <!-- Begin Page Snippets -->
 <script src="https://checkout.flutterwave.com/v3.js"></script>
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAviTdDEFWMJOGwE7NQzk0S1qS3TQEWQUU&callback=initMap" type="text/javascript"></script> -->
+<!-- <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4iD9lE6vET5C0mLW8fRVnMXxrobSlkEU&callback=initMap&region=JP"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4iD9lE6vET5C0mLW8fRVnMXxrobSlkEU&callback=initMap&libraries=places&v=weekly" defer></script>
 <script src="/admin/assets/vendors/js/nicescroll/nicescroll.min.js"></script>
 <script src="/admin/assets/vendors/js/datepicker/moment.min.js"></script>
 <script src="/admin/assets/vendors/js/datepicker/daterangepicker.js"></script>
@@ -829,6 +833,50 @@ $flashMessenger = $this->flashMessenger()
 
 <!-- End Page Snippets -->
 <script>
+	function initMap() {
+		const map = new google.maps.Map(document.getElementById("map"), {
+			zoom: 4,
+			center: {
+				lat: -33,
+				lng: 151
+			},
+			zoom: 8,
+			zoomControl: false
+		});
+
+		// Create the autocomplete object, restricting the search predictions to
+		// geographical location types.
+		const autocomplete = new google.maps.places.Autocomplete(
+			document.getElementById("autocomplete"), {
+				types: ["geocode"],
+				componentRestrictions: {
+					'country': ['gb']
+				},
+				fields: ['place_id', 'geometry', 'formatted_address']
+			}
+		);
+		// When the user selects an address from the drop-down
+		// zoom to the select location and add a marker.
+		autocomplete.addListener("place_changed", addCustomerLocation);
+	}
+
+	function addCustomerLocation() {
+		// Get the place details from the autocomplete object.
+		const place = autocomplete.getPlace();
+
+		// Add a marker to the map.
+		const marker = new google.maps.Marker({
+			map
+		});
+
+		marker.setLabel("C");
+		marker.setPosition(place.geometry.location);
+
+		// Zoom the map to the marker.
+		map.panTo(place.geometry.location);
+		map.setZoom(15);
+	}
+
 	function makeFlutterwavePayment() {
 
 		// if (subs.postPayment) {

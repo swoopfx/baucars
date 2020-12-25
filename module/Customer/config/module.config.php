@@ -9,6 +9,7 @@ use Customer\Paginator\AdminCanceledBookingAdapter;
 use Customer\Paginator\Factory\AdminCancelBookingAdapterInterface;
 use Customer\Paginator\Factory\AdminActyiveTripAdapterInterface;
 use Customer\Paginator\Factory\AdminUpcomingBookingAdapterInterface;
+use Customer\Controller\Factory\BookinsControllerFactory;
 
 return array(
     'controllers' => array(
@@ -17,6 +18,7 @@ return array(
         ),
         'factories' => array(
             'Customer\Controller\Customer' => 'Customer\Controller\Factory\CustomerControllerFactory',
+            "Customer\Controller\Bookings"=>BookinsControllerFactory::class
         ),
     ),
     'router' => array(
@@ -54,6 +56,54 @@ return array(
                     ),
                 ),
             ),
+            
+            
+            'bookings' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    // Change this to something specific to your module
+                    'route' => '/bookings',
+                    'defaults' => array(
+                        // Change this value to reflect the namespace in which
+                        // the controllers for your module are found
+                        '__NAMESPACE__' => 'Customer\Controller',
+                        'controller' => 'Bookings',
+                        'action' => 'board'
+                    )
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    // This route is a sane default when developing a module;
+                    // as you solidify the routes for your module, however,
+                    // you may want to remove it and replace it with more
+                    // specific routes.
+                    'default' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:controller[/:action[/:id]]]',
+                            'constraints' => array(
+                                'id' => '[a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                
+                            ),
+                            'defaults' => array()
+                        )
+                    ),
+                    "paginator" => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:controller[/:action[/page[/:page]]]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                "page" => "[0-9]+"
+                            )
+                            
+                        )
+                    )
+                )
+            )
         ),
     ),
     'view_manager' => array(
