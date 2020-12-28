@@ -4,6 +4,7 @@ namespace Customer\Controller\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Customer\Entity\Bookings;
+use Customer\Controller\BookingsController;
 
 /**
  *
@@ -29,14 +30,16 @@ class BookinsControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $ctr = new Bookings();
+        $ctr = new BookingsController();
         $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
-        $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
+        $bookingService = $serviceLocator->getServiceLocator()->get("Customer\Service\BookingService");
+        // $customerService = $serviceLocator->getServiceLocator()->get("Customer\Service\CustomerService");
         $flutterwaveService = $serviceLocator->getServiceLocator()->get("General\Service\FlutterwaveService");
         $ctr->setGeneralService($generalService)
-        ->setCustomerService($customerService)
-        ->setEntityManager($generalService->getEntityManager())
-        ->setFlutterwaveService($flutterwaveService);
+            ->setFlutterwaveService($flutterwaveService)
+            ->setBookingService($bookingService)
+            ->setEntityManager($generalService->getEntityManager());
+        // ->setFlutterwaveService($flutterwaveService);
         return $ctr;
     }
 }

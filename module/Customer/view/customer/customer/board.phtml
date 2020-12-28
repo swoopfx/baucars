@@ -77,44 +77,9 @@ $flashMessenger = $this->flashMessenger()
 										<div class="widget-body">
 											<form class="needs-validation" novalidate>
 
-												<input id="autocomplete" placeholder="Enter your address" type="text"></input>
-												<div id="map"></div>
-												<div v-if="bookingServiceType.length" class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Service *</label>
-													<div class="col-lg-8">
-														<div class="select">
-															<select v-model="selectedServiceType" class="custom-select form-control" required>
-
-																<option v-for="type in bookingServiceType" :value="type.id">{{type.bookingType}}</option>
-
-															</select>
-															<!-- <div class="invalid-feedback">
-																Please select an option
-															</div> -->
-														</div>
-													</div>
-												</div>
-
-
-
-
-												<div v-if="billingMethod.length" class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Billing Method</label>
-													<div class="col-sm-8">
-														<div v-for="(type, key) in billingMethod" class="mb-3">
-															<!-- <div class="styled-radio"> -->
-															<input @click="getVal(type.id)" :value="type.id" :key="type.id" v-model="selectedBillingMethod" type="radio" name="radio">
-															<label for="rad-1">{{type.billingMethod}}</label>
-															<!-- </div> -->
-														</div>
-
-
-													</div>
-												</div>
-
 
 												<div v-if="bookingClass.length" class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Service Class *</label>
+													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Class *</label>
 													<div class="col-lg-8">
 														<div class="select">
 															<select v-model="selectedBookingClass" class="custom-select form-control" required>
@@ -129,19 +94,55 @@ $flashMessenger = $this->flashMessenger()
 													</div>
 												</div>
 
+												<div v-if="numberOfSeats.length" class="form-group row d-flex align-items-center mb-5">
+													<label class="col-lg-4 form-control-label">Number Of Seat</label>
+													<div class="col-sm-8">
+														<div v-for="seats in numberOfSeats " class="mb-3">
+															<div class="styled-radio">
+																<input type="radio" v-model="selectedSeat" :value="seats.id" name="radio" :id="seats.id">
+																<label for="rad-1">{{seats.seats}}</label>
+															</div>
+														</div>
+
+
+													</div>
+												</div>
+
+
+
+
 												<div class="form-group row d-flex align-items-center mb-5">
 													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Pick Up Address</label>
 													<div class="col-lg-8">
-														<input type="text" ref="pickup" class="form-control" placeholder="Lagos Airport">
+														<input type="text" id="autocomplete" ref="pickup" class="form-control" placeholder="Lagos Airport">
+														<div id="map"></div>
 													</div>
 												</div>
 
 												<div class="form-group row d-flex align-items-center mb-5">
-													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Booking Time</label>
+													<label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Destination</label>
 													<div class="col-lg-8">
-														<input type="text" ref="bookingDatetime" id="datetime" class="form-control" placeholder="">
+														<input type="text" id="destination" ref="dropOff" class="form-control" placeholder="Lagos Airport">
+														<div id="map"></div>
 													</div>
 												</div>
+
+
+
+												<div class="form-group row d-flex align-items-center mb-5">
+													<label class="col-lg-4 form-control-label">Pick Up Time</label>
+													<div class="col-lg-8">
+														<div class="form-group">
+															<div class="input-group">
+																<span class="input-group-addon">
+																	<i class="la la-calendar"></i>
+																</span>
+																<input type="datetime" class="form-control" id="date" placeholder="Select value">
+															</div>
+														</div>
+													</div>
+												</div>
+
 
 
 												<div v-if="processing">
@@ -170,7 +171,7 @@ $flashMessenger = $this->flashMessenger()
 													<div class="text-right">
 														<button v-if="bookingPrice != ''" @click="makePayment()" :disabled="isSubmittingBookingForm" class="btn  btn-success" type="button">Make PAYMENT</button>
 
-														<button @click="calculatePrice()" :disabled="isSubmittingBookingForm" class="btn btn-gradient-01" type="button">Calculate Price</button>
+														<button @click="initiatenewBooking()" :disabled="isSubmittingBookingForm" class="btn btn-gradient-01" type="button">Calculate Price</button>
 
 														<button class="btn btn-shadow" type="reset">Reset</button>
 													</div>
@@ -820,19 +821,21 @@ $flashMessenger = $this->flashMessenger()
 </div>
 <!-- Begin Page Snippets -->
 <script src="https://checkout.flutterwave.com/v3.js"></script>
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAviTdDEFWMJOGwE7NQzk0S1qS3TQEWQUU&callback=initMap" type="text/javascript"></script> -->
-<!-- <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4iD9lE6vET5C0mLW8fRVnMXxrobSlkEU&callback=initMap&region=JP"></script> -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4iD9lE6vET5C0mLW8fRVnMXxrobSlkEU&callback=initMap&libraries=places&v=weekly" defer></script>
 <script src="/admin/assets/vendors/js/nicescroll/nicescroll.min.js"></script>
 <script src="/admin/assets/vendors/js/datepicker/moment.min.js"></script>
-<script src="/admin/assets/vendors/js/datepicker/daterangepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/admin/assets/vendors/js/app/app.min.js"></script>
 <script src="/admin/assets/js/components/validation/validation.min.js"></script>
-<script src="/admin/assets/js/components/datepicker/datepicker.js"></script>
+<!-- <script src="/admin/assets/js/components/datepicker/datepicker.js"></script> -->
 
 <!-- End Page Snippets -->
 <script>
+	let autocomplete;
+	let destination;
+	let place;
+	let bounds;
+
 	function initMap() {
 		const map = new google.maps.Map(document.getElementById("map"), {
 			zoom: 4,
@@ -846,35 +849,67 @@ $flashMessenger = $this->flashMessenger()
 
 		// Create the autocomplete object, restricting the search predictions to
 		// geographical location types.
-		const autocomplete = new google.maps.places.Autocomplete(
+		autocomplete = new google.maps.places.Autocomplete(
 			document.getElementById("autocomplete"), {
 				types: ["geocode"],
 				componentRestrictions: {
-					'country': ['gb']
+					'country': ['ng']
 				},
 				fields: ['place_id', 'geometry', 'formatted_address']
+			}
+		);
+
+		destination = new google.maps.places.Autocomplete(
+			document.getElementById("destination"), {
+				types: ["geocode"],
+				componentRestrictions: {
+					'country': ['ng']
+				},
+				fields: ['place_id', 'geometry', 'formatted_address', "address_components", "icon", "name"]
 			}
 		);
 		// When the user selects an address from the drop-down
 		// zoom to the select location and add a marker.
 		autocomplete.addListener("place_changed", addCustomerLocation);
+		destination.addListener("place_changed", addDestinationLocation);
 	}
 
 	function addCustomerLocation() {
 		// Get the place details from the autocomplete object.
-		const place = autocomplete.getPlace();
+		place = autocomplete.getPlace();
+		console.log(place);
+		
 
-		// Add a marker to the map.
-		const marker = new google.maps.Marker({
-			map
-		});
+		var lat = place.geometry.location.lat();
+		var lon = place.geometry.location.lng();
 
-		marker.setLabel("C");
-		marker.setPosition(place.geometry.location);
+		
 
-		// Zoom the map to the marker.
-		map.panTo(place.geometry.location);
-		map.setZoom(15);
+		cutomerboard.pickUpAddress = place.formatted_address;
+		
+		// cutomerboard.destinationAddress= 
+		cutomerboard.pickUpLongitude = lat;
+		
+		cutomerboard.pickUpLatitude = lon;
+		
+		cutomerboard.pickUpPlaceId = place.place_id;
+		
+		
+		// cutomerboard.pickUpTime:
+
+	}
+
+	function addDestinationLocation(){
+		dropOff = destination.getPlace();
+		console.log(dropOff);
+
+		var dropLat = dropOff.geometry.location.lat();
+		var dropLong = dropOff.geometry.location.lng();
+
+		cutomerboard.destinationAddress = dropOff.formatted_address;
+		cutomerboard.destinationLongitude = dropLat;
+		cutomerboard.destinationLatitude = dropLong;
+		cutomerboard.destinationPlaceId=dropOff.place_id;
 	}
 
 	function makeFlutterwavePayment() {
@@ -1021,6 +1056,21 @@ $flashMessenger = $this->flashMessenger()
 
 				//Profile
 				isEdittingProfile: false,
+
+				// New Booking
+				newBooking: {},
+				selectedSeat: 10,
+				numberOfSeats: [],
+
+				pickUpAddress:'',
+				destinationAddress:'',
+				pickUpLongitude:'',
+				destinationLongitude:'',
+				pickUpLatitude:'',
+				destinationLatitude:'',
+				pickUpPlaceId:'',
+				destinationPlaceId:'',
+				pickUpTime:'' ,
 
 
 
@@ -1404,6 +1454,52 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 
+			// New Bookings
+
+			getNumberOfSeats() {
+				axios.get("/bookings/bookings/numberofseats").then(res => {
+					if (res.status == 200) {
+						this.numberOfSeats = res.data.data;
+					}
+				}).catch();
+			},
+
+
+			initiatenewBooking(){
+				// if(){
+
+				// }else{
+				// 	pickUpAddress:'',
+				// destinationAddress:'',
+				// pickUpLongitude:'',
+				// destinationLongitude:'',
+				// pickUpLatitude:'',
+				// destinationLatitude:'',
+				// pickUpPlaceId:'',
+				// destinationPlaceId:'',
+				// pickUpTime:'' ,
+				let formData = new FormData();
+				formData.append("pickUpAddress", this.pickUpAddress);
+				formData.append("destinationAddress", this.destinationAddress);
+				formData.append("pickUpLongitude", this.pickUpLongitude);
+				formData.append("destinationLongitude", this.destinationLongitude);
+				formData.append("pickUpLatitude", this.pickUpLatitude);
+				formData.append("destinationLatitude", this.destinationLatitude);
+				formData.append("pickUpPlaceId", this.pickUpPlaceId);
+				formData.append("destinationPlaceId", this.destinationPlaceId);
+				formData.append("pickUpTime", this.pickUpTime);
+
+				formData.append("numberOfSeats", this.numberOfSeats);
+				formData.append("bookingClass", this.bookingCLass);
+				axios.post("/bookings/bookings/initiate-booking", formData).then(res=>{
+					if(res.status == 201){
+						
+					}
+				}).catch();
+				// }
+			}
+
+
 
 		},
 
@@ -1416,6 +1512,7 @@ $flashMessenger = $this->flashMessenger()
 			this.getBookingClass();
 			this.getBillingMethod();
 			this.getSupportSnippet();
+			this.getNumberOfSeats();
 		},
 	});
 </script>

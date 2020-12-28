@@ -3,6 +3,8 @@ namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
 use Zend\Authentication\AuthenticationService;
+use General\Entity\AppSettings;
+use General\Entity\PriceRange;
 
 /**
  *
@@ -70,6 +72,21 @@ class GeneralService
         $mailService->setTemplate($template['template'], $template['var']);
         
         $mailService->send();
+    }
+    
+    
+    public function getAppSeettings(){
+        $em = $this->entityManager;
+        $data = $em->getRepository(AppSettings::class)->findOneBy([
+            "id"=>1
+        ]);
+        return $data;
+    }
+    
+    public function getPriceRange(){
+        $em = $this->entityManager;
+        $data = $em->getRepository(PriceRange::class)->findAll();
+        return $data;
     }
     
     

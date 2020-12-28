@@ -88,6 +88,12 @@ class Bookings
      * @var string
      */
     private $pickupLatitude;
+    
+    /**
+     * @ORM\Column(name="pickup_place_id", type="string", nullable=true)
+     * @var string
+     */
+    private $pickupPlaceId;
 
     /**
      * @ORM\Column(name="destination", type="string", nullable=true)
@@ -109,6 +115,12 @@ class Bookings
      * @var string
      */
     private $destinationLatitude;
+    
+    /**
+     * @ORM\Column(name="destination_place_id", type="string", nullable=true)
+     * @var string
+     */
+    private $destinationPlaceId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio", inversedBy="booking")
@@ -611,6 +623,40 @@ class Bookings
         $this->feedback = $feedback;
         return $this;
     }
+    /**
+     * @return the $pickupPlaceId
+     */
+    public function getPickupPlaceId()
+    {
+        return $this->pickupPlaceId;
+    }
+
+    /**
+     * @return the $destinationPlaceId
+     */
+    public function getDestinationPlaceId()
+    {
+        return $this->destinationPlaceId;
+    }
+
+    /**
+     * @param string $pickupPlaceId
+     */
+    public function setPickupPlaceId($pickupPlaceId)
+    {
+        $this->pickupPlaceId = $pickupPlaceId;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationPlaceId
+     */
+    public function setDestinationPlaceId($destinationPlaceId)
+    {
+        $this->destinationPlaceId = $destinationPlaceId;
+        return $this;
+    }
+
 
 }
 
