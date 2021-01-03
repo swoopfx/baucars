@@ -4,7 +4,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use CsnUser\Entity\User;
 use General\Entity\TransactionStatus;
-use Customer\Entity\CustomerBooking;
+use Customer\Entity\Bookings;
 
 /**
  * @ORM\Entity
@@ -75,9 +75,9 @@ class Transactions
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Customer\Entity\CustomerBooking", inversedBy="transaction")
+     * @ORM\OneToOne(targetEntity="Customer\Entity\Bookings", inversedBy="transaction")
      * 
-     * @var CustomerBooking
+     * @var Bookings
      */
     private $booking;
 
@@ -302,24 +302,7 @@ class Transactions
         return $this;
     }
 
-    /**
-     *
-     * @return the $booking
-     */
-    public function getBooking()
-    {
-        return $this->booking;
-    }
-
-    /**
-     *
-     * @param \Customer\Entity\CustomerBooking $booking            
-     */
-    public function setBooking($booking)
-    {
-        $this->booking = $booking;
-        return $this;
-    }
+   
     /**
      * @return the $transactionUid
      */
@@ -336,6 +319,23 @@ class Transactions
         $this->transactionUid = $transactionUid;
         return $this;
     }
+    /**
+     * @return the $booking
+     */
+    public function getBooking()
+    {
+        return $this->booking;
+    }
+
+    /**
+     * @param \Customer\Entity\Bookings $booking
+     */
+    public function setBooking($booking)
+    {
+        $this->booking = $booking;
+        return $this;
+    }
+
 
 }
 

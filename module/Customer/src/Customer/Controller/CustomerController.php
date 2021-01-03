@@ -31,6 +31,7 @@ use Application\Service\AppService;
 use Application\Entity\SupportRoute;
 use CsnUser\Entity\User;
 use General\Entity\BookingAction;
+use Customer\Entity\Bookings;
 
 class CustomerController extends AbstractActionController
 {
@@ -228,17 +229,17 @@ class CustomerController extends AbstractActionController
             $response->setStatusCode(400);
             $jsonModel->setVariable("message", "Absent identifier");
         } else {
-            $repo = $em->getRepository(CustomerBooking::class);
+            $repo = $em->getRepository(Bookings::class);
             $data = $repo->createQueryBuilder("c")
-                ->select("c, st, bc, bt, ad, t, f, bl, dd")
+                ->select("c, st, bc, ad, t, f,  dd")
                 ->where('c.bookingUid = :identifier')
                 ->setParameter('identifier', $id)
                 ->leftJoin("c.status", "st")
                 ->leftJoin("c.assignedDriver", "ad")
                 ->leftJoin("ad.user", "dd")
-                ->leftJoin("c.billingMethod", "bl")
+//                 ->leftJoin("c.billingMethod", "bl")
                 ->leftJoin("c.bookingClass", "bc")
-                ->leftJoin("c.bookingType", "bt")
+//                 ->leftJoin("c.bookingType", "bt")
                 ->leftJoin("c.transaction", "t")
                 ->leftJoin("c.feedback", "f")
                 ->getQuery()

@@ -27,8 +27,8 @@ class BookingActivity
     private $information;
     
     /**
-     * @ORM\ManyToOne(targetEntity="CustomerBooking")
-     * @var CustomerBooking
+     * @ORM\ManyToOne(targetEntity="Bookings")
+     * @var Bookings
      */
     private $booking;
     

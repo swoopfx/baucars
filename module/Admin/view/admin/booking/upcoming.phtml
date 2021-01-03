@@ -4,13 +4,13 @@ echo $this->headtitle("Upcoming Booking");
 
 <?php
 $flashMessenger = $this->flashMessenger()
-	->setMessageOpenFormat('<div%s>
+    ->setMessageOpenFormat('<div%s>
      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
          &times;
      </button>
      <ul><li>')
-	->setMessageSeparatorString('</li><li>')
-	->setMessageCloseString('</li></ul></div>');
+    ->setMessageSeparatorString('</li><li>')
+    ->setMessageCloseString('</li></ul></div>');
 ?>
 <?php echo $flashMessenger->render('error',   array('alert', 'alert-dismissable', 'alert-danger')); ?>
 <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
@@ -35,7 +35,8 @@ $flashMessenger = $this->flashMessenger()
 				</div> -->
 				<div class="modal-body pt-4">
 
-					<select v-if="bookingActions.length" v-model="selectedAction" @change="actionLogic($event)" name="select" class="form-control">
+					<select v-if="bookingActions.length" v-model="selectedAction"
+						@change="actionLogic($event)" name="select" class="form-control">
 						<option v-for="actio in bookingActions" :value="actio.id" selected>{{actio.bookingAction}}</option>
 					</select>
 
@@ -54,29 +55,35 @@ $flashMessenger = $this->flashMessenger()
 										<ul class="list-unstyled">
 											<li><strong>
 													<th>Driver Name</th>
-												</strong> {{bookingdetails.assignedDriver.user.fullName}}</li>
+											</strong> {{bookingdetails.assignedDriver.user.fullName}}</li>
 											<li><strong>
 													<th>Driver Phone Number</th>
-												</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
+											</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
 											<!-- <li><strong>Unlimited</strong> integer felis odio</li> -->
 										</ul>
 									</div>
 									<div v-if="isChangeDriverTrigger">
 										<div class="form-group">
-											<label> <span class="label-text">Available Drivers</span> <select v-if="inactiveDivers.length" @change="onChangeDriver()" v-model="selectDriver" name="select" class="form-control">
+											<label> <span class="label-text">Available Drivers</span> <select
+												v-if="inactiveDivers.length" @change="onChangeDriver()"
+												v-model="selectDriver" name="select" class="form-control">
 													<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
 
-												</select>
+											</select>
 											</label>
 										</div>
 
-										<button type="button" v-if="showAssignButton" :disabled="isAssigningDriver" @click="reAssignDriver()" class="btn btn-sm btn-block btn-rounded btn-success">
+										<button type="button" v-if="showAssignButton"
+											:disabled="isAssigningDriver" @click="reAssignDriver()"
+											class="btn btn-sm btn-block btn-rounded btn-success">
 											<div v-if="isAssigningDriver">Processing...</div>
 											<div v-else>Re-Assign Driver</div>
 										</button>
 									</div>
 									<div v-else class="pricing--action">
-										<a href="" @click="dispatchDriver()" :disabled="isProcessingDispatch" class="btn btn-rounded btn-success">
+										<a href="" @click="dispatchDriver()"
+											:disabled="isProcessingDispatch"
+											class="btn btn-rounded btn-success">
 											<div v-if="isProcessingDispatch">Processing...</div>
 											<div v-else>Dispatch Driver</div>
 										</a>
@@ -92,20 +99,25 @@ $flashMessenger = $this->flashMessenger()
 
 							<div v-if="isShowAssignForm">
 								<div class="form-group">
-									<label> <span class="label-text">Available Drivers</span> <select v-if="inactiveDivers.length" @change="onChangeDriver()" v-model="selectDriver" name="select" class="form-control">
+									<label> <span class="label-text">Available Drivers</span> <select
+										v-if="inactiveDivers.length" @change="onChangeDriver()"
+										v-model="selectDriver" name="select" class="form-control">
 											<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
 
-										</select>
+									</select>
 									</label>
 								</div>
 
 
-								<button type="button" v-if="showAssignButton" :disabled="isAssigningDriver" @click="assignDriver()" class="btn btn-sm btn-block btn-rounded btn-success">
+								<button type="button" v-if="showAssignButton"
+									:disabled="isAssigningDriver" @click="assignDriver()"
+									class="btn btn-sm btn-block btn-rounded btn-success">
 									<div v-if="isAssigningDriver">Processing...</div>
 									<div v-else>Assign Driver</div>
 								</button>
 							</div>
-							<button v-else @click="showAssignForm()" class="btn btn-outline-success btn-block">Assign A Driver</button>
+							<button v-else @click="showAssignForm()"
+								class="btn btn-outline-success btn-block">Assign A Driver</button>
 						</div>
 						<div v-else>
 
@@ -121,29 +133,34 @@ $flashMessenger = $this->flashMessenger()
 										<ul class="list-unstyled">
 											<li><strong>
 													<th>Driver Name</th>
-												</strong> {{bookingdetails.assignedDriver.user.fullName}}</li>
+											</strong> {{bookingdetails.assignedDriver.user.fullName}}</li>
 											<li><strong>
 													<th>Driver Phone Number</th>
-												</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
+											</strong> {{bookingdetails.assignedDriver.user.phoneNumber}}</li>
 											<!-- <li><strong>Unlimited</strong> integer felis odio</li> -->
 										</ul>
 									</div>
 									<div v-if="isChangeDriverTrigger">
 										<div class="form-group">
-											<label> <span class="label-text">Available Drivers</span> <select v-if="inactiveDivers.length" @change="onChangeDriver()" v-model="selectDriver" name="select" class="form-control">
+											<label> <span class="label-text">Available Drivers</span> <select
+												v-if="inactiveDivers.length" @change="onChangeDriver()"
+												v-model="selectDriver" name="select" class="form-control">
 													<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
 
-												</select>
+											</select>
 											</label>
 										</div>
 
-										<button type="button" v-if="showAssignButton" :disabled="isAssigningDriver" @click="reAssignDriver()" class="btn btn-sm btn-block btn-rounded btn-success">
+										<button type="button" v-if="showAssignButton"
+											:disabled="isAssigningDriver" @click="reAssignDriver()"
+											class="btn btn-sm btn-block btn-rounded btn-success">
 											<div v-if="isAssigningDriver">Processing...</div>
 											<div v-else>Re-Assign Driver</div>
 										</button>
 									</div>
 									<div v-else class="pricing--action">
-										<a href="#" @click="triggerChangeDriver()" class="btn btn-rounded btn-success">Change Driver</a>
+										<a href="#" @click="triggerChangeDriver()"
+											class="btn btn-rounded btn-success">Change Driver</a>
 									</div>
 								</div>
 								<!-- Pricing Item End -->
@@ -202,7 +219,9 @@ $flashMessenger = $this->flashMessenger()
 
 				<div class="actions">
 					<form action="#" class="search flex-wrap flex-md-nowrap">
-						<input type="text" class="form-control" placeholder="Product Name..." required> <select name="select" class="form-control">
+						<input type="text" class="form-control"
+							placeholder="Product Name..." required> <select name="select"
+							class="form-control">
 							<option value="" selected>Product Category</option>
 						</select>
 						<button type="submit" class="btn btn-rounded">
@@ -245,17 +264,20 @@ $flashMessenger = $this->flashMessenger()
 									<?php foreach ($allBooking as $booking) : ?>
 										<tr>
 
-											<td><?php echo strtoupper($booking["bookingUid"]) ?></td>
-											<td><?php echo $booking["user"]["fullName"] ?></td>
-											<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
-													<strong>Booking Type :</strong><?php echo $booking["bookingType"]["bookingType"] ?></td>
-											<td><?php echo $this->statusHelper($booking["status"]) ?><br>
-												<strong>Pick Up Time :</strong> <?php echo $this->dateformat($booking["startTime"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
-											<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
+										<td><?php echo strtoupper($booking["bookingUid"]) ?></td>
+										<td><?php echo $booking["user"]["fullName"] ?></td>
+										<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br></td>
+										<td><?php echo $this->statusHelper($booking["status"]) ?><br>
+											<strong>Pick Up Time :</strong> <?php echo $this->dateformat($booking["pickupDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM) ?></td>
+										<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
 
-											<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-											<td><a href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-eye"></i></a> | <a href="#vCenteredModal" @click="viewBooking('<?php echo $booking["bookingUid"] ?>')" data-toggle="modal"><i class="fa fa-wrench"></i></a></td>
-										</tr>
+										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
+										<td><a
+											href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i
+												class="fa fa-eye"></i></a> | <a href="#vCenteredModal"
+											@click="viewBooking('<?php echo $booking["bookingUid"] ?>')"
+											data-toggle="modal"><i class="fa fa-wrench"></i></a></td>
+									</tr>
 									<?php endforeach; ?>
 									<!-- Table Row End -->
 
@@ -370,6 +392,8 @@ $flashMessenger = $this->flashMessenger()
 					if (res.status == 201) {
 						window.location.reload();
 					}
+				}).catch(err=>{
+					this.isAssigningDriver = false;
 				});
 			},
 			showAssignForm() {
@@ -387,6 +411,8 @@ $flashMessenger = $this->flashMessenger()
 					if (res.status == 201) {
 						window.location.reload();
 					}
+				}).catch(err=>{
+					this.isAssigningDriver = false;
 				});
 			},
 

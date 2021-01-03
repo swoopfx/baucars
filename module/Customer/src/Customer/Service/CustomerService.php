@@ -190,6 +190,9 @@ class CustomerService
         
         // Send Booking mail
     }
+    
+    
+    
 
     public static function bookingUid()
     {

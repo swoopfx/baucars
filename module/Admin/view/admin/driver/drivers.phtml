@@ -73,12 +73,12 @@ $flashMessenger = $this->flashMessenger()
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Email</span> <input type="email" v-model="email" ref="email" class="form-control">
+						<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="phoneNumber" ref="phonenumber" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="phoneNumber" ref="phonenumber" class="form-control">
+						<label> <span class="label-text">Driver Email</span> <input type="email" v-model="email" ref="email" class="form-control">
 						</label>
 					</div>
 
@@ -114,17 +114,13 @@ $flashMessenger = $this->flashMessenger()
 					</div>
 
 
-
-
 					<div class="form-group">
 						<label> <span class="label-text">Car Type</span> <input ref="carType" v-model="carType" type="text" class="form-control">
 						</label>
 					</div>
 
-
-
-					<div v-if="creatingDriver">
-						<div class="spinner"></div>
+					<div v-if="isCreating">
+						<img src="/ajax-loader.gif">
 					</div>
 
 
@@ -150,31 +146,31 @@ $flashMessenger = $this->flashMessenger()
 				</div>
 
 				<div class="modal-body pt-4">
-				<div class="spinner"></div>
-					<div v-if="!isEditDriver">
-						<div class="spinner"></div>
+
+					<div v-if="triggerEdit">
+						<img src="/ajax-loader.gif">
 					</div>
 					<div v-else>
 						<div class="form-group">
-							<label> <span class="label-text">Driver Full Name</span> <input type="text" v-model='driverDetails.fullname' ref="fullname" class="form-control">
+							<label> <span class="label-text">Driver Full Name</span> <input type="text" v-model='driverDetails.fullname' ref="editFullname" class="form-control">
 							</label>
 						</div>
 
 						<div class="form-group">
-							<label> <span class="label-text">Driver Email</span> <input type="email" v-model="driverDetails.email" ref="email" class="form-control">
+							<label> <span class="label-text">Driver Email</span> <input type="email" v-model="driverDetails.email" ref="editEmail" class="form-control">
 							</label>
 						</div>
 
 						<div class="form-group">
-							<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="driverDetails.phoneNumber" ref="phonenumber" class="form-control">
+							<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="driverDetails.phoneNumber" ref="editPhonenumber" class="form-control">
 							</label>
 						</div>
 
-						
 
-
-
-						<button :disabled="submitStatus" @click="postEdit()" type="button" value="Submit" class="btn btn-lg btn-block btn-rounded btn-success">Edit Driver</button>
+						<div v-if="isPostEditDriver">
+							<img src="/ajax-loader.gif">
+						</div>
+						<button v-else :disabled="editStatus" @click="postEditDriver()" type="button" value="Submit" class="btn btn-xs btn-block btn-rounded btn-success">Edit Driver</button>
 					</div>
 				</div>
 			</div>
@@ -272,7 +268,7 @@ $flashMessenger = $this->flashMessenger()
 										</td>
 										<!--                                                 <td>2</td> -->
 										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-										<td><a href="#editDriver" @click="editDriver('<?php echo $driver["diverUid"]?>'')" data-toggle="modal"><i class="fa fa-edit"></i> Edit</a>
+										<td><a href="#editDriver" @click="editDriver('<?php echo $driver["diverUid"] ?>')" data-toggle="modal"><i class="fa fa-edit"></i> Edit</a>
 											<!-- 								| <a href=""><i -->
 											<!-- 										class="fa fa-trash"></i> Delete</a> -->
 										</td>
@@ -300,6 +296,7 @@ $flashMessenger = $this->flashMessenger()
 		el: "#drivers",
 		data() {
 			return {
+				isCreating: false,
 				phoneNumber: "",
 				creatingDriver: false,
 				email: "",
@@ -314,7 +311,15 @@ $flashMessenger = $this->flashMessenger()
 
 
 				isEditDriver: false,
-				driverDetails:{},
+				triggerEdit: false,
+				driverDetails: {
+					fullname: "",
+					email: "",
+					phoneNumber: "",
+					uid: ""
+				},
+
+				isPostEditDriver: false,
 
 			}
 		},
@@ -332,6 +337,13 @@ $flashMessenger = $this->flashMessenger()
 
 
 			},
+			editStatus(){
+				// if (this.$refs.editFullname.value == "" || this.$refs.editEmail.value == "" || this.$refs.editPhonenumber.value == "" || this.driverDetails.uid == "") {
+				// 	return true;
+				// } else {
+				// 	return false;
+				// }
+			},
 
 			isEmailValid() {
 				return this.reg.test(this.email);
@@ -346,15 +358,38 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 			editDriver(id) {
-				axios.get("/controller/driver/getdriver/"+id).then(res=>{
-					if(res.status == 200){
-						// this.driverDetails.fullname = res.data.data.;
+				this.triggerEdit = true;
+				axios.get("/controller/driver/getdriver/" + id).then(res => {
+					if (res.status == 200) {
+						this.triggerEdit = false;
+						this.driverDetails.fullname = res.data.data.user.fullName;
+						this.driverDetails.phoneNumber = res.data.data.user.phoneNumber;
+						this.driverDetails.email = res.data.data.user.email;
+						this.driverDetails.uid = res.data.data.diverUid;
 					}
 				}).catch();
 			},
 
+			postEditDriver() {
+				this.isPostEditDriver = true;
+				let formData = new FormData();
+				formData.append("editFullName", this.$refs.editFullname.value);
+				formData.append("editEmail", this.$refs.editEmail.value);
+				formData.append("editPhonenumber", this.$refs.editPhonenumber.value);
+				formData.append("uid", this.driverDetails.uid);
+				axios.post("/controller/driver/posteditdriver", formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+						// this.isPostEditDriver = false;
+					}
+				}).catch(err=>{
+					this.isPostEditDriver = false;
+				});
+			},
+
 			createDriver() {
-				// this.creatingDriver = true;
+
+				this.isCreating = true;
 				let formData = new FormData();
 				formData.append("fullname", this.fullname);
 				formData.append("email", this.email);
@@ -366,11 +401,11 @@ $flashMessenger = $this->flashMessenger()
 				formData.append("carType", this.carType);
 				axios.post("/controller/driver/createdriver", formData).then(res => {
 					if (res.status == 201) {
-						// this.creatingDriver = false;
+						// this.isCreating = false;
 						window.location.reload();
 					}
 				}).catch(err => {
-
+					this.isCreating = false;
 					console.log(err.response.data.message);
 
 				});

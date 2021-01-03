@@ -50,6 +50,7 @@ $flashMessenger = $this->flashMessenger()
 								<option v-for="driver in inactiveDivers" :value="driver.id">{{driver.user.fullName}}</option>
 
 						</select>
+						<p v-else> No Driver</p>
 						</label>
 					</div>
 
@@ -119,21 +120,21 @@ $flashMessenger = $this->flashMessenger()
 											<th><a href="#" class="btn-link"><?php echo strtoupper($data->getBookingUid()) ?></a>
 											</th>
 										</tr>
+<!-- 										<tr> -->
+<!-- 											<td>Order Number:</td> -->
+<!-- 											<th>1231234123</th> -->
+<!-- 										</tr> -->
 										<tr>
-											<td>Order Number:</td>
-											<th>1231234123</th>
-										</tr>
-										<tr>
-											<td>Booking Start On</td>
-											<th><?php echo $this->dateformat($data->getStartTime(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>
+											<td>Booking Pick Up</td>
+											<th><?php echo $this->dateformat($data->getPickupDate(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>
 										</tr>
 										<tr>
 											<td>Booking End On:</td>
-											<th><?php echo $this->dateformat($data->getEndTime(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>
+											<th><?php //echo $this->dateformat($data->getEndTime(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>
 										</tr>
 										<tr>
 											<td>Booking TYpe</td>
-											<th><span class="label label-success"><?php echo $data->getBookingType()->getBookingType() ?></span></th>
+											<th><span class="label label-success"><?php //echo $data->getBookingType()->getBookingType() ?></span></th>
 										</tr>
 										<tr>
 											<td>Service Type</td>

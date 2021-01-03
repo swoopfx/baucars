@@ -37,13 +37,13 @@ class BookingsController extends AbstractActionController
      * @var BookingService
      */
     private $bookingService;
-    
+
     /**
-     * 
+     *
      * @var FlutterwaveService
      */
     private $flutterwaveService;
-    
+
     public function onDispatch(MvcEvent $e)
     {
         $response = parent::onDispatch($e);
@@ -74,32 +74,170 @@ class BookingsController extends AbstractActionController
         return $jsonModel;
     }
 
+    /**
+     * Use this to initiate the booking
+     *
+     * @return \Zend\View\Model\JsonModel
+     */
     public function initiateBookingAction()
     {
         $bookingService = $this->bookingService;
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
         $em = $this->entityManager;
         $request = $this->getRequest();
-        if($request->isPost()){
+        if ($request->isPost()) {
             $post = $request->getPost()->toArray();
             $bookingSession = $this->bookingService->getBookingSession();
-            if($post["pickUpAddress"] != ""){
+            if ($post["pickUpAddress"] != "") {
                 // getDistance from distance matrix
                 // Set Value
-                $bookingSession->pickUpPlaceId= $post["pickUpPlaceId"];
+                $bookingSession->pickUpPlaceId = $post["pickUpPlaceId"];
                 $bookingSession->destinationPlaceId = $post["destinationPlaceId"];
-                $bookingService->distanceMatrix();
+                $dm = $bookingService->distanceMatrix();
                 
+                // Set Submitted Data in session
+                $bookingService->setRequestSession($post);
+                $bookingSession->selectedBookingClass = $post["bookingClass"];
+                $bookingSession->selectedNumberOfSeat = $post["numberOfSeats"];
+                
+                $bookingSession->pickupDate = $post["pickUpDate"];
+                $bookingSession->pickupTime = $post["pickUpTime"];
+                // Calculate Price
+                $distanceValue = $dm->rows[0]->elements[0]->distance->value;
+                $distanceText = $dm->rows[0]->elements[0]->distance->text;
+                $price = $bookingService->setDmDistance($distanceValue)->priceCalculator();
+                $timeText = $dm->rows[0]->elements[0]->duration->text;
+                $timeValue = $dm->rows[0]->elements[0]->duration->value;
+                
+                $bookingSession->distanceValue = $distanceValue;
+                $bookingSession->distanceText = $distanceText;
+                $bookingSession->timeText = $timeText;
+                $bookingSession->timeValue = $timeValue;
+                
+                $bookingSession->bookingPrice = $price;
+                $bookingSession->travelDuration = $timeText;
+                
+                $response->setStatusCode(201);
+                $jsonModel->setVariables([
+                    "price" => $price,
+                    "time" => $timeText,
+                    "pickup" => $dm->destination_addresses,
+                    "destination" => $dm->origin_addresses,
+                    "logo" => $this->url()
+                        ->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png"
+                ]);
             }
         }
-        $jsonModel = new JsonModel();
+        
         return $jsonModel;
     }
-    
-//     public function calcul
 
-    public function completeBookingAction()
+    public function makepaymentAction()
     {
         $jsonModel = new JsonModel();
+        $bookingSession = $this->bookingService->getBookingSession();
+        $response = $this->getResponse();
+        $flutterwaveService = $this->flutterwaveService;
+        $response->setStatusCode(200);
+        $jsonModel->setVariables([
+            "price" => $bookingSession->bookingPrice,
+            "txref" => FlutterwaveService::generateTransaction(),
+            "public_key" => $flutterwaveService->getFlutterwavePublicKey(),
+            "logo" => $this->url()
+                ->fromRoute('application', [
+                'action' => 'application'
+            ], [
+                'force_canonical' => true
+            ]) . "assets/img/logo.png"
+        ]);
+        return $jsonModel;
+    }
+
+    /**
+     * Use this to conclude booking after Payment
+     *
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function completebookingAction()
+    {
+        $flutterwaveService = $this->flutterwaveService;
+        $bookingSession = $this->bookingService->getBookingSession();
+        $em = $this->entityManager;
+        $user = $this->identity();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $txRef = $post["txRef"];
+            $amountPayed = $post["amountPayed"];
+            try {
+                $verifyData = $flutterwaveService->setTxRef($txRef)->verifyPayment();
+                // var_dump($verifyData);
+                if ($verifyData->status == "success" && $verifyData->data->chargedamount >= $amountPayed) {
+                    
+
+                    $bookingEntity = $this->bookingService->createBooking();
+//                     var_dump("After Booking");
+                    $transactionEntity = $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)
+                    ->setTxRef($verifyData->data->txref)
+                    ->setFlwId($verifyData->data->txid)
+                    ->setFlwRef($verifyData->data->flwref)
+                    ->setBooking($bookingEntity)
+                    ->setSettledAmount($verifyData->data->amountsettledforthistransaction)
+                    ->setTransactStatus(FlutterwaveService::TRANSACTION_STATUS_PAID)
+                    ->setTransactUser($this->identity()
+                        ->getId())
+                        ->hydrateTransaction();
+//                         var_dump("After Transaction");
+                        $em->persist($bookingEntity);
+                        $em->persist($transactionEntity);
+                        
+                        $em->flush();
+//                         $flutterwaveService->setTransactionId($transactionEntity->getId());
+                        // $flutterwaveService->initiateTrasnfer();
+                        $response->SetStatusCode(201);
+                        $this->flashmessenger()->addSuccessMessage("N{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
+                        $jsonModel->setVariables([
+                            "data" => $verifyData->data->chargedamount
+                        ]);
+                        
+                        // Notify Controller
+                        $generalService = $this->generalService;
+                        $pointer["to"] = "admin@baucars.com";
+                        $pointer["fromName"] = "System Robot";
+                        $pointer['subject'] = "New Booking";
+                        
+                        $template['template'] = "admin-new-booking";
+                        $template["var"] = [
+                            "logo" => $this->url()->fromRoute('application', [
+                                'action' => 'application'
+                            ], [
+                                'force_canonical' => true
+                            ]) . "assets/img/logo.png",
+                            "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
+                            "fullname" => $transactionEntity->getBooking()
+                            ->getUser()
+                            ->getFullName(),
+                            "amount" => $transactionEntity->getAmount()
+                        ];
+                        $generalService->sendMails($pointer, $template);
+                        
+                       
+                }
+            } catch (\Exception $e) {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "message" => $e->getTrace(),
+                    "data" => $verifyData
+                ]);
+            }
+        }
         return $jsonModel;
     }
 
@@ -165,7 +303,9 @@ class BookingsController extends AbstractActionController
         $this->bookingService = $bookingService;
         return $this;
     }
+
     /**
+     *
      * @return the $flutterwaveService
      */
     public function getFlutterwaveService()
@@ -174,13 +314,13 @@ class BookingsController extends AbstractActionController
     }
 
     /**
-     * @param \General\Service\FlutterwaveService $flutterwaveService
+     *
+     * @param \General\Service\FlutterwaveService $flutterwaveService            
      */
     public function setFlutterwaveService($flutterwaveService)
     {
         $this->flutterwaveService = $flutterwaveService;
         return $this;
     }
-
 }
 

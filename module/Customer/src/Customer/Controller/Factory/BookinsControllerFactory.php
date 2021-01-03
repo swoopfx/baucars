@@ -39,7 +39,7 @@ class BookinsControllerFactory implements FactoryInterface
             ->setFlutterwaveService($flutterwaveService)
             ->setBookingService($bookingService)
             ->setEntityManager($generalService->getEntityManager());
-        // ->setFlutterwaveService($flutterwaveService);
+        
         return $ctr;
     }
 }

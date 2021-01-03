@@ -23,6 +23,7 @@ use Customer\Service\CustomerService;
 use Zend\Mvc\MvcEvent;
 use General\Service\GeneralService;
 use Customer\Entity\DispatchDriver;
+use Customer\Entity\Bookings;
 
 /**
  *
@@ -247,9 +248,9 @@ class DriverController extends AbstractActionController
             $driverId = $post["driver"];
             /**
              *
-             * @var CustomerBooking $bookingEntity
+             * @var Bookings $bookingEntity
              */
-            $bookingEntity = $em->find(CustomerBooking::class, $bookingId);
+            $bookingEntity = $em->find(Bookings::class, $bookingId);
             $bookingEntity->setAssignedDriver($em->find(DriverBio::class, $driverId))
                 ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ASSIGN))
                 ->setUpdatedOn(new \DateTime());
@@ -418,17 +419,148 @@ class DriverController extends AbstractActionController
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
         $em = $this->entityManager;
-        $id = $this->params()->fromRoute();
+        $id = $this->params()->fromRoute("id", NULL);
+        
         $repo = $em->getRepository(DriverBio::class);
         $data = $repo->createQueryBuilder("d")
+            ->select("d, u")
             ->where("d.diverUid = :uid")
+            ->leftJoin("d.user", "u")
             ->setParameters([
-                "uid"=>$id
-            ])
+            "uid" => $id
+        ])
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
-            $jsonModel->setVariable("data", $data);
-            $response->setStatusCode(200);
+        
+        $jsonModel->setVariable("data", $data[0]);
+        $response->setStatusCode(200);
+        return $jsonModel;
+    }
+
+    public function posteditdriverAction()
+    {
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            var_dump($post);
+            $inputFilter->add(array(
+                'name' => 'editFullName',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Driver Full name is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'editEmail',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Email is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            $inputFilter->add(array(
+                'name' => 'editPhonenumber',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Phone Number is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                $data = $inputFilter->getValues();
+                try {
+                    
+                    /**
+                     *
+                     * @var DriverBio $driverEntity
+                     */
+                    $driverEntity = $em->getRepository(DriverBio::class)->findOneBy([
+                        "diverUid" => $post["uid"]
+                    ]);
+                    /**
+                     *
+                     * @var User $userEntity
+                     */
+                    $userEntity = $driverEntity->getUser();
+                    
+                    $userEntity->setUpdatedOn(new \DateTime())
+                        ->setPhoneNumber($data["editPhonenumber"])
+                        ->setEmail($data["editEmail"])
+                        ->setFullName($data["editFullName"]);
+                    $driverEntity->setUpdatedOn(new \DateTime());
+                    
+                    $em->persist($driverEntity);
+                    $em->persist($userEntity);
+                    
+                    $em->flush();
+                    
+                    $this->flashmessenger()->addSuccessMessage("Driver Details has been successfully edited");
+                    $response->setStatusCode(201);
+                    
+                    // send mail
+                } catch (\Exception $e) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "data" => $e->getMessage(),
+                        "message" => "Something went wrong"
+                    ]);
+                }
+                
+                // $jsonModel->setVariable("data", $)
+            }
+        }
         return $jsonModel;
     }
 

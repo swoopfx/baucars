@@ -25,7 +25,7 @@ class Feedback
     private $id;
     
     /**
-     * @ORM\OneToOne(targetEntity="Customer\Entity\CustomerBooking", inversedBy="feedback")
+     * @ORM\OneToOne(targetEntity="Customer\Entity\Bookings", inversedBy="feedback")
      * @var CustomerBooking
      */
     private $booking;

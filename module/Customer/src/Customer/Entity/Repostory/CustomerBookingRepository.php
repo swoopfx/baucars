@@ -5,6 +5,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Customer\Service\CustomerService;
 use Customer\Entity\CustomerBooking;
+use Customer\Entity\Bookings;
 
 /**
  *
@@ -16,7 +17,7 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findBookingHistory($user)
     {
-        $dql = "SELECT b, d, s, t, bc, bt FROM Customer\Entity\CustomerBooking b LEFT JOIN b.bookingType bt LEFT JOIN b.bookingClass bc LEFT JOIN b.assignedDriver d LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user ORDER BY  b.id DESC ";
+        $dql = "SELECT b, d, s, t, bc FROM Customer\Entity\Bookings b  LEFT JOIN b.bookingClass bc LEFT JOIN b.assignedDriver d LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user ORDER BY  b.id DESC ";
         
         $entity = $this->getEntityManager()
             ->createQuery($dql)
@@ -37,7 +38,7 @@ class CustomerBookingRepository extends EntityRepository
      */
     public function findAllInititedBooking($user)
     {
-        $dql = "SELECT b, d, u, s, t FROM Customer\Entity\CustomerBooking b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user AND b.status = :status ORDER BY b.id";
+        $dql = "SELECT b, d, u, s, t FROM Customer\Entity\Bookings b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user AND b.status = :status ORDER BY b.id";
         $result = $this->getEntityManager()
             ->createQuery($dql)
             ->setParameters([
@@ -50,7 +51,7 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findCustomersBooking($user)
     {
-        $dql = "SELECT b, d, u, s, t FROM Customer\Entity\CustomerBooking b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user  ORDER BY b.id";
+        $dql = "SELECT b, d, u, s, t FROM Customer\Entity\Bookings b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user  ORDER BY b.id";
         $result = $this->getEntityManager()
             ->createQuery($dql)
             ->setMaxResults(50)
@@ -100,12 +101,12 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findBookingItems($offset, $itemsPerPage)
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select([
             "b",
             "t",
-            "bt",
+//             "bt",
             "u",
             "bc",
             "s"
@@ -114,7 +115,7 @@ class CustomerBookingRepository extends EntityRepository
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
             ->leftJoin("b.status", "s")
-            ->leftJoin("b.bookingType", "bt")
+//             ->leftJoin("b.bookingType", "bt")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
@@ -145,12 +146,12 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminAllInitiatedBooking($offset, $itemsPerPage)
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select([
             "b",
             "t",
-            "bt",
+//             "bt",
             "u",
             "bc",
             "s"
@@ -159,7 +160,7 @@ class CustomerBookingRepository extends EntityRepository
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
             ->leftJoin("b.status", "s")
-            ->leftJoin("b.bookingType", "bt")
+//             ->leftJoin("b.bookingType", "bt")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
@@ -175,7 +176,7 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminActiveTripCount()
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select("count(b.id)")
             ->where("b.status = :status")
@@ -189,12 +190,12 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminActiveTrip($offset, $itemsPerPage)
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select([
             "b",
             "t",
-            "bt",
+//             "bt",
             "u",
             "s",
             "bc"
@@ -203,7 +204,7 @@ class CustomerBookingRepository extends EntityRepository
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
             ->leftJoin("b.status", "s")
-            ->leftJoin("b.bookingType", "bt")
+//             ->leftJoin("b.bookingType", "bt")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
@@ -219,7 +220,7 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminCancelBookingCount()
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select("count(b.id)")
             ->where("b.status = :status")
@@ -233,12 +234,12 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminCanceledBooking($offset, $itemsPerPage)
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select([
             "b",
             "t",
-            "bt",
+//             "bt",
             "u",
             "bc",
             "s"
@@ -246,7 +247,7 @@ class CustomerBookingRepository extends EntityRepository
         ])
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
-            ->leftJoin("b.bookingType", "bt")
+//             ->leftJoin("b.bookingType", "bt")
             ->leftJoin("b.status", "s")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
@@ -263,7 +264,7 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminUpcomingBookingCount()
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select("count(b.id)")
             ->where("b.status = :status")
@@ -281,12 +282,12 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findAdminUpcomingBooking($offset, $itemsPerPage)
     {
-        $repo = $this->getEntityManager()->getRepository(CustomerBooking::class);
+        $repo = $this->getEntityManager()->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("b")
             ->select([
             "b",
             "t",
-            "bt",
+//             "bt",
             "u",
             "bc",
             "s"
@@ -294,7 +295,7 @@ class CustomerBookingRepository extends EntityRepository
         ])
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
-            ->leftJoin("b.bookingType", "bt")
+//             ->leftJoin("b.bookingType", "bt")
             ->leftJoin("b.status", "s")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
@@ -307,7 +308,7 @@ class CustomerBookingRepository extends EntityRepository
             "status2" => CustomerService::BOOKING_STATUS_ASSIGN,
             "status3" => CustomerService::BOOKING_STATUS_PROCESSING
         ])
-            ->orderBy("b.startTime", "ASC")
+            ->orderBy("b.pickupDate", "ASC")
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
         return $result;

@@ -7,6 +7,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Driver\Controller\Driver' => 'Driver\Controller\DriverController',
+            "Driver\Controller\Board"
         ),
     ),
     'router' => array(

@@ -52,7 +52,7 @@ class Bookings
 
     /**
      * @ORM\Column(name="calculated_time_value", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $calculatedTimeValue;
@@ -77,47 +77,49 @@ class Bookings
 
     /**
      * @ORM\Column(name="pick_up_longitude", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $pickupLongitude;
 
     /**
      * @ORM\Column(name="pick_up_latitude", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $pickupLatitude;
-    
+
     /**
      * @ORM\Column(name="pickup_place_id", type="string", nullable=true)
+     * 
      * @var string
      */
     private $pickupPlaceId;
 
     /**
      * @ORM\Column(name="destination", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $destination;
 
     /**
      * @ORM\Column(name="destination_longitude", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $destinationLongitude;
 
     /**
      * @ORM\Column(name="destination_latitude", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $destinationLatitude;
-    
+
     /**
      * @ORM\Column(name="destination_place_id", type="string", nullable=true)
+     * 
      * @var string
      */
     private $destinationPlaceId;
@@ -137,11 +139,25 @@ class Bookings
     private $dispatchActivity;
 
     /**
-     * @ORM\Column(name="start_time", type="datetime", nullable=true)
-     *
+     * @ORM\Column(name="pickup_date", type="datetime", nullable=true)
+     * 
      * @var \DateTime
      */
-    private $startTime;
+    private $pickupDate;
+
+//     /**
+//      * @ORM\Column(name="pickup_time", type="time", nullable=true)
+//      * 
+//      * @var \DateTime
+//      */
+//     private $pickuptime;
+
+//     /**
+//      * @ORM\Column(name="start_time", type="datetime", nullable=true)
+//      *
+//      * @var \DateTime
+//      */
+//     private $startTime;
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\BookingClass")
@@ -167,7 +183,7 @@ class Bookings
 
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\NumberOfSeat")
-     * 
+     *
      * @var NumberOfSeat
      */
     private $seater;
@@ -216,7 +232,9 @@ class Bookings
         
         // TODO - Insert your code here
     }
+
     /**
+     *
      * @return the $id
      */
     public function getId()
@@ -225,6 +243,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $bookingUid
      */
     public function getBookingUid()
@@ -233,6 +252,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $calculatedDistanceValue
      */
     public function getCalculatedDistanceValue()
@@ -241,6 +261,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $calculatedDistanceText
      */
     public function getCalculatedDistanceText()
@@ -249,6 +270,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $calculatedTimeValue
      */
     public function getCalculatedTimeValue()
@@ -257,6 +279,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $calculatedTimeText
      */
     public function getCalculatedTimeText()
@@ -265,6 +288,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $pickUpAddress
      */
     public function getPickUpAddress()
@@ -273,6 +297,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $pickupLongitude
      */
     public function getPickupLongitude()
@@ -281,6 +306,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $pickupLatitude
      */
     public function getPickupLatitude()
@@ -289,6 +315,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $destination
      */
     public function getDestination()
@@ -297,6 +324,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $destinationLongitude
      */
     public function getDestinationLongitude()
@@ -305,6 +333,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $destinationLatitude
      */
     public function getDestinationLatitude()
@@ -313,6 +342,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $assignedDriver
      */
     public function getAssignedDriver()
@@ -321,6 +351,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $dispatchActivity
      */
     public function getDispatchActivity()
@@ -329,6 +360,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $startTime
      */
     public function getStartTime()
@@ -337,6 +369,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $bookingClass
      */
     public function getBookingClass()
@@ -345,6 +378,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $status
      */
     public function getStatus()
@@ -353,6 +387,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $bookingType
      */
     public function getBookingType()
@@ -361,6 +396,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $seater
      */
     public function getSeater()
@@ -369,6 +405,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $user
      */
     public function getUser()
@@ -377,6 +414,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $createdOn
      */
     public function getCreatedOn()
@@ -385,6 +423,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $updatedOn
      */
     public function getUpdatedOn()
@@ -393,6 +432,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $transaction
      */
     public function getTransaction()
@@ -401,6 +441,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $feedback
      */
     public function getFeedback()
@@ -409,7 +450,8 @@ class Bookings
     }
 
     /**
-     * @param number $id
+     *
+     * @param number $id            
      */
     public function setId($id)
     {
@@ -418,7 +460,8 @@ class Bookings
     }
 
     /**
-     * @param string $bookingUid
+     *
+     * @param string $bookingUid            
      */
     public function setBookingUid($bookingUid)
     {
@@ -427,7 +470,8 @@ class Bookings
     }
 
     /**
-     * @param \Customer\Entity\string; $calculatedDistanceValue
+     *
+     * @param \Customer\Entity\string; $calculatedDistanceValue            
      */
     public function setCalculatedDistanceValue($calculatedDistanceValue)
     {
@@ -436,7 +480,8 @@ class Bookings
     }
 
     /**
-     * @param string $calculatedDistanceText
+     *
+     * @param string $calculatedDistanceText            
      */
     public function setCalculatedDistanceText($calculatedDistanceText)
     {
@@ -445,7 +490,8 @@ class Bookings
     }
 
     /**
-     * @param string $calculatedTimeValue
+     *
+     * @param string $calculatedTimeValue            
      */
     public function setCalculatedTimeValue($calculatedTimeValue)
     {
@@ -454,7 +500,8 @@ class Bookings
     }
 
     /**
-     * @param string $calculatedTimeText
+     *
+     * @param string $calculatedTimeText            
      */
     public function setCalculatedTimeText($calculatedTimeText)
     {
@@ -463,7 +510,8 @@ class Bookings
     }
 
     /**
-     * @param string $pickUpAddress
+     *
+     * @param string $pickUpAddress            
      */
     public function setPickUpAddress($pickUpAddress)
     {
@@ -472,7 +520,8 @@ class Bookings
     }
 
     /**
-     * @param string $pickupLongitude
+     *
+     * @param string $pickupLongitude            
      */
     public function setPickupLongitude($pickupLongitude)
     {
@@ -481,7 +530,8 @@ class Bookings
     }
 
     /**
-     * @param string $pickupLatitude
+     *
+     * @param string $pickupLatitude            
      */
     public function setPickupLatitude($pickupLatitude)
     {
@@ -490,7 +540,8 @@ class Bookings
     }
 
     /**
-     * @param string $destination
+     *
+     * @param string $destination            
      */
     public function setDestination($destination)
     {
@@ -499,7 +550,8 @@ class Bookings
     }
 
     /**
-     * @param string $destinationLongitude
+     *
+     * @param string $destinationLongitude            
      */
     public function setDestinationLongitude($destinationLongitude)
     {
@@ -508,7 +560,8 @@ class Bookings
     }
 
     /**
-     * @param string $destinationLatitude
+     *
+     * @param string $destinationLatitude            
      */
     public function setDestinationLatitude($destinationLatitude)
     {
@@ -517,7 +570,8 @@ class Bookings
     }
 
     /**
-     * @param \Driver\Entity\DriverBio $assignedDriver
+     *
+     * @param \Driver\Entity\DriverBio $assignedDriver            
      */
     public function setAssignedDriver($assignedDriver)
     {
@@ -526,7 +580,8 @@ class Bookings
     }
 
     /**
-     * @param \Customer\Entity\DispatchDriver $dispatchActivity
+     *
+     * @param \Customer\Entity\DispatchDriver $dispatchActivity            
      */
     public function setDispatchActivity($dispatchActivity)
     {
@@ -535,7 +590,8 @@ class Bookings
     }
 
     /**
-     * @param DateTime $startTime
+     *
+     * @param DateTime $startTime            
      */
     public function setStartTime($startTime)
     {
@@ -544,7 +600,8 @@ class Bookings
     }
 
     /**
-     * @param \General\Entity\BookingClass $bookingClass
+     *
+     * @param \General\Entity\BookingClass $bookingClass            
      */
     public function setBookingClass($bookingClass)
     {
@@ -553,7 +610,8 @@ class Bookings
     }
 
     /**
-     * @param \Customer\Entity\BookingStatus $status
+     *
+     * @param \Customer\Entity\BookingStatus $status            
      */
     public function setStatus($status)
     {
@@ -562,7 +620,8 @@ class Bookings
     }
 
     /**
-     * @param \General\Entity\BookingType $bookingType
+     *
+     * @param \General\Entity\BookingType $bookingType            
      */
     public function setBookingType($bookingType)
     {
@@ -571,7 +630,8 @@ class Bookings
     }
 
     /**
-     * @param \Customer\Entity\NumberOfSeats $seater
+     *
+     * @param \Customer\Entity\NumberOfSeats $seater            
      */
     public function setSeater($seater)
     {
@@ -580,7 +640,8 @@ class Bookings
     }
 
     /**
-     * @param \CsnUser\Entity\User $user
+     *
+     * @param \CsnUser\Entity\User $user            
      */
     public function setUser($user)
     {
@@ -589,7 +650,8 @@ class Bookings
     }
 
     /**
-     * @param DateTime $createdOn
+     *
+     * @param DateTime $createdOn            
      */
     public function setCreatedOn($createdOn)
     {
@@ -598,7 +660,8 @@ class Bookings
     }
 
     /**
-     * @param DateTime $updatedOn
+     *
+     * @param DateTime $updatedOn            
      */
     public function setUpdatedOn($updatedOn)
     {
@@ -607,7 +670,8 @@ class Bookings
     }
 
     /**
-     * @param \Application\Entity\Transactions $transaction
+     *
+     * @param \Application\Entity\Transactions $transaction            
      */
     public function setTransaction($transaction)
     {
@@ -616,14 +680,17 @@ class Bookings
     }
 
     /**
-     * @param \Application\Entity\Feedback $feedback
+     *
+     * @param \Application\Entity\Feedback $feedback            
      */
     public function setFeedback($feedback)
     {
         $this->feedback = $feedback;
         return $this;
     }
+
     /**
+     *
      * @return the $pickupPlaceId
      */
     public function getPickupPlaceId()
@@ -632,6 +699,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $destinationPlaceId
      */
     public function getDestinationPlaceId()
@@ -640,7 +708,8 @@ class Bookings
     }
 
     /**
-     * @param string $pickupPlaceId
+     *
+     * @param string $pickupPlaceId            
      */
     public function setPickupPlaceId($pickupPlaceId)
     {
@@ -649,14 +718,47 @@ class Bookings
     }
 
     /**
-     * @param string $destinationPlaceId
+     *
+     * @param string $destinationPlaceId            
      */
     public function setDestinationPlaceId($destinationPlaceId)
     {
         $this->destinationPlaceId = $destinationPlaceId;
         return $this;
     }
+    /**
+     * @return the $pickupDate
+     */
+    public function getPickupDate()
+    {
+        return $this->pickupDate;
+    }
 
+    /**
+     * @return the $pickuptime
+     */
+    public function getPickuptime()
+    {
+        return $this->pickuptime;
+    }
+
+    /**
+     * @param DateTime $pickupDate
+     */
+    public function setPickupDate($pickupDate)
+    {
+        $this->pickupDate = $pickupDate;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $pickuptime
+     */
+    public function setPickuptime($pickuptime)
+    {
+        $this->pickuptime = $pickuptime;
+        return $this;
+    }
 
 }
 

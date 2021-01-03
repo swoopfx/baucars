@@ -216,7 +216,7 @@
 								<thead>
 									<tr>
 										<th>TRACKING ID</th>
-										<th>ACTIVE PERIOD</th>
+										<th>PICKUP TIME</th>
 										<!-- <th>AMOUNT PAID</th> -->
 										<th>BOOKING CLASS</th>
 										<th>BOOKING TYPE</th>
@@ -229,10 +229,10 @@
 									<tr v-for="data in splashInitiatedBooking ">
 										<!-- <td><img src="assets/img/products/thumb-01.jpg" alt=""></td> -->
 										<td>{{data.bookingUid.toUpperCase()}}</td>
-										<td><a href="#" class="btn-link">{{formatPHPDate(data.startTime.date)}}
-												- {{formatPHPDate(data.endTime.date)}}</a></td>
+										<td><a href="#" class="btn-link">{{formatPHPDate(data.pickupDate.date)}}
+												</a></td>
 										<td>{{data.bookingClass.bookingClass}}</td>
-										<td>{{data.bookingType.bookingType}}</td>
+										<!-- <td>{{data.bookingType.bookingType}}</td> -->
 										<td><span class="label label-success">{{data.status.status}}</span></td>
 										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
 												class="fa fa-eye"></i></a></td>

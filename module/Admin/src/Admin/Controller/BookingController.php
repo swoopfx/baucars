@@ -11,6 +11,7 @@ use Customer\Paginator\AllBookingAdapter;
 use Zend\Mvc\MvcEvent;
 use Customer\Service\CustomerService;
 use Doctrine\ORM\Query;
+use Customer\Entity\Bookings;
 
 /**
  *
@@ -135,9 +136,10 @@ class BookingController extends AbstractActionController
             ));
         } else {
             // var_dump($bookingUid);
-            $data = $em->getRepository(CustomerBooking::class)->findOneBy([
+            $data = $em->getRepository(Bookings::class)->findOneBy([
                 "bookingUid" => $bookingUid
             ]);
+            
             
             $viewModel->setVariables([
                 "data" => $data
@@ -171,9 +173,9 @@ class BookingController extends AbstractActionController
         $jsonModel = new JsonModel();
         $repo = $em->getRepository(CustomerBooking::class);
         $result = $repo->createQueryBuilder("a")
-            ->select('a, s, bt, bc')
+            ->select('a, s, bc')
             ->leftJoin("a.status", "s")
-            ->leftJoin("a.bookingType", "bt")
+//             ->leftJoin("a.bookingType", "bt")
             ->leftJoin("a.bookingClass", "bc")
             ->where("a.status =" . CustomerService::BOOKING_STATUS_CANCELED)
             ->setMaxResults(50)

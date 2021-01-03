@@ -188,6 +188,8 @@ class FlutterwaveService
      */
     public function hydrateTransaction()
     {
+        try {
+        
         $em = $this->entityManager;
         $auth = $this->auth;
         $transactionEntity = new Transactions();
@@ -213,12 +215,16 @@ class FlutterwaveService
         $template["var"] = [
             "amount" => $this->amountPayed,
             "fullname" => $this->booking->getUser()->getFullName(),
-            "logo" => "kkkk",
+            "logo" => "KK",
             "bookingUid" => $this->booking->getBookingUid()
         ];
         $generalService->sendMails($pointer, $template);
         // send transaction mail to customer
         return $transactionEntity;
+        
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+        }
         
         // send transaction mail
     }
@@ -635,7 +641,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Customer\Entity\CustomerBooking $booking            
+     * @param \Bookings           
      */
     public function setBooking($booking)
     {
