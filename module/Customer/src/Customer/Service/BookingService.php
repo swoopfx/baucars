@@ -127,7 +127,7 @@ class BookingService
     {
         if ($this->bookingSession->pickUpPlaceId != NULL && $this->bookingSession->destinationPlaceId != NULL) {
             
-            $endPoint = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:{$this->bookingSession->pickUpPlaceId}&key=AIzaSyA4iD9lE6vET5C0mLW8fRVnMXxrobSlkEU&destinations=place_id:{$this->bookingSession->destinationPlaceId}";
+            $endPoint = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:{$this->bookingSession->pickUpPlaceId}&key=AIzaSyCYu1Ni05iwzLh8tVRA2fGkSy9pIKGo4lc&destinations=place_id:{$this->bookingSession->destinationPlaceId}";
             $client = new Client();
             
             $client->setMethod(Request::METHOD_GET);

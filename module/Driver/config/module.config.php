@@ -2,12 +2,16 @@
 namespace Driver;
 use Driver\Paginator\Factory\DriverAdapterInterface;
 use Driver\Service\Factory\DriverServiceFactory;
+use Driver\Controller\Factory\BoardControllerFactory;
 
 return array(
     'controllers' => array(
         'invokables' => array(
             'Driver\Controller\Driver' => 'Driver\Controller\DriverController',
-            "Driver\Controller\Board"
+            
+        ),
+        'factories' => array(
+            "Driver\Controller\Board"=>BoardControllerFactory::class
         ),
     ),
     'router' => array(
@@ -21,8 +25,8 @@ return array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
                         '__NAMESPACE__' => 'Driver\Controller',
-                        'controller'    => 'Driver',
-                        'action'        => 'index',
+                        'controller'    => 'Board',
+                        'action'        => 'board',
                     ),
                 ),
                 'may_terminate' => true,
@@ -38,6 +42,7 @@ return array(
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'     => '[a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                             ),

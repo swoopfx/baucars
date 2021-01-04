@@ -91,7 +91,7 @@ class Bookings
 
     /**
      * @ORM\Column(name="pickup_place_id", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $pickupPlaceId;
@@ -119,7 +119,7 @@ class Bookings
 
     /**
      * @ORM\Column(name="destination_place_id", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $destinationPlaceId;
@@ -140,25 +140,25 @@ class Bookings
 
     /**
      * @ORM\Column(name="pickup_date", type="datetime", nullable=true)
-     * 
+     *
      * @var \DateTime
      */
     private $pickupDate;
 
-//     /**
-//      * @ORM\Column(name="pickup_time", type="time", nullable=true)
-//      * 
-//      * @var \DateTime
-//      */
-//     private $pickuptime;
-
-//     /**
-//      * @ORM\Column(name="start_time", type="datetime", nullable=true)
-//      *
-//      * @var \DateTime
-//      */
-//     private $startTime;
-
+    // /**
+    // * @ORM\Column(name="pickup_time", type="time", nullable=true)
+    // *
+    // * @var \DateTime
+    // */
+    // private $pickuptime;
+    
+    // /**
+    // * @ORM\Column(name="start_time", type="datetime", nullable=true)
+    // *
+    // * @var \DateTime
+    // */
+    // private $startTime;
+    
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\BookingClass")
      *
@@ -222,6 +222,13 @@ class Bookings
      * @var Feedback
      */
     private $feedback;
+
+    /**
+     * @ORM\OneToOne(targetEntity="ActiveTrip", mappedBy="booking")
+     * 
+     * @var ActiveTrip
+     */
+    private $trip;
 
     // TODO - Insert your code here
     
@@ -726,7 +733,9 @@ class Bookings
         $this->destinationPlaceId = $destinationPlaceId;
         return $this;
     }
+
     /**
+     *
      * @return the $pickupDate
      */
     public function getPickupDate()
@@ -735,6 +744,7 @@ class Bookings
     }
 
     /**
+     *
      * @return the $pickuptime
      */
     public function getPickuptime()
@@ -743,7 +753,8 @@ class Bookings
     }
 
     /**
-     * @param DateTime $pickupDate
+     *
+     * @param DateTime $pickupDate            
      */
     public function setPickupDate($pickupDate)
     {
@@ -752,7 +763,8 @@ class Bookings
     }
 
     /**
-     * @param DateTime $pickuptime
+     *
+     * @param DateTime $pickuptime            
      */
     public function setPickuptime($pickuptime)
     {
@@ -760,5 +772,23 @@ class Bookings
         return $this;
     }
 
+    /**
+     *
+     * @return the $trip
+     */
+    public function getTrip()
+    {
+        return $this->trip;
+    }
+
+    /**
+     *
+     * @param \Customer\Entity\ActiveTrip $trip            
+     */
+    public function setTrip($trip)
+    {
+        $this->trip = $trip;
+        return $this;
+    }
 }
 

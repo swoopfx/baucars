@@ -30,15 +30,17 @@ class BoardControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        
-       $ctr = new BoardController();
-       /**
-        * 
-        * @var GeneralService $generalService
-        */
-       $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
-       
-       return $ctr;
+        $ctr = new BoardController();
+        /**
+         *
+         * @var GeneralService $generalService
+         */
+        $generalService = $serviceLocator->getServiceLocator()->get("General\Service\GeneralService");
+        $driverService = $serviceLocator->getServiceLocator()->get("driverService");
+        $ctr->setEntityManager($generalService->getEntityManager())
+            ->setGeneralService($generalService)
+            ->setDriverService($driverService);
+        return $ctr;
     }
 }
 

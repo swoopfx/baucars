@@ -22,9 +22,9 @@ class ActiveTrip
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CustomerBooking")
+     * @ORM\OneToOne(targetEntity="Bookings", inversedBy="trip")
      * 
-     * @var CustomerBooking
+     * @var Bookings
      */
     private $booking;
 

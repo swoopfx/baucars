@@ -138,6 +138,12 @@ class DriverBio
      * @var User
      */
     private $user;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="DriverState")
+     * @var DriverState
+     */
+    private $driverState;
 
     /**
      */
@@ -434,5 +440,22 @@ class DriverBio
         $this->booking = $booking;
         return $this;
     }
+    /**
+     * @return the $driverState
+     */
+    public function getDriverState()
+    {
+        return $this->driverState;
+    }
+
+    /**
+     * @param \Driver\Entity\DriverState $driverState
+     */
+    public function setDriverState($driverState)
+    {
+        $this->driverState = $driverState;
+        return $this;
+    }
+
 }
 

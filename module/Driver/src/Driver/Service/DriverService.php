@@ -26,6 +26,12 @@ class DriverService
      * @var EntityManager
      */
     private $entityManager;
+    
+    const DRIVER_STATUS_FREE = 10;
+    
+    const DRIVER_STATUS_ENGAGED = 50;
+    
+    const DRIVER_STATUS_ASSIGNED = 100;
 
     // TODO - Insert your code here
     

@@ -54,7 +54,7 @@ class CustomerService
 
     const BOOKING_STATUS_ACTIVE = 10;
 
-    const BOOKING_STATUS_IN_TRANSIT = 600;
+//     const BOOKING_STATUS_IN_TRANSIT = 600;
 
     const BOOKING_STATUS_CANCELED = 100;
 
