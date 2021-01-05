@@ -60,7 +60,7 @@ class BoardController extends AbstractActionController
     {
         $userEntity = $this->identity();
         $viewModel = new ViewModel([
-            "user"=>$userEntity
+            "user" => $userEntity
         ]);
         return $viewModel;
     }
@@ -90,15 +90,15 @@ class BoardController extends AbstractActionController
         $em = $this->entityManager;
         $repo = $em->getRepository(Bookings::class);
         $data = $repo->createQueryBuilder("b")
-        ->where("b.user = :user")
-        ->andWhere("b.status = :status")
-        ->setParameters([
+            ->where("b.user = :user")
+            ->andWhere("b.status = :status")
+            ->setParameters([
             "user" => $this->identity()
-            ->getId(),
+                ->getId(),
             "status" => CustomerService::BOOKING_STATUS_ACTIVE
         ])
-        ->getQuery()
-        ->getResult(Query::HYDRATE_ARRAY);
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $jsonModel = new JsonModel();
@@ -112,7 +112,12 @@ class BoardController extends AbstractActionController
         $em = $this->entityManager;
         $repo = $em->getRepository(Bookings::class);
         $data = $repo->createQueryBuilder("b")
-            ->where("b.user = :user")
+            ->select([
+            "b, c,  a"
+        ])
+            ->leftJoin("b.assignedDriver", "a")
+            ->leftJoin("b.user", "c")
+            ->where("a.user = :user")
             ->andWhere("b.status = :status")
             ->setParameters([
             "user" => $this->identity()
@@ -121,9 +126,38 @@ class BoardController extends AbstractActionController
         ])
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
+        
+        // var_dump($data);
         $response = $this->getResponse();
         $response->setStatusCode(200);
         
+        $jsonModel->setVariable("data", $data);
+        return $jsonModel;
+    }
+
+    public function completedtripsAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $repo = $em->getRepository(Bookings::class);
+        $data = $repo->createQueryBuilder("b")
+            ->select("b,t,u, a")
+            ->leftJoin("b.trip", "t")
+            ->leftJoin("b.user", "u")
+            ->leftJoin("b.assignedDriver", "a")
+            ->orderBy("b.id", "desc")
+            ->where("a.user = :user")
+            ->andWhere("b.status = :status")
+            ->setParameters([
+            "user" => $this->identity()
+                ->getId(),
+            "status" => CustomerService::BOOKING_STATUS_COMPLETED
+        ])
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        $response->setStatusCode(200);
         $jsonModel->setVariable("data", $data);
         return $jsonModel;
     }

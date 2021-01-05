@@ -229,6 +229,13 @@ class Bookings
      * @var ActiveTrip
      */
     private $trip;
+    
+    /**
+     * This is an auto generated code for the trip
+     * Only Visually accessible to the Customer
+     * @var string
+     */
+    private $tripCode;
 
     // TODO - Insert your code here
     

@@ -146,16 +146,28 @@ class BookingService
 
     public function priceCalculator()
     {
+        $bookingSession = $this->bookingSession;
+       $finalPrice = 0;
         $dmDistance = $this->dmDistance / 1000;
         if ($dmDistance < $this->appSettings->getMinimumKilometer()) {
-            return 2000;
+            $finalPrice = 2000;
         } elseif ($this->dmDistance > $this->appSettings->getMinimumKilometer() && $dmDistance < $this->pricaRangeSettings[0]->getMaximumKilometer()) {
-            return round((($dmDistance * $this->pricaRangeSettings[0]->getPricePerKilometer()) + 100), 2);
+            $finalPrice = round((($dmDistance * $this->pricaRangeSettings[0]->getPricePerKilometer()) + 100), 2);
         } elseif ($dmDistance > $this->pricaRangeSettings[0]->getMaximumKilometer() && $this->pricaRangeSettings[1]->getMaximumKilometer()) {
-            return round((($dmDistance * $this->pricaRangeSettings[1]->getPricePerKilometer()) + 100), 2);
+            $finalPrice =  round((($dmDistance * $this->pricaRangeSettings[1]->getPricePerKilometer()) + 100), 2);
         } else {
-            return $dmDistance * 140;
+            $finalPrice =  $dmDistance * 140;
         }
+        
+        if($bookingSession->selectedBookingClass == 100){
+            $finalPrice = $finalPrice + 5000;
+        }
+        
+        if($bookingSession->selectedNumberOfSeat == 20){
+            $finalPrice = round($finalPrice + ($finalPrice * 0.5));
+        }
+        
+        return $finalPrice;
     }
 
     public function createBooking()

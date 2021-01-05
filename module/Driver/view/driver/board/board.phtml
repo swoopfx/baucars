@@ -13,7 +13,7 @@ echo $this->headtitle("Driver Controller");
             <div class="row">
                 <div class="page-header">
                     <div class="d-flex align-items-center">
-                        <h2 class="page-header-title">Driver : <?php  echo $user->getFullName()?> </h2>
+                        <h2 class="page-header-title">Driver : <?php echo $user->getFullName() ?> </h2>
                         <div>
                             <!-- 	                                <div class="page-header-tools"> -->
                             <!-- 	                                    <a class="btn btn-gradient-01" href="#">Add Widget</a> -->
@@ -27,24 +27,23 @@ echo $this->headtitle("Driver Controller");
 
             <!-- End Row -->
             <div class="row flex-row">
-                
 
-                <div class="col-xl-6 col-md-6 col-sm-12">
+                <div v-if="activetrip.length" class="col-xl-6 col-md-6 col-sm-12">
                     <!-- Begin Widget 01 -->
                     <div class="widget widget-01 has-shadow">
                         <div class="widget-body no-padding">
-                        <h3>Active Booking</h3>
+                            <h3>Active Trip</h3>
                             <br>
                             <div class="row no-margin justify-content-center">
                                 <div class="col-12 col-xl-12 col-md-12 col-sm-10">
                                     <div class="today-sales">
-                                    <div class="text">
-                                    <br>
-                                            <div class="heading">Phone Number</div>
-                                            <div class="number">CustomerName</div>
-                                            <div class="value text-blue">Email</div>
+                                        <div class="text">
+                                            <br>
+                                            <div class="heading">{{activetrip[0].user.phoneNumber}}</div>
+                                            <div class="number">{{activetrip[0].user.fullName}}</div>
+                                            <div class="value text-blue">{{activetrip[0].user.email}}</div>
                                             <hr>
-                                            <div class="heading">State : <span></span></div>
+                                            <div class="heading">State : <span>Active Trip</span></div>
                                         </div>
                                         <div class="col-12 widget widget-18">
                                             <div class="new-message">
@@ -52,7 +51,7 @@ echo $this->headtitle("Driver Controller");
 
                                                     <div class="media-body align-self-center">
                                                         <div class="new-message-sender">Pick Up Address</div>
-                                                        <div class="new-message-time"></div>
+                                                        <div class="new-message-time">{{activetrip[0].pickUpAddress}}</div>
                                                     </div>
 
                                                 </div>
@@ -65,13 +64,13 @@ echo $this->headtitle("Driver Controller");
 
                                                     <div class="media-body align-self-center">
                                                         <div class="new-message-sender">Destination Address</div>
-                                                        <div class="new-message-time"></div>
+                                                        <div class="new-message-time">{{activetrip[0].destination}}</div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <!-- End Today Sales -->
@@ -80,7 +79,72 @@ echo $this->headtitle("Driver Controller");
 
                             <div class="circle">
 
-                                <button type="button" class="btn btn-primary btn-lg">Large button</button>
+                                <button type="button" class="btn btn-danger btn-lg btn-block">End Trip</button>
+                            </div>
+                            <!-- Begin Other Stats -->
+                            <div class="other-stats">
+                                <!-- Begin Row -->
+
+                                <!-- End Row -->
+                            </div>
+                            <!-- End Other Stats -->
+                        </div>
+                    </div>
+                    <!-- End Widget 01 -->
+                </div>
+
+                <div v-else-if="assignedBooking.length" class="col-xl-6 col-md-6 col-sm-12">
+                    <!-- Begin Widget 01 -->
+                    <div class="widget widget-01 has-shadow">
+                        <div class="widget-body no-padding">
+                            <h3>Assigned Booking</h3>
+                            <br>
+                            <div class="row no-margin justify-content-center">
+                                <div class="col-12 col-xl-12 col-md-12 col-sm-10">
+                                    <div class="today-sales">
+                                        <div class="text">
+                                            <br>
+                                            <div class="heading">{{assignedBooking[0].user.phoneNumber}}</div>
+                                            <div class="number">{{assignedBooking[0].user.fullName}}</div>
+                                            <div class="value text-blue">{{assignedBooking[0].user.email}}</div>
+                                            <hr>
+                                            <div class="heading">State : <span>AAssigned</span></div>
+                                        </div>
+                                        <div class="col-12 widget widget-18">
+                                            <div class="new-message">
+                                                <div class="media">
+
+                                                    <div class="media-body align-self-center">
+                                                        <div class="new-message-sender">Pick Up Address</div>
+                                                        <div class="new-message-time">{{assignedBooking[0].pickUpAddress}}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 widget widget-18">
+                                            <div class="new-message">
+                                                <div class="media">
+
+                                                    <div class="media-body align-self-center">
+                                                        <div class="new-message-sender">Destination Address</div>
+                                                        <div class="new-message-time">{{assignedBooking[0].destination}}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- End Today Sales -->
+                            </div>
+
+
+                            <div class="circle">
+
+                                <button type="button" @click="onStartTrip()" class="btn btn-primary btn-lg btn-block">Start Trip</button>
                             </div>
                             <!-- Begin Other Stats -->
                             <div class="other-stats">
@@ -108,7 +172,7 @@ echo $this->headtitle("Driver Controller");
                         <div class="widget-body no-padding hidden">
                             <div class="author-avatar">
                                 <span class="badge-pulse-green"></span>
-                                
+
 
                             </div>
                             <div class="author-name">
@@ -174,7 +238,7 @@ echo $this->headtitle("Driver Controller");
                     <div class="widget widget-07 has-shadow">
                         <!-- Begin Widget Header -->
                         <div class="widget-header bordered d-flex align-items-center">
-                            <h2>Previous Trips</h2>
+                            <h2>Previous Completed Trips</h2>
                             <!--                                         <div class="widget-options"> -->
                             <!--                                             <div class="btn-group" role="group"> -->
                             <!--                                                 <button type="button" class="btn btn-primary ripple">Week</button> -->
@@ -205,7 +269,7 @@ echo $this->headtitle("Driver Controller");
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr v-if="completedTrips.length" v-for="trip in completedTrips">
                                             <td style="width:5%;">
                                                 <div class="styled-checkbox mt-2">
                                                     <input type="checkbox" name="cb1" id="cb1">
@@ -266,17 +330,10 @@ echo $this->headtitle("Driver Controller");
             <div class="container">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 d-flex align-items-center justify-content-xl-start justify-content-lg-start justify-content-md-start justify-content-center">
-                        <p class="text-gradient-02">Design By Saerox</p>
+                        <p class="text-gradient-02">Design By I-Manager Solutions</p>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 d-flex align-items-center justify-content-xl-end justify-content-lg-end justify-content-md-end justify-content-center">
-                        <ul class="nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="documentation.html">Documentation</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="changelog.html">Changelog</a>
-                            </li>
-                        </ul>
+
                     </div>
                 </div>
             </div>
@@ -287,13 +344,10 @@ echo $this->headtitle("Driver Controller");
         <div class="off-sidebar from-right">
             <div class="off-sidebar-container">
                 <header class="off-sidebar-header">
-                    <ul class="button-nav nav nav-tabs mt-3 mb-3 ml-3" role="tablist" id="weather-tab">
-                        <li><a class="active" data-toggle="tab" href="#messenger" role="tab" id="messenger-tab">Messages</a></li>
-                        <li><a data-toggle="tab" href="#today" role="tab" id="today-tab">Today</a></li>
-                    </ul>
-                    <a href="#off-canvas" class="off-sidebar-close"></a>
+
+
                 </header>
-                
+
                 <!-- End Offcanvas Container -->
             </div>
             <!-- End Offsidebar Container -->
@@ -307,35 +361,98 @@ echo $this->headtitle("Driver Controller");
         el: "#driverId",
         data() {
             return {
-                activetrip:'',
-                assignedBooking:""
+                activetrip: [],
+                assignedBooking: [],
+                completedTrips: [],
             }
         },
 
         mounted() {
             this.getActiveTrip();
-            this. getAssignedBooking();
+            this.getAssignedBooking();
         },
 
         methods: {
-            getDriveringHistory() {
+            getCompletedTrips() {
+                axios.get("/driver/board/active-trip").then(res => {
+                    if (res.status == 200) {
+                        this.completedTrips = res.data.data;
+                    }
+                }).catch(err => {
 
+                });
             },
 
-            getActiveTrip(){
-                axios.get("/driver/board/active-trip").then(res=>{
-                    if(res.status == 200){
+            getActiveTrip() {
+                axios.get("/driver/board/active-trip").then(res => {
+                    if (res.status == 200) {
                         this.activetrip = res.data.data;
+                        console.log(this.activetrip);
                     }
                 }).catch();
             },
 
-            getAssignedBooking(){
-                axios.get("/driver/board/assigned-booking").then(res=>{
-                    if(res.status == 200){
+            getAssignedBooking() {
+                axios.get("/driver/board/assigned-booking").then(res => {
+                    if (res.status == 200) {
                         this.assignedBooking = res.data.data;
                     }
                 }).catch();
+            },
+
+            onStartTrip() {
+                swal({
+                    title: "Pick Up Code",
+                    text: "Enter Pick Up Code:",
+                    type: "input",
+                    inputValue: "",
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Enter Code",
+                            type: "password",
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: "Confirm",
+                        roll: {
+                            text: "By Pass Code",
+                            value: "roll",
+                        },
+                    },
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Write something"
+                }).then(function(inputValue) {
+                    if (inputValue === false) return false;
+
+                    if (inputValue === "") {
+                        swal({
+                            title: "Aww Error",
+                            text: "You must Enter the customer Code",
+                            type: "error"
+                        });
+                        return false
+                    }
+
+                    swal("Nice!", "You wrote: " + inputValue, "success");
+                });
+            },
+
+            startTrip() {
+
+            },
+
+
+            onEndTrip() {
+
+            },
+
+
+            endTrip() {
+
             }
 
         },

@@ -66,10 +66,10 @@ class DriverBio extends \Driver\Entity\DriverBio implements \Doctrine\ORM\Proxy\
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'id', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'diverUid', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'booking', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'assisnedCar', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverSince', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverImage', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverDob', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'updatedOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'height', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'weight', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'eyeColor', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'complexion', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'createdOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'user'];
+            return ['__isInitialized__', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'id', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'diverUid', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'booking', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'assisnedCar', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverSince', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverImage', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverDob', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'updatedOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'height', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'weight', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'eyeColor', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'complexion', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'createdOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'user', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverState'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'id', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'diverUid', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'booking', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'assisnedCar', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverSince', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverImage', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverDob', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'updatedOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'height', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'weight', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'eyeColor', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'complexion', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'createdOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'user'];
+        return ['__isInitialized__', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'id', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'diverUid', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'booking', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'assisnedCar', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverSince', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverImage', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverDob', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'updatedOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'height', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'weight', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'eyeColor', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'complexion', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'createdOn', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'user', '' . "\0" . 'Driver\\Entity\\DriverBio' . "\0" . 'driverState'];
     }
 
     /**
@@ -508,6 +508,28 @@ class DriverBio extends \Driver\Entity\DriverBio implements \Doctrine\ORM\Proxy\
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setBooking', [$booking]);
 
         return parent::setBooking($booking);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDriverState()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDriverState', []);
+
+        return parent::getDriverState();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDriverState($driverState)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDriverState', [$driverState]);
+
+        return parent::setDriverState($driverState);
     }
 
 }
