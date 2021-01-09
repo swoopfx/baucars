@@ -44,9 +44,8 @@ class BookingController extends AbstractActionController
     private $activeBooking;
 
     private $cancelBooking;
-    
+
     private $upcomgBooking;
-    
 
     /**
      */
@@ -111,14 +110,16 @@ class BookingController extends AbstractActionController
         ]);
         return $viewModel;
     }
-    
+
     /**
      * Defines all upcoming initite
+     *
      * @return \Zend\View\Model\ViewModel
      */
-    public function upcomingAction(){
+    public function upcomingAction()
+    {
         $allBooking = $this->upcomgBooking;
-        $viewmodel= new ViewModel([
+        $viewmodel = new ViewModel([
             "allBooking" => $allBooking
         ]);
         return $viewmodel;
@@ -139,7 +140,6 @@ class BookingController extends AbstractActionController
             $data = $em->getRepository(Bookings::class)->findOneBy([
                 "bookingUid" => $bookingUid
             ]);
-            
             
             $viewModel->setVariables([
                 "data" => $data
@@ -171,12 +171,13 @@ class BookingController extends AbstractActionController
     {
         $em = $this->entityManager;
         $jsonModel = new JsonModel();
-        $repo = $em->getRepository(CustomerBooking::class);
+        $repo = $em->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("a")
             ->select('a, s, bc')
             ->leftJoin("a.status", "s")
-//             ->leftJoin("a.bookingType", "bt")
-            ->leftJoin("a.bookingClass", "bc")
+            ->
+        // ->leftJoin("a.bookingType", "bt")
+        leftJoin("a.bookingClass", "bc")
             ->where("a.status =" . CustomerService::BOOKING_STATUS_CANCELED)
             ->setMaxResults(50)
             ->getQuery()
@@ -192,13 +193,16 @@ class BookingController extends AbstractActionController
     {
         $em = $this->entityManager;
         $jsonModel = new JsonModel();
-        $repo = $em->getRepository(CustomerBooking::class);
+        $repo = $em->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("a")
-            ->select('a, s, bt, bc')
+            ->select('a, s, t, bc')
             ->leftJoin("a.status", "s")
-            ->leftJoin("a.bookingType", "bt")
+            ->leftJoin("a.trip", "t")
             ->leftJoin("a.bookingClass", "bc")
-            ->where("a.status =" . CustomerService::BOOKING_STATUS_IN_TRANSIT)
+            ->where("a.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_ACTIVE
+        ])
             ->setMaxResults(50)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
@@ -208,8 +212,6 @@ class BookingController extends AbstractActionController
         $jsonModel->setVariable("data", $result);
         return $jsonModel;
     }
-
-  
 
     // public function
     
@@ -269,7 +271,9 @@ class BookingController extends AbstractActionController
         $this->allBookingPaginator = $allBookingPaginator;
         return $this;
     }
+
     /**
+     *
      * @return the $initiTitedBooking
      */
     public function getInitiTitedBooking()
@@ -278,6 +282,7 @@ class BookingController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $activeBooking
      */
     public function getActiveBooking()
@@ -286,6 +291,7 @@ class BookingController extends AbstractActionController
     }
 
     /**
+     *
      * @return the $cancelBooking
      */
     public function getCancelBooking()
@@ -294,7 +300,8 @@ class BookingController extends AbstractActionController
     }
 
     /**
-     * @param field_type $initiTitedBooking
+     *
+     * @param field_type $initiTitedBooking            
      */
     public function setInitiTitedBooking($initiTitedBooking)
     {
@@ -303,7 +310,8 @@ class BookingController extends AbstractActionController
     }
 
     /**
-     * @param field_type $activeBooking
+     *
+     * @param field_type $activeBooking            
      */
     public function setActiveBooking($activeBooking)
     {
@@ -312,14 +320,17 @@ class BookingController extends AbstractActionController
     }
 
     /**
-     * @param field_type $cancelBooking
+     *
+     * @param field_type $cancelBooking            
      */
     public function setCancelBooking($cancelBooking)
     {
         $this->cancelBooking = $cancelBooking;
         return $this;
     }
+
     /**
+     *
      * @return the $upcomgBooking
      */
     public function getUpcomgBooking()
@@ -328,14 +339,13 @@ class BookingController extends AbstractActionController
     }
 
     /**
-     * @param field_type $upcomgBooking
+     *
+     * @param field_type $upcomgBooking            
      */
     public function setUpcomgBooking($upcomgBooking)
     {
         $this->upcomgBooking = $upcomgBooking;
         return $this;
     }
-
-
 }
 

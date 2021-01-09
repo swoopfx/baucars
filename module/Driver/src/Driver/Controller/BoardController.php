@@ -94,13 +94,12 @@ class BoardController extends AbstractActionController
         $em = $this->entityManager;
         $repo = $em->getRepository(Bookings::class);
         $data = $repo->createQueryBuilder("b")
-        ->select([
+            ->select([
             "b, c,  a"
         ])
-        ->leftJoin("b.assignedDriver", "a")
-        ->leftJoin("b.user", "c")
-        ->where("a.user = :user")
-           
+            ->leftJoin("b.assignedDriver", "a")
+            ->leftJoin("b.user", "c")
+            ->where("a.user = :user")
             ->andWhere("b.status = :status")
             ->setParameters([
             "user" => $this->identity()
@@ -171,8 +170,7 @@ class BoardController extends AbstractActionController
         $jsonModel->setVariable("data", $data);
         return $jsonModel;
     }
-    
-    
+
     // Driver Action
     public function starttripAction()
     {
@@ -183,7 +181,7 @@ class BoardController extends AbstractActionController
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
             
-//             var_dump($em);
+            // var_dump($em);
             $id = $post["bookingId"];
             /**
              *
@@ -194,8 +192,8 @@ class BoardController extends AbstractActionController
             
             $bookActivity = new BookingActivity();
             $bookActivity->setBooking($bookingEntity)
-            ->setCreatedOn(new \DateTime())
-            ->setInformation("Driver Started trip");
+                ->setCreatedOn(new \DateTime())
+                ->setInformation("Driver Started trip");
             
             /**
              *
@@ -205,8 +203,9 @@ class BoardController extends AbstractActionController
             $activeTrip = new ActiveTrip();
             
             $activeTrip->setBooking($bookingEntity)
-            ->setCreatedOn(new \DateTime())
-            ->setStarted(new \DateTime());
+                ->setActiveTripUid(uniqid("atrip"))
+                ->setCreatedOn(new \DateTime())
+                ->setStarted(new \DateTime());
             try {
                 
                 $em->persist($assignedDriver);
@@ -229,6 +228,60 @@ class BoardController extends AbstractActionController
             }
         }
         
+        return $jsonModel;
+    }
+
+    public function endtripAction()
+    {
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            
+            $id = $post["bookingId"];
+            try {
+                /**
+                 *
+                 * @var Bookings $bookingEntity
+                 */
+                $bookingEntity = $em->find(Bookings::class, $id);
+                $bookingEntity->setUpdatedOn(new \DateTime())->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_COMPLETED));
+                
+                $bookActivity = new BookingActivity();
+                $bookActivity->setBooking($bookingEntity)
+                    ->setCreatedOn(new \DateTime())
+                    ->setInformation("Driver ended trip");
+                
+                /**
+                 *
+                 * @var DriverBio $assignedDriver
+                 */
+                $assignedDriver = $bookingEntity->getAssignedDriver()->setDriverState($em->find(DriverBio::class, DriverService::DRIVER_STATUS_FREE));
+                $activeTrip = $bookingEntity->getTrip();
+                
+                $activeTrip->setBooking($bookingEntity)
+                    ->setUpdatedOn(new \DateTime())
+                    ->setEnded(new \DateTime());
+                
+                    $em->persist($bookActivity);
+                    $em->persist($bookingEntity);
+                    $em->persist($assignedDriver);
+                    
+                    $em->flush();
+                    
+                    // Send Email
+                    // amotize account 
+            } catch (\Exception $e) {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "messages"=>"Something Went wrong",
+                    "data"=>$e->getMessage(),
+                ]);
+            }
+        }
+       
         return $jsonModel;
     }
 

@@ -315,11 +315,11 @@
 							<table class="table style--2">
 								<thead>
 									<tr>
-										<th>TRACKING ID</th>
+										<th>BOOKING ID</th>
 										<th>ACTIVE PERIOD</th>
 										<!-- <th>AMOUNT PAID</th> -->
-										<th>BOOKING CLASS</th>
-										<th>BOOKING TYPE</th>
+										<th>PICK UP TIME</th>
+										<th>ACTIVE TRIP</th>
 										<th>STATUS</th>
 										<th>ACTION</th>
 									</tr>
@@ -329,10 +329,10 @@
 									<tr v-for="data in splashInTransitBooking">
 										<!-- <td><img src="assets/img/products/thumb-01.jpg" alt=""></td> -->
 										<td>{{data.bookingUid.toUpperCase()}}</td>
-										<td><a href="#" class="btn-link">{{formatPHPDate(data.startTime.date)}}
-												- {{formatPHPDate(data.endTime.date)}}</a></td>
+										<!-- <td><a href="#" class="btn-link">{{formatPHPDate(data.startTime.date)}}
+												- {{formatPHPDate(data.endTime.date)}}</a></td> -->
 										<td>{{data.bookingClass.bookingClass}}</td>
-										<td>{{data.bookingType.bookingType}}</td>
+										<td>{{formatPHPDate(data.trip.started.date)}}</td>
 										<td><span class="label label-success">{{data.status.status}}</span></td>
 										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
 												class="fa fa-eye"></i></a></td>
@@ -387,7 +387,7 @@
 			<div class="col-xl-9">
 				<div class="panel">
 					<div class="panel-heading">
-						<h3 class="panel-title">CANCELED BOOKING</h3>
+						<h3 class="panel-title">COMPLETED BOOKING</h3>
 
 						<div class="dropdown">
 							<button type="button" class="btn-link dropdown-toggle"

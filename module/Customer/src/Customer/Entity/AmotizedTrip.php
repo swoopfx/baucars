@@ -5,12 +5,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="active_trip")
- * 
+ * @ORM\Table(name="amotized_trip")
  * @author otaba
  *        
  */
-class ActiveTrip
+class AmotizedTrip
 {
 
     /**
@@ -22,48 +21,33 @@ class ActiveTrip
     private $id;
     
     /**
-     * @ORM\Column(name="active_trip_uid", type="string")
-     * @var string
-     */
-    private $activeTripUid;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Bookings", inversedBy="trip")
-     * 
+     * @ORM\OneToOne(targetntity="Bookings")
      * @var Bookings
      */
     private $booking;
-
+    
     /**
-     * Datetime trip strated
-     * @ORM\Column(name="started", type="datetime", nullable=true)
      * 
-     * @var Datetime
+     * @var string
      */
-    private $started;
-
-    /**
-     * @ORM\Column(name="ended", type="datetime", nullable=true)
-     * 
-     * @var \DateTime
-     */
-    private $ended;
-
+    private $amotizedValue;
+    
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     * 
      * @var \DateTime
      */
     private $createdOn;
-
+    
+    
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * 
      * @var \DateTime
      */
     private $updatedOn;
-
-    // TODO - Insert your code here
+    
+    
+    
+    
     
     /**
      */
@@ -89,19 +73,11 @@ class ActiveTrip
     }
 
     /**
-     * @return the $started
+     * @return the $amotizedValue
      */
-    public function getStarted()
+    public function getAmotizedValue()
     {
-        return $this->started;
-    }
-
-    /**
-     * @return the $ended
-     */
-    public function getEnded()
-    {
-        return $this->ended;
+        return $this->amotizedValue;
     }
 
     /**
@@ -130,7 +106,7 @@ class ActiveTrip
     }
 
     /**
-     * @param \Customer\Entity\CustomerBooking $booking
+     * @param \Customer\Entity\Bookings $booking
      */
     public function setBooking($booking)
     {
@@ -139,20 +115,11 @@ class ActiveTrip
     }
 
     /**
-     * @param \Customer\Entity\Datetime $started
+     * @param string $amotizedValue
      */
-    public function setStarted($started)
+    public function setAmotizedValue($amotizedValue)
     {
-        $this->started = $started;
-        return $this;
-    }
-
-    /**
-     * @param DateTime $ended
-     */
-    public function setEnded($ended)
-    {
-        $this->ended = $ended;
+        $this->amotizedValue = $amotizedValue;
         return $this;
     }
 
@@ -162,7 +129,6 @@ class ActiveTrip
     public function setCreatedOn($createdOn)
     {
         $this->createdOn = $createdOn;
-        $this->updatedOn = $createdOn;
         return $this;
     }
 
@@ -174,23 +140,6 @@ class ActiveTrip
         $this->updatedOn = $updatedOn;
         return $this;
     }
-    /**
-     * @return the $activeTripUid
-     */
-    public function getActiveTripUid()
-    {
-        return $this->activeTripUid;
-    }
-
-    /**
-     * @param string $activeTripUid
-     */
-    public function setActiveTripUid($activeTripUid)
-    {
-        $this->activeTripUid = $activeTripUid;
-        return $this;
-    }
-
 
 }
 
