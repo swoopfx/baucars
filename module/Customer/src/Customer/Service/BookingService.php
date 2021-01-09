@@ -127,7 +127,7 @@ class BookingService
     {
         if ($this->bookingSession->pickUpPlaceId != NULL && $this->bookingSession->destinationPlaceId != NULL) {
             
-            $endPoint = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:{$this->bookingSession->pickUpPlaceId}&key=AIzaSyCYu1Ni05iwzLh8tVRA2fGkSy9pIKGo4lc&destinations=place_id:{$this->bookingSession->destinationPlaceId}";
+            $endPoint = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:{$this->bookingSession->pickUpPlaceId}&key=AIzaSyBobkXMM-uzqQLM5pqs_n7prJKJJ4-JK5I&destinations=place_id:{$this->bookingSession->destinationPlaceId}";
             $client = new Client();
             
             $client->setMethod(Request::METHOD_GET);
@@ -159,11 +159,11 @@ class BookingService
             $finalPrice =  $dmDistance * 140;
         }
         
-        if($bookingSession->selectedBookingClass == 100){
+        if($bookingSession->selectedBookingClass == "100"){
             $finalPrice = $finalPrice + 5000;
         }
         
-        if($bookingSession->selectedNumberOfSeat == 20){
+        if($bookingSession->selectedNumberOfSeat == "20"){
             $finalPrice = round($finalPrice + ($finalPrice * 0.5));
         }
         
@@ -193,6 +193,7 @@ class BookingService
             ->setCalculatedDistanceValue($bookingSession->distanceValue)
             ->setCalculatedTimeText($bookingSession->timeText)
             ->setCalculatedTimeValue($bookingSession->timeValue)
+            
 //             ->setPickuptime($bookingSession->pickupTime)
             ->setBookingClass($em->find(BookingClass::class, $bookingSession->selectedBookingClass))
             ->setSeater($em->find(NumberOfSeat::class, $bookingSession->selectedNumberOfSeat));

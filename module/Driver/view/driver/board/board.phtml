@@ -6,6 +6,42 @@ echo $this->headtitle("Driver Controller");
 
 
 <div id="driverId">
+    <div id="onStartTrip" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content room-details">
+                <div class="modal-header border-0">
+                    <h3 class="modal-title"><i class="la la-glass la-2x align-middle pr-2"></i>Start Trip</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                        <span class="sr-only">close</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group row d-flex align-items-center mb-5">
+                            <label class="col-lg-4 form-control-label d-flex justify-content-lg-end">Trip Code</label>
+                            <div class="col-lg-8">
+                                <input type="text" v-model="tripCode" ref="tripCode" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-shadow" data-dismiss="modal">Cancel</button>
+                    <button type="button" @click="startTrip()" :disabled="isStartingTrip" class="btn btn-success">
+                        <div v-if="isStartingTrip">Processing... </div>
+                        <div v-else>Start Trip</div>
+                    </button>
+                    <button type="button" @click="startTrip()" :disabled="isByPass" class="btn btn-danger">
+                        <div v-if="isByPass">Processing... </div>
+                        <div v-else>ByPass Code</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="content-inner boxed mt-4 w-100">
         <div class="container">
@@ -108,7 +144,7 @@ echo $this->headtitle("Driver Controller");
                                             <div class="number">{{assignedBooking[0].user.fullName}}</div>
                                             <div class="value text-blue">{{assignedBooking[0].user.email}}</div>
                                             <hr>
-                                            <div class="heading">State : <span>AAssigned</span></div>
+                                            <div class="heading">State : <span>Assigned</span></div>
                                         </div>
                                         <div class="col-12 widget widget-18">
                                             <div class="new-message">
@@ -144,7 +180,7 @@ echo $this->headtitle("Driver Controller");
 
                             <div class="circle">
 
-                                <button type="button" @click="onStartTrip()" class="btn btn-primary btn-lg btn-block">Start Trip</button>
+                                <button type="button" data-toggle="modal" data-target="#onStartTrip" class="btn btn-primary btn-lg btn-block">Start Trip</button>
                             </div>
                             <!-- Begin Other Stats -->
                             <div class="other-stats">
@@ -361,6 +397,10 @@ echo $this->headtitle("Driver Controller");
         el: "#driverId",
         data() {
             return {
+                hey: "NONONON",
+                isStartingTrip: false,
+                isByPass: false,
+                tripCode: '',
                 activetrip: [],
                 assignedBooking: [],
                 completedTrips: [],
@@ -387,7 +427,7 @@ echo $this->headtitle("Driver Controller");
                 axios.get("/driver/board/active-trip").then(res => {
                     if (res.status == 200) {
                         this.activetrip = res.data.data;
-                        console.log(this.activetrip);
+                        // console.log(this.activetrip);
                     }
                 }).catch();
             },
@@ -401,48 +441,77 @@ echo $this->headtitle("Driver Controller");
             },
 
             onStartTrip() {
-                swal({
-                    title: "Pick Up Code",
-                    text: "Enter Pick Up Code:",
-                    type: "input",
-                    inputValue: "",
-                    content: {
-                        element: "input",
-                        attributes: {
-                            placeholder: "Enter Code",
-                            type: "password",
-                        },
-                    },
-                    buttons: {
-                        cancel: true,
-                        confirm: "Confirm",
-                        roll: {
-                            text: "By Pass Code",
-                            value: "roll",
-                        },
-                    },
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    animation: "slide-from-top",
-                    inputPlaceholder: "Write something"
-                }).then(function(inputValue) {
-                    if (inputValue === false) return false;
+                // let code = this.hey;
+                // swal({
+                //     title: "Pick Up Code",
+                //     text: "Enter Pick Up Code:",
+                //     type: "input",
+                //     inputValue: "",
+                //     content: {
+                //         element: "input",
+                //         attributes: {
+                //             placeholder: code,
+                //             type: "password",
+                //         },
+                //     },
+                //     buttons: {
+                //         cancel: true,
+                //         confirm: "Confirm",
 
-                    if (inputValue === "") {
-                        swal({
-                            title: "Aww Error",
-                            text: "You must Enter the customer Code",
-                            type: "error"
-                        });
-                        return false
-                    }
+                //         roll: {
+                //             text: "By Pass Code",
+                //             value: "byPass",
 
-                    swal("Nice!", "You wrote: " + inputValue, "success");
-                });
+                //         },
+                //     },
+                //     showCancelButton: true,
+                //     closeOnConfirm: false,
+                //     animation: "slide-from-top",
+                //     inputPlaceholder: "Write something"
+                // }).then(function(inputValue, code) {
+                //     if (inputValue === false) return false;
+
+
+                //     if (inputValue === "") {
+                //         swal({
+                //             title: "Awwwww",
+                //             text: code,
+                //             type: "error"
+                //         });
+                //         return false
+                //     }
+
+                //     if (inputValue == "byPass") {
+                //         let formData = new FormData();
+                //         formData.append("bookingId", this.assignedBooking[0].id);
+                //         axios.post("/driver/driver/starttrip").then(res => {
+                //             window.location.reload();
+                //         }).catch(err => {
+
+                //         });
+                //         return false;
+                //     }
+
+                //     swal("Nice!", "You wrote: " + inputValue, "success");
+                // });
+            },
+
+            confirmCode() {
+
             },
 
             startTrip() {
+                this.isStartingTrip = true;
+                let formData = new FormData();
+                console.log(this.assignedBooking[0].id);
+                formData.append("bookingId", this.assignedBooking[0].id);
+                axios.post("/driver/board/starttrip", formData).then(res => {
+                    if (res.status == 201) {
+                        window.location.reload();
+                    }
+                }).catch(err => {
 
+                });
             },
 
 

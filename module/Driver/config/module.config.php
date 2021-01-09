@@ -3,6 +3,7 @@ namespace Driver;
 use Driver\Paginator\Factory\DriverAdapterInterface;
 use Driver\Service\Factory\DriverServiceFactory;
 use Driver\Controller\Factory\BoardControllerFactory;
+use Driver\Controller\Factory\DriverControllerFactory;
 
 return array(
     'controllers' => array(
@@ -11,7 +12,8 @@ return array(
             
         ),
         'factories' => array(
-            "Driver\Controller\Board"=>BoardControllerFactory::class
+            "Driver\Controller\Board"=>BoardControllerFactory::class,
+            "Driver\Controller\Driver"=>DriverControllerFactory::class
         ),
     ),
     'router' => array(

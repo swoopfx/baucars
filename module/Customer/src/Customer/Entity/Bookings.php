@@ -233,6 +233,7 @@ class Bookings
     /**
      * This is an auto generated code for the trip
      * Only Visually accessible to the Customer
+     * @ORM\Column(name="trip_code", type="string", length=60, nullable=true)
      * @var string
      */
     private $tripCode;
@@ -797,5 +798,22 @@ class Bookings
         $this->trip = $trip;
         return $this;
     }
+    /**
+     * @return the $tripCode
+     */
+    public function getTripCode()
+    {
+        return $this->tripCode;
+    }
+
+    /**
+     * @param string $tripCode
+     */
+    public function setTripCode($tripCode)
+    {
+        $this->tripCode = $tripCode;
+        return $this;
+    }
+
 }
 
