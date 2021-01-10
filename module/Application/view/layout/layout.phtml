@@ -7,14 +7,14 @@
 
         <?php
         
-echo $this->headMeta()
+        echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')?>
 
         <!-- Le styles -->
         <?php
         
-echo $this->headLink(array(
+        echo $this->headLink(array(
             'rel' => 'shortcut icon',
             'type' => 'image/vnd.microsoft.icon',
             'href' => $this->basePath() . '/img/favicon.ico'
@@ -33,7 +33,11 @@ echo $this->headLink(array(
         <!-- Scripts -->
         <?php
         
-echo $this->headScript()
+        echo $this->headScript()
+            ->prependFile("https://unpkg.com/sweetalert/dist/sweetalert.min.js")
+            ->prependFile("https://cdn.jsdelivr.net/npm/vue-toast-notification")
+            ->prependFile($this->basePath('js/axios.min.js'))
+            ->prependFile($this->basePath('js/vue.js'))
             ->prependFile($this->basePath('js/bootstrap.min.js'))
             ->prependFile($this->basePath('js/jquery.min.js'))
             ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array(
@@ -49,9 +53,9 @@ echo $this->headScript()
 	<!--== Preloader Area Start ==-->
 	<div class="preloader">
 		<div class="preloader-spinner">
-<!-- 			<div class="loader-content"> -->
-<!-- 				<img src="assets/img/preloader.gif" alt="JSOFT"> -->
-<!-- 			</div> -->
+			<!-- 			<div class="loader-content"> -->
+			<!-- 				<img src="assets/img/preloader.gif" alt="JSOFT"> -->
+			<!-- 			</div> -->
 		</div>
 	</div>
 	<!--== Preloader Area End ==-->

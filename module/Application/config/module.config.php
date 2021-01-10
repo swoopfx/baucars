@@ -2,6 +2,7 @@
 namespace Application;
 
 use Application\Paginator\Factory\CarAdapterInterface;
+use Application\Controller\Factory\IndexControllerFactory;
 
 /**
  * Zend Framework (http://framework.zend.com/)
@@ -91,8 +92,11 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
-        )
+//             'Application\Controller\Index' => 'Application\Controller\IndexController'
+        ),
+        'factories' => array(
+            'Application\Controller\Index'=>IndexControllerFactory::class
+        ),
     ),
     'view_manager' => array(
         'display_not_found_reason' => true,
@@ -115,7 +119,8 @@ return array(
             'email-app-user-registration' => __DIR__ . '/../view/mail/app-user-registeration.phtml',
             'app-support-created-controller-mail' => __DIR__ . '/../view/mail/app-support-created-controller-mail.phtml',
             'app-support-created-user-mail' => __DIR__ . '/../view/mail/app-support-created-user-mail.phtml',
-            'app-customercancel-booking-user' => __DIR__ . '/../view/mail/app-customer-cancel-booking-user.phtml'
+            'app-customercancel-booking-user' => __DIR__ . '/../view/mail/app-customer-cancel-booking-user.phtml',
+            'app-contactus-mail' => __DIR__ . '/../view/mail/app-contact-us-mail.phtml'
         
         ),
         'template_path_stack' => array(

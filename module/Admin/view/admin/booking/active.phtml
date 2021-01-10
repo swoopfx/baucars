@@ -29,7 +29,7 @@ echo $this->headtitle("Active Trip");
 		<div class="records--header">
 			<div class="title fa-shopping-bag">
 				<h3 class="h3">
-					Active Trips
+				 Trips In-Transit
 					<!-- 					 <a href="#" class="btn btn-sm btn-outline-info">Manage -->
 					<!-- 						Products</a> -->
 				</h3>
@@ -37,20 +37,20 @@ echo $this->headtitle("Active Trip");
 			</div>
 
 			<div class="actions">
-				<form action="#" class="search flex-wrap flex-md-nowrap">
-					<input type="text" class="form-control"
-						placeholder="Product Name..." required> <select name="select"
-						class="form-control">
-						<option value="" selected>Product Category</option>
-					</select>
-					<button type="submit" class="btn btn-rounded">
-						<i class="fa fa-search"></i>
-					</button>
-				</form>
+<!-- 				<form action="#" class="search flex-wrap flex-md-nowrap"> -->
+<!-- 					<input type="text" class="form-control" -->
+<!-- 						placeholder="Product Name..." required> <select name="select" -->
+<!-- 						class="form-control"> -->
+<!-- 						<option value="" selected>Product Category</option> -->
+<!-- 					</select> -->
+<!-- 					<button type="submit" class="btn btn-rounded"> -->
+<!-- 						<i class="fa fa-search"></i> -->
+<!-- 					</button> -->
+<!-- 				</form> -->
 
 
-				<a href="#" class="addProduct btn btn-lg btn-rounded btn-warning">Create
-					Booking</a>
+<!-- 				<a href="#" class="addProduct btn btn-lg btn-rounded btn-warning">Create -->
+<!-- 					Booking</a> -->
 			</div>
 		</div>
 		<!-- Records Header End -->
@@ -86,7 +86,7 @@ echo $this->headtitle("Active Trip");
 
 									<td><?php echo strtoupper($booking["bookingUid"]) ?></td>
 									<td><?php echo $booking["user"]["fullName"] ?><br> <strong>
-											Pick Up Address:</strong> <?php  echo ($booking["pickupAddress"] != NULL ? $booking["pickupAddress"] : "No Address")?></td>
+											Pick Up Address:</strong> <?php  echo ($booking["pickUpAddress"] != NULL ? $booking["pickUpAddress"] : "No Address")?></td>
 									<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
 											</td>
 									<td><?php echo $this->statusHelper($booking["status"]) ?></td>

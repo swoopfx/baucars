@@ -180,6 +180,25 @@ class BookingController extends AbstractActionController
         $jsonModel->setVariable("count", $this->bookingService->getAllInititedBookingCount());
         return $jsonModel;
     }
+    
+    public function intransitcountAction(){
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+         $repo = $em->getRepository(Bookings::class);
+        $result = $repo->createQueryBuilder("a")
+       
+        ->where("a.status = :status")
+        ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_ACTIVE
+        ])
+        
+        ->getQuery()
+       ->getResult();
+        $jsonModel->setVariable("data", count($result));
+        $response->setStatusCode(200);
+        return $jsonModel;
+    }
 
     public function splashinitiatedbookingAction()
     {

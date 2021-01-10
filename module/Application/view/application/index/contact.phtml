@@ -10,7 +10,7 @@ echo $this->headtitle("Contact Us");
 				<div class="section-title  text-center">
 					<h2>Contact Us</h2>
 					<span class="title-line"><i class="fa fa-car"></i></span>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+					<!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
 				</div>
 			</div>
 			<!-- Page Title End -->
@@ -20,46 +20,42 @@ echo $this->headtitle("Contact Us");
 
 
 <!--== Contact Page Area Start ==-->
-<div class="contact-page-wrao section-padding">
+<div id="contact" class="contact-page-wrao section-padding">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-10 m-auto">
 				<div class="contact-form">
-					<form action="index.html">
+					<form>
 						<div class="row">
 							<div class="col-lg-6 col-md-6">
 								<div class="name-input">
-									<input type="text" placeholder="Full Name">
+									<input type="text" v-model="fullname" placeholder="Full Name">
 								</div>
 							</div>
 
 							<div class="col-lg-6 col-md-6">
 								<div class="email-input">
-									<input type="email" placeholder="Email Address">
+									<input type="email" v-model="email" placeholder="Email Address">
 								</div>
 							</div>
 						</div>
 
 						<div class="row">
-							<div class="col-lg-6 col-md-6">
-								<div class="website-input">
-									<input type="url" placeholder="Website">
-								</div>
-							</div>
 
-							<div class="col-lg-6 col-md-6">
+
+							<div class="col-lg-6 col-md-12">
 								<div class="subject-input">
-									<input type="text" placeholder="Subject">
+									<input type="text" v-model="subject" placeholder="Subject">
 								</div>
 							</div>
 						</div>
 
 						<div class="message-input">
-							<textarea name="review" cols="30" rows="10" placeholder="Message"></textarea>
+							<textarea name="review" v-model="message" cols="30" rows="10" placeholder="Message"></textarea>
 						</div>
 
 						<div class="input-submit">
-							<button type="submit">Submit Message</button>
+							<button :disabled="processing" @click="postContactUs()" type="button">Submit Message</button>
 						</div>
 					</form>
 				</div>
@@ -68,3 +64,47 @@ echo $this->headtitle("Contact Us");
 	</div>
 </div>
 <!--== Contact Page Area End ==-->
+
+<script>
+	let contact = new Vue({
+		el: "#contact",
+
+		data() {
+			return {
+				subject: "",
+				email: "",
+				fullname: "",
+				message: "",
+				processing:false,
+			}
+		},
+
+		methods: {
+			postContactUs() {
+				if (this.subject == "" || this.fullname == "" || this.message == "" || this.email == "") {
+					swal({
+						title: "Required Field",
+						text: "One of your field is required",
+						icon: "error",
+						button: "Continue!",
+					}).then(res => {
+						this.processing = false;
+					})
+
+				} else {
+					this.processing = true;
+					let formData = new FormData();
+					formData.append("email", this.email);
+					formData.append('fullname', this.email);
+					formData.append("subject", this.subject);
+					formData.append("message", this.message);
+					axios.post("/contactus", formData).then(res=>{
+						if(res.status == 202){
+							window.location.reload();
+						}
+					}).catch();
+				}
+			}
+		},
+	});
+</script>

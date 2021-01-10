@@ -26,11 +26,11 @@ class DriverService
      * @var EntityManager
      */
     private $entityManager;
-    
+
     const DRIVER_STATUS_FREE = 10;
-    
+
     const DRIVER_STATUS_ENGAGED = 50;
-    
+
     const DRIVER_STATUS_ASSIGNED = 100;
 
     // TODO - Insert your code here
@@ -49,13 +49,11 @@ class DriverService
             ->leftJoin("d.user", "u")
             ->leftJoin("d.booking", "b")
             ->leftJoin("b.status", "s")
-            ->
-        // ->where("s.id <> ".CustomerService::BOOKING_STATUS_ACTIVE)
-        getQuery();
-        // ->groupBy("s")
-        // ->having("s.id != ".CustomerService::BOOKING_STATUS_ACTIVE)
-        // ->getQuery();
-        // var_dump($result);
+            ->where("d.driverState = :state")
+            ->setParameters([
+            "state" => self::DRIVER_STATUS_FREE
+        ])->getQuery();
+        
         $res = $result->getResult(Query::HYDRATE_ARRAY);
         return $res;
     }

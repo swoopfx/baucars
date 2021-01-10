@@ -11,9 +11,19 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use CsnUser\Service\UserService;
+use Zend\View\Model\JsonModel;
+use General\Service\GeneralService;
 
 class IndexController extends AbstractActionController
 {
+
+    private $entityManager;
+
+    /**
+     *
+     * @var object
+     */
+    private $generalService;
 
     public function dashboardAction()
     {
@@ -45,5 +55,73 @@ class IndexController extends AbstractActionController
     public function contactAction()
     {
         return new ViewModel();
+    }
+
+    public function contactusAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $subject = $post["subject"];
+            $message = $post["message"];
+            $fullname = $post["fullname"];
+            $email = $post["email"];
+            
+            $generalService = $this->generalService;
+            $pointer["to"] = GeneralService::COMPANY_EMAIL;
+            $pointer["fromName"] = "System Robot";
+            $pointer['subject'] = "Contact Us Form filled";
+            
+            $template['template'] = "app-contactus-mail";
+            $template["var"] = [
+                "subject" => $subject,
+                "fullname" => $fullname,
+                "message" => $message,
+                "email" => $email
+            ];
+            $generalService->sendMails($pointer, $template);
+            $response->setStatusCode(202);
+        }
+        return $jsonModel;
+    }
+
+    /**
+     *
+     * @return the $entityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     *
+     * @param field_type $entityManager            
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $generalService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     *
+     * @param object $generalService            
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
+        return $this;
     }
 }

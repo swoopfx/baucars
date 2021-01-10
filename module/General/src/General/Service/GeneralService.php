@@ -31,6 +31,9 @@ class GeneralService
     private $renderer;
 
     const COMPANY_NAME = "BAU Cars Limited";
+    
+    
+    const COMPANY_EMAIL = "admin@baucars.com";
 
     /**
      */

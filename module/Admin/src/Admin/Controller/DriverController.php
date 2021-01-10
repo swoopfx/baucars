@@ -24,6 +24,7 @@ use Zend\Mvc\MvcEvent;
 use General\Service\GeneralService;
 use Customer\Entity\DispatchDriver;
 use Customer\Entity\Bookings;
+use Driver\Entity\DriverState;
 
 /**
  *
@@ -182,6 +183,7 @@ class DriverController extends AbstractActionController
                         ->setDiverUid(DriverService::driverUid())
                         ->setDriverDob(\DateTime::createFromFormat("Y-m-d", $post["driver_dob"]))
                         ->setUser($userEntity)
+                        ->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_FREE))
                         ->setDriverSince(\DateTime::createFromFormat("Y-m-d", $post["driving_since"]));
                     // if()
                     // var_dump($data);
@@ -425,6 +427,7 @@ class DriverController extends AbstractActionController
         $data = $repo->createQueryBuilder("d")
             ->select("d, u")
             ->where("d.diverUid = :uid")
+           
             ->leftJoin("d.user", "u")
             ->setParameters([
             "uid" => $id
