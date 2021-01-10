@@ -268,8 +268,11 @@ class BoardController extends AbstractActionController
                     $em->persist($bookActivity);
                     $em->persist($bookingEntity);
                     $em->persist($assignedDriver);
+                    $em->persist($activeTrip);
                     
                     $em->flush();
+                    
+                    $response->setStatusCode(201);
                     
                     // Send Email
                     // amotize account 

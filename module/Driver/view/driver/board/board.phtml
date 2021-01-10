@@ -57,14 +57,14 @@ echo $this->headtitle("Driver Controller");
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h3>Make suryou have reached the destination defined </h3>
+                    <h3>Make sure you have reached the destination defined </h3>
 
 
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-shadow" data-dismiss="modal">Cancel</button>
-                    <button type="button" @click="startTrip()" :disabled="isStartingTrip" class="btn btn-success">
-                        <div v-if="isStartingTrip">Processing... </div>
+                    <button type="button" @click="endTrip()" :disabled="isEndTrip" class="btn btn-success">
+                        <div v-if="isEndTrip">Processing... </div>
                         <div v-else>End Trip</div>
                     </button>
                    
@@ -428,6 +428,7 @@ echo $this->headtitle("Driver Controller");
         data() {
             return {
                 hey: "NONONON",
+                isEndTrip:false,
                 isStartingTrip: false,
                 isByPass: false,
                 tripCode: '',
@@ -495,7 +496,17 @@ echo $this->headtitle("Driver Controller");
 
 
             endTrip() {
+                this.isEndTrip = true;
+                let formData = new FormData();
+                console.log(this.activetrip[0].id);
+                formData.append("bookingId", this.activetrip[0].id);
+                axios.post("/driver/board/endtrip", formData).then(res => {
+                    if (res.status == 201) {
+                        window.location.reload();
+                    }
+                }).catch(err => {
 
+                });
             }
 
         },

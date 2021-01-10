@@ -9,6 +9,7 @@ use General\Entity\BookingType;
 use General\Entity\BookingClass;
 use Driver\Entity\DriverBio;
 use General\Entity\NumberOfSeat;
+use General\Entity\BookingStatus;
 
 /**
  * @ORM\Entity

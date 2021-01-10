@@ -149,6 +149,29 @@ class BookingController extends AbstractActionController
         return $viewModel;
     }
 
+    public function completedAction()
+    {
+        $em = $this->entityManager;
+        $repo = $em->getRepository(Bookings::class)
+            ->createQueryBuilder('s')
+            ->select("s, u, t, ad, adu")
+            ->leftJoin("s.user", "u")
+            ->leftJoin("s.trip", "t")
+            ->leftJoin("s.assignedDriver", "ad")
+            ->leftJoin("ad.user", "adu")
+            ->where("s.status = :status")
+            ->setParameters([
+                "status"=>CustomerService::BOOKING_STATUS_COMPLETED
+            ])
+            ->setMaxResults(100)
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        $viewModel = new ViewModel([
+            "data"=>$repo
+        ]);
+        return $viewModel;
+    }
+
     public function initiatedbookingcountAction()
     {
         $jsonModel = new JsonModel();
