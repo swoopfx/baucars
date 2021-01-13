@@ -22,7 +22,7 @@ into the account can either be of positive or negative money
 values. Each account has a credit limit and the account is never
 allowed to have a balance below that value.
 
-For simplicity we live in a world where money is composed of
+For simplicity we live in a world were money is composed of
 integers only. Also we omit the receiver/sender name, stated reason
 for transfer and the execution date. These all would have to be
 added on the ``Entry`` object.
@@ -32,39 +32,30 @@ Our entities look like:
 .. code-block:: php
 
     <?php
-
     namespace Bank\Entities;
-
-    use Doctrine\ORM\Mapping as ORM;
     
     /**
-     * @ORM\Entity
+     * @Entity
      */
     class Account
     {
-        /**
-         * @ORM\Id
-         * @ORM\GeneratedValue
-         * @ORM\Column(type="integer")
-         */
-        private ?int $id;
+        /** @Id @GeneratedValue @Column(type="integer") */
+        private $id;
+    
+        /** @Column(type="string", unique=true) */
+        private $no;
     
         /**
-         * @ORM\Column(type="string", unique=true)
+         * @OneToMany(targetEntity="Entry", mappedBy="account", cascade={"persist"})
          */
-        private string $no;
+        private $entries;
     
         /**
-         * @ORM\OneToMany(targetEntity="Entry", mappedBy="account", cascade={"persist"})
+         * @Column(type="integer")
          */
-        private array $entries;
+        private $maxCredit = 0;
     
-        /**
-         * @ORM\Column(type="integer")
-         */
-        private int $maxCredit = 0;
-    
-        public function __construct(string $no, int $maxCredit = 0)
+        public function __construct($no, $maxCredit = 0)
         {
             $this->no = $no;
             $this->maxCredit = $maxCredit;
@@ -73,35 +64,31 @@ Our entities look like:
     }
     
     /**
-     * @ORM\Entity
+     * @Entity
      */
     class Entry
     {
-        /**
-         * @ORM\Id
-         * @ORM\GeneratedValue
-         * @ORM\Column(type="integer")
-         */
-        private ?int $id;
+        /** @Id @GeneratedValue @Column(type="integer") */
+        private $id;
     
         /**
-         * @ORM\ManyToOne(targetEntity="Account", inversedBy="entries")
+         * @ManyToOne(targetEntity="Account", inversedBy="entries")
          */
-        private Account $account;
+        private $account;
     
         /**
-         * @ORM\Column(type="integer")
+         * @Column(type="integer")
          */
-        private int $amount;
+        private $amount;
     
-        public function __construct(Account $account, int $amount)
+        public function __construct($account, $amount)
         {
             $this->account = $account;
             $this->amount = $amount;
             // more stuff here, from/to whom, stated reason, execution date and such
         }
     
-        public function getAmount(): Amount
+        public function getAmount()
         {
             return $this->amount;
         }
@@ -159,14 +146,12 @@ collection, which means we can compute this value at runtime:
     class Account
     {
         // .. previous code
-
-        public function getBalance(): int
+        public function getBalance()
         {
             $balance = 0;
             foreach ($this->entries as $entry) {
                 $balance += $entry->getAmount();
             }
-
             return $balance;
         }
     }
@@ -190,12 +175,13 @@ relation with this method:
     <?php
     class Account
     {
-        public function addEntry(int $amount): void
+        public function addEntry($amount)
         {
             $this->assertAcceptEntryAllowed($amount);
     
             $e = new Entry($this, $amount);
             $this->entries[] = $e;
+            return $e;
         }
     }
 
@@ -204,10 +190,7 @@ Now look at the following test-code for our entities:
 .. code-block:: php
 
     <?php
-
-    use PHPUnit\Framework\TestCase;
-
-    class AccountTest extends TestCase
+    class AccountTest extends \PHPUnit_Framework_TestCase
     {
         public function testAddEntry()
         {
@@ -225,7 +208,7 @@ Now look at the following test-code for our entities:
         {
             $account = new Account("123456", $maxCredit = 200);
     
-            $this->expectException(Exception::class);
+            $this->setExpectedException("Exception");
             $account->addEntry(-1000);
         }
     }
@@ -236,12 +219,9 @@ To enforce our rule we can now implement the assertion in
 .. code-block:: php
 
     <?php
-
     class Account
     {
-        // .. previous code
-
-        private function assertAcceptEntryAllowed(int $amount): void
+        private function assertAcceptEntryAllowed($amount)
         {
             $futureBalance = $this->getBalance() + $amount;
             $allowedMinimalBalance = ($this->maxCredit * -1);
@@ -286,22 +266,23 @@ entries collection) we want to add an aggregate field called
     class Account
     {
         /**
-         * @ORM\Column(type="integer")
+         * @Column(type="integer")
          */
-        private int $balance = 0;
+        private $balance = 0;
     
-        public function getBalance(): int
+        public function getBalance()
         {
             return $this->balance;
         }
     
-        public function addEntry(int $amount): void
+        public function addEntry($amount)
         {
             $this->assertAcceptEntryAllowed($amount);
     
             $e = new Entry($this, $amount);
             $this->entries[] = $e;
             $this->balance += $amount;
+            return $e;
         }
     }
 
@@ -325,15 +306,12 @@ potentially lead to inconsistent state. See this example:
 .. code-block:: php
 
     <?php
-
-    use Bank\Entities\Account;
-
     // The Account $accId has a balance of 0 and a max credit limit of 200:
     // request 1 account
-    $account1 = $em->find(Account::class, $accId);
+    $account1 = $em->find('Bank\Entities\Account', $accId);
     
     // request 2 account
-    $account2 = $em->find(Account::class, $accId);
+    $account2 = $em->find('Bank\Entities\Account', $accId);
     
     $account1->addEntry(-200);
     $account2->addEntry(-200);
@@ -354,14 +332,10 @@ Optimistic locking is as easy as adding a version column:
 .. code-block:: php
 
     <?php
-
     class Account
     {
-        /**
-         * @ORM\Column(type="integer")
-         * @ORM\Version
-         */
-        private int $version;
+        /** @Column(type="integer") @Version */
+        private $version;
     }
 
 The previous example would then throw an exception in the face of
@@ -375,11 +349,9 @@ the database using a FOR UPDATE.
 .. code-block:: php
 
     <?php
-
-    use Bank\Entities\Account;
     use Doctrine\DBAL\LockMode;
-
-    $account = $em->find(Account::class, $accId, LockMode::PESSIMISTIC_READ);
+    
+    $account = $em->find('Bank\Entities\Account', $accId, LockMode::PESSIMISTIC_READ);
 
 Keeping Updates and Deletes in Sync
 -----------------------------------
@@ -400,3 +372,5 @@ field that offers serious performance benefits over iterating all
 the related objects that make up an aggregate value. Finally I
 showed how you can ensure that your aggregate fields do not get out
 of sync due to race-conditions and concurrent access.
+
+

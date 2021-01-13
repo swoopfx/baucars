@@ -60,6 +60,9 @@ class DefaultCache implements Cache
      */
     private $defaultQueryCache;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em           = $em;

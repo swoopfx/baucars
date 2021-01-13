@@ -22,9 +22,6 @@ namespace Doctrine\ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query\AST\DeleteStatement;
-use Doctrine\ORM\Query\AST\SelectStatement;
-use Doctrine\ORM\Query\AST\UpdateStatement;
 use Doctrine\ORM\Query\Exec\AbstractSqlExecutor;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\ParameterTypeInferer;
@@ -136,7 +133,7 @@ final class Query extends AbstractQuery
      *
      * @var integer
      */
-    private $_state = self::STATE_DIRTY;
+    private $_state = self::STATE_CLEAN;
 
     /**
      * A snapshot of the parameter types the query was parsed with.
@@ -216,7 +213,9 @@ final class Query extends AbstractQuery
     /**
      * Returns the corresponding AST for this DQL query.
      *
-     * @return SelectStatement|UpdateStatement|DeleteStatement
+     * @return \Doctrine\ORM\Query\AST\SelectStatement |
+     *         \Doctrine\ORM\Query\AST\UpdateStatement |
+     *         \Doctrine\ORM\Query\AST\DeleteStatement
      */
     public function getAST()
     {
@@ -326,7 +325,7 @@ final class Query extends AbstractQuery
             $this->evictEntityCacheRegion();
         }
 
-        [$sqlParams, $types] = $this->processParameterMappings($paramMappings);
+        list($sqlParams, $types) = $this->processParameterMappings($paramMappings);
 
         $this->evictResultSetCache(
             $executor,
@@ -365,11 +364,11 @@ final class Query extends AbstractQuery
     {
         $AST = $this->getAST();
 
-        if ($AST instanceof SelectStatement) {
+        if ($AST instanceof \Doctrine\ORM\Query\AST\SelectStatement) {
             throw new QueryException('The hint "HINT_CACHE_EVICT" is not valid for select statements.');
         }
 
-        $className = $AST instanceof DeleteStatement
+        $className = ($AST instanceof \Doctrine\ORM\Query\AST\DeleteStatement)
             ? $AST->deleteClause->abstractSchemaName
             : $AST->updateClause->abstractSchemaName;
 
@@ -381,13 +380,11 @@ final class Query extends AbstractQuery
      *
      * @param array $paramMappings
      *
-     * @return mixed[][]
+     * @return array
      *
      * @throws Query\QueryException
-     *
-     * @psalm-return array{0: list<mixed>, 1: array}
      */
-    private function processParameterMappings($paramMappings) : array
+    private function processParameterMappings($paramMappings)
     {
         $sqlParams = [];
         $types     = [];
@@ -432,11 +429,7 @@ final class Query extends AbstractQuery
         return [$sqlParams, $types];
     }
 
-    /**
-     * @return mixed[] tuple of (value, type)
-     *
-     * @psalm-return array{0: mixed, 1: mixed}
-     */
+    /** @return mixed[] tuple of (value, type) */
     private function resolveParameterValue(Parameter $parameter) : array
     {
         if ($parameter->typeWasSpecified()) {
@@ -473,9 +466,9 @@ final class Query extends AbstractQuery
      *
      * @param \Doctrine\Common\Cache\Cache|null $queryCache Cache driver.
      *
-     * @return self This query instance.
+     * @return Query This query instance.
      */
-    public function setQueryCacheDriver($queryCache) : self
+    public function setQueryCacheDriver($queryCache)
     {
         $this->_queryCache = $queryCache;
 
@@ -487,9 +480,9 @@ final class Query extends AbstractQuery
      *
      * @param boolean $bool
      *
-     * @return self This query instance.
+     * @return Query This query instance.
      */
-    public function useQueryCache($bool) : self
+    public function useQueryCache($bool)
     {
         $this->_useQueryCache = $bool;
 
@@ -516,9 +509,9 @@ final class Query extends AbstractQuery
      *
      * @param integer $timeToLive How long the cache entry is valid.
      *
-     * @return self This query instance.
+     * @return Query This query instance.
      */
-    public function setQueryCacheLifetime($timeToLive) : self
+    public function setQueryCacheLifetime($timeToLive)
     {
         if ($timeToLive !== null) {
             $timeToLive = (int) $timeToLive;
@@ -544,9 +537,9 @@ final class Query extends AbstractQuery
      *
      * @param boolean $expire Whether or not to force query cache expiration.
      *
-     * @return self This query instance.
+     * @return Query This query instance.
      */
-    public function expireQueryCache($expire = true) : self
+    public function expireQueryCache($expire = true)
     {
         $this->_expireQueryCache = $expire;
 
@@ -578,8 +571,10 @@ final class Query extends AbstractQuery
      * Sets a DQL query string.
      *
      * @param string $dqlQuery DQL Query.
+     *
+     * @return \Doctrine\ORM\AbstractQuery
      */
-    public function setDQL($dqlQuery) : self
+    public function setDQL($dqlQuery)
     {
         if ($dqlQuery !== null) {
             $this->_dql = $dqlQuery;
@@ -629,11 +624,11 @@ final class Query extends AbstractQuery
     /**
      * Sets the position of the first result to retrieve (the "offset").
      *
-     * @param int|null $firstResult The first result to return.
+     * @param integer $firstResult The first result to return.
      *
-     * @return self This query object.
+     * @return Query This query object.
      */
-    public function setFirstResult($firstResult) : self
+    public function setFirstResult($firstResult)
     {
         $this->_firstResult = $firstResult;
         $this->_state       = self::STATE_DIRTY;
@@ -657,9 +652,9 @@ final class Query extends AbstractQuery
      *
      * @param integer|null $maxResults
      *
-     * @return self This query object.
+     * @return Query This query object.
      */
-    public function setMaxResults($maxResults) : self
+    public function setMaxResults($maxResults)
     {
         $this->_maxResults = $maxResults;
         $this->_state      = self::STATE_DIRTY;
@@ -721,9 +716,11 @@ final class Query extends AbstractQuery
      *
      * @param int $lockMode
      *
+     * @return Query
+     *
      * @throws TransactionRequiredException
      */
-    public function setLockMode($lockMode) : self
+    public function setLockMode($lockMode)
     {
         if (in_array($lockMode, [LockMode::NONE, LockMode::PESSIMISTIC_READ, LockMode::PESSIMISTIC_WRITE], true)) {
             if ( ! $this->_em->getConnection()->isTransactionActive()) {

@@ -105,7 +105,7 @@ class TrimFunction extends FunctionNode
     }
 
     /**
-     * @return int
+     * @return integer
      */
     private function getTrimMode()
     {

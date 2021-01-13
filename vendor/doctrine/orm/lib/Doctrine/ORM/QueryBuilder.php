@@ -100,7 +100,7 @@ class QueryBuilder
     /**
      * The index of the first result to retrieve.
      *
-     * @var int|null
+     * @var integer
      */
     private $_firstResult = null;
 
@@ -440,9 +440,7 @@ class QueryBuilder
      *     $qb->getRootAliases(); // array('u')
      * </code>
      *
-     * @return mixed[]
-     *
-     * @psalm-return list<mixed>
+     * @return array
      */
     public function getRootAliases()
     {
@@ -475,10 +473,7 @@ class QueryBuilder
      *
      *     $qb->getAllAliases(); // array('u','a')
      * </code>
-     *
-     * @return mixed[]
-     *
-     * @psalm-return list<mixed>
+     * @return array
      */
     public function getAllAliases()
     {
@@ -497,9 +492,7 @@ class QueryBuilder
      *     $qb->getRootEntities(); // array('User')
      * </code>
      *
-     * @return mixed[]
-     *
-     * @psalm-return list<mixed>
+     * @return array
      */
     public function getRootEntities()
     {
@@ -574,7 +567,6 @@ class QueryBuilder
     {
         // BC compatibility with 2.3-
         if (is_array($parameters)) {
-            /** @psalm-var ArrayCollection<int, Query\Parameter> $parameterCollection */
             $parameterCollection = new ArrayCollection();
 
             foreach ($parameters as $key => $value) {
@@ -610,13 +602,11 @@ class QueryBuilder
      */
     public function getParameter($key)
     {
-        $key = Query\Parameter::normalizeName($key);
-
         $filteredParameters = $this->parameters->filter(
             function (Query\Parameter $parameter) use ($key) : bool {
                 $parameterName = $parameter->getName();
 
-                return $key === $parameterName;
+                return $key === $parameterName || (string) $key === (string) $parameterName;
             }
         );
 
@@ -626,7 +616,7 @@ class QueryBuilder
     /**
      * Sets the position of the first result to retrieve (the "offset").
      *
-     * @param int|null $firstResult The first result to return.
+     * @param integer $firstResult The first result to return.
      *
      * @return self
      */
@@ -641,7 +631,7 @@ class QueryBuilder
      * Gets the position of the first result the query object was set to retrieve (the "offset").
      * Returns NULL if {@link setFirstResult} was not applied to this QueryBuilder.
      *
-     * @return int|null The position of the first result.
+     * @return integer The position of the first result.
      */
     public function getFirstResult()
     {
@@ -1346,6 +1336,8 @@ class QueryBuilder
      * @param string $queryPartName
      *
      * @return mixed $queryPart
+     *
+     * @todo Rename: getQueryPart (or remove?)
      */
     public function getDQLPart($queryPartName)
     {
@@ -1356,6 +1348,8 @@ class QueryBuilder
      * Gets all query parts.
      *
      * @return array $dqlParts
+     *
+     * @todo Rename: getQueryParts (or remove?)
      */
     public function getDQLParts()
     {

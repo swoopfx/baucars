@@ -67,9 +67,9 @@ abstract class SQLFilter
      *                           the type conversion of this type. This is usually not needed for
      *                           strings and numeric types.
      *
-     * @return self The current SQL filter.
+     * @return SQLFilter The current SQL filter.
      */
-    final public function setParameter($name, $value, $type = null) : self
+    final public function setParameter($name, $value, $type = null)
     {
         if (null === $type) {
             $type = ParameterTypeInferer::inferType($value);

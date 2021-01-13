@@ -71,8 +71,8 @@ follows:
 .. code-block:: php
 
     <?php
-    use Doctrine\Persistence\NotifyPropertyChanged,
-        Doctrine\Persistence\PropertyChangedListener;
+    use Doctrine\Common\NotifyPropertyChanged,
+        Doctrine\Common\PropertyChangedListener;
     
     /**
      * @Entity

@@ -32,6 +32,7 @@ use Application\Entity\SupportRoute;
 use CsnUser\Entity\User;
 use General\Entity\BookingAction;
 use Customer\Entity\Bookings;
+use CsnUser\Service\UserService;
 
 class CustomerController extends AbstractActionController
 {
@@ -64,7 +65,12 @@ class CustomerController extends AbstractActionController
     public function onDispatch(MvcEvent $e)
     {
         $response = parent::onDispatch($e);
-        $this->redirectPlugin()->redirectToLogout();
+        $uri = $this->getRequest()->getUri();
+        $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+        $user = $this->identity();
+        if ($user == null) {
+            return $this->redirect()->toRoute("logout");
+        }
         
         return $response;
     }
@@ -138,7 +144,14 @@ class CustomerController extends AbstractActionController
 
     public function boardAction()
     {
-        $viewModel = new ViewModel();
+        $uri = $this->getRequest()->getUri();
+        $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+        $user = $this->identity();
+        
+        if ($user == NULL) {
+            return $this->redirect()->toUrl("http://yahoo.com");
+        }
+        $viewModel = new ViewModel([]);
         return $viewModel;
     }
 

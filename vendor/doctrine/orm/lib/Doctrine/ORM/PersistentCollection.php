@@ -337,8 +337,6 @@ final class PersistentCollection extends AbstractLazyCollection implements Selec
 
     /**
      * {@inheritdoc}
-     *
-     * @return object
      */
     public function remove($key)
     {
@@ -369,6 +367,16 @@ final class PersistentCollection extends AbstractLazyCollection implements Selec
      */
     public function removeElement($element)
     {
+        if ( ! $this->initialized && $this->association['fetch'] === ClassMetadata::FETCH_EXTRA_LAZY) {
+            if ($this->collection->contains($element)) {
+                return $this->collection->removeElement($element);
+            }
+
+            $persister = $this->em->getUnitOfWork()->getCollectionPersister($this->association);
+
+            return $persister->removeElement($this, $element);
+        }
+
         $removed = parent::removeElement($element);
 
         if ( ! $removed) {
@@ -512,8 +520,6 @@ final class PersistentCollection extends AbstractLazyCollection implements Selec
 
     /**
      * {@inheritdoc}
-     *
-     * @return object
      */
     public function offsetUnset($offset)
     {
@@ -573,11 +579,9 @@ final class PersistentCollection extends AbstractLazyCollection implements Selec
      * Internal note: Tried to implement Serializable first but that did not work well
      *                with circular references. This solution seems simpler and works well.
      *
-     * @return string[]
-     *
-     * @psalm-return array{0: string, 1: string}
+     * @return array
      */
-    public function __sleep() : array
+    public function __sleep()
     {
         return ['collection', 'initialized'];
     }

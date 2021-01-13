@@ -161,13 +161,13 @@ class BookingController extends AbstractActionController
             ->leftJoin("ad.user", "adu")
             ->where("s.status = :status")
             ->setParameters([
-                "status"=>CustomerService::BOOKING_STATUS_COMPLETED
-            ])
+            "status" => CustomerService::BOOKING_STATUS_COMPLETED
+        ])
             ->setMaxResults(100)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
         $viewModel = new ViewModel([
-            "data"=>$repo
+            "data" => $repo
         ]);
         return $viewModel;
     }
@@ -180,22 +180,49 @@ class BookingController extends AbstractActionController
         $jsonModel->setVariable("count", $this->bookingService->getAllInititedBookingCount());
         return $jsonModel;
     }
-    
-    public function intransitcountAction(){
+
+    public function intransitcountAction()
+    {
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
         $em = $this->entityManager;
-         $repo = $em->getRepository(Bookings::class);
+        $repo = $em->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("a")
-       
-        ->where("a.status = :status")
-        ->setParameters([
+            ->
+        where("a.status = :status")
+            ->setParameters([
             "status" => CustomerService::BOOKING_STATUS_ACTIVE
         ])
-        
-        ->getQuery()
-       ->getResult();
+            ->
+        getQuery()
+            ->getResult();
         $jsonModel->setVariable("data", count($result));
+        $response->setStatusCode(200);
+        return $jsonModel;
+    }
+
+    public function splashcompletedtripAction()
+    {
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $repo = $em->getRepository(Bookings::class)
+            ->createQueryBuilder('s')
+            ->select("s, u, t, ad, adu, st")
+            ->leftJoin("s.user", "u")
+            ->leftJoin("s.trip", "t")
+            ->leftJoin("s.status", "st")
+            ->leftJoin("s.assignedDriver", "ad")
+            ->leftJoin("ad.user", "adu")
+            ->where("s.status = :status")
+            ->setParameters([
+            "status" => CustomerService::BOOKING_STATUS_COMPLETED
+        ])
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+        $jsonModel = new JsonModel([
+            "data" => $repo
+        ]);
         $response->setStatusCode(200);
         return $jsonModel;
     }

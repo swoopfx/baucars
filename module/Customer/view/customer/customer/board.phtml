@@ -965,9 +965,9 @@ $flashMessenger = $this->flashMessenger()
 				email: cutomerboard.profileEmail,
 				name: cutomerboard.profileName,
 			},
-			// subaccounts: [{
-			// 	id: "RS_C4B4B84A84BC05F179E5C808BEC0C7A5", // This assumes you have setup your commission on the dashboard.
-			// }],
+			subaccounts: [{
+				id: "RS_5C928897803C0EE347EF69B83E409BF5", // This assumes you have setup your commission on the dashboard.
+			}],
 			callback: function(response) { // specified callback function
 				if (response.status == "successful") {
 					cutomerboard.tx_ref = response.tx_ref;

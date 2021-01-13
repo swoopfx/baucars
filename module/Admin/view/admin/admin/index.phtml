@@ -201,8 +201,7 @@
 						<h3 class="panel-title">INITIATED BOOKING</h3>
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle"
-								data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -230,12 +229,11 @@
 										<!-- <td><img src="assets/img/products/thumb-01.jpg" alt=""></td> -->
 										<td>{{data.bookingUid.toUpperCase()}}</td>
 										<td><a href="#" class="btn-link">{{formatPHPDate(data.pickupDate.date)}}
-												</a></td>
+											</a></td>
 										<td>{{data.bookingClass.bookingClass}}</td>
 										<!-- <td>{{data.bookingType.bookingType}}</td> -->
 										<td><span class="label label-success">{{data.status.status}}</span></td>
-										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
-												class="fa fa-eye"></i></a></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -253,8 +251,7 @@
 						<!-- <h3 class="panel-title">To-Do List</h3> -->
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle"
-								data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -301,8 +298,7 @@
 						<h3 class="panel-title">IN TRANSIT</h3>
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle"
-								data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -334,8 +330,7 @@
 										<td>{{data.bookingClass.bookingClass}}</td>
 										<td>{{formatPHPDate(data.trip.started.date)}}</td>
 										<td><span class="label label-success">{{data.status.status}}</span></td>
-										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
-												class="fa fa-eye"></i></a></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -353,8 +348,7 @@
 						<!-- <h3 class="panel-title">Total Overdue</h3> -->
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle"
-								data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -390,8 +384,7 @@
 						<h3 class="panel-title">COMPLETED BOOKING</h3>
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle"
-								data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -405,26 +398,30 @@
 								<thead>
 									<tr>
 										<th>TRACKING ID</th>
-										<th>ACTIVE PERIOD</th>
-										<!-- <th>AMOUNT PAID</th> -->
-										<th>BOOKING CLASS</th>
-										<th>BOOKING TYPE</th>
+										<th>USER DETAILS</th>
+
+
+										<th>TRIP DETAILs</th>
+
 										<th>STATUS</th>
 										<th>ACTION</th>
 									</tr>
 								</thead>
-								<tbody v-if="splashCanceledBooking.length">
+								<tbody v-if="splashCompletedTrip.length">
 									<!-- Table Row Start -->
-									<tr v-for="data in splashCanceledBooking">
-										<!-- <td><img src="assets/img/products/thumb-01.jpg" alt=""></td> -->
+									<tr v-for="data in splashCompletedTrip">
+
 										<td>{{data.bookingUid.toUpperCase()}}</td>
-										<td><a href="#" class="btn-link">{{formatPHPDate(data.startTime.date)}}
-												- {{formatPHPDate(data.endTime.date)}}</a></td>
-										<td>{{data.bookingClass.bookingClass}}</td>
-										<td>{{data.bookingType.bookingType}}</td>
+										<td><strong>{{data.user.fullName}} ({{data.user.userUid}})</strong><br></td>
+
+
+										<td><a href="#" class="btn-link">Trip Started :{{formatPHPDate(data.trip.started.date)}}
+											</a><br>
+											Trip Ended :{{formatPHPDate(data.trip.ended.date)}}
+										</td>
+
 										<td><span class="label label-success">{{data.status.status}}</span></td>
-										<td><a :href="initiateBookingListLink(data.bookingUid)"><i
-												class="fa fa-eye"></i></a></td>
+										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -442,8 +439,7 @@
 						<!-- <h3 class="panel-title">Total Overdue</h3> -->
 
 						<div class="dropdown">
-							<button type="button" class="btn-link dropdown-toggle"
-								data-toggle="dropdown">
+							<button type="button" class="btn-link dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-ellipsis-v"></i>
 							</button>
 
@@ -522,8 +518,7 @@
 						<ul v-if="splashSupport.length">
 							<li v-for="support in splashSupport">
 								<div class="img">
-									<img src="assets/img/avatars/04_40x40.png" alt=""
-										class="rounded-circle">
+									<img src="assets/img/avatars/04_40x40.png" alt="" class="rounded-circle">
 								</div>
 
 								<div class="info">
@@ -542,10 +537,7 @@
 						</ul>
 
 						<div class="nav">
-							<a
-								href="<?php echo $this->url("admin/default", array("controller"=>"admin", "action"=>"support"))?>"
-								class="next btn-link">Older Comments <i
-								class="fa fa-angle-double-right"></i></a>
+							<a href="<?php echo $this->url("admin/default", array("controller" => "admin", "action" => "support")) ?>" class="next btn-link">Older Comments <i class="fa fa-angle-double-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -563,6 +555,7 @@
 			this.getSplashInitiatedBooking();
 			this.getSplashCancledBooking();
 			this.getSplashInTransitBooking();
+			this.getSplashCompletedTrips();
 
 			// Support
 			this.getSplashSupport();
@@ -577,6 +570,7 @@
 				splashInitiatedBooking: [],
 				splashCanceledBooking: [],
 				splashInTransitBooking: [],
+				splashCompletedTrip: [],
 
 				// Support
 				splashSupport: [],
@@ -609,7 +603,7 @@
 			},
 
 			getActiveTripCount() {
-				
+
 				axios.get("/controller/booking/intransitcount").then(res => {
 					if (res.status == 200) {
 						this.activeTrip = res.data.data;
@@ -636,6 +630,14 @@
 				}).catch();
 			},
 
+			getSplashCompletedTrips() {
+				axios.get("/controller/booking/splashcompletedtrip").then(res => {
+					if (res.status == 200) {
+						this.splashCompletedTrip = res.data.data;
+					}
+				});
+			},
+
 			getSplashInTransitBooking() {
 				axios.get("/controller/booking/splashtransitbooking").then(res => {
 					if (res.status == 200) {
@@ -646,8 +648,8 @@
 			},
 
 			getSplashSupport() {
-				axios.get("/controller/admin/getSplashSupport").then(res=>{
-					if(res.status == 200){
+				axios.get("/controller/admin/getSplashSupport").then(res => {
+					if (res.status == 200) {
 						this.splashSupport = res.data.data;
 					}
 				}).catch();

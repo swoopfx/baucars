@@ -33,17 +33,17 @@ use Doctrine\ORM\Cache\QueryCacheKey;
 class StatisticsCacheLogger implements CacheLogger
 {
     /**
-     * @var int[]
+     * @var array
      */
     private $cacheMissCountMap = [];
 
     /**
-     * @var int[]
+     * @var array
      */
     private $cacheHitCountMap = [];
 
     /**
-     * @var int[]
+     * @var array
      */
     private $cachePutCountMap = [];
 
@@ -142,7 +142,7 @@ class StatisticsCacheLogger implements CacheLogger
      *
      * @param string $regionName The name of the cache region.
      *
-     * @return int
+     * @return integer
      */
     public function getRegionHitCount($regionName)
     {
@@ -154,7 +154,7 @@ class StatisticsCacheLogger implements CacheLogger
      *
      * @param string $regionName The name of the cache region.
      *
-     * @return int
+     * @return integer
      */
     public function getRegionMissCount($regionName)
     {
@@ -166,7 +166,7 @@ class StatisticsCacheLogger implements CacheLogger
      *
      * @param string $regionName The name of the cache region.
      *
-     * @return int
+     * @return integer
      */
     public function getRegionPutCount($regionName)
     {
@@ -222,7 +222,7 @@ class StatisticsCacheLogger implements CacheLogger
     /**
      * Get the total number of put in cache.
      *
-     * @return int
+     * @return integer
      */
     public function getPutCount()
     {
@@ -232,7 +232,7 @@ class StatisticsCacheLogger implements CacheLogger
     /**
      * Get the total number of entries successfully retrieved from cache.
      *
-     * @return int
+     * @return integer
      */
     public function getHitCount()
     {
@@ -242,7 +242,7 @@ class StatisticsCacheLogger implements CacheLogger
     /**
      * Get the total number of cached entries *not* found in cache.
      *
-     * @return int
+     * @return integer
      */
     public function getMissCount()
     {

@@ -41,9 +41,8 @@ class Expr
      *     // (u.type = ?1) AND (u.role = ?2)
      *     $expr->andX($expr->eq('u.type', ':1'), $expr->eq('u.role', ':2'));
      *
-     * @param Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string $x Optional clause. Defaults to null,
-     *                                                               but requires at least one defined
-     *                                                               when converting to string.
+     * @param Expr\Comparison|Expr\Func|Expr\Orx|string $x Optional clause. Defaults to null, but requires at least one
+     *                                                     defined when converting to string.
      *
      * @return Expr\Andx
      */
@@ -61,9 +60,8 @@ class Expr
      *     // (u.type = ?1) OR (u.role = ?2)
      *     $q->where($q->expr()->orX('u.type = ?1', 'u.role = ?2'));
      *
-     * @param Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string $x Optional clause. Defaults to null,
-     *                                                               but requires at least one defined
-     *                                                               when converting to string.
+     * @param mixed $x Optional clause. Defaults to null, but requires
+     *                 at least one defined when converting to string.
      *
      * @return Expr\Orx
      */
@@ -629,7 +627,7 @@ class Expr
      * @param integer|string $x   Starting range value to be used in BETWEEN() function.
      * @param integer|string $y   End point value to be used in BETWEEN() function.
      *
-     * @return string A BETWEEN expression.
+     * @return Expr\Func A BETWEEN expression.
      */
     public function between($val, $x, $y)
     {

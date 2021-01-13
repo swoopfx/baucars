@@ -1,8 +1,8 @@
 Caching
 =======
 
-Doctrine provides cache drivers in the ``doctrine/cache`` package for some
-of the most popular caching implementations such as APCu, Memcache
+Doctrine provides cache drivers in the ``Common`` package for some
+of the most popular caching implementations such as APC, Memcache
 and Xcache. We also provide an ``ArrayCache`` driver which stores
 the data in a PHP array. Obviously, when using ``ArrayCache``, the 
 cache does not persist between requests, but this is useful for 
@@ -45,29 +45,41 @@ This documentation does not cover every single cache driver included
 with Doctrine. For an up-to-date-list, see the
 `cache directory on GitHub <https://github.com/doctrine/cache/tree/master/lib/Doctrine/Common/Cache>`_.
 
-PhpFileCache
-~~~~~~~~~~~~
+APC
+~~~
 
-The preferred cache driver for metadata and query caches is ``PhpFileCache``.
-This driver serializes cache items and writes them to a file. This allows for
-opcode caching to be used and provides high performance in most scenarios.
+In order to use the APC cache driver you must have it compiled and
+enabled in your php.ini. You can read about APC
+`in the PHP Documentation <http://us2.php.net/apc>`_. It will give
+you a little background information about what it is and how you
+can use it as well as how to install it.
 
-In order to use the ``PhpFileCache`` driver it must be able to write to
-a directory.
-
-Below is an example of how to use the ``PhpFileCache`` driver by itself.
+Below is a simple example of how you could use the APC cache driver
+by itself.
 
 .. code-block:: php
 
     <?php
-    $cacheDriver = new \Doctrine\Common\Cache\PhpFileCache(
-        '/path/to/writable/directory'
-    );
+    $cacheDriver = new \Doctrine\Common\Cache\ApcCache();
     $cacheDriver->save('cache_id', 'my_data');
 
-The PhpFileCache is not distributed across multiple machines if you are running
-your application in a distributed setup. This is ok for the metadata and query
-cache but is not a good approach for the result cache.
+APCu
+~~~~
+
+In order to use the APCu cache driver you must have it compiled and
+enabled in your php.ini. You can read about APCu
+`in the PHP Documentation <http://us2.php.net/apcu>`_. It will give
+you a little background information about what it is and how you
+can use it as well as how to install it.
+
+Below is a simple example of how you could use the APCu cache driver
+by itself.
+
+.. code-block:: php
+
+    <?php
+    $cacheDriver = new \Doctrine\Common\Cache\ApcuCache();
+    $cacheDriver->save('cache_id', 'my_data');
 
 Memcache
 ~~~~~~~~
@@ -114,6 +126,24 @@ driver by itself.
     
     $cacheDriver = new \Doctrine\Common\Cache\MemcachedCache();
     $cacheDriver->setMemcached($memcached);
+    $cacheDriver->save('cache_id', 'my_data');
+
+Xcache
+~~~~~~
+
+In order to use the Xcache cache driver you must have it compiled
+and enabled in your php.ini. You can read about Xcache
+`here <http://xcache.lighttpd.net/>`_. It will give you a little
+background information about what it is and how you can use it as
+well as how to install it.
+
+Below is a simple example of how you could use the Xcache cache
+driver by itself.
+
+.. code-block:: php
+
+    <?php
+    $cacheDriver = new \Doctrine\Common\Cache\XcacheCache();
     $cacheDriver->save('cache_id', 'my_data');
 
 Redis
@@ -276,11 +306,8 @@ use on your ORM configuration.
 .. code-block:: php
 
     <?php
-    $cacheDriver = new \Doctrine\Common\Cache\PhpFileCache(
-        '/path/to/writable/directory'
-    );
     $config = new \Doctrine\ORM\Configuration();
-    $config->setQueryCacheImpl($cacheDriver);
+    $config->setQueryCacheImpl(new \Doctrine\Common\Cache\ApcuCache());
 
 Result Cache
 ~~~~~~~~~~~~
@@ -293,11 +320,7 @@ cache implementation.
 .. code-block:: php
 
     <?php
-    $cacheDriver = new \Doctrine\Common\Cache\PhpFileCache(
-        '/path/to/writable/directory'
-    );
-    $config = new \Doctrine\ORM\Configuration();
-    $config->setResultCacheImpl($cacheDriver);
+    $config->setResultCacheImpl(new \Doctrine\Common\Cache\ApcuCache());
 
 Now when you're executing DQL queries you can configure them to use
 the result cache.
@@ -306,7 +329,7 @@ the result cache.
 
     <?php
     $query = $em->createQuery('select u from \Entities\User u');
-    $query->enableResultCache();
+    $query->useResultCache(true);
 
 You can also configure an individual query to use a different
 result cache driver.
@@ -314,21 +337,18 @@ result cache driver.
 .. code-block:: php
 
     <?php
-    $cacheDriver = new \Doctrine\Common\Cache\PhpFileCache(
-        '/path/to/writable/directory'
-    );
-    $query->setResultCacheDriver($cacheDriver);
+    $query->setResultCacheDriver(new \Doctrine\Common\Cache\ApcuCache());
 
 .. note::
 
     Setting the result cache driver on the query will
     automatically enable the result cache for the query. If you want to
-    disable it use ``disableResultCache()``.
+    disable it pass false to ``useResultCache()``.
 
     ::
 
         <?php
-        $query->disableResultCache();
+        $query->useResultCache(false);
 
 
 If you want to set the time the cache has to live you can use the
@@ -349,12 +369,12 @@ yourself with the ``setResultCacheId()`` method.
     $query->setResultCacheId('my_custom_id');
 
 You can also set the lifetime and cache ID by passing the values as
-the first and second argument to ``enableResultCache()``.
+the second and third argument to ``useResultCache()``.
 
 .. code-block:: php
 
     <?php
-    $query->enableResultCache(3600, 'my_custom_id');
+    $query->useResultCache(true, 3600, 'my_custom_id');
 
 Metadata Cache
 ~~~~~~~~~~~~~~
@@ -369,11 +389,7 @@ first.
 .. code-block:: php
 
     <?php
-    $cacheDriver = new \Doctrine\Common\Cache\PhpFileCache(
-        '/path/to/writable/directory'
-    );
-    $config = new \Doctrine\ORM\Configuration();
-    $config->setMetadataCacheImpl($cacheDriver);
+    $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ApcuCache());
 
 Now the metadata information will only be parsed once and stored in
 the cache driver.
@@ -408,12 +424,6 @@ To clear the result cache use the ``orm:clear-cache:result`` task.
 
 All these tasks accept a ``--flush`` option to flush the entire
 contents of the cache instead of invalidating the entries.
-
-.. note::
-
-    None of these tasks will work with APC, APCu, or XCache drivers
-    because the memory that the cache is stored in is only accessible
-    to the webserver.
 
 Cache Chaining
 --------------

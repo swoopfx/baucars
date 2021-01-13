@@ -19,16 +19,13 @@
 
 namespace Doctrine\ORM\Query;
 
-use Doctrine\ORM\AbstractQuery;
-
 /**
- * @template-implements \Iterator<TreeWalker>
- * @template-implements \ArrayAccess<int, TreeWalker>
+ *
  */
 class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
 {
     /**
-     * @var class-string<TreeWalker>[]
+     * @var TreeWalker[]
      */
     private $walkers = [];
     /**
@@ -36,18 +33,14 @@ class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
      */
     private $treeWalkerChain;
     /**
-     * @var AbstractQuery
+     * @var
      */
     private $query;
     /**
-     * @var ParserResult
+     * @var
      */
     private $parserResult;
 
-    /**
-     * @param AbstractQuery $query
-     * @param ParserResult  $parserResult
-     */
     public function __construct(TreeWalkerChain $treeWalkerChain, $query, $parserResult)
     {
         $this->treeWalkerChain = $treeWalkerChain;
@@ -56,9 +49,7 @@ class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @return string|false
-     *
-     * @psalm-return class-string<TreeWalker>|false
+     * {@inheritdoc}
      */
     public function rewind()
     {
@@ -66,7 +57,7 @@ class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @return TreeWalker|null
+     * {@inheritdoc}
      */
     public function current()
     {
@@ -74,7 +65,7 @@ class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function key()
     {
@@ -82,7 +73,7 @@ class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @return TreeWalker|null
+     * {@inheritdoc}
      */
     public function next()
     {
@@ -108,7 +99,7 @@ class TreeWalkerChainIterator implements \Iterator, \ArrayAccess
     }
 
     /**
-     * @return TreeWalker|null
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {

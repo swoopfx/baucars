@@ -17,7 +17,7 @@
  * drop this config file in it and change the values as you wish.
  */
 return array(
-    'csnuser' => array(
+    'user' => array(
         /**
          * Login Redirect Route
          *
@@ -25,10 +25,9 @@ return array(
          *
          * Default value: 'user'
          * Accepted values: A valid route name within your application
-         *
          */
-        'login_redirect_route' => 'user-index',
-    
+        'login_redirect_route' => 'dashboard',
+        
         /**
          * Logout Redirect Route
          *
@@ -37,7 +36,7 @@ return array(
          * Default value: 'user'
          * Accepted values: A valid route name within your application
          */
-        'logout_redirect_route' => 'user-index',
+        'logout_redirect_route' => 'logout',
         
         /**
          * Sender email dadress
@@ -46,7 +45,7 @@ return array(
          * defined email address
          *
          * Default value: 'no-reply@example.com'
-         * Accepted values:  A valid email address
+         * Accepted values: A valid email address
          */
         'sender_email_adress' => 'no-reply@example.com',
         
@@ -66,7 +65,7 @@ return array(
          * Default value: 3
          * Accepted values: int
          */
-         'captcha_char_num' => 3,
+        'captcha_char_num' => 3,
         
         /**
          * Visibility of exception details
@@ -77,6 +76,6 @@ return array(
          * Accepted values: true/false
          * Production reccommended value: false
          */
-        'display_exceptions' => true,
-    ),
+        'display_exceptions' => false
+    )
 );

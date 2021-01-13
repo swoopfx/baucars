@@ -620,7 +620,6 @@ class Configuration extends DBALConfiguration
      * @see \Doctrine\ORM\Configuration::setClassMetadataFactoryName()
      *
      * @param string $factoryName
-     * @return self
      */
     public function setClassMetadataFactoryName($factoryName)
     {
@@ -671,7 +670,7 @@ class Configuration extends DBALConfiguration
 
     /**
      * @param  array $secondLevelCache
-     * @return self
+     * @return void
      */
     public function setSecondLevelCache(array $secondLevelCache)
     {
@@ -690,7 +689,7 @@ class Configuration extends DBALConfiguration
 
     /**
      * @param  string $filterSchemaAssetsExpression
-     * @return self
+     * @return void
      */
     public function setFilterSchemaAssetsExpression($filterSchemaAssetsExpression)
     {
@@ -711,7 +710,7 @@ class Configuration extends DBALConfiguration
      * Sets default repository class.
      *
      * @param  string $className
-     * @return self
+     * @return void
      */
     public function setDefaultRepositoryClassName($className)
     {

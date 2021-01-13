@@ -34,7 +34,7 @@ use Doctrine\DBAL\Cache\QueryCacheProfile;
 abstract class AbstractSqlExecutor
 {
     /**
-     * @var mixed[]|string
+     * @var array
      */
     protected $_sqlStatements;
 
@@ -46,7 +46,7 @@ abstract class AbstractSqlExecutor
     /**
      * Gets the SQL statements that are executed by the executor.
      *
-     * @return mixed[]|string  All the SQL update statements.
+     * @return array  All the SQL update statements.
      */
     public function getSqlStatements()
     {

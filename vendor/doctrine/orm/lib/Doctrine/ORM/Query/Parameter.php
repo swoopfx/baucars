@@ -31,18 +31,6 @@ use function trim;
 class Parameter
 {
     /**
-     * Returns the internal representation of a parameter name.
-     *
-     * @param string|int $name The parameter name or position.
-     *
-     * @return string The normalized parameter name.
-     */
-    public static function normalizeName($name)
-    {
-        return trim((string) $name, ':');
-    }
-
-    /**
      * The parameter name.
      *
      * @var string
@@ -79,7 +67,7 @@ class Parameter
      */
     public function __construct($name, $value, $type = null)
     {
-        $this->name          = self::normalizeName($name);
+        $this->name          = trim($name, ':');
         $this->typeSpecified = $type !== null;
 
         $this->setValue($value, $type);

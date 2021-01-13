@@ -25,12 +25,12 @@ class IndexController extends AbstractActionController
      */
     private $generalService;
 
-    public function dashboardAction()
-    {
-        $uri = $this->getRequest()->getUri();
-        $baseUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
-        return $this->redirect()->toUrl($baseUrl . "/" . UserService::routeManager($this->identity()));
-    }
+//     public function dashboardAction()
+//     {
+//         $uri = $this->getRequest()->getUri();
+//         $baseUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+//         return $this->redirect()->toUrl($baseUrl . "/" . UserService::routeManager($this->identity()));
+//     }
 
     public function indexAction()
     {

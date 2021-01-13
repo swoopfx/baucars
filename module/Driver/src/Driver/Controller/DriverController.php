@@ -17,6 +17,7 @@ use Customer\Entity\ActiveTrip;
 use Customer\Entity\Bookings;
 use Driver\Entity\DriverBio;
 use Customer\Entity\BookingActivity;
+use Zend\Mvc\MvcEvent;
 
 class DriverController extends AbstractActionController
 {
@@ -38,6 +39,14 @@ class DriverController extends AbstractActionController
      * @var DriverService
      */
     private $driverService;
+    
+    public function onDispatch(MvcEvent $e)
+    {
+        $response = parent::onDispatch($e);
+        $this->redirectPlugin()->redirectToLogout();
+        
+        return $response;
+    }
 
     public function indexAction()
     {

@@ -54,6 +54,7 @@ class AdminController extends AbstractActionController
     // private $
     public function indexAction()
     {
+        
         return array();
     }
 

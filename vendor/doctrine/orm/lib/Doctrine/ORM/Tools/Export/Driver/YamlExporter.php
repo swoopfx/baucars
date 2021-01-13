@@ -28,8 +28,6 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Jonathan Wage <jonwage@gmail.com>
- *
- * @deprecated 2.7 This class is being removed from the ORM and won't have any replacement
  */
 class YamlExporter extends AbstractExporter
 {
@@ -120,7 +118,10 @@ class YamlExporter extends AbstractExporter
         $array['id'] = $ids;
 
         if ($fieldMappings) {
-            $array['fields'] = $fieldMappings;
+            if ( ! isset($array['fields'])) {
+                $array['fields'] = [];
+            }
+            $array['fields'] = array_merge($array['fields'], $fieldMappings);
         }
 
         foreach ($metadata->associationMappings as $name => $associationMapping) {

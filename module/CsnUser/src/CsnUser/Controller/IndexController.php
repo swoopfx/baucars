@@ -97,7 +97,7 @@ class IndexController extends AbstractActionController
             $lastloginEntity->setUser($user)->setLastlogin(new \DateTime());
         }
         try {
-            $em->persist($user);
+            $em->persist($lastloginEntity);
             $em->flush();
         } catch (\Exception $e) {
             $this->flashmessenger()->addErrorMessage("We could not logi at this time ");
@@ -140,9 +140,8 @@ class IndexController extends AbstractActionController
      */
     public function loginAction()
     {
-        // $this->layout()->setTemplate("layout/login");
-        
-        // var_dump($baseUrl = $this->baseUrl());
+//         $this->layout()->setTemplate("layout/login");
+ 
         $user = $this->identity();
         if ($user) {
             return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
@@ -151,6 +150,7 @@ class IndexController extends AbstractActionController
         // use the generated controllerr plugin for the redirection
         
         $form = $this->loginForm->createUserForm($this->userEntity, 'login');
+        // var_dump($form);
         $messages = null;
         if ($this->getRequest()->isPost()) {
             $form->setValidationGroup('usernameOrEmail', 'password', 'rememberme', 'csrf');
@@ -174,7 +174,6 @@ class IndexController extends AbstractActionController
                     if (count($user) > 0) {
                         $user = $user[0];
                     }
-                    // var_dump($user);
                     // var_dump($user);
                     if ($user == NULL) {
                         
@@ -248,7 +247,7 @@ class IndexController extends AbstractActionController
                 }
             }
         }
-        
+//         var_dump($form);
         return new ViewModel(array(
             'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
             'form' => $form,
@@ -266,12 +265,20 @@ class IndexController extends AbstractActionController
      */
     public function loginjsonAction()
     {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        // $data = $inputFilter->getValues();
+        $response->setStatusCode(402);
+        return $jsonModel;
         $user = $this->identity();
         if ($user) {
             return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
         }
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
+        // $data = $inputFilter->getValues();
+        $response->setStatusCode(402);
+        return $jsonModel;
         $uri = $this->getRequest()->getUri();
         // var_dump($uri);
         $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
@@ -307,6 +314,9 @@ class IndexController extends AbstractActionController
                 )
             ));
             
+            $response->setStatusCode(402);
+            return $jsonModel;
+            
             $inputFilter->add(array(
                 'name' => 'password',
                 'required' => true,
@@ -330,55 +340,50 @@ class IndexController extends AbstractActionController
                     )
                 )
             ));
-            // $form->setValidationGroup('usernameOrEmail', 'password', 'rememberme', 'csrf');
-            // $form->setData($this->getRequest()
-            // ->getPost());
+            
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
                 $data = $inputFilter->getValues();
-                
+                $response->setStatusCode(401);
+                return $jsonModel;
                 $authService = $this->authService;
                 $adapter = $authService->getAdapter();
                 $phoneOrEmail = $data["phoneOrEmail"];
                 
                 try {
-                    $user = $this->entityManager
-                    ->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")
-                    ->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
+                    $user = $this->entityManager->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
                     
-                   
-                    
-//                     $user = $this->user->selectUserDQL($phoneOrEmail);
+                    // $user = $this->user->selectUserDQL($phoneOrEmail);
                     if (count($user) == 0) {
-                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        $response->setCustomStatusCode(498);
+                        $response->setReasonPhrase('Invalid token!');
                         return $jsonModel->setVariables([
-                            "messages"=>"The username or email is not valid!"
+                            "messages" => "The username or email is not valid!"
                         ]);
-                    }else{
+                    } else {
                         $user = $user[0];
                     }
                     
-                   
                     // var_dump($user);
                     // var_dump($user);
-//                     if ($user == NULL) {
-                       
-//                         $messages = 'The username or email is not valid!';
-//                         // return new ViewModel(array(
-//                         // 'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
-//                         // 'form' => $form,
-//                         // 'messages' => $messages,
-//                         // 'navMenu' => $this->options->getNavMenu()
-//                         // ));
-                        
-//                         $response->setStatusCode(Response::STATUS_CODE_422);
-//                         return $jsonModel->setVariables([
-//                             "messages" => $messages
-//                         ]);
-//                     }
+                    // if ($user == NULL) {
+                    
+                    // $messages = 'The username or email is not valid!';
+                    // // return new ViewModel(array(
+                    // // 'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
+                    // // 'form' => $form,
+                    // // 'messages' => $messages,
+                    // // 'navMenu' => $this->options->getNavMenu()
+                    // // ));
+                    
+                    // $response->setStatusCode(Response::STATUS_CODE_422);
+                    // return $jsonModel->setVariables([
+                    // "messages" => $messages
+                    // ]);
+                    // }
                     if (! $user->getEmailConfirmed() == 1) {
                         $messages = $this->translatorHelper->translate('You are yet to confirm your account, please go to the registered email to confirm your account');
-                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        $response->setCustomerStatusCode(Response::STATUS_CODE_422);
                         return $jsonModel->setVariables([
                             "messages" => $messages
                         ]);
@@ -404,13 +409,14 @@ class IndexController extends AbstractActionController
                         
                         // Last Login Date
                         $this->lastLogin($this->identity());
-                        
+                        $userEntity = $this->identity();
                         if ($this->params()->fromPost('rememberme')) {
                             $time = 1209600; // 14 days (1209600/3600 = 336 hours => 336/24 = 14 days)
                             $sessionManager = new SessionManager();
                             $sessionManager->rememberMe($time);
                         }
                         
+                        // var_dump($this->identity());
                         /**
                          * At this region check if the user varible isProfiled is true
                          * If it is true make sure continue with the login
@@ -419,15 +425,16 @@ class IndexController extends AbstractActionController
                          * to display the required form to fill the profile
                          * if required redirect to the copletinfg profile Page
                          */
-                        $redirect = $fullUrl . "/" . UserService::routeManager($user);
-                        // $referer = $request->getHeaders("Referer")->getFieldValue();
-                        $response->setStatusCode(Response::STATUS_CODE_200);
+                        $redirect = $fullUrl . "/" . UserService::routeManager($userEntity);
+                        
+                        $response->setCustomerStatusCode(201);
                         $jsonModel->setVariables([
                             "redirect" => $redirect
                         ]);
+                        $jsonModel->setVariables([]);
                         return $jsonModel;
                         // return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
-                    }else{
+                    } else {
                         $messages = $this->translatorHelper->translate('Invalid Credentials');
                         $response->setStatusCode(Response::STATUS_CODE_422);
                         return $jsonModel->setVariables([
@@ -476,7 +483,7 @@ class IndexController extends AbstractActionController
             $sessionManager->destroy();
         }
         
-        return $this->redirect()->toRoute($this->options->getLogoutRedirectRoute());
+        return $this->redirect()->toRoute("login");
     }
 
     /**

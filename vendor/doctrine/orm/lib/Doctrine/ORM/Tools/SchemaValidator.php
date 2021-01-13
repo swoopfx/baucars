@@ -81,9 +81,7 @@ class SchemaValidator
      *
      * @param ClassMetadataInfo $class
      *
-     * @return string[]
-     *
-     * @psalm-return list<string>
+     * @return array
      */
     public function validateClass(ClassMetadataInfo $class)
     {

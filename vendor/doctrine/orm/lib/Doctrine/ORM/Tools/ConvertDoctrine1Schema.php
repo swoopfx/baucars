@@ -68,9 +68,7 @@ class ConvertDoctrine1Schema
      * Gets an array of ClassMetadataInfo instances from the passed
      * Doctrine 1 schema.
      *
-     * @return ClassMetadataInfo[] An array of ClassMetadataInfo instances
-     *
-     * @psalm-return list<ClassMetadataInfo>
+     * @return array An array of ClassMetadataInfo instances
      */
     public function getMetadata()
     {
@@ -172,7 +170,7 @@ class ConvertDoctrine1Schema
      * @param string|array      $column
      * @param ClassMetadataInfo $metadata
      *
-     * @return mixed[]
+     * @return array
      *
      * @throws ToolsException
      */

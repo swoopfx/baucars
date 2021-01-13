@@ -25,7 +25,6 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use function array_map;
-use function array_sum;
 
 /**
  * The paginator can handle various complex scenarios with DQL.
@@ -123,7 +122,7 @@ class Paginator implements \Countable, \IteratorAggregate
     {
         if ($this->count === null) {
             try {
-                $this->count = (int) array_sum(array_map('current', $this->getCountQuery()->getScalarResult()));
+                $this->count = array_sum(array_map('current', $this->getCountQuery()->getScalarResult()));
             } catch (NoResultException $e) {
                 $this->count = 0;
             }
@@ -140,7 +139,7 @@ class Paginator implements \Countable, \IteratorAggregate
         $offset = $this->query->getFirstResult();
         $length = $this->query->getMaxResults();
 
-        if ($this->fetchJoinCollection && $length !== null) {
+        if ($this->fetchJoinCollection) {
             $subQuery = $this->cloneQuery($this->query);
 
             if ($this->useOutputWalker($subQuery)) {
@@ -191,6 +190,7 @@ class Paginator implements \Countable, \IteratorAggregate
      */
     private function cloneQuery(Query $query)
     {
+        /* @var $cloneQuery Query */
         $cloneQuery = clone $query;
 
         $cloneQuery->setParameters(clone $query->getParameters());
@@ -244,6 +244,7 @@ class Paginator implements \Countable, \IteratorAggregate
      */
     private function getCountQuery()
     {
+        /* @var $countQuery Query */
         $countQuery = $this->cloneQuery($this->query);
 
         if ( ! $countQuery->hasHint(CountWalker::HINT_DISTINCT)) {

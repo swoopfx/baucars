@@ -283,17 +283,17 @@ abstract class AbstractEntityPersister implements CachedEntityPersister
     /**
      * Generates a string of currently query
      *
-     * @param string            $query
-     * @param string[]|Criteria $criteria
-     * @param string[]          $orderBy
-     * @param int               $limit
-     * @param int               $offset
+     * @param array   $query
+     * @param string  $criteria
+     * @param array   $orderBy
+     * @param integer $limit
+     * @param integer $offset
      *
      * @return string
      */
     protected function getHash($query, $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        [$params] = $criteria instanceof Criteria
+        list($params) = ($criteria instanceof Criteria)
             ? $this->persister->expandCriteriaParameters($criteria)
             : $this->persister->expandParameters($criteria);
 
@@ -544,18 +544,19 @@ abstract class AbstractEntityPersister implements CachedEntityPersister
     /**
      * {@inheritdoc}
      */
-    public function loadManyToManyCollection(array $assoc, $sourceEntity, PersistentCollection $collection)
+    public function loadManyToManyCollection(array $assoc, $sourceEntity, PersistentCollection $coll)
     {
         $persister = $this->uow->getCollectionPersister($assoc);
         $hasCache  = ($persister instanceof CachedPersister);
+        $key       = null;
 
         if ( ! $hasCache) {
-            return $this->persister->loadManyToManyCollection($assoc, $sourceEntity, $collection);
+            return $this->persister->loadManyToManyCollection($assoc, $sourceEntity, $coll);
         }
 
-        $ownerId = $this->uow->getEntityIdentifier($collection->getOwner());
+        $ownerId = $this->uow->getEntityIdentifier($coll->getOwner());
         $key     = $this->buildCollectionCacheKey($assoc, $ownerId);
-        $list    = $persister->loadCollectionCache($collection, $key);
+        $list    = $persister->loadCollectionCache($coll, $key);
 
         if ($list !== null) {
             if ($this->cacheLogger) {
@@ -565,7 +566,7 @@ abstract class AbstractEntityPersister implements CachedEntityPersister
             return $list;
         }
 
-        $list = $this->persister->loadManyToManyCollection($assoc, $sourceEntity, $collection);
+        $list = $this->persister->loadManyToManyCollection($assoc, $sourceEntity, $coll);
 
         $persister->storeCollectionCache($key, $list);
 
@@ -579,18 +580,18 @@ abstract class AbstractEntityPersister implements CachedEntityPersister
     /**
      * {@inheritdoc}
      */
-    public function loadOneToManyCollection(array $assoc, $sourceEntity, PersistentCollection $collection)
+    public function loadOneToManyCollection(array $assoc, $sourceEntity, PersistentCollection $coll)
     {
         $persister = $this->uow->getCollectionPersister($assoc);
         $hasCache  = ($persister instanceof CachedPersister);
 
         if ( ! $hasCache) {
-            return $this->persister->loadOneToManyCollection($assoc, $sourceEntity, $collection);
+            return $this->persister->loadOneToManyCollection($assoc, $sourceEntity, $coll);
         }
 
-        $ownerId = $this->uow->getEntityIdentifier($collection->getOwner());
+        $ownerId = $this->uow->getEntityIdentifier($coll->getOwner());
         $key     = $this->buildCollectionCacheKey($assoc, $ownerId);
-        $list    = $persister->loadCollectionCache($collection, $key);
+        $list    = $persister->loadCollectionCache($coll, $key);
 
         if ($list !== null) {
             if ($this->cacheLogger) {
@@ -600,7 +601,7 @@ abstract class AbstractEntityPersister implements CachedEntityPersister
             return $list;
         }
 
-        $list = $this->persister->loadOneToManyCollection($assoc, $sourceEntity, $collection);
+        $list = $this->persister->loadOneToManyCollection($assoc, $sourceEntity, $coll);
 
         $persister->storeCollectionCache($key, $list);
 

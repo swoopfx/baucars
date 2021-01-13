@@ -22,13 +22,11 @@ namespace Doctrine\ORM\Tools\Console\Command;
 use Doctrine\ORM\Tools\ConvertDoctrine1Schema;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
-use Doctrine\ORM\Tools\Export\Driver\AnnotationExporter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command to convert a Doctrine 1 schema to a Doctrine 2 mapping file.
@@ -39,8 +37,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
- *
- * @deprecated 2.7 This class is being removed from the ORM and won't have any replacement
  */
 class ConvertDoctrine1SchemaCommand extends Command
 {
@@ -120,9 +116,6 @@ class ConvertDoctrine1SchemaCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ui = new SymfonyStyle($input, $output);
-        $ui->warning('Command ' . $this->getName() . ' is deprecated and will be removed in Doctrine ORM 3.0.');
-
         // Process source directories
         $fromPaths = array_merge([$input->getArgument('from-path')], $input->getOption('from'));
 
@@ -131,11 +124,9 @@ class ConvertDoctrine1SchemaCommand extends Command
 
         $toType = $input->getArgument('to-type');
         $extend = $input->getOption('extend');
-        $numSpaces = (int) $input->getOption('num-spaces');
+        $numSpaces = $input->getOption('num-spaces');
 
         $this->convertDoctrine1Schema($fromPaths, $destPath, $toType, $numSpaces, $extend, $output);
-
-        return 0;
     }
 
     /**
@@ -181,7 +172,7 @@ class ConvertDoctrine1SchemaCommand extends Command
         $cme = $this->getMetadataExporter();
         $exporter = $cme->getExporter($toType, $destPath);
 
-        if ($exporter instanceof AnnotationExporter) {
+        if (strtolower($toType) === 'annotation') {
             $entityGenerator = $this->getEntityGenerator();
             $exporter->setEntityGenerator($entityGenerator);
 

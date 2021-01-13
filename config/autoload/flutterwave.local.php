@@ -7,9 +7,9 @@ return [
             "encryption_key" => "FLWSECK_TEST560d71ec54c6"
         ],
         'live' => [
-            "public_key" => "FLWPUBK-ac7b6b5cd4cc7def4ed7773d2ac89e56-X",
-            "secret_key" => "FLWSECK-262dbc2005e0230cce3fd23d629de28c-X",
-            "encryption_key" => "262dbc2005e0e1dbbcfaa9c6"
+            "public_key" => "FLWPUBK-27116caef5240cb85a3732c6767bfff9-X",
+            "secret_key" => "FLWSECK-1f80f202766cca75ffd33f768086179a-X",
+            "encryption_key" => "1f80f202766c4695d1682e8a"
         ]
     ]
 ];
