@@ -5,13 +5,15 @@ return array(
         'AcMailer',
         'DoctrineModule',
         'DoctrineORMModule',
-		
+        
         'Application',
-       'CsnUser',
-       'Admin',
-       'Driver',
+        'CsnUser',
+        'Admin',
+        'Driver',
         'General',
-       'Customer','Job'
+        'Customer',
+        'Job',
+        'WasabiLib',
     ),
     
     // These are various options for the listeners attached to the ModuleManager
@@ -23,7 +25,7 @@ return array(
         'module_paths' => array(
             './module',
             './vendor'
-           
+        
         ),
         
         // An array of paths from which to glob configuration files after

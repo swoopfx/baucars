@@ -86,6 +86,8 @@ class IndexController extends AbstractActionController
         }
         return $jsonModel;
     }
+    
+   
 
     /**
      *

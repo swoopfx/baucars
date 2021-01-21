@@ -29,11 +29,7 @@ $flashMessenger = $this->flashMessenger()
 						<div class="col-xl-6 col-lg-6 col-md-6 col-12 d-flex justify-content-xl-end justify-content-lg-end justify-content-md-end justify-content-center">
 							<h2 class="page-header-title" style="margin-right: 0 !important;"> Welcome {{profileName}}</h2>
 						</div>
-						<!-- <div class="col-xl-6 col-lg-6 col-md-6 col-12 d-flex justify-content-xl-start justify-content-lg-start justify-content-md-start justify-content-center">
-							<div class="page-header-tools">
-								<a class="btn btn-gradient-01" @click="toggleBookingForm()"> Book a Ride</a>
-							</div>
-						</div> -->
+
 					</div>
 				</div>
 			</div>
@@ -66,8 +62,10 @@ $flashMessenger = $this->flashMessenger()
 									<div class="widget has-shadow">
 
 
-
-										<div class="widget-body">
+										<div class="widget-body" v-if="isCashPayment">
+											<div class="spinner"></div>
+										</div>
+										<div class="widget-body" v-else>
 
 											<div v-if="isPreBooking">
 
@@ -124,14 +122,15 @@ $flashMessenger = $this->flashMessenger()
 
 												<div v-if="initiatedPayment">
 
-														<div class="spinner"></div>
-													</div>
+													<div class="spinner"></div>
+												</div>
 												<div v-if="!initiatedPayment">
 
 													<div class="text-right">
 
 
-														<button @click="makeNewPayment()" class="btn btn-success" type="button">Confirm Booking</button>
+														<button @click="cashPayment()" class="btn btn-default" type="button"><i class="ion ion-social-usd"></i> Cash</button>
+														<button @click="makeNewPayment()" class="btn btn-default" type="button"><i class="ion ion-closed-captioning"></i>Card</button>
 
 														<button @click="closePreBook()" class="btn btn-shadow btn-danger" type="reset">Reset Booking</button>
 													</div>
@@ -194,12 +193,24 @@ $flashMessenger = $this->flashMessenger()
 
 
 													<div class="form-group row d-flex align-items-center mb-5">
+														<label class="col-lg-4 form-control-label">Pick Up Date</label>
+														<div class="col-lg-8">
+															<div class="form-group">
+																<div class="input-group">
+
+																	<input type="date" ref="pickupdate" class="form-control" id="date" placeholder="Select value">
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="form-group row d-flex align-items-center mb-5">
 														<label class="col-lg-4 form-control-label">Pick Up Time</label>
 														<div class="col-lg-8">
 															<div class="form-group">
 																<div class="input-group">
 
-																	<input type="date" ref="pickupdate" class="form-control" id="date" placeholder="Select value"><input ref="pickuptime" type="time" id="appt" name="appt">
+																	<input ref="pickuptime" class="form-control" type="time" id="appt" name="appt">
 																</div>
 															</div>
 														</div>
@@ -212,7 +223,7 @@ $flashMessenger = $this->flashMessenger()
 														<div class="spinner"></div>
 													</div>
 													<div v-if="!processing" class="text-right">
-														<button @click="initiatenewBooking()" class="btn btn-primary" type="button">Initiate Booking</button>
+														<button @click="initiatenewBooking()" class="btn btn-primary" type="button"> <i class="ion ion-closed-captioning"></i>Initiate Booking</button>
 													</div>
 												</form>
 
@@ -431,7 +442,7 @@ $flashMessenger = $this->flashMessenger()
 												<!-- <td><span class="text-primary">{{booking.bookingUid.toUpperCase()}}</span></td> -->
 												<!-- <td></td> -->
 												<td>{{formatPHPDate(booking.pickupDate.date)}}</td>
-												
+
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
 												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
 												<td class="td-actions"> <a href="#"><i class="la la-info delete"></i></a></td>
@@ -1098,7 +1109,12 @@ $flashMessenger = $this->flashMessenger()
 				isEdittingProfile: false,
 
 				// New Booking
-				initiatedPayment:false,
+
+
+				isCashPayment: false,
+
+
+				initiatedPayment: false,
 				newBooking: {},
 				selectedSeat: 10,
 				numberOfSeats: [],
@@ -1492,6 +1508,9 @@ $flashMessenger = $this->flashMessenger()
 			},
 
 
+
+
+
 			initiatenewBooking() {
 				this.processing = true;
 				if (this.pickUpAddress == "" || this.destinationAddress == "" || this.pickUpPlaceId == "" || this.destinationPlaceId == "" || this.$refs.pickupdate.value == "" || this.$refs.pickuptime.value == "") {
@@ -1537,6 +1556,17 @@ $flashMessenger = $this->flashMessenger()
 				window.location.reload();
 			},
 
+			cashPayment() {
+				this.isCashPayment = true;
+				let formData = new FormData();
+				// formData.append();
+				axios.post("/bookings/bookings/makepayment", formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+					}
+				}).catch();
+			},
+			//cashpayment
 
 			makeNewPayment() {
 				this.initiatedPayment = true;

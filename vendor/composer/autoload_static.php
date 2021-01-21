@@ -110,6 +110,7 @@ class ComposerStaticInit21ab68b0425d74fb0326f23f1f3e5093
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'Prophecy\\' => 9,
+            'PackageVersions\\' => 16,
         ),
         'I' => 
         array (
@@ -121,6 +122,7 @@ class ComposerStaticInit21ab68b0425d74fb0326f23f1f3e5093
             'Doctrine\\ORM\\' => 13,
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\Inflector\\' => 19,
+            'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Lexer\\' => 22,
             'Doctrine\\Common\\Inflector\\' => 26,
             'Doctrine\\Common\\Collections\\' => 28,
@@ -410,6 +412,10 @@ class ComposerStaticInit21ab68b0425d74fb0326f23f1f3e5093
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
+        'PackageVersions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions',
+        ),
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
@@ -429,6 +435,10 @@ class ComposerStaticInit21ab68b0425d74fb0326f23f1f3e5093
         'Doctrine\\Inflector\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
+        ),
+        'Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
         ),
         'Doctrine\\Common\\Lexer\\' => 
         array (
@@ -470,10 +480,6 @@ class ComposerStaticInit21ab68b0425d74fb0326f23f1f3e5093
     public static $prefixesPsr0 = array (
         'D' => 
         array (
-            'Doctrine\\DBAL\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
-            ),
             'DoctrineORMModule\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/doctrine-orm-module/src',

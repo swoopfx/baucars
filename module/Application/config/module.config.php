@@ -107,6 +107,7 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
             "layout/login" => __DIR__ . '/../view/layout/login-layout.phtml',
+            "soon"=> __DIR__ . '/../view/layout/coming-soon-layout.phtml',
             "layout/control" => __DIR__ . '/../view/layout/admin-layout.phtml',
             "layout/customer" => __DIR__ . '/../view/layout/customer-layout.phtml',
             'layout/footer' => __DIR__ . '/../view/layout/footer.phtml',

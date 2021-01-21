@@ -7,15 +7,10 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-5">
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
+					<br> <br> <br> <br> <br> <br>
 					<div class="book-a-car">
-						<a href="<?= $this->url("user-index")?>" class="btn btn-success btn-block">BOOK
-							NOW</a>
+						<a href="<?php echo $this->url("general/default", ["controller"=>"general", "action"=>"soon"]) ?>"
+							class="btn btn-success btn-block">BOOK NOW</a>
 					</div>
 				</div>
 
@@ -25,8 +20,8 @@
 							<div class="slider-right-text">
 								<h1>BOOK A CAR TODAY!</h1>
 								<p>
-									FOR AS LOW AS <?php  echo $this->myCurrency(2000)?> A DAY PLUS 10% DISCOUNT <br> FOR OUR
-									RETURNING CUSTOMERS
+									FOR AS LOW AS <?php  echo $this->myCurrency(2000)?> A DAY PLUS 10% DISCOUNT <br>
+									FOR OUR RETURNING CUSTOMERS
 								</p>
 							</div>
 						</div>
@@ -224,7 +219,7 @@
 			<div class="col-lg-4 text-center">
 				<div class="service-item">
 					<i class="fa fa-map-marker"></i>
-					<h3>CAR SALES</h3>
+					<h3>TAXI/MINI CAB</h3>
 					<!-- 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit -->
 					<!-- 						admollitia.</p> -->
 				</div>
@@ -281,7 +276,7 @@
 <!-- 			<div class="col-lg-11 col-md-12 m-auto"> -->
 <!-- 				<div class="funfact-content-wrap"> -->
 <!-- 					<div class="row"> -->
-						<!-- Single FunFact Start -->
+<!-- Single FunFact Start -->
 <!-- 						<div class="col-lg-4 col-md-6"> -->
 <!-- 							<div class="single-funfact"> -->
 <!-- 								<div class="funfact-icon"> -->
@@ -295,9 +290,9 @@
 <!-- 								</div> -->
 <!-- 							</div> -->
 <!-- 						</div> -->
-						<!-- Single FunFact End -->
+<!-- Single FunFact End -->
 
-						<!-- Single FunFact Start -->
+<!-- Single FunFact Start -->
 <!-- 						<div class="col-lg-4 col-md-6"> -->
 <!-- 							<div class="single-funfact"> -->
 <!-- 								<div class="funfact-icon"> -->
@@ -311,9 +306,9 @@
 <!-- 								</div> -->
 <!-- 							</div> -->
 <!-- 						</div> -->
-						<!-- Single FunFact End -->
+<!-- Single FunFact End -->
 
-						<!-- Single FunFact Start -->
+<!-- Single FunFact Start -->
 <!-- 						<div class="col-lg-4 col-md-6"> -->
 <!-- 							<div class="single-funfact"> -->
 <!-- 								<div class="funfact-icon"> -->
@@ -327,7 +322,7 @@
 <!-- 								</div> -->
 <!-- 							</div> -->
 <!-- 						</div> -->
-						<!-- Single FunFact End -->
+<!-- Single FunFact End -->
 <!-- 					</div> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
@@ -349,24 +344,24 @@
 <!-- <section id="pricing-area" class="section-padding overlay"> -->
 <!-- 	<div class="container"> -->
 <!-- 		<div class="row"> -->
-			<!-- Section Title Start -->
+<!-- Section Title Start -->
 <!-- 			<div class="col-lg-12"> -->
 <!-- 				<div class="section-title  text-center"> -->
 <!-- 					<h2>SERVICE DESCRIPTION</h2> -->
 <!-- 					<span class="title-line"><i class="fa fa-car"></i></span> -->
-					<!-- 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
+<!-- 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-			<!-- Section Title End -->
+<!-- Section Title End -->
 <!-- 		</div> -->
 
-		<!-- Pricing Table Conatent Start -->
+<!-- Pricing Table Conatent Start -->
 <!-- 		<div class="row"> -->
-			<!-- Single Pricing Table -->
+<!-- Single Pricing Table -->
 <!-- 			<div class="col-lg-4 col-md-6 text-center"> -->
 <!-- 				<div class="single-pricing-table"> -->
 <!-- 					<h3>CAR RENTAL</h3> -->
-					<!-- 						<h2>$ 55.99</h2> -->
+<!-- 						<h2>$ 55.99</h2> -->
 <!-- 					<h5>PER MONTH</h5> -->
 
 <!-- 					<ul class="package-list"> -->
@@ -379,9 +374,9 @@
 <!-- 					</ul> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-			<!-- Single Pricing Table -->
+<!-- Single Pricing Table -->
 
-			<!-- Single Pricing Table -->
+<!-- Single Pricing Table -->
 <!-- 			<div class="col-lg-4 col-md-6 text-center"> -->
 <!-- 				<div class="single-pricing-table"> -->
 <!-- 					<h3>Trial</h3> -->
@@ -398,13 +393,13 @@
 <!-- 					</ul> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-			<!-- Single Pricing Table -->
+<!-- Single Pricing Table -->
 
-			<!-- Single Pricing Table -->
+<!-- Single Pricing Table -->
 <!-- 			<div class="col-lg-4 col-md-6 text-center"> -->
 <!-- 				<div class="single-pricing-table"> -->
 <!-- 					<h3>standard</h3> -->
-					<!-- 						<h2>$ 35.99</h2> -->
+<!-- 						<h2>$ 35.99</h2> -->
 <!-- 					<h5>PER MONTH</h5> -->
 
 <!-- 					<ul class="package-list"> -->
@@ -417,9 +412,9 @@
 <!-- 					</ul> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-			<!-- Single Pricing Table -->
+<!-- Single Pricing Table -->
 <!-- 		</div> -->
-		<!-- Pricing Table Conatent End -->
+<!-- Pricing Table Conatent End -->
 <!-- 	</div> -->
 <!-- </section> -->
 <!--== Pricing Area End ==-->
@@ -492,26 +487,38 @@
 <!--== Testimonials Area End ==-->
 
 <!--== Mobile App Area Start ==-->
-<div id="mobileapp-video-bg"></div>
-<section id="mobile-app-area">
+<!-- <div id="mobileapp-video-bg"></div> -->
+
+<section id="funfact-area" class="overlay section-padding">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-6">
-				<div class="mobile-app-content">
-					<h2>COMING SOON</h2>
-					<p>Easy &amp; Fast - Book a car in 30 seconds</p>
-					<div class="app-btns">
-						<a href="#"><i class="fa fa-android"></i> Android Store</a>
-						<!-- 							 <a href="#"><i class="fa fa-apple"></i> Apple Store</a> -->
-						<a
-							href="https://api.whatsapp.com/send?phone=+2348052536443&text=Hi,%20I%20contacted%20you%20through%20BAU%20CARS%20website."><i
-							class="fa fa-whatsapp">WhatsApp</i></a>
+			<div class="col-lg-11 col-md-12 m-auto">
+				<div class="funfact-content-wrap">
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="mobile-app-content">
+								<h2>COMING SOON</h2>
+								<p>Easy &amp; Fast - Book a car in 30 seconds</p>
+								<div class="app-btns">
+									<a href="#"><i class="fa fa-android"></i> Android Store</a>
+									<!-- 							 <a href="#"><i class="fa fa-apple"></i> Apple Store</a> -->
+									<a
+										href="https://api.whatsapp.com/send?phone=+2348052536443&text=Hi,%20I%20contacted%20you%20through%20BAU%20CARS%20website."><i
+										class="fa fa-whatsapp">WhatsApp</i></a>
+								</div>
+							</div>
+						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
+
+
+
 <!-- == Mobile App Area End == -->
 
 <!--== Articles Area Start ==-->

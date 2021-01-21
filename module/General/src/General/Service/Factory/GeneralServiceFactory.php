@@ -42,10 +42,11 @@ class GeneralServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $xserv = new GeneralService();
-       
+        
         $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
         
         $mailService = $serviceLocator->get("acmailer.mailservice.default");
+        $mailService = (getenv('APPLICATION_ENV') == "development" ? $serviceLocator->get("acmailer.mailservice.default") : $serviceLocator->get("acmailer.mailservice.live"));
         $viewRenderer = $serviceLocator->get("ViewRenderer");
         $auth = $serviceLocator->get('Zend\Authentication\AuthenticationService');
         $viewRenderer = $serviceLocator->get("ViewRenderer");

@@ -10,12 +10,19 @@
 namespace General\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class GeneralController extends AbstractActionController
 {
     public function indexAction()
     {
         return array();
+    }
+    
+    public function  soonAction(){
+        $this->layout()->setTemplate("soon");
+        $viewModel = new ViewModel();
+        return $viewModel;
     }
 
     public function fooAction()

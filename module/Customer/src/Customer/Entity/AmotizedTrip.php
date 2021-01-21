@@ -21,7 +21,7 @@ class AmotizedTrip
     private $id;
     
     /**
-     * @ORM\OneToOne(targetntity="Bookings")
+     * @ORM\OneToOne(targetEntity="Bookings")
      * @var Bookings
      */
     private $booking;

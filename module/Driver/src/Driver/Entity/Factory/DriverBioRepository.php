@@ -30,6 +30,7 @@ class DriverBioRepository extends EntityRepository
             ->select([
             "d",
             "c",
+            "ds",
             "mm",
             "u"
         ])
@@ -37,6 +38,7 @@ class DriverBioRepository extends EntityRepository
             ->leftJoin("d.assisnedCar", "c")
             ->leftJoin("c.motorMake", "mm")
             ->leftJoin("d.user", "u")
+            ->leftJoin("d.driverState", "ds")
             ->setMaxResults($itemCountPerPage)
             ->setFirstResult($offset)
             ->orderBy("d.id", "DESC")

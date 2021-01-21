@@ -265,11 +265,10 @@ class IndexController extends AbstractActionController
      */
     public function loginjsonAction()
     {
-        $jsonModel = new JsonModel();
-        $response = $this->getResponse();
+       
+        
         // $data = $inputFilter->getValues();
-        $response->setStatusCode(402);
-        return $jsonModel;
+        
         $user = $this->identity();
         if ($user) {
             return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
@@ -277,8 +276,7 @@ class IndexController extends AbstractActionController
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
         // $data = $inputFilter->getValues();
-        $response->setStatusCode(402);
-        return $jsonModel;
+        
         $uri = $this->getRequest()->getUri();
         // var_dump($uri);
         $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
@@ -314,8 +312,7 @@ class IndexController extends AbstractActionController
                 )
             ));
             
-            $response->setStatusCode(402);
-            return $jsonModel;
+           
             
             $inputFilter->add(array(
                 'name' => 'password',
@@ -344,8 +341,7 @@ class IndexController extends AbstractActionController
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
                 $data = $inputFilter->getValues();
-                $response->setStatusCode(401);
-                return $jsonModel;
+               
                 $authService = $this->authService;
                 $adapter = $authService->getAdapter();
                 $phoneOrEmail = $data["phoneOrEmail"];
@@ -383,7 +379,7 @@ class IndexController extends AbstractActionController
                     // }
                     if (! $user->getEmailConfirmed() == 1) {
                         $messages = $this->translatorHelper->translate('You are yet to confirm your account, please go to the registered email to confirm your account');
-                        $response->setCustomerStatusCode(Response::STATUS_CODE_422);
+                        $response->setStatusCode(Response::STATUS_CODE_422);
                         return $jsonModel->setVariables([
                             "messages" => $messages
                         ]);
@@ -427,7 +423,7 @@ class IndexController extends AbstractActionController
                          */
                         $redirect = $fullUrl . "/" . UserService::routeManager($userEntity);
                         
-                        $response->setCustomerStatusCode(201);
+                        $response->setStatusCode(201);
                         $jsonModel->setVariables([
                             "redirect" => $redirect
                         ]);

@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-include_path=0;/baucars/module
+include_path=0;/baucars/module\u00050;/baucars/vendor
 org.eclipse.php.core.phpDoc=false
 use_asp_tags_as_php=false

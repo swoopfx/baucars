@@ -11,6 +11,9 @@ use General\Entity\NumberOfSeat;
 use Doctrine\ORM\Query;
 use Zend\Mvc\MvcEvent;
 use General\Service\FlutterwaveService;
+use WasabiLib\Ajax\Response;
+use WasabiLib\Ajax\GritterMessage;
+use WasabiLib\Ajax\Redirect;
 
 /**
  *
@@ -181,54 +184,51 @@ class BookingsController extends AbstractActionController
                 // var_dump($verifyData);
                 if ($verifyData->status == "success" && $verifyData->data->chargedamount >= $amountPayed) {
                     
-
                     $bookingEntity = $this->bookingService->createBooking();
-//                     var_dump("After Booking");
+                    // var_dump("After Booking");
                     $transactionEntity = $flutterwaveService->setAmountPayed($verifyData->data->chargedamount)
-                    ->setTxRef($verifyData->data->txref)
-                    ->setFlwId($verifyData->data->txid)
-                    ->setFlwRef($verifyData->data->flwref)
-                    ->setBooking($bookingEntity)
-                    ->setSettledAmount($verifyData->data->amountsettledforthistransaction)
-                    ->setTransactStatus(FlutterwaveService::TRANSACTION_STATUS_PAID)
-                    ->setTransactUser($this->identity()
+                        ->setTxRef($verifyData->data->txref)
+                        ->setFlwId($verifyData->data->txid)
+                        ->setFlwRef($verifyData->data->flwref)
+                        ->setBooking($bookingEntity)
+                        ->setSettledAmount($verifyData->data->amountsettledforthistransaction)
+                        ->setTransactStatus(FlutterwaveService::TRANSACTION_STATUS_PAID)
+                        ->setTransactUser($this->identity()
                         ->getId())
                         ->hydrateTransaction();
-//                         var_dump("After Transaction");
-                        $em->persist($bookingEntity);
-                        $em->persist($transactionEntity);
-                        
-                        $em->flush();
-//                         $flutterwaveService->setTransactionId($transactionEntity->getId());
-                        // $flutterwaveService->initiateTrasnfer();
-                        $response->SetStatusCode(201);
-                        $this->flashmessenger()->addSuccessMessage("N{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
-                        $jsonModel->setVariables([
-                            "data" => $verifyData->data->chargedamount
-                        ]);
-                        
-                        // Notify Controller
-                        $generalService = $this->generalService;
-                        $pointer["to"] = "admin@baucars.com";
-                        $pointer["fromName"] = "System Robot";
-                        $pointer['subject'] = "New Booking";
-                        
-                        $template['template'] = "admin-new-booking";
-                        $template["var"] = [
-                            "logo" => $this->url()->fromRoute('application', [
-                                'action' => 'application'
-                            ], [
-                                'force_canonical' => true
-                            ]) . "assets/img/logo.png",
-                            "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
-                            "fullname" => $transactionEntity->getBooking()
+                    // var_dump("After Transaction");
+                    $em->persist($bookingEntity);
+                    $em->persist($transactionEntity);
+                    
+                    $em->flush();
+                    // $flutterwaveService->setTransactionId($transactionEntity->getId());
+                    // $flutterwaveService->initiateTrasnfer();
+                    $response->SetStatusCode(201);
+                    $this->flashmessenger()->addSuccessMessage("N{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
+                    $jsonModel->setVariables([
+                        "data" => $verifyData->data->chargedamount
+                    ]);
+                    
+                    // Notify Controller
+                    $generalService = $this->generalService;
+                    $pointer["to"] = "admin@baucars.com";
+                    $pointer["fromName"] = "System Robot";
+                    $pointer['subject'] = "New Booking";
+                    
+                    $template['template'] = "admin-new-booking";
+                    $template["var"] = [
+                        "logo" => $this->url()->fromRoute('application', [
+                            'action' => 'application'
+                        ], [
+                            'force_canonical' => true
+                        ]) . "assets/img/logo.png",
+                        "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
+                        "fullname" => $transactionEntity->getBooking()
                             ->getUser()
                             ->getFullName(),
-                            "amount" => $transactionEntity->getAmount()
-                        ];
-                        $generalService->sendMails($pointer, $template);
-                        
-                       
+                        "amount" => $transactionEntity->getAmount()
+                    ];
+                    $generalService->sendMails($pointer, $template);
                 }
             } catch (\Exception $e) {
                 $response->setStatusCode(400);
@@ -239,6 +239,67 @@ class BookingsController extends AbstractActionController
             }
         }
         return $jsonModel;
+    }
+
+    public function cashpaymentAction()
+    {
+        $response = new Response();
+        $gritter = new GritterMessage();
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $user = $this->identity();
+        if ($this->isPost()) {
+            $bookingSession = $this->bookingService->getBookingSession();
+            try {
+                
+                $bookingEntity = $this->bookingService->createBooking();
+                
+                $em->persist($bookingEntity);
+                
+                $em->flush();
+                
+                $response->SetStatusCode(201);
+                
+                $this->flashmessenger()->addSuccessMessage("Your booking has beeen initiated ");
+                // $this->flashmessenger()->addSuccessMessage("N{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
+                $jsonModel->setVariables([                    // "data" => $verifyData->data->chargedamount
+                ]);
+                
+                // Notify Controller
+                $generalService = $this->generalService;
+//                 $pointer["to"] = "admin@baucars.com";
+//                 $pointer["fromName"] = "System Robot";
+//                 $pointer['subject'] = "New Booking";
+                
+//                 $template['template'] = "admin-new-booking";
+//                 $template["var"] = [
+//                     "logo" => $this->url()->fromRoute('application', [
+//                         'action' => 'application'
+//                     ], [
+//                         'force_canonical' => true
+//                     ]) . "assets/img/logo.png",
+//                     "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
+//                     "fullname" => $transactionEntity->getBooking()
+//                         ->getUser()
+//                         ->getFullName(),
+//                     "amount" => $transactionEntity->getAmount()
+//                 ];
+                
+                $response->add($gritter);
+                $redirect = new Redirect($this->url()->fromRoute("customer/default", array(
+                    "action" => "board"
+                )));
+                
+                $response->add($redirect);
+            } catch (\Exception $e) {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "message" => $e->getTrace()
+                    // "data" => $verifyData
+                ]);
+            }
+        }
+        return $this->getResponse()->setContent($response);
     }
 
     public function boardAction()

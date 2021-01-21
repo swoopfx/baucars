@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
 	<buildpathentry kind="src" path="module"/>
+	<buildpathentry kind="src" path="public"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 	<buildpathentry kind="src" path="vendor/acelaya/zf2-acmailer/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/composer">
+	<buildpathentry excluding="package-versions-deprecated/" kind="src" path="vendor/composer">
+		<attributes>
+			<attribute name="composer" value="vendor"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="vendor/composer/package-versions-deprecated/src/PackageVersions">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
@@ -37,7 +43,7 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/doctrine/dbal/lib">
+	<buildpathentry kind="src" path="vendor/doctrine/dbal/lib/Doctrine/DBAL">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>

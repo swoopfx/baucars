@@ -79,6 +79,17 @@ class BookingService
         
         // TODO - Insert your code here
     }
+    
+    public static function byPassCode(){
+        $six_digit_random_number = mt_rand(100000, 99999);
+        return $six_digit_random_number;
+    }
+
+
+    public static function tripCode(){
+        $five_digit_random_number = mt_rand(100000, 999999);
+        return $five_digit_random_number;
+    }
 
     public function setRequestSession($post)
     {
@@ -193,8 +204,8 @@ class BookingService
             ->setCalculatedDistanceValue($bookingSession->distanceValue)
             ->setCalculatedTimeText($bookingSession->timeText)
             ->setCalculatedTimeValue($bookingSession->timeValue)
-            
-//             ->setPickuptime($bookingSession->pickupTime)
+            ->setByPassCode(self::byPassCode())
+            ->setTripCode(self::tripCode())
             ->setBookingClass($em->find(BookingClass::class, $bookingSession->selectedBookingClass))
             ->setSeater($em->find(NumberOfSeat::class, $bookingSession->selectedNumberOfSeat));
         
