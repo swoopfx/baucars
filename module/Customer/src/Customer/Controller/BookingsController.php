@@ -243,12 +243,12 @@ class BookingsController extends AbstractActionController
 
     public function cashpaymentAction()
     {
-        $response = new Response();
-        $gritter = new GritterMessage();
+        $response = $this->getResponse();
         $em = $this->entityManager;
         $jsonModel = new JsonModel();
+        $request = $this->getRequest();
         $user = $this->identity();
-        if ($this->isPost()) {
+        if ($request->isPost()) {
             $bookingSession = $this->bookingService->getBookingSession();
             try {
                 
@@ -258,39 +258,58 @@ class BookingsController extends AbstractActionController
                 
                 $em->flush();
                 
-                $response->SetStatusCode(201);
+                $tripCode = $bookingEntity->getTripCode();
+                $byPassCode = $bookingEntity->getByPassCode();
+                
+                // send email
+                $generalService = $this->generalService;
+                $pointers["to"] = "admin@baucars.com";
+                $pointers["fromName"] = "System Robot";
+                $pointers['subject'] = "New Booking";
+                
+                $template['template'] = "admin-new-booking";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png",
+                    "bookingUid" => $bookingEntity->getBookingUid(),
+                    "fullname" => $bookingEntity->getUser()->getFullName(),
+                    "amount" => NULL,
+                    "tripCode"=>$tripCode
+                ];
+                
+               
+                
+                $generalService->sendMails($pointers, $template);
+                
+                $pointer["to"] = $user->getEmail();
+                $pointer["fromName"] = "Your Bau Cars Booking";
+                $pointer['subject'] = "My Booking";
+                
+                $template['template'] = "admin-new-booking";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png",
+                    "bookingUid" => $bookingEntity->getBookingUid(),
+                    "fullname" => $bookingEntity->getUser()->getFullName(),
+                    "amount" => NULL,
+                    "tripCode"=>$tripCode
+                ];
+                
+                $generalService->sendMails($pointer, $template);
+                
+                
                 
                 $this->flashmessenger()->addSuccessMessage("Your booking has beeen initiated ");
+                $response->setStatusCode(201);
                 // $this->flashmessenger()->addSuccessMessage("N{$verifyData->data->chargedamount} has been charged from your account and a request is processing");
-                $jsonModel->setVariables([                    // "data" => $verifyData->data->chargedamount
-                ]);
-                
-                // Notify Controller
-                $generalService = $this->generalService;
-//                 $pointer["to"] = "admin@baucars.com";
-//                 $pointer["fromName"] = "System Robot";
-//                 $pointer['subject'] = "New Booking";
-                
-//                 $template['template'] = "admin-new-booking";
-//                 $template["var"] = [
-//                     "logo" => $this->url()->fromRoute('application', [
-//                         'action' => 'application'
-//                     ], [
-//                         'force_canonical' => true
-//                     ]) . "assets/img/logo.png",
-//                     "bookingUid" => $transactionEntity->getBooking()->getBookingUid(),
-//                     "fullname" => $transactionEntity->getBooking()
-//                         ->getUser()
-//                         ->getFullName(),
-//                     "amount" => $transactionEntity->getAmount()
-//                 ];
-                
-                $response->add($gritter);
-                $redirect = new Redirect($this->url()->fromRoute("customer/default", array(
-                    "action" => "board"
-                )));
-                
-                $response->add($redirect);
+                $jsonModel->setVariables([ // "data" => $verifyData->data->chargedamount
+]);
             } catch (\Exception $e) {
                 $response->setStatusCode(400);
                 $jsonModel->setVariables([
@@ -299,7 +318,7 @@ class BookingsController extends AbstractActionController
                 ]);
             }
         }
-        return $this->getResponse()->setContent($response);
+        return $jsonModel;
     }
 
     public function boardAction()

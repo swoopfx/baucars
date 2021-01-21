@@ -142,11 +142,11 @@ $flashMessenger = $this->flashMessenger()
 										</tr>
 										<tr>
 											<td>Amount Payed:</td>
-											<th><?php echo $this->myCurrency($data->getTransaction()->getAmount()) ?></th>
+											<th><?php echo ($data->getTransaction() == NULL ? "Cash Trip" :$this->myCurrency($data->getTransaction()->getAmount())) ?></th>
 										</tr>
 										<tr>
 											<td>Payment Method:</td>
-											<th>Credit Card</th>
+											<th><?php echo ($data->getTransaction() == NULL ? "Cash Trip" : "Credit Card" )?></th>
 										</tr>
 									</tbody>
 								</table>

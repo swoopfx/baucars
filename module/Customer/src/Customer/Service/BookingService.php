@@ -81,7 +81,7 @@ class BookingService
     }
     
     public static function byPassCode(){
-        $six_digit_random_number = mt_rand(100000, 99999);
+        $six_digit_random_number = mt_rand(100000, 999999);
         return $six_digit_random_number;
     }
 

@@ -129,8 +129,8 @@ $flashMessenger = $this->flashMessenger()
 													<div class="text-right">
 
 
-														<button @click="cashPayment()" class="btn btn-default" type="button"><i class="ion ion-social-usd"></i> Cash</button>
-														<button @click="makeNewPayment()" class="btn btn-default" type="button"><i class="ion ion-closed-captioning"></i>Card</button>
+														<button @click="cashPayment()" class="btn btn-default" type="button"><i class="ion ion-social-usd"></i> Cash Trip</button>
+														<button @click="makeNewPayment()" class="btn btn-default" type="button"><i class="ion ion-closed-captioning"></i> Card</button>
 
 														<button @click="closePreBook()" class="btn btn-shadow btn-danger" type="reset">Reset Booking</button>
 													</div>
@@ -162,7 +162,7 @@ $flashMessenger = $this->flashMessenger()
 														<div class="col-sm-8">
 															<div v-for="seats in numberOfSeats" class="mb-3">
 																<!-- <div class="styled-radio"> -->
-																<input type="radio" v-model="selectedSeat" :value="seats.id" name="radio" :id="seats.id">
+																<input type="radio" v-model="selectedSeat"  :value="seats.id" name="radio" :id="seats.id">
 																<label for="rad-1">{{seats.seats}} seater</label>
 																<!-- </div> -->
 															</div>
@@ -444,7 +444,7 @@ $flashMessenger = $this->flashMessenger()
 												<td>{{formatPHPDate(booking.pickupDate.date)}}</td>
 
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
-												<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
+												<td>{{amountStatus(booking.transaction)}}</td>
 												<td class="td-actions"> <a href="#"><i class="la la-info delete"></i></a></td>
 											</tr>
 
@@ -539,7 +539,7 @@ $flashMessenger = $this->flashMessenger()
 											<td>{{formatPHPDate(booking.pickupDate.date)}}</td>
 											<!-- <td>{{formatPHPDate(booking.endTime.date)}}</td> -->
 											<td><span style="width: 100px;" :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></td>
-											<td>&#8358;{{formatPrice(booking.transaction.amount)}}</td>
+											<td>{{amountStatus(booking.transaction)}}</td>
 											<td class="td-actions"><a v-if="booking.status.id == 5" @click="getBookingDetails(booking.bookingUid)" data-toggle="modal" data-target="#booking-details"><i class="la la-edit edit"></i></a> <a v-if="booking.status.id == 5" @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
 										</tr>
 
@@ -1163,6 +1163,8 @@ $flashMessenger = $this->flashMessenger()
 				}
 			},
 
+			
+
 
 
 			showBookingForm() {
@@ -1176,6 +1178,19 @@ $flashMessenger = $this->flashMessenger()
 		},
 
 		methods: {
+			seatStatus(bookClass, seat){
+				if(bookClass == 100 && seat == 20){
+					return false;
+				}
+			},
+
+			amountStatus(amount){
+				if(amount == null){
+					return "Cash Trip";
+				}else{
+					return "&#8358; "+this.formatPrice(amount.amount);
+				}
+			},
 
 			toggleBookingForm() {
 				this.isBookingForm = !this.isBookingForm;
@@ -1560,7 +1575,7 @@ $flashMessenger = $this->flashMessenger()
 				this.isCashPayment = true;
 				let formData = new FormData();
 				// formData.append();
-				axios.post("/bookings/bookings/makepayment", formData).then(res => {
+				axios.post("/bookings/bookings/cashpayment", formData).then(res => {
 					if (res.status == 201) {
 						window.location.reload();
 					}

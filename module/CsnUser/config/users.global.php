@@ -26,7 +26,9 @@ return array(
          * Default value: 'user'
          * Accepted values: A valid route name within your application
          */
-        'login_redirect_route' => 'dashboard',
+        'login_redirect_route' => function(){
+            
+        },
         
         /**
          * Logout Redirect Route

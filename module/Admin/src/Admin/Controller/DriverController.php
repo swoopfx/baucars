@@ -261,6 +261,7 @@ class DriverController extends AbstractActionController
              * @var DriverBio $driverEntity
              */
             $driverEntity = $em->find(DriverBio::class, $driverId);
+            $driverEntity->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_ASSIGNED));
             $bookingAvtivityEntity = new BookingActivity();
             $bookingAvtivityEntity->setBooking($bookingEntity)
                 ->setCreatedOn(new \DateTime())
@@ -268,6 +269,7 @@ class DriverController extends AbstractActionController
             
             $em->persist($bookingEntity);
             $em->persist($bookingAvtivityEntity);
+            $em->persist($driverEntity);
             // send Email to driver
             // send mail to customer
             $em->flush();

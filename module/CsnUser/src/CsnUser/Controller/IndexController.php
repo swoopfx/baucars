@@ -143,8 +143,13 @@ class IndexController extends AbstractActionController
 //         $this->layout()->setTemplate("layout/login");
  
         $user = $this->identity();
+        $uri = $this->getRequest()->getUri();
+        // var_dump($uri);
+        $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+       
         if ($user) {
-            return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+            
+            return $this->redirect()->toUrl($fullUrl. "/" . UserService::routeManager($user));
         }
         
         // use the generated controllerr plugin for the redirection
