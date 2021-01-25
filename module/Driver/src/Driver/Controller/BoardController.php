@@ -231,6 +231,97 @@ class BoardController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function bypassAction()
+    {
+        $jsonModel = new JsonModel();
+        $generalService = $this->generalService;
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            if ($post["code"] == "" || $post["code"] == NULL) {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("messages", "Invalid Ientifier");
+                return $jsonModel;
+            }
+            $code = $post["code"];
+            $id = $post["id"]; // booking Id
+            
+            $byPassCode = ($em->find(Bookings::class, $id))->getByPassCode();
+            if ($byPassCode == $code) {
+                
+                try {
+//                     $id = $post["bookingId"];
+                    
+                    // initiate trip
+                    /**
+                     *
+                     * @var Bookings $bookingEntity
+                     */
+                    $bookingEntity = $em->find(Bookings::class, $id);
+                    $bookingEntity->setUpdatedOn(new \DateTime())->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ACTIVE));
+                    
+                    $bookActivity = new BookingActivity();
+                    $bookActivity->setBooking($bookingEntity)
+                        ->setCreatedOn(new \DateTime())
+                        ->setInformation("Driver Started trip");
+                    
+                    /**
+                     *
+                     * @var Ambiguous $assignedDriver
+                     */
+                    $assignedDriver = $bookingEntity->getAssignedDriver()->setDriverState($em->find(DriverBio::class, DriverService::DRIVER_STATUS_ENGAGED));
+                    $activeTrip = new ActiveTrip();
+                    
+                    $activeTrip->setBooking($bookingEntity)
+                        ->setActiveTripUid(uniqid("atrip"))
+                        ->setCreatedOn(new \DateTime())
+                        ->setStarted(new \DateTime());
+                    
+                    // send email of bypass// notify customer of byPass
+                    $pointer["to"] = $bookingEntity->getUser()->getEmail();
+                    $pointer["fromName"] = "Bau Cars System";
+                    $pointer['subject'] = "Trip By Pass Initiated";
+                    
+                    $template['template'] = "driver-bypass-notification-email";
+                    $template["var"] = [
+                        "logo" => $this->url()->fromRoute('application', [
+                            'action' => 'application'
+                        ], [
+                            'force_canonical' => true
+                        ]) . "assets/img/logo.png",
+                        "bookingUid" => $bookingEntity->getBookingUid(),
+                        "byPassLink" => $bookingEntity->getUser()->getFullName()
+                        // "cancelDate" => $bookingEntity->getUpdatedOn()
+                    ];
+                    $generalService->sendMails($pointer, $template);
+                    
+                    // send sms of bypass
+                    
+                    $em->persist($activeTrip);
+                    $em->persist($bookActivity);
+                    $em->persist($bookingEntity);
+                    
+                    $em->flush();
+                    
+                    $this->flashmessenger()->addSuccessMessage("Successfully bypassed the trip");
+                    $response->setStatusCode(201);
+                    $jsonModel->setVariable("data", '');
+                } catch (\Exception $e) {
+                    $response->setStatusCode(422);
+                    $jsonModel->setVariable("messages", $e->getMessage());
+                }
+            } else {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("messages", "Invalid By Pass Code");
+            }
+        } else {
+            // return bad request
+        }
+        return $jsonModel;
+    }
+
     public function endtripAction()
     {
         $em = $this->entityManager;
@@ -265,26 +356,74 @@ class BoardController extends AbstractActionController
                     ->setUpdatedOn(new \DateTime())
                     ->setEnded(new \DateTime());
                 
-                    $em->persist($bookActivity);
-                    $em->persist($bookingEntity);
-                    $em->persist($assignedDriver);
-                    $em->persist($activeTrip);
-                    
-                    $em->flush();
-                    
-                    $response->setStatusCode(201);
-                    
-                    // Send Email
-                    // amotize account 
+                $em->persist($bookActivity);
+                $em->persist($bookingEntity);
+                $em->persist($assignedDriver);
+                $em->persist($activeTrip);
+                
+                
+                
+                $em->flush();
+                
+                $response->setStatusCode(201);
+                
+                // Send Email
+                $pointer["to"] = $bookingEntity->getUser()->getEmail();
+                $pointer["fromName"] = "Trip Receipt";
+                $pointer['subject'] = "Trip By Pass Initiated";
+                
+                $template['template'] = "driver-bypass-notification-email";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png",
+                    "bookingUid" => $bookingEntity->getBookingUid(),
+                    "byPassLink" => $bookingEntity->getUser()->getFullName()
+                    // "cancelDate" => $bookingEntity->getUpdatedOn()
+                ];
+                $generalService->sendMails($pointer, $template);
+                // Receipt to 
+                // amotize account
             } catch (\Exception $e) {
                 $response->setStatusCode(400);
                 $jsonModel->setVariables([
-                    "messages"=>"Something Went wrong",
-                    "data"=>$e->getMessage(),
+                    "messages" => "Something Went wrong",
+                    "data" => $e->getMessage()
                 ]);
             }
         }
-       
+        
+        return $jsonModel;
+    }
+
+    public function getByPassCodeAction()
+    {
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $bookingId = $post["id"];
+            if ($bookingId == NULL) {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("messages", "Absent Identifier");
+                return $jsonModel;
+            }
+            /**
+             *
+             * @var Bookings $bookingEntity
+             */
+            $bookingEntity = $em->find(Bookings::class, $bookingId);
+            $byPassCode = $bookingEntity->getByPassCode();
+            $response->setStatusCode(200);
+            $jsonModel->setVariable("data", $byPassCode);
+        } else {
+            $response->setStatusCode(400);
+            $jsonModel->setVariable("messages", "Invalid Action taken");
+        }
         return $jsonModel;
     }
 

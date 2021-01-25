@@ -58,6 +58,10 @@ return array(
         'template_path_stack' => array(
             'Driver' => __DIR__ . '/../view',
         ),
+        'template_map' => array(
+            "driver-bypass-notification-email"=> __DIR__ . '/../view/email/driver-bypass-notification-email.phtml',
+            "driver-end-trip-email"=> __DIR__ . '/../view/email/driver-end-trip-email.phtml'
+        ),
     ),
     'service_manager' => array(
         'factories' => array(

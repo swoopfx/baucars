@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Driver\Entity\DriverBio;
 use Doctrine\ORM\Query;
 use Customer\Service\CustomerService;
+use Customer\Entity\Bookings;
 
 /**
  *
@@ -76,6 +77,33 @@ class DriverService
         ])
             ->getResult(Query::HYDRATE_ARRAY);
         return $result;
+    }
+    
+    
+    /**
+     * 
+     * @param Bookings $booking
+     */
+    public function amotizedTrip($booking){
+        $generalService = $this->generalService;
+        $appSettings = $generalService->getAppSeettings();
+        $em = $this->entityManager;
+        $estimatedSeconds = $booking->getCalculatedTimeValue();
+        $estimateMinutes = floor($estimatedSeconds/60);
+        $estimatedDistance = $booking->getCalculatedDistanceValue();
+        $activeTrip = $booking->getTrip();
+        $actualStarttime = new \DateTime($booking->getTrip()->getStarted());
+        $actualEndtime = new \DateTime($booking->getTrip()->getEnded());
+        
+        $actualTimeDifference = $actualStarttime->diff($actualEndtime);
+        $actualMinutes = $actualTimeDifference->days * 24 * 60;
+        $actualMinutes+= $actualTimeDifference->h * 60;
+        $actualMinutes+= $actualTimeDifference->i;
+        
+        $usableMinutes = $estimateMinutes + $appSettings->getGracePeriod();
+        if($usableMinutes <= $actualMinutes){
+            
+        }
     }
 
     /**

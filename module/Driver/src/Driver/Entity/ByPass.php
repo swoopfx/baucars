@@ -1,57 +1,54 @@
 <?php
-namespace Customer\Entity;
+namespace Driver\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Customer\Entity\Bookings;
+use CsnUser\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="amotized_trip")
- *
+ * @ORM\Table(name="by_pass")
+ * 
  * @author otaba
  *        
+ *         All ByPass Action
  */
-class AmotizedTrip
+class ByPass
 {
 
     /**
      *
-     * @var integer @ORM\Column(name="id", type="integer", nullable=false)
+     * @var integer @ORM\Column(name="id", type="integer")
      *      @ORM\Id
      *      @ORM\GeneratedValue(strategy="IDENTITY")
+     *     
      */
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Bookings")
-     *
+     * @ORM\ManyToOne(targetEntity="Customer\Entity\Bookings")
+     * 
      * @var Bookings
      */
     private $booking;
 
     /**
-     * @ORM\Column(name="amotized_price", type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
      * 
-     * @var string
+     * @var User
      */
-    private $amotizedPrice;
-
-    /**
-     * @ORM\Column(name="final_duration", type="string", nullable=true)
-     * 
-     * @var strng
-     */
-    private $finalDuration;
+    private $initiator;
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     *
+     * 
      * @var \DateTime
      */
     private $createdOn;
 
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     *
+     * 
      * @var \DateTime
      */
     private $updatedOn;
@@ -63,9 +60,7 @@ class AmotizedTrip
         
         // TODO - Insert your code here
     }
-
     /**
-     *
      * @return the $id
      */
     public function getId()
@@ -74,7 +69,6 @@ class AmotizedTrip
     }
 
     /**
-     *
      * @return the $booking
      */
     public function getBooking()
@@ -83,7 +77,14 @@ class AmotizedTrip
     }
 
     /**
-     *
+     * @return the $initiator
+     */
+    public function getInitiator()
+    {
+        return $this->initiator;
+    }
+
+    /**
      * @return the $createdOn
      */
     public function getCreatedOn()
@@ -92,7 +93,6 @@ class AmotizedTrip
     }
 
     /**
-     *
      * @return the $updatedOn
      */
     public function getUpdatedOn()
@@ -101,8 +101,7 @@ class AmotizedTrip
     }
 
     /**
-     *
-     * @param number $id            
+     * @param number $id
      */
     public function setId($id)
     {
@@ -111,8 +110,7 @@ class AmotizedTrip
     }
 
     /**
-     *
-     * @param \Customer\Entity\Bookings $booking            
+     * @param \Customer\Entity\Bookings $booking
      */
     public function setBooking($booking)
     {
@@ -121,8 +119,16 @@ class AmotizedTrip
     }
 
     /**
-     *
-     * @param DateTime $createdOn            
+     * @param \CsnUser\Entity\User $initiator
+     */
+    public function setInitiator($initiator)
+    {
+        $this->initiator = $initiator;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $createdOn
      */
     public function setCreatedOn($createdOn)
     {
@@ -131,8 +137,7 @@ class AmotizedTrip
     }
 
     /**
-     *
-     * @param DateTime $updatedOn            
+     * @param DateTime $updatedOn
      */
     public function setUpdatedOn($updatedOn)
     {
@@ -140,23 +145,5 @@ class AmotizedTrip
         return $this;
     }
 
-    /**
-     *
-     * @return the $amotizedPrice
-     */
-    public function getAmotizedPrice()
-    {
-        return $this->amotizedPrice;
-    }
-
-    /**
-     *
-     * @param string $amotizedPrice            
-     */
-    public function setAmotizedPrice($amotizedPrice)
-    {
-        $this->amotizedPrice = $amotizedPrice;
-        return $this;
-    }
 }
 
