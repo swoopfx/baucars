@@ -381,7 +381,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      */
     protected function mergeAssociationOptions(ArrayObject $elementSpec, $targetEntity)
     {
-        $options = $elementSpec['spec']['options'] ?? [];
+        $options = isset($elementSpec['spec']['options']) ? $elementSpec['spec']['options'] : [];
         $options = array_merge(
             [
                 'object_manager' => $this->objectManager,

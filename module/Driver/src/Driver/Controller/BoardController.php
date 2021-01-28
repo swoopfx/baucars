@@ -15,6 +15,7 @@ use Customer\Entity\BookingActivity;
 use Customer\Entity\ActiveTrip;
 use Driver\Entity\DriverBio;
 use General\Entity\BookingStatus;
+use Driver\Entity\DriverState;
 
 /**
  *
@@ -180,7 +181,16 @@ class BoardController extends AbstractActionController
         $response = $this->getResponse();
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
+            if ($post["code"] == "" || $post["code"] == NULL) {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("messages", "Invalid Ientifier");
+                return $jsonModel;
+            }
             
+            $code = $post["code"];
+            $id = $post["bookingId"]; // booking Id
+            
+            $byPassCode = ($em->find(Bookings::class, $id))->getTripCode();
             // var_dump($em);
             $id = $post["bookingId"];
             /**
@@ -324,6 +334,9 @@ class BoardController extends AbstractActionController
 
     public function endtripAction()
     {
+        $generalService = $this->generalService;
+        $driverService = $this->driverService;
+        $amotizedSession = $this->driverService->getAmotizedSession();
         $em = $this->entityManager;
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
@@ -349,7 +362,7 @@ class BoardController extends AbstractActionController
                  *
                  * @var DriverBio $assignedDriver
                  */
-                $assignedDriver = $bookingEntity->getAssignedDriver()->setDriverState($em->find(DriverBio::class, DriverService::DRIVER_STATUS_FREE));
+                $assignedDriver = $bookingEntity->getAssignedDriver()->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_FREE));
                 $activeTrip = $bookingEntity->getTrip();
                 
                 $activeTrip->setBooking($bookingEntity)
@@ -360,19 +373,17 @@ class BoardController extends AbstractActionController
                 $em->persist($bookingEntity);
                 $em->persist($assignedDriver);
                 $em->persist($activeTrip);
-                
-                
-                
+                $driverService->amotizedTrip($bookingEntity);
                 $em->flush();
-                
+               
                 $response->setStatusCode(201);
                 
                 // Send Email
                 $pointer["to"] = $bookingEntity->getUser()->getEmail();
-                $pointer["fromName"] = "Trip Receipt";
-                $pointer['subject'] = "Trip By Pass Initiated";
+                $pointer["fromName"] = "Bau Cars System";
+                $pointer['subject'] = "Trip Receipt";
                 
-                $template['template'] = "driver-bypass-notification-email";
+                $template['template'] = "driver-end-trip-email";
                 $template["var"] = [
                     "logo" => $this->url()->fromRoute('application', [
                         'action' => 'application'
@@ -380,7 +391,13 @@ class BoardController extends AbstractActionController
                         'force_canonical' => true
                     ]) . "assets/img/logo.png",
                     "bookingUid" => $bookingEntity->getBookingUid(),
-                    "byPassLink" => $bookingEntity->getUser()->getFullName()
+                    "customer"=>$bookingEntity->getUser()->getFullName(),
+                    "estimatedDistance" => $amotizedSession->estimatedDistance,
+                    "estimatedTime"=>$amotizedSession->estimateMinutes,
+                    "actualTime"=>$amotizedSession->actualMinutes,
+                    "price"=>$amotizedSession->price,
+                    "extraTimeUsed"=> $amotizedSession->extraTimeUsed ,
+                    "extraCost"=>$amotizedSession->extraCost,
                     // "cancelDate" => $bookingEntity->getUpdatedOn()
                 ];
                 $generalService->sendMails($pointer, $template);

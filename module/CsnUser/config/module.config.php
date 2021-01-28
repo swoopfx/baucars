@@ -181,7 +181,7 @@ return array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
                 'identity_class' => 'CsnUser\Entity\User',
-                'identity_property' => 'phoneNumber',
+                'identity_property' => 'username',
                 'credential_property' => 'password',
                 'credential_callable' => 'CsnUser\Service\UserService::verifyHashedPassword'
             )

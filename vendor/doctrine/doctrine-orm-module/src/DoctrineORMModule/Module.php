@@ -2,14 +2,13 @@
 
 namespace DoctrineORMModule;
 
+use DoctrineORMModule\Listener\PostCliLoadListener;
 use Interop\Container\ContainerInterface;
 use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
-use Zend\ModuleManager\ModuleManagerInterface;
-use DoctrineORMModule\CliConfigurator;
-use ZendDeveloperTools\ProfilerEvent;
 
 /**
  * Base module for Doctrine ORM.
@@ -20,6 +19,7 @@ use ZendDeveloperTools\ProfilerEvent;
  * @author  Marco Pivetta <ocramius@gmail.com>
  */
 class Module implements
+    BootstrapListenerInterface,
     ControllerProviderInterface,
     ConfigProviderInterface,
     DependencyIndicatorInterface
@@ -27,37 +27,26 @@ class Module implements
     /**
      * {@inheritDoc}
      */
-    public function init(ModuleManagerInterface $manager)
+    public function onBootstrap(EventInterface $event)
     {
-        // Initialize the console
-        $manager
-            ->getEventManager()
-            ->getSharedManager()
-            ->attach(
-                'doctrine',
-                'loadCli.post',
-                function (EventInterface $event) {
-                    $event
-                        ->getParam('ServiceManager')
-                        ->get(CliConfigurator::class)
-                        ->configure($event->getTarget())
-                        ;
-                },
-                1
-            );
+        /* @var $application \Zend\Mvc\Application */
+        $application = $event->getTarget();
+        /* @var $container ContainerInterface */
+        $container = $application->getServiceManager();
 
-        // Initialize logger collector in ZendDeveloperTools
-        if (class_exists(ProfilerEvent::class)) {
-            $manager
-                ->getEventManager()
-                ->attach(
-                    ProfilerEvent::EVENT_PROFILER_INIT,
-                    function ($event) {
-                        $container = $event->getTarget()->getParam('ServiceManager');
-                        $container->get('doctrine.sql_logger_collector.orm_default');
-                    }
-                );
-        }
+        $events = $application->getEventManager();
+
+        // Initialize logger collector once the profiler is initialized itself
+        $events->attach(
+            'profiler_init',
+            function () use ($container) {
+                $container->get('doctrine.sql_logger_collector.orm_default');
+            }
+        );
+
+        /* @var $postCliLoadListener PostCliLoadListener */
+        $postCliLoadListener = $container->get(PostCliLoadListener::class);
+        $postCliLoadListener->attach($events);
     }
 
     /**

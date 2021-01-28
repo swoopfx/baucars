@@ -1,92 +1,20 @@
 
 <?php
-// $host = "localhost";
-// $username = "tfits_live";
-// $password = "Simple1234@#";
-$host = "localhost";
-$username = "root";
-$password = "";
+
 
 return array(
     'doctrine' => array(
         'connection' => array(
-            
             'orm_default' => array(
-                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                'driverClass' =>'Doctrine\DBAL\Driver\PDOMySql\Driver',
                 'params' => array(
-                    
-                    'host' => $host,
-                    'port' => '3306',
-                    'user' => $username,
-                    'password' => $password,
-                    // 'dbname' => 'tfits_invest1',
-                    'dbname' => 'baucars',
-                    
-                    // 'host' => 'us-cdbr-azure-east-c.cloudapp.net',
-                    // 'port' => '3306',
-                    // 'user' => 'b7488980d7038c',
-                    // 'password' => '45329998',
-                    // 'dbname' => 'imapp',
-                    
-                    // 'host' => 'localhost',
-                    // 'port' => '3306',
-                    // 'user' => 'baucarsc_invest1',
-                    // 'password' => 'Simple1234@#',
-                    // 'dbname' => 'baucarsc_invest1',
-                    
-                    'charset' => 'utf8', // extra
-                    'driverOptions' => array(
-                        1002 => 'SET NAMES utf8'
-                    )
-                )
-            )
-        
-        ),
-        
-        'entitymanager' => array(
-            'orm_default' => array(
-                'connection' => 'orm_default',
-                'configuration' => 'orm_default'
-            ),
-            // This is the alternative config
-            'orm_imapp_direct' => array(
-                'connection' => 'orm_imapp_direct',
-                'configuration' => 'orm_imapp_direct'
-            ),
-            'orm_imapp_cm' => array(
-                'connection' => 'orm_imapp_cm',
-                'configuration' => 'orm_imapp_cm'
-            )
-        ),
-        // We need to define now the 'orm_alternative' config,
-        // the default one is already defined at the level of
-        // doctrine module code
-        'configuration' => array(
-            'orm_imapp_cm' => array(
-                'metadata_cache' => 'array',
-                'query_cache' => 'array',
-                'result_cache' => 'array',
-                'driver' => 'orm_imapp_cm', // This driver will be defined later
-                'generate_proxies' => true,
-                'proxy_dir' => 'data/DoctrineORMModule/Proxy/Cm',
-                'proxy_namespace' => 'DoctrineORMModule\Proxy\Cm',
-                'filters' => array()
-            ),
-            'orm_imapp_direct' => array(
-                'metadata_cache' => 'array',
-                'query_cache' => 'array',
-                'result_cache' => 'array',
-                'driver' => 'orm_imapp_direct', // This driver will be defined later
-                'generate_proxies' => true,
-                'proxy_dir' => 'data/DoctrineORMModule/Proxy/Direct',
-                'proxy_namespace' => 'DoctrineORMModule\Proxy\Direct',
-                'filters' => array()
-            )
-        )
-    
-    )
-
-);
-
-
-
+                    'host'     => 'localhost',
+                    'port'     => '3306',
+                    'user'     => "ezekiel",
+//                     'user'     => "root",
+                    "password"=>"Oluwaseun1@",
+//                     'password' => "Jolaoso1234@#$",
+//                     'dbname'   => "baucars_invest",
+                    'dbname'   => "baucars",
+                    'encoding' => 'utf8',
+                )))));

@@ -7,6 +7,8 @@ use Driver\Entity\DriverBio;
 use Doctrine\ORM\Query;
 use Customer\Service\CustomerService;
 use Customer\Entity\Bookings;
+use Customer\Service\BookingService;
+use Zend\Session\Container;
 
 /**
  *
@@ -27,6 +29,18 @@ class DriverService
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     *
+     * @var BookingService
+     */
+    private $bookingService;
+
+    /**
+     *
+     * @var Container
+     */
+    private $amotizedSession;
 
     const DRIVER_STATUS_FREE = 10;
 
@@ -53,7 +67,8 @@ class DriverService
             ->where("d.driverState = :state")
             ->setParameters([
             "state" => self::DRIVER_STATUS_FREE
-        ])->getQuery();
+        ])
+            ->getQuery();
         
         $res = $result->getResult(Query::HYDRATE_ARRAY);
         return $res;
@@ -78,32 +93,62 @@ class DriverService
             ->getResult(Query::HYDRATE_ARRAY);
         return $result;
     }
-    
-    
+
     /**
-     * 
-     * @param Bookings $booking
+     *
+     * @param Bookings $booking            
      */
-    public function amotizedTrip($booking){
-        $generalService = $this->generalService;
-        $appSettings = $generalService->getAppSeettings();
-        $em = $this->entityManager;
-        $estimatedSeconds = $booking->getCalculatedTimeValue();
-        $estimateMinutes = floor($estimatedSeconds/60);
-        $estimatedDistance = $booking->getCalculatedDistanceValue();
-        $activeTrip = $booking->getTrip();
-        $actualStarttime = new \DateTime($booking->getTrip()->getStarted());
-        $actualEndtime = new \DateTime($booking->getTrip()->getEnded());
+    public function amotizedTrip($booking)
+    {
         
-        $actualTimeDifference = $actualStarttime->diff($actualEndtime);
-        $actualMinutes = $actualTimeDifference->days * 24 * 60;
-        $actualMinutes+= $actualTimeDifference->h * 60;
-        $actualMinutes+= $actualTimeDifference->i;
-        
-        $usableMinutes = $estimateMinutes + $appSettings->getGracePeriod();
-        if($usableMinutes <= $actualMinutes){
             
-        }
+            $generalService = $this->generalService;
+            $bookingService = $this->bookingService;
+            $amotizedSession = $this->amotizedSession;
+           
+            $appSettings = $generalService->getAppSeettings();
+            $em = $this->entityManager;
+            $appSettings = $generalService->getAppSeettings();
+          
+            $estimatedSeconds = $booking->getCalculatedTimeValue();
+            $estimateMinutes = floor($estimatedSeconds / 60);
+          
+            $estimatedDistance = $booking->getCalculatedDistanceValue();
+            $activeTrip = $booking->getTrip();
+            $actualStarttime = $booking->getTrip()->getStarted();
+            $actualEndtime = $booking->getTrip()->getEnded();
+           
+            $actualTimeDifference = $actualStarttime->diff($actualEndtime);
+            $actualMinutes = $actualTimeDifference->days * 24 * 60;
+            $actualMinutes += $actualTimeDifference->h * 60;
+            $actualMinutes += $actualTimeDifference->i;
+           
+            $usableMinutes = $estimateMinutes + $appSettings->getGracePeriod();
+            $price = 0;
+            if ($usableMinutes <= $actualMinutes) {
+                // call
+                $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
+            } else {
+                $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
+                $extraTimeUsed = $actualMinutes - $usableMinutes;
+                $amotizedSession->extraTimeUsed = $extraTimeUsed;
+                if ($extraTimeUsed > 60) {
+                    $extraTimeMultiplier = $extraTimeUsed / 60;
+                    $extraCost = (ceil($extraTimeMultiplier) * $appSettings->getExtraHourFee());
+                    $amotizedSession->extraCost = $extraCost;
+                    $price = $price + $extraCost;
+                }
+            }
+            
+
+            
+            $amotizedSession->price = $price;
+            $amotizedSession->estimateMinutes = $estimateMinutes;
+            $amotizedSession->estimatedDistance= $estimatedDistance;
+            
+            $amotizedSession->actualMinutes = $actualMinutes;
+          
+        
     }
 
     /**
@@ -156,5 +201,41 @@ class DriverService
         $this->entityManager = $entityManager;
         return $this;
     }
+
+    /**
+     *
+     * @return the $bookingService
+     */
+    public function getBookingService()
+    {
+        return $this->bookingService;
+    }
+
+    /**
+     *
+     * @param \Customer\Service\BookingService $bookingService            
+     */
+    public function setBookingService($bookingService)
+    {
+        $this->bookingService = $bookingService;
+        return $this;
+    }
+    /**
+     * @return the $amotizedSession
+     */
+    public function getAmotizedSession()
+    {
+        return $this->amotizedSession;
+    }
+
+    /**
+     * @param \Zend\Session\Container $amotizedSession
+     */
+    public function setAmotizedSession($amotizedSession)
+    {
+        $this->amotizedSession = $amotizedSession;
+        return $this;
+    }
+
 }
 

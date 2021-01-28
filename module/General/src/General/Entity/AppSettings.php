@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="app_settings")
- * 
+ *
  * @author otaba
  *        
  */
@@ -24,32 +24,40 @@ class AppSettings
 
     /**
      * @ORM\Column(name="minimum_kilometer", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $minimumKilometer;
 
     /**
      * @ORM\Column(name="price_per_kilometer", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $pricePerKilometer;
 
     /**
      * @ORM\Column(name="grace_period", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $gracePeriod;
- // aprosimately 30 min
+
+    // aprosimately 30 min
     
     /**
      * @ORM\Column(name="cancel_fee", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $cancelFee;
+
+    /**
+     * @ORM\Column(name="extra_hour_fee", type="string", nullable=true)
+     * 
+     * @var string
+     */
+    private $extraHourFee;
 
     /**
      */
@@ -58,7 +66,9 @@ class AppSettings
         
         // TODO - Insert your code here
     }
+
     /**
+     *
      * @return the $id
      */
     public function getId()
@@ -67,6 +77,7 @@ class AppSettings
     }
 
     /**
+     *
      * @return the $minimumKilometer
      */
     public function getMinimumKilometer()
@@ -75,6 +86,7 @@ class AppSettings
     }
 
     /**
+     *
      * @return the $pricePerKilometer
      */
     public function getPricePerKilometer()
@@ -83,6 +95,7 @@ class AppSettings
     }
 
     /**
+     *
      * @return the $gracePeriod
      */
     public function getGracePeriod()
@@ -91,6 +104,7 @@ class AppSettings
     }
 
     /**
+     *
      * @return the $cancelFee
      */
     public function getCancelFee()
@@ -99,7 +113,8 @@ class AppSettings
     }
 
     /**
-     * @param number $id
+     *
+     * @param number $id            
      */
     public function setId($id)
     {
@@ -108,7 +123,8 @@ class AppSettings
     }
 
     /**
-     * @param string $minimumKilometer
+     *
+     * @param string $minimumKilometer            
      */
     public function setMinimumKilometer($minimumKilometer)
     {
@@ -117,7 +133,8 @@ class AppSettings
     }
 
     /**
-     * @param string $pricePerKilometer
+     *
+     * @param string $pricePerKilometer            
      */
     public function setPricePerKilometer($pricePerKilometer)
     {
@@ -126,7 +143,8 @@ class AppSettings
     }
 
     /**
-     * @param string $gracePeriod
+     *
+     * @param string $gracePeriod            
      */
     public function setGracePeriod($gracePeriod)
     {
@@ -135,11 +153,28 @@ class AppSettings
     }
 
     /**
-     * @param string $cancelFee
+     *
+     * @param string $cancelFee            
      */
     public function setCancelFee($cancelFee)
     {
         $this->cancelFee = $cancelFee;
+        return $this;
+    }
+    /**
+     * @return the $extraHourFee
+     */
+    public function getExtraHourFee()
+    {
+        return $this->extraHourFee;
+    }
+
+    /**
+     * @param string $extraHourFee
+     */
+    public function setExtraHourFee($extraHourFee)
+    {
+        $this->extraHourFee = $extraHourFee;
         return $this;
     }
 

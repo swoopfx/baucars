@@ -140,16 +140,17 @@ class IndexController extends AbstractActionController
      */
     public function loginAction()
     {
-//         $this->layout()->setTemplate("layout/login");
- 
+        
+       
+        // $this->layout()->setTemplate("layout/login");
         $user = $this->identity();
         $uri = $this->getRequest()->getUri();
         // var_dump($uri);
         $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
-       
+        
         if ($user) {
             
-            return $this->redirect()->toUrl($fullUrl. "/" . UserService::routeManager($user));
+            return $this->redirect()->toUrl($fullUrl . "/" . UserService::routeManager($user));
         }
         
         // use the generated controllerr plugin for the redirection
@@ -158,7 +159,7 @@ class IndexController extends AbstractActionController
         // var_dump($form);
         $messages = null;
         if ($this->getRequest()->isPost()) {
-            $form->setValidationGroup('usernameOrEmail', 'password', 'rememberme', 'csrf');
+            $form->setValidationGroup('usernameOrEmail', 'password');
             $form->setData($this->getRequest()
                 ->getPost());
             if ($form->isValid()) {
@@ -175,7 +176,8 @@ class IndexController extends AbstractActionController
                     
                     // $user = $user[0];
                     
-                    $user = $this->user->selectUserDQL($usernameOrEmail);
+                    // $user = $this->user->selectUserDQL($usernameOrEmail);
+                    $user = $this->entityManager->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$usernameOrEmail' OR u.username = '$usernameOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
                     if (count($user) > 0) {
                         $user = $user[0];
                     }
@@ -220,7 +222,7 @@ class IndexController extends AbstractActionController
                     if ($authResult->isValid()) {
                         $identity = $authResult->getIdentity();
                         $authService->getStorage()->write($identity);
-                        
+//                         var_dump("KILLL");
                         // Last Login Date
                         $this->lastLogin($this->identity());
                         
@@ -238,8 +240,8 @@ class IndexController extends AbstractActionController
                          * to display the required form to fill the profile
                          * if required redirect to the copletinfg profile Page
                          */
-                        
-                        return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+                       
+                        return $this->redirect()->toUrl($fullUrl . "/" . UserService::routeManager($user));
                     }
                     
                     foreach ($authResult->getMessages() as $message) {
@@ -250,9 +252,11 @@ class IndexController extends AbstractActionController
                     return $this->errorView->createErrorView($this->translatorHelper->translate('Something went wrong during login! Please, try again later.'), $e, $this->options->getDisplayExceptions(), $this->options);
                     // ->getNavMenu();
                 }
+            }else{
+               
             }
         }
-//         var_dump($form);
+        // var_dump($form);
         return new ViewModel(array(
             'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
             'form' => $form,
@@ -270,10 +274,8 @@ class IndexController extends AbstractActionController
      */
     public function loginjsonAction()
     {
-       
         
         // $data = $inputFilter->getValues();
-        
         $user = $this->identity();
         if ($user) {
             return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
@@ -317,8 +319,6 @@ class IndexController extends AbstractActionController
                 )
             ));
             
-           
-            
             $inputFilter->add(array(
                 'name' => 'password',
                 'required' => true,
@@ -346,7 +346,7 @@ class IndexController extends AbstractActionController
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
                 $data = $inputFilter->getValues();
-               
+                
                 $authService = $this->authService;
                 $adapter = $authService->getAdapter();
                 $phoneOrEmail = $data["phoneOrEmail"];

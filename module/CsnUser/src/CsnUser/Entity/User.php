@@ -54,6 +54,23 @@ class User
      * @var string
      */
     private $userUid;
+    
+//     /**
+//      * @var string
+//      *
+//      * @ORM\Column(name="username", type="string", length=30, nullable=false, unique=true)
+//      * @Annotation\Type("Zend\Form\Element\Text")
+//      * @Annotation\Filter({"name":"StripTags"})
+//      * @Annotation\Filter({"name":"StringTrim"})
+//      * @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "min":6, "max":30}})
+//      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[Òa-z—A-Z][Òa-z—A-Z0-9\_\-]+$/"}})
+//      * @Annotation\Required(true)
+//      * @Annotation\Attributes({
+//      *   "type":"text",
+//      *   "required":"true"
+//      * })
+//      */
+//     protected $username;
 
     /**
      *
@@ -70,7 +87,7 @@ class User
      *      })
      *      @Annotation\Options({"label":"Phone Number"})
      */
-    protected $phoneNumber;
+    protected $username;
 
     /**
      *

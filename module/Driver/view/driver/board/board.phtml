@@ -37,12 +37,12 @@ echo $this->headtitle("Driver Controller");
 
 				<div class="modal-footer border-0" v-if="byPassCode != '' ">
 
-					<button type="button" @click="byPassAction()" :disabled="isByPass" class="btn btn-success btn-block">
-						<div v-if="isByPass">Processing...</div>
+					<button type="button" @click="byPassAction()" :disabled="isByPassTrip" class="btn btn-success btn-block">
+						<div v-if="isByPassTrip">Processing...</div>
 						<div v-else>Confirm ByPass</div>
 					</button>
-					<button type="button" @click="byPassTrip()" :disabled="isByPass" class="btn btn-danger btn-block">
-						<div v-if="isByPass">Processing...</div>
+					<button type="button" @click="cancelByPass()" :disabled="isByPassTrip" class="btn btn-danger btn-block">
+						<div v-if="isByPassTrip">Processing...</div>
 						<div v-else>Cancel ByPass</div>
 					</button>
 				</div>
@@ -442,6 +442,7 @@ echo $this->headtitle("Driver Controller");
 			return {
 				hey: "NONONON",
 				isEndTrip: false,
+				isByPassTrip: false,
 				isStartingTrip: false,
 				isByPassCode: false,
 				isByPass: false,
@@ -511,14 +512,18 @@ echo $this->headtitle("Driver Controller");
 				});
 			},
 
+			cancelByPass(){
+				window.location.reload();
+			},
+
 			byPassAction() {
-				this.byPassTrip = true;
-				
+				// this.byPassTrip = true;
+				this.isByPassTrip = true;
 				if (this.tripCode == '') {
 					swal({
 						title: "Empty Bypass Code",
 						text: "Enter ByPass Code",
-						icon: "success",
+						icon: "error",
 						button: "Continue!",
 					});
 				} else {
@@ -529,7 +534,14 @@ echo $this->headtitle("Driver Controller");
 						if(res.status == 201){
 							window.location.reload();
 						}
-					}).catch();
+					}).catch(err=>{
+						swal({
+						title: "Error",
+						text: err.response.data.messages,
+						icon: "error",
+						button: "Continue!",
+					});
+					});
 				}
 			},
 
@@ -546,6 +558,7 @@ echo $this->headtitle("Driver Controller");
 					});
 
 				} else {
+					formData.append("code", this.tripCode);
 					formData.append("bookingId", this.assignedBooking[0].id);
 					axios.post("/driver/board/starttrip", formData).then(res => {
 						if (res.status == 201) {

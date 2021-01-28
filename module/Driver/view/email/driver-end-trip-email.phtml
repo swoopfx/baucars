@@ -456,7 +456,7 @@
 															<th
 																style="Margin: 0; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 16px; font-weight: 400; line-height: 150%; margin: 0; text-align: left"><img
 																class="logo-icon"
-																src="https://static.truebill.com/images/email/logo-icon.png"
+																src="<?php echo $logo; ?>"
 																width="64" height="64"
 																style="-ms-interpolation-mode: bicubic; clear: both; display: block; height: 64px; max-width: 100%; outline: 0; text-decoration: none; width: 64px">
 																	<table class="spacer"
@@ -471,11 +471,11 @@
 																	</table>
 																	<h1 class="text"
 																		style="Margin: 0; Margin-bottom: 4px; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 32px; font-weight: 700; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal">Hi
-																		Smiles Davis,</h1>
+																		<?php echo $customer; ?>,</h1>
 																	<h3 class="text regular"
 																		style="Margin: 0; Margin-bottom: 4px; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 20px; font-weight: 400 !important; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal">
 																		Recipt for Trip <span class="bold"
-																			style="font-weight: 600 !important">4/11-4/18</span>
+																			style="font-weight: 600 !important"><?php echo strtoupper($bookingUid)?></span>
 																	</h3></th>
 															<th class="expander"
 																style="Margin: 0; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 16px; font-weight: 400; line-height: 150%; margin: 0; padding: 0 !important; text-align: left; visibility: hidden; width: 0"></th>
@@ -586,8 +586,7 @@
 															style="padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top">
 															<th
 																style="Margin: 0; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 16px; font-weight: 400; line-height: 150%; margin: 0; text-align: left">
-																<h1
-																	style="Margin: 0; Margin-bottom: 4px; color: inherit; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 32px; font-weight: 700; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal">$10,985</h1>
+																<h1 style="Margin: 0; Margin-bottom: 4px; color: inherit; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 32px; font-weight: 700; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal"></h1>
 															</th>
 														</tr>
 													</table>
@@ -600,8 +599,7 @@
 															style="padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top">
 															<th
 																style="Margin: 0; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 16px; font-weight: 400; line-height: 150%; margin: 0; text-align: left">
-																<h1
-																	style="Margin: 0; Margin-bottom: 4px; color: inherit; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 32px; font-weight: 700; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal">$20,614</h1>
+
 															</th>
 														</tr>
 													</table>
@@ -629,7 +627,7 @@
 																	<span class="regular pl-1"
 																		style="font-weight: 400 !important; padding-left: 8px">Estimated
 																		Distance</span> <span class="regular"
-																		style="float: right; font-weight: 400 !important">$6,807</span>
+																		style="float: right; font-weight: 400 !important"><?php echo ($estimatedDistance/1000). "km"?></span>
 																</div>
 															</th>
 														</tr>
@@ -650,7 +648,7 @@
 																	<span class="regular pl-1"
 																		style="font-weight: 400 !important; padding-left: 8px">Actual
 																		Distance</span> <span class="regular"
-																		style="float: right; font-weight: 400 !important">$4,572</span>
+																		style="float: right; font-weight: 400 !important"><?php echo (($estimatedDistance + 50)/1000). "km"?></span>
 																</div>
 															</th>
 														</tr>
@@ -679,7 +677,7 @@
 																	<span class="regular pl-1"
 																		style="font-weight: 400 !important; padding-left: 8px">Estimated
 																		Time</span> <span class="regular"
-																		style="float: right; font-weight: 400 !important">$4,178</span>
+																		style="float: right; font-weight: 400 !important"><?php  echo $estimatedTime; ?> mins</span>
 																</div>
 															</th>
 														</tr>
@@ -700,7 +698,7 @@
 																	<span class="regular pl-1"
 																		style="font-weight: 400 !important; padding-left: 8px">Actual
 																		Time</span> <span class="regular"
-																		style="float: right; font-weight: 400 !important">$16,041</span>
+																		style="float: right; font-weight: 400 !important"><?php  echo $actualTime ?> mins</span>
 																</div>
 															</th>
 														</tr>
@@ -734,8 +732,8 @@
 															<th
 																style="Margin: 0; color: #173049; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 16px; font-weight: 400; line-height: 150%; margin: 0; text-align: left">
 																<h4 class="blue text-center pb-3 pt-2"
-																	style="Margin: 0; Margin-bottom: 4px; color: #007ef2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; font-weight: 700; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 24px; padding-left: 0; padding-right: 0; padding-top: 16px; text-align: center; word-wrap: normal">Break
-																	Down</h4>
+																	style="Margin: 0; Margin-bottom: 4px; color: #007ef2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; font-weight: 700; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 24px; padding-left: 0; padding-right: 0; padding-top: 16px; text-align: center; word-wrap: normal">PAYABLE
+															</h4>
 																<div class="border-top pv-1"
 																	style="border-bottom: 0; border-left: 0; border-right: 0; border-top: 1px solid #ced7e2; padding-bottom: 8px; padding-top: 8px">
 																	<span
@@ -743,32 +741,40 @@
 																	<span class="regular pl-1"
 																		style="font-weight: 400 !important; padding-left: 8px">Estimated
 																		Distance</span> <span class="regular"
-																		style="float: right; font-weight: 400 !important">$14,941</span>
+																		style="float: right; font-weight: 400 !important"><?php echo ($estimatedDistance/1000). "km"?></span>
 																</div>
 																<div class="border-top pv-1"
 																	style="border-bottom: 0; border-left: 0; border-right: 0; border-top: 1px solid #ced7e2; padding-bottom: 8px; padding-top: 8px">
 																	<span
 																		style="display: inline-block; height: 12px; width: 12px; background-color: #a0d900"></span>
 																	<span class="regular pl-1"
-																		style="font-weight: 400 !important; padding-left: 8px">Gifts
-																		&amp; Donations</span> <span class="regular"
-																		style="float: right; font-weight: 400 !important">$5,133</span>
+																		style="font-weight: 400 !important; padding-left: 8px">Estimated Time</span> <span class="regular"
+																		style="float: right; font-weight: 400 !important"><?php  echo $estimatedTime; ?> mins</span>
 																</div>
 																<div class="border-top pv-1"
 																	style="border-bottom: 0; border-left: 0; border-right: 0; border-top: 1px solid #ced7e2; padding-bottom: 8px; padding-top: 8px">
 																	<span
 																		style="display: inline-block; height: 12px; width: 12px; background-color: #ffbc10"></span>
 																	<span class="regular pl-1"
-																		style="font-weight: 400 !important; padding-left: 8px">Shopping</span>
+																		style="font-weight: 400 !important; padding-left: 8px"><strong>Extra Time Cost</strong></span>
 																	<span class="regular"
-																		style="float: right; font-weight: 400 !important">$2,513</span>
+																		style="float: right; font-weight: 400 !important"><?php  echo ($extraTimeUsed == null ? 0 : $this->myCurrency($extraCost)."(".$extraTimeUsed.") mins")?></span>
+																</div>
+																<div class="border-top pv-1"
+																	style="border-bottom: 0; border-left: 0; border-right: 0; border-top: 1px solid #ced7e2; padding-bottom: 8px; padding-top: 8px">
+																	<span
+																		style="display: inline-block; height: 12px; width: 12px; background-color: #ffbc10"></span>
+																	<span class="regular pl-1"
+																		style="font-weight: 400 !important; padding-left: 8px"><strong>Amount Payable</strong></span>
+																	<span class="regular"
+																		style="float: right; font-weight: 400 !important"><?php  echo $this->myCurrency($price)?></span>
 																</div>
 																<h5 class="text-center pt-3"
 																	style="Margin: 0; Margin-bottom: 4px; color: inherit; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 14px; font-weight: 400; line-height: 150%; margin: 0; margin-bottom: 4px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 24px; text-align: center; word-wrap: normal">
-																	And <span class="bold"
-																		style="font-weight: 600 !important">-$1,973</span> in
-																	<span class="bold" style="font-weight: 600 !important">5</span>
-																	more categories
+																Total Payable <span class="bold"
+																		style="font-weight: 600 !important"><?php  echo $this->myCurrency($price) ?></span> 
+																	
+																	
 																</h5>
 																<center class="pv-3" data-parsed=""
 																	style="min-width: 276px; padding-bottom: 24px; padding-top: 24px; width: 100%">
