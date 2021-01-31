@@ -2,13 +2,12 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
-        'Application',
-        'CsnUser',
-        'AcMailer',
         
+        'AcMailer',
         'DoctrineModule',
         'DoctrineORMModule',
-        
+        'Application',
+        'CsnUser',
         'Admin',
         'Driver',
         'General',

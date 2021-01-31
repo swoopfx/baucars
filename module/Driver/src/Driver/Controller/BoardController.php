@@ -16,6 +16,7 @@ use Customer\Entity\ActiveTrip;
 use Driver\Entity\DriverBio;
 use General\Entity\BookingStatus;
 use Driver\Entity\DriverState;
+use Driver\Entity\ByPass;
 
 /**
  *
@@ -173,6 +174,43 @@ class BoardController extends AbstractActionController
     }
 
     // Driver Action
+    public function initiatestarttripAction()
+    {
+        $jsonModel = new JsonModel();
+        // Sends a notification to the rider
+        // Email and sms
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isGet()) {
+            $id = $this->params()->fromQuery("id", NULL);
+            /**
+             *
+             * @var Bookings $bookingEntity
+             */
+            $bookingEntity = $em->find(Bookings::class, $id);
+            $generalService = $this->generalService;
+            $pointer["to"] = $bookingEntity->getUser()->getEmail();
+            $pointer["fromName"] = "Bau Cars System";
+            $pointer['subject'] = "Trip Code";
+            
+            $template['template'] = "driver-start-trip-code";
+            $template["var"] = [
+                "logo" => $this->url()->fromRoute('application', [
+                    'action' => 'application'
+                ], [
+                    'force_canonical' => true
+                ]) . "assets/img/logo.png",
+                // "bookingUid" => $bookingEntity->getBookingUid(),
+                "tripCode" => $bookingEntity->getTripCode()
+                // "cancelDate" => $bookingEntity->getUpdatedOn()
+            ];
+            $generalService->sendMails($pointer, $template);
+        }
+        
+        return $jsonModel;
+    }
+
     public function starttripAction()
     {
         $em = $this->entityManager;
@@ -185,56 +223,57 @@ class BoardController extends AbstractActionController
                 $response->setStatusCode(422);
                 $jsonModel->setVariable("messages", "Invalid Ientifier");
                 return $jsonModel;
-            }
-            
-            $code = $post["code"];
-            $id = $post["bookingId"]; // booking Id
-            
-            $byPassCode = ($em->find(Bookings::class, $id))->getTripCode();
-            // var_dump($em);
-            $id = $post["bookingId"];
-            /**
-             *
-             * @var Bookings $bookingEntity
-             */
-            $bookingEntity = $em->find(Bookings::class, $id);
-            $bookingEntity->setUpdatedOn(new \DateTime())->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ACTIVE));
-            
-            $bookActivity = new BookingActivity();
-            $bookActivity->setBooking($bookingEntity)
-                ->setCreatedOn(new \DateTime())
-                ->setInformation("Driver Started trip");
-            
-            /**
-             *
-             * @var Ambiguous $assignedDriver
-             */
-            $assignedDriver = $bookingEntity->getAssignedDriver()->setDriverState($em->find(DriverBio::class, DriverService::DRIVER_STATUS_ENGAGED));
-            $activeTrip = new ActiveTrip();
-            
-            $activeTrip->setBooking($bookingEntity)
-                ->setActiveTripUid(uniqid("atrip"))
-                ->setCreatedOn(new \DateTime())
-                ->setStarted(new \DateTime());
-            try {
+            } else {
                 
-                $em->persist($assignedDriver);
-                $em->persist($bookingEntity);
-                $em->persist($bookingEntity);
-                $em->persist($activeTrip);
+                $code = $post["code"];
+                $id = $post["bookingId"]; // booking Id
                 
-                $em->flush();
+                $byPassCode = ($em->find(Bookings::class, $id))->getTripCode();
+                // var_dump($em);
+               
+                /**
+                 *
+                 * @var Bookings $bookingEntity
+                 */
+                $bookingEntity = $em->find(Bookings::class, $id);
+                $bookingEntity->setUpdatedOn(new \DateTime())->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_ACTIVE));
                 
-                // Send email to controller
-                // Notify controller
+                $bookActivity = new BookingActivity();
+                $bookActivity->setBooking($bookingEntity)
+                    ->setCreatedOn(new \DateTime())
+                    ->setInformation("Driver Started trip");
                 
-                $response->setStatusCode(201);
-            } catch (\Exception $e) {
-                $response->setStatusCode(400);
-                $jsonModel->setVariables([
-                    "messages" => "something went wrong",
-                    "data" => $e->getMessage()
-                ]);
+                /**
+                 *
+                 * @var Ambiguous $assignedDriver
+                 */
+                $assignedDriver = $bookingEntity->getAssignedDriver()->setDriverState($em->find(DriverBio::class, DriverService::DRIVER_STATUS_ENGAGED));
+                $activeTrip = new ActiveTrip();
+                
+                $activeTrip->setBooking($bookingEntity)
+                    ->setActiveTripUid(uniqid("atrip"))
+                    ->setCreatedOn(new \DateTime())
+                    ->setStarted(new \DateTime());
+                try {
+                    
+                    $em->persist($assignedDriver);
+                    $em->persist($bookingEntity);
+                    $em->persist($bookingEntity);
+                    $em->persist($activeTrip);
+                    
+                    $em->flush();
+                    
+                    // Send email to controller
+                    // Notify controller
+                    
+                    $response->setStatusCode(201);
+                } catch (\Exception $e) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "messages" => "something went wrong",
+                        "data" => $e->getMessage()
+                    ]);
+                }
             }
         }
         
@@ -262,8 +301,8 @@ class BoardController extends AbstractActionController
             if ($byPassCode == $code) {
                 
                 try {
-//                     $id = $post["bookingId"];
-                    
+                    // $id = $post["bookingId"];
+                    $user = $this->identity();
                     // initiate trip
                     /**
                      *
@@ -289,6 +328,11 @@ class BoardController extends AbstractActionController
                         ->setCreatedOn(new \DateTime())
                         ->setStarted(new \DateTime());
                     
+                    $byPassEntity = new ByPass();
+                    $byPassEntity->setBooking($bookingEntity)
+                        ->setCreatedOn(new \DateTime())
+                        ->setInitiator($user);
+                    
                     // send email of bypass// notify customer of byPass
                     $pointer["to"] = $bookingEntity->getUser()->getEmail();
                     $pointer["fromName"] = "Bau Cars System";
@@ -310,6 +354,7 @@ class BoardController extends AbstractActionController
                     // send sms of bypass
                     
                     $em->persist($activeTrip);
+                    $em->persist($byPassEntity);
                     $em->persist($bookActivity);
                     $em->persist($bookingEntity);
                     
@@ -375,8 +420,9 @@ class BoardController extends AbstractActionController
                 $em->persist($activeTrip);
                 $driverService->amotizedTrip($bookingEntity);
                 $em->flush();
-               
+                
                 $response->setStatusCode(201);
+                $jsonModel->setVariable("price", $amotizedSession->price);
                 
                 // Send Email
                 $pointer["to"] = $bookingEntity->getUser()->getEmail();
@@ -391,17 +437,17 @@ class BoardController extends AbstractActionController
                         'force_canonical' => true
                     ]) . "assets/img/logo.png",
                     "bookingUid" => $bookingEntity->getBookingUid(),
-                    "customer"=>$bookingEntity->getUser()->getFullName(),
+                    "customer" => $bookingEntity->getUser()->getFullName(),
                     "estimatedDistance" => $amotizedSession->estimatedDistance,
-                    "estimatedTime"=>$amotizedSession->estimateMinutes,
-                    "actualTime"=>$amotizedSession->actualMinutes,
-                    "price"=>$amotizedSession->price,
-                    "extraTimeUsed"=> $amotizedSession->extraTimeUsed ,
-                    "extraCost"=>$amotizedSession->extraCost,
+                    "estimatedTime" => $amotizedSession->estimateMinutes,
+                    "actualTime" => $amotizedSession->actualMinutes,
+                    "price" => $amotizedSession->price,
+                    "extraTimeUsed" => $amotizedSession->extraTimeUsed,
+                    "extraCost" => $amotizedSession->extraCost
                     // "cancelDate" => $bookingEntity->getUpdatedOn()
                 ];
                 $generalService->sendMails($pointer, $template);
-                // Receipt to 
+                // Receipt to
                 // amotize account
             } catch (\Exception $e) {
                 $response->setStatusCode(400);

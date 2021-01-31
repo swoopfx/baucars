@@ -133,6 +133,7 @@ class ByPass
     public function setCreatedOn($createdOn)
     {
         $this->createdOn = $createdOn;
+        $this->updatedOn = $createdOn;
         return $this;
     }
 

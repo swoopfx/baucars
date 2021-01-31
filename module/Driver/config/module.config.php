@@ -60,7 +60,9 @@ return array(
         ),
         'template_map' => array(
             "driver-bypass-notification-email"=> __DIR__ . '/../view/email/driver-bypass-notification-email.phtml',
-            "driver-end-trip-email"=> __DIR__ . '/../view/email/driver-end-trip-email.phtml'
+            "driver-end-trip-email"=> __DIR__ . '/../view/email/driver-end-trip-email.phtml',
+            "driver-start-trip-code"=> __DIR__ . '/../view/email/driver-strat-trip-code-email.phtml'
+            
         ),
     ),
     'service_manager' => array(

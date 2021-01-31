@@ -83,11 +83,6 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/doctrine/migrations/lib/Doctrine/DBAL/Migrations">
-		<attributes>
-			<attribute name="composer" value="vendor"/>
-		</attributes>
-	</buildpathentry>
 	<buildpathentry kind="src" path="vendor/doctrine/orm/lib/Doctrine/ORM">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
@@ -109,11 +104,6 @@
 		</attributes>
 	</buildpathentry>
 	<buildpathentry kind="src" path="vendor/myclabs/deep-copy/src/DeepCopy">
-		<attributes>
-			<attribute name="composer" value="vendor"/>
-		</attributes>
-	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/ocramius/proxy-manager/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>

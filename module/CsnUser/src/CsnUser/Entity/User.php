@@ -87,7 +87,7 @@ class User
      *      })
      *      @Annotation\Options({"label":"Phone Number"})
      */
-    protected $username;
+    protected $phoneNumber;
 
     /**
      *

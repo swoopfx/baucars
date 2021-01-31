@@ -131,7 +131,11 @@ class DriverService
             } else {
                 $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
                 $extraTimeUsed = $actualMinutes - $usableMinutes;
+                
                 $amotizedSession->extraTimeUsed = $extraTimeUsed;
+                if($extraTimeUsed < 0){
+                    $amotizedSession->extraTimeUsed = 0;
+                }
                 if ($extraTimeUsed > 60) {
                     $extraTimeMultiplier = $extraTimeUsed / 60;
                     $extraCost = (ceil($extraTimeMultiplier) * $appSettings->getExtraHourFee());
