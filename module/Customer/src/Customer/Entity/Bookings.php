@@ -246,6 +246,12 @@ class Bookings
      * @var string
      */
     private $byPassCode;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="DriverArrived", mappedBy="booking")
+     * @var DriverArrived
+     */
+    private $driverArrived;
 
     // TODO - Insert your code here
     
@@ -842,6 +848,23 @@ class Bookings
         $this->byPassCode = $byPassCode;
         return $this;
     }
+    /**
+     * @return the $driverArrived
+     */
+    public function getDriverArrived()
+    {
+        return $this->driverArrived;
+    }
+
+    /**
+     * @param \Customer\Entity\DriverArrived $driverArrived
+     */
+    public function setDriverArrived($driverArrived)
+    {
+        $this->driverArrived = $driverArrived;
+        return $this;
+    }
+
 
 }
 

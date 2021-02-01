@@ -162,7 +162,7 @@ $flashMessenger = $this->flashMessenger()
 														<div class="col-sm-8">
 															<div v-for="seats in numberOfSeats" class="mb-3">
 																<!-- <div class="styled-radio"> -->
-																<input type="radio" v-model="selectedSeat"  :value="seats.id" name="radio" :id="seats.id">
+																<input type="radio" v-model="selectedSeat" :value="seats.id" name="radio" :id="seats.id">
 																<label for="rad-1">{{seats.seats}} seater</label>
 																<!-- </div> -->
 															</div>
@@ -873,11 +873,9 @@ $flashMessenger = $this->flashMessenger()
 <script src="https://checkout.flutterwave.com/v3.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBobkXMM-uzqQLM5pqs_n7prJKJJ4-JK5I&callback=initMap&libraries=places&v=weekly" defer></script>
 <script src="/admin/assets/vendors/js/nicescroll/nicescroll.min.js"></script>
-<!-- <script src="/admin/assets/vendors/js/datepicker/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script> -->
 <script src="/admin/assets/vendors/js/app/app.min.js"></script>
 <script src="/admin/assets/js/components/validation/validation.min.js"></script>
-<!-- <script src="/admin/assets/js/components/datepicker/datepicker.js"></script> -->
+
 
 <!-- End Page Snippets -->
 <script>
@@ -1163,7 +1161,7 @@ $flashMessenger = $this->flashMessenger()
 				}
 			},
 
-			
+
 
 
 
@@ -1178,17 +1176,17 @@ $flashMessenger = $this->flashMessenger()
 		},
 
 		methods: {
-			seatStatus(bookClass, seat){
-				if(bookClass == 100 && seat == 20){
+			seatStatus(bookClass, seat) {
+				if (bookClass == 100 && seat == 20) {
 					return false;
 				}
 			},
 
-			amountStatus(amount){
-				if(amount == null){
+			amountStatus(amount) {
+				if (amount == null) {
 					return "Cash Trip";
-				}else{
-					return "&#8358; "+this.formatPrice(amount.amount);
+				} else {
+					return "&#8358; " + this.formatPrice(amount.amount);
 				}
 			},
 
@@ -1425,7 +1423,7 @@ $flashMessenger = $this->flashMessenger()
 			onCancelBooking(id) {
 				swal({
 					title: "Are you Sure",
-					text: "You are about to cancel you booking",
+					text: "You are about to cancel your booking",
 					icon: "warning",
 					button: "Continue!",
 				}).then(function(isConfirm) {
@@ -1437,7 +1435,12 @@ $flashMessenger = $this->flashMessenger()
 								window.location.reload();
 							}
 						}).catch(err => {
-
+							swal({
+								title: "Error",
+								text: err.response.data.messages,
+								icon: "error",
+								button: "YES"
+							})
 						});
 					}
 				});

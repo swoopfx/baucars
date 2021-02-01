@@ -27,6 +27,12 @@ class DriverBio
      *     
      */
     private $id;
+    
+    /**
+     * @ORM\Column(name="is_active", type="boolean", nullable=false, options={"default": 1})
+     * @var boolean
+     */
+    private $isActive;
 
     /**
      * @ORM\Column(name="driver_uid", type="string", nullable=false)
@@ -456,6 +462,23 @@ class DriverBio
         $this->driverState = $driverState;
         return $this;
     }
+    /**
+     * @return the $isActive
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
 
 }
 

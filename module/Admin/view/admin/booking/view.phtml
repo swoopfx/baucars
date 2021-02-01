@@ -120,10 +120,14 @@ $flashMessenger = $this->flashMessenger()
 											<th><a href="#" class="btn-link"><?php echo strtoupper($data->getBookingUid()) ?></a>
 											</th>
 										</tr>
-<!-- 										<tr> -->
-<!-- 											<td>Order Number:</td> -->
-<!-- 											<th>1231234123</th> -->
-<!-- 										</tr> -->
+										<tr>
+											<td>PICK UP Address</td>
+											<th><?php echo $data->getPickUpAddress() ?></th>
+										</tr>
+										<tr>
+											<td>Destination Address</td>
+											<th><?php echo $data->getDestination() ?></th>
+										</tr>
 										<tr>
 											<td>Booking Pick Up</td>
 											<th><?php echo $this->dateformat($data->getPickupDate(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>

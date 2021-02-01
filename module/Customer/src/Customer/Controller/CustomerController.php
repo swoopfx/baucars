@@ -334,7 +334,7 @@ class CustomerController extends AbstractActionController
                  *
                  * @var CustomerBooking $bookingEntity
                  */
-                $bookingEntity = $em->find(CustomerBooking::class, $id);
+                $bookingEntity = $em->find(Bookings::class, $id);
                 // var_dump($id);
                 $bookingEntity->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_CANCELED))
                     ->setUpdatedOn(new \DateTime());
@@ -376,6 +376,7 @@ class CustomerController extends AbstractActionController
                 $jsonModel->setVariable("data", $bookingEntity->getBookUid());
             } catch (\Exception $e) {
                 $response->setStatusCode(500);
+                $jsonModel->setVariable("messages", $e->getMessage());
             }
         }
         return $jsonModel;

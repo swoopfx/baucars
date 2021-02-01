@@ -252,7 +252,9 @@ echo $this->headtitle("Driver Controller");
 
 							<div class="circle">
 
-								<button type="button" data-toggle="modal" data-target="#onStartTrip" class="btn btn-primary btn-lg btn-block">Start Trip</button>
+								<button v-if="assignedBooking[0].driverArrived != null" type="button" data-toggle="modal" data-target="#onStartTrip" class="btn btn-primary btn-lg btn-block">Start Trip</button>
+								<button v-else type="button" @click="driverHasArrived()" :disabled="isDriverArrived" class="btn btn-primary btn-lg btn-block"> <div v-if="isDriverArrived">Processing ...</div>
+								 <div v-else>Arrived</div></button>
 							</div>
 							<!-- Begin Other Stats -->
 							<div class="other-stats">
@@ -475,6 +477,7 @@ echo $this->headtitle("Driver Controller");
 				ridersPayment: 0,
 				isRiderPaid: false,
 				isDriverCollectPayment:false,
+				isDriverArrived:false,
 			}
 		},
 
@@ -611,8 +614,16 @@ echo $this->headtitle("Driver Controller");
 
 			},
 
-
-
+			driverHasArrived(){
+				this.isDriverArrived = true;
+				let formData = new FormData();
+				formData.append("id", this.assignedBooking[0].id);
+				axios.post("/driver/board/drivararrived", formData).then(res=>{
+					if(res.status == 204){
+						window.location.reload();
+					}
+				});
+			},
 
 
 			endTrip() {
@@ -630,7 +641,7 @@ echo $this->headtitle("Driver Controller");
 			},
 
 			driverCollectedPayment(){
-				
+				//send reciept of payment
 			}
 
 		},

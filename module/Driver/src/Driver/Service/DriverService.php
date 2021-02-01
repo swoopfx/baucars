@@ -65,8 +65,10 @@ class DriverService
             ->leftJoin("d.booking", "b")
             ->leftJoin("b.status", "s")
             ->where("d.driverState = :state")
+            ->andWhere("d.isActive = :active")
             ->setParameters([
-            "state" => self::DRIVER_STATUS_FREE
+            "state" => self::DRIVER_STATUS_FREE,
+                "active"=>TRUE
         ])
             ->getQuery();
         

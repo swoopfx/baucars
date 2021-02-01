@@ -86,7 +86,7 @@ echo $this->headtitle("Canceled Booking");
 										<td><?php echo strtoupper($booking["bookingUid"]) ?></td>
 										<td><?php echo $booking["user"]["fullName"] ?></td>
 										<td><a href="#" class="btn-link"><strong>Booking Class : </strong><?php echo $booking["bookingClass"]["bookingClass"] ?> <br>
-												<strong>Booking Type :</strong><?php echo $booking["bookingType"]["bookingType"] ?></td>
+												</td>
 										<td><?php echo $this->statusHelper($booking["status"]) ?></td>
 										<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
 

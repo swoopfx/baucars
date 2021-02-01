@@ -183,6 +183,7 @@ class DriverController extends AbstractActionController
                         ->setDiverUid(DriverService::driverUid())
                         ->setDriverDob(\DateTime::createFromFormat("Y-m-d", $post["driver_dob"]))
                         ->setUser($userEntity)
+                        ->setIsActive(TRUE)
                         ->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_FREE))
                         ->setDriverSince(\DateTime::createFromFormat("Y-m-d", $post["driving_since"]));
                     // if()
@@ -429,8 +430,8 @@ class DriverController extends AbstractActionController
         $data = $repo->createQueryBuilder("d")
             ->select("d, u")
             ->where("d.diverUid = :uid")
-           
-            ->leftJoin("d.user", "u")
+            ->
+        leftJoin("d.user", "u")
             ->setParameters([
             "uid" => $id
         ])
@@ -564,6 +565,42 @@ class DriverController extends AbstractActionController
                 }
                 
                 // $jsonModel->setVariable("data", $)
+            }
+        }
+        return $jsonModel;
+    }
+
+    public function deletedriverAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+           
+            $post = $request->getPost()->toArray();
+            $id = $post["id"];
+           
+            if ($id == NULL) {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("message", "Absent Identifier");
+            } else {
+                /**
+                 *
+                 * @var DriverBio $driverEntity
+                 */
+                $driverEntity = $em->find(DriverBio::class, $id);
+                $driverEntity->setIsActive(FALSE)->setUpdatedOn(new \DateTime());
+                
+                try {
+                    $em->persist($driverEntity);
+                    $em->flush();
+                    $this->flashmessenger()->addSuccessMessage("Driver successfully removed form database");
+                    $response->setStatusCode(204);
+                } catch (\Exception $e) {
+                    $response->setStatusCode(500);
+                    $jsonModel->setVariable("messages", $e->getMessage());
+                }
             }
         }
         return $jsonModel;

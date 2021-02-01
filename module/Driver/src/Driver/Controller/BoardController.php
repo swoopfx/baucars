@@ -17,6 +17,7 @@ use Driver\Entity\DriverBio;
 use General\Entity\BookingStatus;
 use Driver\Entity\DriverState;
 use Driver\Entity\ByPass;
+use Customer\Entity\DriverArrived;
 
 /**
  *
@@ -124,10 +125,11 @@ class BoardController extends AbstractActionController
         $repo = $em->getRepository(Bookings::class);
         $data = $repo->createQueryBuilder("b")
             ->select([
-            "b, c,  a"
+            "b, c,  a, da"
         ])
             ->leftJoin("b.assignedDriver", "a")
             ->leftJoin("b.user", "c")
+            ->leftJoin("b.driverArrived", "da")
             ->where("a.user = :user")
             ->andWhere("b.status = :status")
             ->setParameters([
@@ -230,7 +232,7 @@ class BoardController extends AbstractActionController
                 
                 $byPassCode = ($em->find(Bookings::class, $id))->getTripCode();
                 // var_dump($em);
-               
+                
                 /**
                  *
                  * @var Bookings $bookingEntity
@@ -486,6 +488,60 @@ class BoardController extends AbstractActionController
         } else {
             $response->setStatusCode(400);
             $jsonModel->setVariable("messages", "Invalid Action taken");
+        }
+        return $jsonModel;
+    }
+
+    public function drivararrivedAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $id = $post["id"];
+           
+            if ($id == NULL) {
+                $request->setStatusCode(422);
+                $jsonModel->setVariable("messages", "Absent Identifier");
+            } else {
+                
+                try {
+                    $bookingEntity = $em->find(Bookings::class, $id);
+                   
+                    $driverErrivedEntity = new DriverArrived();
+                    $driverErrivedEntity->setCreatedOn(new \DateTime())->setBooking($bookingEntity);
+                   
+                    $em->persist($driverErrivedEntity);
+                    $em->flush();
+                   
+                    $generalService = $this->generalService;
+                    $pointer["to"] = $bookingEntity->getUser()->getEmail();
+                    $pointer["fromName"] = "Bau Cars System";
+                    $pointer['subject'] = "Trip Code";
+                    
+                    $template['template'] = "driver-start-trip-code";
+                    $template["var"] = [
+                        "logo" => $this->url()->fromRoute('application', [
+                            'action' => 'application'
+                        ], [
+                            'force_canonical' => true
+                        ]) . "assets/img/logo.png",
+                        // "bookingUid" => $bookingEntity->getBookingUid(),
+                        "tripCode" => $bookingEntity->getTripCode()
+                        // "cancelDate" => $bookingEntity->getUpdatedOn()
+                    ];
+                    $generalService->sendMails($pointer, $template);
+                    $response->setStatusCode(204);
+                    
+                    //Send SMS
+                    
+                } catch (\Exception $e) {
+                    $response->setStatusCode(500);
+                    $jsonModel->setVariable("messages", "Something went wrong");
+                }
+            }
         }
         return $jsonModel;
     }

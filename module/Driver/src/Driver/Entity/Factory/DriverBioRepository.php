@@ -39,6 +39,10 @@ class DriverBioRepository extends EntityRepository
             ->leftJoin("c.motorMake", "mm")
             ->leftJoin("d.user", "u")
             ->leftJoin("d.driverState", "ds")
+            ->where("d.isActive = :active")
+            ->setParameters([
+                "active"=>TRUE
+            ])
             ->setMaxResults($itemCountPerPage)
             ->setFirstResult($offset)
             ->orderBy("d.id", "DESC")
