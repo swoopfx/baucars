@@ -276,7 +276,7 @@ class BookingsController extends AbstractActionController
                     ]) . "assets/img/logo.png",
                     "bookingUid" => $bookingEntity->getBookingUid(),
                     "fullname" => $bookingEntity->getUser()->getFullName(),
-                    "amount" => NULL,
+                    "amount" => $bookingSession->bookingPrice,
                     "tripCode"=>$tripCode
                 ];
                 
@@ -297,7 +297,7 @@ class BookingsController extends AbstractActionController
                     ]) . "assets/img/logo.png",
                     "bookingUid" => $bookingEntity->getBookingUid(),
                     "fullname" => $bookingEntity->getUser()->getFullName(),
-                    "amount" => NULL,
+                    "amount" => $bookingSession->bookingPrice,
                     "tripCode"=>$tripCode
                 ];
                 

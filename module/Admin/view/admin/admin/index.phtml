@@ -219,8 +219,8 @@
 										<!-- <th>AMOUNT PAID</th> -->
 										<th>BOOKING CLASS</th>
 										<th>BOOKING TYPE</th>
-										<th>STATUS</th>
 										<th>ACTION</th>
+										<th>E/PRICE</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -234,6 +234,10 @@
 										<!-- <td>{{data.bookingType.bookingType}}</td> -->
 										<td><span class="label label-success">{{data.status.status}}</span></td>
 										<td><a :href="initiateBookingListLink(data.bookingUid)"><i class="fa fa-eye"></i></a></td>
+										<td>
+											<div v-if="data.bookingsEstimatedPrice == null"><a :disabled="isNotifyingCustomer" class="btn btn-success" @click="notifyCustomer(data.id)"><span v-if="isNotifyingCustomer"> ...Processing</span><span v-else class="label label-success">Notify Rider of Cost</span></a></div>
+											<div v-else>&#8358;{{formatPrice(data.bookingsEstimatedPrice)}}</div>
+										</td>
 									</tr>
 									<!-- Table Row End -->
 
@@ -574,12 +578,29 @@
 
 				// Support
 				splashSupport: [],
+
+				isNotifyingCustomer: false,
 			}
 		},
 		methods: {
 			formatPHPDate(date) {
 				// myDate = date.replace(/-/g, "/");
 				return new Date(date);
+			},
+			formatPrice(value) {
+				let val = (value / 1).toFixed(2).replace(',', '.')
+				return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+			},
+
+			notifyCustomer(id) {
+				this.isNotifyingCustomer = true;
+				let formData = new FormData();
+				formData.append("id", id);
+				axios.post("/controller/booking/sendbookingprice", formData).then(res => {
+					if (res.status = 204) {
+						window.location.reload();
+					}
+				}).catch()
 			},
 
 			initiateBookingListLink(uid) {

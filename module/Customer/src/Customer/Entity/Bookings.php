@@ -252,6 +252,12 @@ class Bookings
      * @var DriverArrived
      */
     private $driverArrived;
+    
+    /**
+     * @ORM\Column(name="bookings_estimated_price", type="string", nullable=true)
+     * @var string
+     */
+    private $bookingsEstimatedPrice;
 
     // TODO - Insert your code here
     
@@ -864,6 +870,23 @@ class Bookings
         $this->driverArrived = $driverArrived;
         return $this;
     }
+    /**
+     * @return the $bookingsEstimatedPrice
+     */
+    public function getBookingsEstimatedPrice()
+    {
+        return $this->bookingsEstimatedPrice;
+    }
+
+    /**
+     * @param string $bookingsEstimatedPrice
+     */
+    public function setBookingsEstimatedPrice($bookingsEstimatedPrice)
+    {
+        $this->bookingsEstimatedPrice = $bookingsEstimatedPrice;
+        return $this;
+    }
+
 
 
 }

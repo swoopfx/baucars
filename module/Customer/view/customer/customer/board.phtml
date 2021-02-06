@@ -73,12 +73,12 @@ $flashMessenger = $this->flashMessenger()
 													<!-- Begin Widget Body -->
 													<div class="widget-body">
 														<div class="row">
-															<div class="col-xl-12 text-center mt-5 mb-5">
+															<div class="col-xl-12 text-center mt-3 mb-3">
 																<div class="nb-visitors">
 																	BOOKING PRICE
 																</div>
 																<div class="visitors-nb text-gradient-02">
-																	&#8358; {{bookingPrice}}
+																	&#8358; {{formatPrice(bookingPrice)}}
 																</div>
 															</div>
 
@@ -1002,6 +1002,9 @@ $flashMessenger = $this->flashMessenger()
 	});
 
 
+
+
+
 	Date.prototype.datee = function() {
 		var mm = "";
 
@@ -1176,6 +1179,12 @@ $flashMessenger = $this->flashMessenger()
 		},
 
 		methods: {
+
+			formatPrice(value) {
+				let val = (value / 1).toFixed(2).replace('.', ',')
+				return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+			},
+
 			seatStatus(bookClass, seat) {
 				if (bookClass == 100 && seat == 20) {
 					return false;

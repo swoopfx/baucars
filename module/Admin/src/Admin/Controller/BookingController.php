@@ -12,6 +12,7 @@ use Zend\Mvc\MvcEvent;
 use Customer\Service\CustomerService;
 use Doctrine\ORM\Query;
 use Customer\Entity\Bookings;
+use General\Service\GeneralService;
 
 /**
  *
@@ -20,6 +21,12 @@ use Customer\Entity\Bookings;
  */
 class BookingController extends AbstractActionController
 {
+
+    /**
+     *
+     * @var GeneralService
+     */
+    private $generalService;
 
     /**
      *
@@ -188,13 +195,11 @@ class BookingController extends AbstractActionController
         $em = $this->entityManager;
         $repo = $em->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder("a")
-            ->
-        where("a.status = :status")
+            ->where("a.status = :status")
             ->setParameters([
             "status" => CustomerService::BOOKING_STATUS_ACTIVE
         ])
-            ->
-        getQuery()
+            ->getQuery()
             ->getResult();
         $jsonModel->setVariable("data", count($result));
         $response->setStatusCode(200);
@@ -279,6 +284,93 @@ class BookingController extends AbstractActionController
         $response = $this->getResponse();
         $response->setStatusCode(200);
         $jsonModel->setVariable("data", $result);
+        return $jsonModel;
+    }
+
+    /**
+     * Sends an email notification informing the the customer
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function sendbookingpriceAction()
+    {
+        $generalService = $this->generalService;
+        $bookingService = $this->bookingService;
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $user = $this->identity();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $id = $post["id"];
+            if ($id == NULL) {
+                $response->setStatusCode(422);
+                $jsonModel->setVariable("messages", "Absent Identifier");
+            } else {
+                try {
+                    
+                    /**
+                     *
+                     * @var Bookings $bookingEntity
+                     */
+                    $bookingEntity = $em->find(Bookings::class, $id);
+                    if ($bookingEntity->getBookingsEstimatedPrice() != NULL) {
+                        $pointer["to"] = $user->getEmail();
+                        $pointer["fromName"] = "Bau Cars Booking";
+                        $pointer['subject'] = "My Booking Details";
+                        
+                        $template['template'] = "admin-new-booking";
+                        $template["var"] = [
+                            "logo" => $this->url()->fromRoute('application', [
+                                'action' => 'application'
+                            ], [
+                                'force_canonical' => true
+                            ]) . "assets/img/logo.png",
+                            "bookingUid" => $bookingEntity->getBookingUid(),
+                            "fullname" => $bookingEntity->getUser()->getFullName(),
+                            "amount" => $bookingEntity->getBookingsEstimatedPrice(),
+                            "tripCode" => $tripCode
+                        ];
+                        
+                        $generalService->sendMails($pointer, $template);
+                    } else {
+                        $price = $bookingService->setDmDistance($bookingEntity->getCalculatedDistanceValue())
+                            ->priceCalculator();
+                        
+                        $bookingEntity->setBookingsEstimatedPrice($price)->setUpdatedOn(new \DateTime());
+                        
+                        $em->persist($bookingEntity);
+                        $em->flush();
+                        
+                        $pointer["to"] = $user->getEmail();
+                        $pointer["fromName"] = "Bau Cars Booking";
+                        $pointer['subject'] = "My Booking Details";
+                        
+                        $template['template'] = "admin-new-booking";
+                        $template["var"] = [
+                            "logo" => $this->url()->fromRoute('application', [
+                                'action' => 'application'
+                            ], [
+                                'force_canonical' => true
+                            ]) . "assets/img/logo.png",
+                            "bookingUid" => $bookingEntity->getBookingUid(),
+                            "fullname" => $bookingEntity->getUser()->getFullName(),
+                            "amount" => $bookingEntity->getBookingsEstimatedPrice(),
+                            "tripCode" => $tripCode
+                        ];
+                        
+                        $generalService->sendMails($pointer, $template);
+                    }
+                    $response->setStatusCode(204);
+                    
+                } catch (\Exception $e) {
+                    $response->setStatusCode();
+                    $jsonModel->setVariable("messages", "Something went wrong please try again later");
+                }
+            }
+        }
+        
         return $jsonModel;
     }
 
@@ -414,6 +506,25 @@ class BookingController extends AbstractActionController
     public function setUpcomgBooking($upcomgBooking)
     {
         $this->upcomgBooking = $upcomgBooking;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $generalService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     *
+     * @param \General\Service\GeneralService $generalService            
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
         return $this;
     }
 }

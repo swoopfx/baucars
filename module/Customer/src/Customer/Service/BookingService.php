@@ -206,6 +206,7 @@ class BookingService
             ->setCalculatedTimeValue($bookingSession->timeValue)
             ->setByPassCode(self::byPassCode())
             ->setTripCode(self::tripCode())
+            ->setBookingsEstimatedPrice($bookingSession->bookingPrice)
             ->setBookingClass($em->find(BookingClass::class, $bookingSession->selectedBookingClass))
             ->setSeater($em->find(NumberOfSeat::class, $bookingSession->selectedNumberOfSeat));
         

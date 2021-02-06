@@ -47,6 +47,7 @@ class BookingControllerFactory implements FactoryInterface
             ->setCancelBooking($cancelBooking)
             ->setActiveBooking($activeTrip)
             ->setInitiTitedBooking($initiatedBooking)
+            ->setGeneralService($generalService)
             ->setUpcomgBooking($upcomingBooking)
             ->setAllBookingPaginator($bookingPaginator);
         return $ctr;

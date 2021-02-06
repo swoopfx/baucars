@@ -620,7 +620,7 @@ echo $this->headtitle("Driver Controller");
 				formData.append("id", this.assignedBooking[0].id);
 				axios.post("/driver/board/drivararrived", formData).then(res=>{
 					if(res.status == 204){
-						window.location.reload();
+						window.location.reload();	
 					}
 				});
 			},
