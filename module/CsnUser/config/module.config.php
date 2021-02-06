@@ -13,6 +13,9 @@
  */
 namespace CsnUser;
 
+use CsnUser\View\Helper\UserStatusHelper;
+use CsnUser\Controller\Plugin\Factory\RedirectPluginFactory;
+
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -25,6 +28,11 @@ return array(
 
             'CsnUser\Controller\Index' => 'CsnUser\Controller\Factory\IndexControllerFactory'
         )
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            "userStateHelper"=>UserStatusHelper::class
+        ),
     ),
     'router' => array(
         'routes' => array(
@@ -131,9 +139,15 @@ return array(
         'template_path_stack' => array(
             'csn-user' => __DIR__ . '/../view'
         ),
+        'strategies' => array(
+            'ViewJsonStrategy'
+        ),
         'template_map' => array(
             'csnuser-register-snipet' => __DIR__ . '/../view/partial/user-register-snipet.phtml',
-            'csnuser-basic-info-snipet' => __DIR__ . '/../view/partial/user-basic-info-snipet.phtml'
+            'csnuser-basic-info-snipet' => __DIR__ . '/../view/partial/user-basic-info-snipet.phtml',
+            
+            'csnuser-login-snippet' => __DIR__ . '/../view/csn-user/index/login.phtml',
+            'csnuser-register-snippet' => __DIR__ . '/../view/csn-user/registration/registration.phtml',
         )
     ),
     'service_manager' => array(
@@ -152,6 +166,11 @@ return array(
             'CsnUser\Form\Fieldset\UserBasicFieldset' => 'CsnUser\Form\Fieldset\Factory\UserBasicFieldsetFactory'
         )
     ),
+    'controller_plugins' => array(
+        'factories' => array(
+            "redirectPlugin"=>RedirectPluginFactory::class
+        ),
+    ),
     'doctrine' => array(
         'configuration' => array(
             'orm_default' => array(
@@ -162,7 +181,7 @@ return array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
                 'identity_class' => 'CsnUser\Entity\User',
-                'identity_property' => 'username',
+                'identity_property' => 'phoneNumber',
                 'credential_property' => 'password',
                 'credential_callable' => 'CsnUser\Service\UserService::verifyHashedPassword'
             )

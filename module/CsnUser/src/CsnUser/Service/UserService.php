@@ -21,19 +21,17 @@ class UserService
 {
 
     const USER_ROLE_GUEST = 1;
+
+    const USER_ROLE_DRIVER = 20;
+
+    const USER_ROLE_CUSTOMER = 30;
+
     
-    const USER_ROLE_MEMBER = 20;
-    
-    const USER_ROLE_PROFILED = 30;
-    
-    const USER_ROLE_GUARATEED = 100;
-    
-    
+
     const USER_ROLE_ADMIN = 1000;
-    
-    
+
     const USER_STATE_DISABLED = 1;
-    
+
     const USER_STATE_ENABLED = 2;
 
     /**
@@ -67,20 +65,40 @@ class UserService
         ));
         return $bcrypt->create($password);
     }
-    
-    /**
-     * 
-     * @param Wallet $wallet
-     * @param string $passcode
-     */
-    public static function verifyPasscode(Wallet $wallet, $passcode){
-        $bcrypt = new Bcrypt(array(
-            'cost' => 10
-        ));
-        return $bcrypt->verify($passcode, $wallet->getPasscode()->getPasscode());
-    }
-    
-    public static function createUserUid(){
+
+//     /**
+//      *
+//      * @param Wallet $wallet            
+//      * @param string $passcode            
+//      */
+//     public static function verifyPasscode(Wallet $wallet, $passcode)
+//     {
+//         $bcrypt = new Bcrypt(array(
+//             'cost' => 10
+//         ));
+//         return $bcrypt->verify($passcode, $wallet->getPasscode()
+//             ->getPasscode());
+//     }
+
+    public static function createUserUid()
+    {
         return uniqid(rand());
+    }
+
+    /**
+     *
+     * @param User $user            
+     */
+    public static function routeManager($user)
+    {
+        if ($user->getRole()->getId() == self::USER_ROLE_ADMIN) {
+            return "controller";
+        } elseif($user->getRole()->getId() == self::USER_ROLE_CUSTOMER) {
+            return "customer";
+        }elseif($user->getRole()->getId() == self::USER_ROLE_DRIVER){
+            return "driver";
+        }else{
+            return "logout";
+        }
     }
 }

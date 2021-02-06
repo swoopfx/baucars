@@ -36,6 +36,8 @@
             'type' => 'image/vnd.microsoft.icon',
             'href' => $this->basePath() . '/img/favicon.ico'
         ))
+            ->
+        prependStylesheet("https://cdn.jsdelivr.net/npm/vue-toast-notification/dist/theme-default.css")
             ->prependStylesheet($this->basePath('assets/css/animate/animate.min.css'))
             ->prependStylesheet($this->basePath('admin/assets/vendors/css/base/elisyam-1.5.min.css'))
             ->prependStylesheet($this->basePath('admin/assets/vendors/css/base/bootstrap.min.css'))?>
@@ -45,6 +47,10 @@
         <?php
         
         echo $this->headScript()
+            ->prependFile("https://unpkg.com/sweetalert/dist/sweetalert.min.js")
+            ->prependFile("https://cdn.jsdelivr.net/npm/vue-toast-notification")
+            ->prependFile($this->basePath('js/axios.min.js'))
+            ->prependFile($this->basePath('js/vue.js'))
             ->prependFile($this->basePath('js/bootstrap.min.js'))
             ->prependFile($this->basePath('js/jquery.min.js'))
             ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array(
@@ -74,13 +80,13 @@
 					<div class="elisyam-overlay overlay-08"></div>
 					<div class="authentication-col-content-2 mx-auto text-center">
 						<div class="logo-centered">
-							<a href="db-default.html"> <img src="assets/img/logo.png"
+							<a href="<?php echo $this->url("application")?>"> <img src="assets/img/logo.png"
 								alt="logo">
 							</a>
 						</div>
-						<h1>Join Our Community</h1>
-						<span class="description"> Etiam consequat urna at magna bibendum,
-							in tempor arcu fermentum vitae mi massa egestas. </span>
+						<h1>Come Aboard</h1>
+						<span class="description"> Take the advantage of our unique
+							service </span>
 						<ul class="login-nav nav nav-tabs mt-5 justify-content-center"
 							role="tablist" id="animate-tab">
 							<li><a class="active" data-toggle="tab" href="#singin" role="tab"
@@ -98,69 +104,11 @@
 				<!-- Begin Form -->
 				<div class="authentication-form-2 mx-auto">
 					<div class="tab-content" id="animate-tab-content">
-						<!-- Begin Sign In -->
-						<div role="tabpanel" class="tab-pane show active" id="singin"
-							aria-labelledby="singin-tab">
-							<h3>Sign In To Elisyam</h3>
-							<form>
-								<div class="group material-input">
-									<input type="text" required> <span class="highlight"></span> <span
-										class="bar"></span> <label>Email</label>
-								</div>
-								<div class="group material-input">
-									<input type="password" required> <span class="highlight"></span>
-									<span class="bar"></span> <label>Password</label>
-								</div>
-							</form>
-							<div class="row">
-								<div class="col text-left">
-									<div class="styled-checkbox">
-										<input type="checkbox" name="checkbox" id="remeber"> <label
-											for="remeber">Remember me</label>
-									</div>
-								</div>
-								<div class="col text-right">
-									<a href="pages-forgot-password.html">Forgot Password ?</a>
-								</div>
-							</div>
-							<div class="sign-btn text-center">
-								<a href="db-default.html" class="btn btn-lg btn-gradient-01">
-									Sign In </a>
-							</div>
-						</div>
-						<!-- End Sign In -->
-						<!-- Begin Sign Up -->
-						<div role="tabpanel" class="tab-pane" id="signup"
-							aria-labelledby="signup-tab">
-							<h3>Create An Account</h3>
-							<form>
-								<div class="group material-input">
-									<input type="text" required> <span class="highlight"></span> <span
-										class="bar"></span> <label>Email</label>
-								</div>
-								<div class="group material-input">
-									<input type="password" required> <span class="highlight"></span>
-									<span class="bar"></span> <label>Password</label>
-								</div>
-								<div class="group material-input">
-									<input type="password" required> <span class="highlight"></span>
-									<span class="bar"></span> <label>Confirm Password</label>
-								</div>
-							</form>
-							<div class="row">
-								<div class="col text-left">
-									<div class="styled-checkbox">
-										<input type="checkbox" name="checkbox" id="agree"> <label
-											for="agree">I Accept <a href="#">Terms and Conditions</a></label>
-									</div>
-								</div>
-							</div>
-							<div class="sign-btn text-center">
-								<a href="db-default.html" class="btn btn-lg btn-gradient-01">
-									Sign Up </a>
-							</div>
-						</div>
-						<!-- End Sign Up -->
+						
+						<?php  echo $this->partial("csnuser-login-snippet")?>
+						<?php  echo $this->partial("csnuser-register-snippet")?>
+						<?php  //echo $this->content ?>
+						
 					</div>
 				</div>
 				<!-- End Form -->

@@ -128,8 +128,8 @@
         // Video Bg JS 
         $('#mobileapp-video-bg').YTPlayer({
             fitToBackground: true,
-            videoURL: 'm5_AKjDdqaU',
-            containment: '#mobile-app-area',
+//            videoURL: 'm5_AKjDdqaU',
+//            containment: '#mobile-app-area',
             quality: 'highres',
             loop: true,
             showControls: false,

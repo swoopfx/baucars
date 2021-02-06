@@ -1140,7 +1140,7 @@ a.slicknav_btn {
 }
 
 #mobile-app-area::after {
-	background-image: url("assets/img/mobile-app.png");
+	background-image: url("/assets/img/mobile-app.png");
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -1191,6 +1191,7 @@ a.slicknav_btn {
 
 #mobileapp-video-bg {
 	position: relative;
+	background-color: #000000;
 }
 
 /*== Mobile Apps CSS End ==*/

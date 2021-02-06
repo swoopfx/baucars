@@ -1,5 +1,10 @@
 <?php
+namespace General;
+
 use General\Service\Factory\GeneralServiceFactory;
+use General\Service\Factory\FlutterwaveServiceFactory;
+use General\View\Helper\MyCurrency;
+use General\View\Helper\StatusHelper;
 
 return array(
     'controllers' => array(
@@ -9,7 +14,8 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            "General\Service\GeneralService"=>GeneralServiceFactory::class
+            "General\Service\GeneralService"=>GeneralServiceFactory::class,
+            "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
         ),
     ),
     'router' => array(
@@ -52,6 +58,35 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'General' => __DIR__ . '/../view',
+        ),
+        'template_map' => array(
+            "general-mail-transaction-success" => __DIR__ . '/../view/mail/general-transaction-success.phtml',
+            "general-customer-assigned-driver" => __DIR__ . '/../view/mail/general-customer-assigned-todriver-mail.phtml',
+            "general-customer-driver-dispatch" => __DIR__ . '/../view/mail/general-customer-driver-dispatched-mail.phtml',
+            
+        ),
+    ),
+    
+    'doctrine' => array(
+        'driver' => array(
+            __NAMESPACE__ . '_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(
+                    __DIR__ . '/../src/' . __NAMESPACE__ . '/Entity'
+                )
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                )
+            )
+        )
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            "myCurrency"=>MyCurrency::class,
+            "statusHelper"=>StatusHelper::class,
         ),
     ),
 );

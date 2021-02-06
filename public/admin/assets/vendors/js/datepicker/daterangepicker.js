@@ -37,12 +37,12 @@
         this.maxDate = false;
         this.dateLimit = false;
         this.autoApply = false;
-        this.singleDatePicker = false;
+        this.singleDatePicker = true;
         this.showDropdowns = false;
         this.showWeekNumbers = false;
         this.showISOWeekNumbers = false;
         this.showCustomRangeLabel = true;
-        this.timePicker = false;
+        this.timePicker = true;
         this.timePicker24Hour = false;
         this.timePickerIncrement = 1;
         this.timePickerSeconds = false;

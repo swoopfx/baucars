@@ -1,10 +1,15 @@
 <?php
+namespace Application;
+
+use Application\Paginator\Factory\CarAdapterInterface;
+use Application\Controller\Factory\IndexControllerFactory;
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @link http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 return array(
     'router' => array(
@@ -47,17 +52,33 @@ return array(
                         )
                     )
                 )
+            ),
+            
+            'dashboard' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route' => '/dashboard',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'dashboard'
+                    )
+                )
             )
         )
     ),
     'service_manager' => array(
+        
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory'
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator'
-        )
+        ),
+        
+        'factories' => array(
+            "allcarsRegisteredPaginator"=>CarAdapterInterface::class
+        ),
     ),
     'translator' => array(
         'locale' => 'en_US',
@@ -71,8 +92,11 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
-        )
+//             'Application\Controller\Index' => 'Application\Controller\IndexController'
+        ),
+        'factories' => array(
+            'Application\Controller\Index'=>IndexControllerFactory::class
+        ),
     ),
     'view_manager' => array(
         'display_not_found_reason' => true,
@@ -83,11 +107,22 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
             "layout/login" => __DIR__ . '/../view/layout/login-layout.phtml',
+            "soon"=> __DIR__ . '/../view/layout/coming-soon-layout.phtml',
+            "layout/control" => __DIR__ . '/../view/layout/admin-layout.phtml',
+            "layout/customer" => __DIR__ . '/../view/layout/customer-layout.phtml',
             'layout/footer' => __DIR__ . '/../view/layout/footer.phtml',
             'layout/header' => __DIR__ . '/../view/layout/header.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
-            'error/index' => __DIR__ . '/../view/error/index.phtml'
+            'error/index' => __DIR__ . '/../view/error/index.phtml',
+            
+            // emails
+            'email-app-user-registration' => __DIR__ . '/../view/mail/app-user-registeration.phtml',
+            'app-support-created-controller-mail' => __DIR__ . '/../view/mail/app-support-created-controller-mail.phtml',
+            'app-support-created-user-mail' => __DIR__ . '/../view/mail/app-support-created-user-mail.phtml',
+            'app-customercancel-booking-user' => __DIR__ . '/../view/mail/app-customer-cancel-booking-user.phtml',
+            'app-contactus-mail' => __DIR__ . '/../view/mail/app-contact-us-mail.phtml'
+        
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view'
@@ -97,6 +132,23 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array()
+        )
+    ),
+    
+    'doctrine' => array(
+        'driver' => array(
+            __NAMESPACE__ . '_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(
+                    __DIR__ . '/../src/' . __NAMESPACE__ . '/Entity'
+                )
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                )
+            )
         )
     )
 );

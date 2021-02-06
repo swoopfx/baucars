@@ -26,6 +26,10 @@ use Doctrine\ORM\EntityManager;
 use Zend\I18n\Translator\Translator;
 use Zend\Form\Form;
 use Zend\Authentication\AuthenticationService;
+use Zend\InputFilter\InputFilter;
+use Zend\View\Model\JsonModel;
+use Zend\Http\Response;
+use CsnUser\Service\UserService;
 
 /**
  * Index controller
@@ -57,7 +61,6 @@ class IndexController extends AbstractActionController
      */
     protected $userFormHelper;
 
-    
     protected $user;
 
     private $authService;
@@ -79,7 +82,7 @@ class IndexController extends AbstractActionController
 
     /**
      * This persit the user s login timestamp
-     * 
+     *
      * @param object $user            
      */
     private function lastLogin($user)
@@ -94,40 +97,40 @@ class IndexController extends AbstractActionController
             $lastloginEntity->setUser($user)->setLastlogin(new \DateTime());
         }
         try {
-            $em->persist($user);
+            $em->persist($lastloginEntity);
             $em->flush();
         } catch (\Exception $e) {
             $this->flashmessenger()->addErrorMessage("We could not logi at this time ");
         }
     }
 
-//     private function brokerActivationCondition($userId)
-//     {
-//         $em = $this->entityManager;
-//         $brokerEntity = $em->getRespository("CsnUser\Entity\InsuranceBrokerRegistered")->findOneBy(array(
-//             "user" => $userId
-//         ));
-        
-// //         var_dump($brokerEntity);
-        
-//         if ($brokerEntity->getBrokerActivation == NULL) {
-//             $brokerActivationEntity = new BrokerActivation();
-//         } else {
-//             $brokerActivationEntity = $brokerEntity->getBrokerActivation();
-//         }
-        
-//         try {
-//             $brokerActivationEntity->setActivation($em->find("Settings\Entity\ActivationType", SettingsService::BROKER_ACTIVATION_COMMISION))
-//                 ->setBroker($brokerEntity);
-//             $brokerEntity->setBrokerActivation($brokerActivationEntity);
-            
-//             $em->persist($brokerEntity);
-//             $em->flush();
-//         } catch (\Exception $e) {
-//             $this->flashmessenger()->addErrorMessage("We could not define the activation");
-//         }
-//     }
-
+    // private function brokerActivationCondition($userId)
+    // {
+    // $em = $this->entityManager;
+    // $brokerEntity = $em->getRespository("CsnUser\Entity\InsuranceBrokerRegistered")->findOneBy(array(
+    // "user" => $userId
+    // ));
+    
+    // // var_dump($brokerEntity);
+    
+    // if ($brokerEntity->getBrokerActivation == NULL) {
+    // $brokerActivationEntity = new BrokerActivation();
+    // } else {
+    // $brokerActivationEntity = $brokerEntity->getBrokerActivation();
+    // }
+    
+    // try {
+    // $brokerActivationEntity->setActivation($em->find("Settings\Entity\ActivationType", SettingsService::BROKER_ACTIVATION_COMMISION))
+    // ->setBroker($brokerEntity);
+    // $brokerEntity->setBrokerActivation($brokerActivationEntity);
+    
+    // $em->persist($brokerEntity);
+    // $em->flush();
+    // } catch (\Exception $e) {
+    // $this->flashmessenger()->addErrorMessage("We could not define the activation");
+    // }
+    // }
+    
     /**
      * Log in action
      *
@@ -137,18 +140,26 @@ class IndexController extends AbstractActionController
      */
     public function loginAction()
     {
-        $this->layout()->setTemplate("layout/login");
+        
+       
+        // $this->layout()->setTemplate("layout/login");
         $user = $this->identity();
+        $uri = $this->getRequest()->getUri();
+        // var_dump($uri);
+        $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+        
         if ($user) {
-            return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+            
+            return $this->redirect()->toUrl($fullUrl . "/" . UserService::routeManager($user));
         }
         
         // use the generated controllerr plugin for the redirection
         
         $form = $this->loginForm->createUserForm($this->userEntity, 'login');
+        // var_dump($form);
         $messages = null;
         if ($this->getRequest()->isPost()) {
-            $form->setValidationGroup('usernameOrEmail', 'password', 'rememberme', 'csrf');
+            $form->setValidationGroup('usernameOrEmail', 'password');
             $form->setData($this->getRequest()
                 ->getPost());
             if ($form->isValid()) {
@@ -165,11 +176,11 @@ class IndexController extends AbstractActionController
                     
                     // $user = $user[0];
                     
-                    $user = $this->user->selectUserDQL($usernameOrEmail);
+                    // $user = $this->user->selectUserDQL($usernameOrEmail);
+                    $user = $this->entityManager->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$usernameOrEmail' OR u.username = '$usernameOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
                     if (count($user) > 0) {
                         $user = $user[0];
                     }
-//                     var_dump($user);
                     // var_dump($user);
                     if ($user == NULL) {
                         
@@ -211,11 +222,10 @@ class IndexController extends AbstractActionController
                     if ($authResult->isValid()) {
                         $identity = $authResult->getIdentity();
                         $authService->getStorage()->write($identity);
-                       
-                        
+//                         var_dump("KILLL");
                         // Last Login Date
                         $this->lastLogin($this->identity());
-                       
+                        
                         if ($this->params()->fromPost('rememberme')) {
                             $time = 1209600; // 14 days (1209600/3600 = 336 hours => 336/24 = 14 days)
                             $sessionManager = new SessionManager();
@@ -230,8 +240,8 @@ class IndexController extends AbstractActionController
                          * to display the required form to fill the profile
                          * if required redirect to the copletinfg profile Page
                          */
-                        
-                        return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+                       
+                        return $this->redirect()->toUrl($fullUrl . "/" . UserService::routeManager($user));
                     }
                     
                     foreach ($authResult->getMessages() as $message) {
@@ -242,14 +252,218 @@ class IndexController extends AbstractActionController
                     return $this->errorView->createErrorView($this->translatorHelper->translate('Something went wrong during login! Please, try again later.'), $e, $this->options->getDisplayExceptions(), $this->options);
                     // ->getNavMenu();
                 }
+            }else{
+               
             }
         }
-        
+        // var_dump($form);
         return new ViewModel(array(
             'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
             'form' => $form,
             'messages' => $messages
         ));
+        // 'navMenu' => $this->options->getNavMenu()
+    }
+
+    /**
+     * Log in action
+     *
+     * The method uses Doctrine Entity Manager to authenticate the input data
+     *
+     * @return ViewModel|array login form|array messages|array navigation menu
+     */
+    public function loginjsonAction()
+    {
+        
+        // $data = $inputFilter->getValues();
+        $user = $this->identity();
+        if ($user) {
+            return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+        }
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        // $data = $inputFilter->getValues();
+        
+        $uri = $this->getRequest()->getUri();
+        // var_dump($uri);
+        $fullUrl = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+        // use the generated controllerr plugin for the redirection
+        
+        // $form = $this->loginForm->createUserForm($this->userEntity, 'login');
+        $messages = null;
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                'name' => 'phoneOrEmail',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Phone number or email is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'password',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Password is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                $data = $inputFilter->getValues();
+                
+                $authService = $this->authService;
+                $adapter = $authService->getAdapter();
+                $phoneOrEmail = $data["phoneOrEmail"];
+                
+                try {
+                    $user = $this->entityManager->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
+                    
+                    // $user = $this->user->selectUserDQL($phoneOrEmail);
+                    if (count($user) == 0) {
+                        $response->setCustomStatusCode(498);
+                        $response->setReasonPhrase('Invalid token!');
+                        return $jsonModel->setVariables([
+                            "messages" => "The username or email is not valid!"
+                        ]);
+                    } else {
+                        $user = $user[0];
+                    }
+                    
+                    // var_dump($user);
+                    // var_dump($user);
+                    // if ($user == NULL) {
+                    
+                    // $messages = 'The username or email is not valid!';
+                    // // return new ViewModel(array(
+                    // // 'error' => $this->translatorHelper->translate('Your authentication credentials are not valid'),
+                    // // 'form' => $form,
+                    // // 'messages' => $messages,
+                    // // 'navMenu' => $this->options->getNavMenu()
+                    // // ));
+                    
+                    // $response->setStatusCode(Response::STATUS_CODE_422);
+                    // return $jsonModel->setVariables([
+                    // "messages" => $messages
+                    // ]);
+                    // }
+                    if (! $user->getEmailConfirmed() == 1) {
+                        $messages = $this->translatorHelper->translate('You are yet to confirm your account, please go to the registered email to confirm your account');
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages" => $messages
+                        ]);
+                    }
+                    if ($user->getState()->getId() < 2) {
+                        $messages = $this->translatorHelper->translate('Your username is disabled. Please contact an administrator.');
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages" => $messages
+                        ]);
+                    }
+                    
+                    $adapter->setIdentity($user->getPhoneNumber());
+                    $adapter->setCredential($data["password"]);
+                    
+                    $authResult = $authService->authenticate();
+                    // $class_methods = get_class_methods($adapter);
+                    // echo "<pre>";print_r($class_methods);exit;
+                    
+                    if ($authResult->isValid()) {
+                        $identity = $authResult->getIdentity();
+                        $authService->getStorage()->write($identity);
+                        
+                        // Last Login Date
+                        $this->lastLogin($this->identity());
+                        $userEntity = $this->identity();
+                        if ($this->params()->fromPost('rememberme')) {
+                            $time = 1209600; // 14 days (1209600/3600 = 336 hours => 336/24 = 14 days)
+                            $sessionManager = new SessionManager();
+                            $sessionManager->rememberMe($time);
+                        }
+                        
+                        // var_dump($this->identity());
+                        /**
+                         * At this region check if the user varible isProfiled is true
+                         * If it is true make sure continue with the login
+                         * If it is false branch into the condition get the user role mand seed it to
+                         * the userProfile Sertvice
+                         * to display the required form to fill the profile
+                         * if required redirect to the copletinfg profile Page
+                         */
+                        $redirect = $fullUrl . "/" . UserService::routeManager($userEntity);
+                        
+                        $response->setStatusCode(201);
+                        $jsonModel->setVariables([
+                            "redirect" => $redirect
+                        ]);
+                        $jsonModel->setVariables([]);
+                        return $jsonModel;
+                        // return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
+                    } else {
+                        $messages = $this->translatorHelper->translate('Invalid Credentials');
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages" => $messages
+                        ]);
+                    }
+                    
+                    foreach ($authResult->getMessages() as $message) {
+                        $messages .= "$message\n";
+                    }
+                } catch (\Exception $e) {
+                    // echo "Something went wrong";
+                    // return $this->errorView->createErrorView($this->translatorHelper->translate('Something went wrong during login! Please, try again later.'), $e, $this->options->getDisplayExceptions(), $this->options);
+                    // ->getNavMenu();
+                    $response->setStatusCode(Response::STATUS_CODE_400);
+                    return $jsonModel->setVariables([
+                        "messages" => $this->translatorHelper->translate('Something went wrong during login! Please, try again later.')
+                    ]);
+                }
+            }
+        }
+        
+        $response->setStatusCode(Response::STATUS_CODE_500);
+        $jsonModel->setVariables([
+            'messages' => "Some thing went wrong"
+        ]);
+        return $jsonModel;
+        
         // 'navMenu' => $this->options->getNavMenu()
     }
 
@@ -270,7 +484,7 @@ class IndexController extends AbstractActionController
             $sessionManager->destroy();
         }
         
-        return $this->redirect()->toRoute($this->options->getLogoutRedirectRoute());
+        return $this->redirect()->toRoute("login");
     }
 
     /**

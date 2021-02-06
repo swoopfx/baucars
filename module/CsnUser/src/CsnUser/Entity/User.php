@@ -31,8 +31,8 @@ use Training\Entity\UserTraining;
  * Doctrine ORM implementation of User entity
  *
  * @ORM\Entity(repositoryClass="CsnUser\Entity\Repository\UserRepository")
- * @ORM\Table(name="retail_user",
- * indexes={@ORM\Index(name="search_idx", columns={"username", "email", "user_uid"})}
+ * @ORM\Table(name="user",
+ * indexes={@ORM\Index(name="search_idx", columns={"phone_number", "email", "user_uid"})}
  * )
  * @Annotation\Name("User")
  */
@@ -50,14 +50,31 @@ class User
 
     /**
      * @ORM\Column(name="user_uid", type="string", unique=true, nullable=false)
-     * 
+     *
      * @var string
      */
     private $userUid;
+    
+//     /**
+//      * @var string
+//      *
+//      * @ORM\Column(name="username", type="string", length=30, nullable=false, unique=true)
+//      * @Annotation\Type("Zend\Form\Element\Text")
+//      * @Annotation\Filter({"name":"StripTags"})
+//      * @Annotation\Filter({"name":"StringTrim"})
+//      * @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "min":6, "max":30}})
+//      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[ña-zÑA-Z][ña-zÑA-Z0-9\_\-]+$/"}})
+//      * @Annotation\Required(true)
+//      * @Annotation\Attributes({
+//      *   "type":"text",
+//      *   "required":"true"
+//      * })
+//      */
+//     protected $username;
 
     /**
      *
-     * @var string @ORM\Column(name="username", type="string", length=30, nullable=false, unique=true)
+     * @var string @ORM\Column(name="phone_number", type="string", length=30, nullable=false, unique=true)
      *      @Annotation\Type("Zend\Form\Element\Text")
      *      @Annotation\Filter({"name":"StripTags"})
      *      @Annotation\Filter({"name":"StringTrim"})
@@ -70,19 +87,18 @@ class User
      *      })
      *      @Annotation\Options({"label":"Phone Number"})
      */
-    protected $username;
+    protected $phoneNumber;
 
-    // /**
-    // * @var string
-    // *
-    // * @ORM\Column(name="first_name", type="string", length=40, nullable=true)
-    // * @Annotation\Type("Zend\Form\Element\Text")
-    // * @Annotation\Filter({"name":"StripTags"})
-    // * @Annotation\Filter({"name":"StringTrim"})
-    // * @Annotation\Validator({"name":"StringLength", "options":{ "encoding":"UTF-8", "max":40}})
-    // */
-    // protected $firstName;
-    
+    /**
+     *
+     * @var string @ORM\Column(name="full_name", type="string", length=100, nullable=true)
+     *      @Annotation\Type("Zend\Form\Element\Text")
+     *      @Annotation\Filter({"name":"StripTags"})
+     *      @Annotation\Filter({"name":"StringTrim"})
+     *      @Annotation\Validator({"name":"StringLength", "options":{ "encoding":"UTF-8", "max":40}})
+     */
+    protected $fullName;
+
     // /**
     // * @var string
     // *
@@ -162,7 +178,7 @@ class User
 
     /**
      *
-     * @var CsnUser\Entity\State @ORM\ManyToOne(targetEntity="CsnUser\Entity\State")
+     * @var State @ORM\ManyToOne(targetEntity="CsnUser\Entity\State")
      *      @ORM\JoinColumn(name="state_id", referencedColumnName="id", nullable=false)
      *      @Annotation\Type("DoctrineModule\Form\Element\ObjectSelect")
      *      @Annotation\Filter({"name":"StripTags"})
@@ -263,25 +279,25 @@ class User
      */
     protected $myFriends;
 
-//     /**
-//      * @ORM\OneToMany(targetEntity="Support\Entity\Support", mappedBy="user")
-//      * 
-//      * @var Collection
-//      */
-//     private $support;
+    // /**
+    // * @ORM\OneToMany(targetEntity="Support\Entity\Support", mappedBy="user")
+    // *
+    // * @var Collection
+    // */
+    // private $support;
+    
+    // /**
+    // * @ORM\OneToOne(targetEntity="Wallet\Entity\Wallet", mappedBy="user")
+    // * @var Wallet
+    // */
+    // private $wallet;
     
 //     /**
-//      * @ORM\OneToOne(targetEntity="Wallet\Entity\Wallet", mappedBy="user")
-//      * @var Wallet
+//      * @ORM\Column(name="is_profiled", type="boolean", nullable=true)
+//      *
+//      * @var boolean
 //      */
-//     private $wallet;
-
-    /**
-     * @ORM\Column(name="is_profiled", type="boolean", nullable=true)
-     *
-     * @var boolean
-     */
-    private $isProfiled;
+//     private $isProfiled;
 
     /**
      * @ORM\OneToOne(targetEntity="CsnUser\Entity\Lastlogin", mappedBy="user", cascade={"persist", "remove"})
@@ -289,22 +305,22 @@ class User
      * @var Lastlogin
      */
     private $lastlogin;
+
+    // /**
+    // * @ORM\ManyToMany(targetEntity="Training\Entity\Training", mappedBy="subscriber")
+    // * @ORM\JoinTable(name="training_subscribers",
+    // * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+    // * inverseJoinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")}
+    // * )
+    // * @var Collection
+    // */
     
-//     /**
-//      * @ORM\ManyToMany(targetEntity="Training\Entity\Training", mappedBy="subscriber")
-//      * @ORM\JoinTable(name="training_subscribers",
-//      * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//      * inverseJoinColumns={@ORM\JoinColumn(name="training_id", referencedColumnName="id")}
-//      * )
-//      * @var Collection
-//      */
-
-//     /**
-//      * @ORM\OneToMany(targetEntity="Training\Entity\UserTraining", mappedBy="user")
-//      * @var Collection
-//      */
-//     private $training;
-
+    // /**
+    // * @ORM\OneToMany(targetEntity="Training\Entity\UserTraining", mappedBy="user")
+    // * @var Collection
+    // */
+    // private $training;
+    
     // /**
     // * @ORM\OneToOne(targetEntity="Users\Entity\BrokerChildProfile", mappedBy="user", cascade={"persist", "remove"})
     // * @var BrokerChildProfile
@@ -837,29 +853,31 @@ class User
         return $this;
     }
 
-    public function getSupport()
-    {
-        return $this->support;
-    }
+//     public function getSupport()
+//     {
+//         return $this->support;
+//     }
 
-    public function addSupport(Support $support)
-    {
-        if (! $this->support->contains($support)) {
-            $this->support[] = $support;
-            $support->setUser($this);
-        }
-        return $this;
-    }
+//     public function addSupport(Support $support)
+//     {
+//         if (! $this->support->contains($support)) {
+//             $this->support[] = $support;
+//             $support->setUser($this);
+//         }
+//         return $this;
+//     }
 
-    public function removeSupport(Support $support)
-    {
-        if ($this->support->contains($support)) {
-            $this->support->removeElement($support);
-            $support->setUser(NULL);
-        }
-        return $this;
-    }
+//     public function removeSupport(Support $support)
+//     {
+//         if ($this->support->contains($support)) {
+//             $this->support->removeElement($support);
+//             $support->setUser(NULL);
+//         }
+//         return $this;
+//     }
+
     /**
+     *
      * @return the $wallet
      */
     public function getWallet()
@@ -868,49 +886,83 @@ class User
     }
 
     /**
-     * @param \Wallet\Entity\Wallet $wallet
+     *
+     * @param \Wallet\Entity\Wallet $wallet            
      */
     public function setWallet($wallet)
     {
         $this->wallet = $wallet;
         return $this;
     }
-    
 
+//     /**
+//      *
+//      * @return \Doctrine\Common\Collections\Collection
+//      */
+//     public function getTraining()
+//     {
+//         return $this->training;
+//     }
+
+//     /**
+//      *
+//      * @param UserTraining $training            
+//      * @return \CsnUser\Entity\User
+//      */
+//     public function adddTraining(UserTraining $training)
+//     {
+//         if (! $this->training->contains($training)) {
+//             $this->training[] = $training;
+//             $training->setUser($this);
+//         }
+//         return $this;
+//     }
+
+//     /**
+//      *
+//      * @param UserTraining $training            
+//      * @return \CsnUser\Entity\User
+//      */
+//     public function removeTraining(UserTraining $training)
+//     {
+//         if ($this->training->contains($training)) {
+//             $this->training->removeElement($training);
+//             $training->setUser(NULL);
+//         }
+//         return $this;
+//     }
     /**
-     * 
-     * @return \Doctrine\Common\Collections\Collection
+     * @return the $phoneNumber
      */
-    public function getTraining()
+    public function getPhoneNumber()
     {
-        return $this->training;
+        return $this->phoneNumber;
     }
-    
+
     /**
-     * 
-     * @param UserTraining $training
-     * @return \CsnUser\Entity\User
+     * @return the $fullName
      */
-    public function adddTraining(UserTraining $training){
-        if(!$this->training->contains($training)){
-            $this->training[] =  $training;
-            $training->setUser($this);
-        }
-        return $this;
+    public function getFullName()
+    {
+        return $this->fullName;
     }
-    
+
     /**
-     * 
-     * @param UserTraining $training
-     * @return \CsnUser\Entity\User
+     * @param string $phoneNumber
      */
-    public function removeTraining(UserTraining $training){
-        if($this->training->contains($training)){
-            $this->training->removeElement($training);
-            $training->setUser(NULL);
-        }
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
+    /**
+     * @param string $fullName
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
 
 }
