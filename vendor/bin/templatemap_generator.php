@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-dir=$(cd "${0%[/\\]*}" > /dev/null; cd "../zendframework/zendframework/bin" && pwd)
+dir=$(cd "${0%[/\\]*}" > /dev/null; cd "../zendframework/zend-view/bin" && pwd)
 
 if [ -d /proc/cygdrive ]; then
     case $(which php) in
