@@ -429,7 +429,7 @@ class BoardController extends AbstractActionController
                 // Send Email
                 $pointer["to"] = $bookingEntity->getUser()->getEmail();
                 $pointer["fromName"] = "Bau Cars System";
-                $pointer['subject'] = "Trip Receipt";
+                $pointer['subject'] = "Trip Overview";
                 
                 $template['template'] = "driver-end-trip-email";
                 $template["var"] = [
@@ -501,7 +501,7 @@ class BoardController extends AbstractActionController
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
             $id = $post["id"];
-           
+            
             if ($id == NULL) {
                 $request->setStatusCode(422);
                 $jsonModel->setVariable("messages", "Absent Identifier");
@@ -509,13 +509,13 @@ class BoardController extends AbstractActionController
                 
                 try {
                     $bookingEntity = $em->find(Bookings::class, $id);
-                   
+                    
                     $driverErrivedEntity = new DriverArrived();
                     $driverErrivedEntity->setCreatedOn(new \DateTime())->setBooking($bookingEntity);
-                   
+                    
                     $em->persist($driverErrivedEntity);
                     $em->flush();
-                   
+                    
                     $generalService = $this->generalService;
                     $pointer["to"] = $bookingEntity->getUser()->getEmail();
                     $pointer["fromName"] = "Bau Cars System";
@@ -535,12 +535,49 @@ class BoardController extends AbstractActionController
                     $generalService->sendMails($pointer, $template);
                     $response->setStatusCode(204);
                     
-                    //Send SMS
-                    
+                    // Send SMS
                 } catch (\Exception $e) {
                     $response->setStatusCode(500);
                     $jsonModel->setVariable("messages", "Something went wrong");
                 }
+            }
+        }
+        return $jsonModel;
+    }
+
+    public function paymentcollectedAction()
+    {
+        $generalService = $this->generalService;
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $id = $post["id"];
+            $bookings = $em->find(Bookings::class, $id);
+            try {
+                
+                $pointer["to"] = $bookings->getUser()->getEmail();
+                $pointer["fromName"] = "Bau Cars System";
+                $pointer['subject'] = "Trip Code";
+                
+                $template['template'] = "driver-trip-receipt";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png",
+                    "amount"=>$amount,
+                    "tripCode" => $bookings->getTripCode()
+                ];
+                $generalService->sendMails($pointer, $template);
+                
+                $response->setStatusCode(204);
+            } catch (\Exception $e) {
+                $response->setStatusCode(500);
+                $jsonModel->setVariable("messages", "Something wet wrong");
             }
         }
         return $jsonModel;

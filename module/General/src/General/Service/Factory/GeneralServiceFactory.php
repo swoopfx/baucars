@@ -43,13 +43,13 @@ class GeneralServiceFactory implements FactoryInterface
     {
         $xserv = new GeneralService();
         
-        $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
+      $em = $serviceLocator->get('doctrine.entitymanager.orm_default');
         
-        $mailService = $serviceLocator->get("acmailer.mailservice.default");
+        //$mailService = $serviceLocator->get("acmailer.mailservice.default");
         $mailService = (getenv('APPLICATION_ENV') == "development" ? $serviceLocator->get("acmailer.mailservice.default") : $serviceLocator->get("acmailer.mailservice.live"));
         $viewRenderer = $serviceLocator->get("ViewRenderer");
-        $auth = $serviceLocator->get('Zend\Authentication\AuthenticationService');
-        $viewRenderer = $serviceLocator->get("ViewRenderer");
+       $auth = $serviceLocator->get('Zend\Authentication\AuthenticationService');
+        //$viewRenderer = $serviceLocator->get("ViewRenderer");
         $this->em = $em;
         $this->auth = $auth;
         $xserv->setEntityManager($em)
