@@ -102,6 +102,7 @@ class BookingService
         $bookingSession->destinationLatitude = $post["destinationLatitude"];
         $bookingSession->pickUpPlaceId = $post["pickUpPlaceId"];
         $bookingSession->destinationPlaceId = $post["destinationPlaceId"];
+        $bookingSession->isReturnTrip = $post['returnTrip'];
     }
 
     public function getAllInititedBookingCount()
@@ -178,11 +179,17 @@ class BookingService
             $finalPrice = round($finalPrice + ($finalPrice * 0.5));
         }
         
+        if($bookingSession->isReturnTrip == "true"){
+//             var_dump("KIIII");
+            $finalPrice = $finalPrice + ($finalPrice * 0.5);
+        }
+        
         return $finalPrice;
     }
 
     public function createBooking()
     {
+        
         $bookingsEntity = new Bookings();
         $auth = $this->auth;
         $em = $this->entityManager;
@@ -207,8 +214,11 @@ class BookingService
             ->setByPassCode(self::byPassCode())
             ->setTripCode(self::tripCode())
             ->setBookingsEstimatedPrice($bookingSession->bookingPrice)
+            ->setIsActive(TRUE)
             ->setBookingClass($em->find(BookingClass::class, $bookingSession->selectedBookingClass))
+            ->setIsReturnTrip(($bookingSession->isReturnTrip == "true" ? true : false))
             ->setSeater($em->find(NumberOfSeat::class, $bookingSession->selectedNumberOfSeat));
+        
         
             return $bookingsEntity;
     }

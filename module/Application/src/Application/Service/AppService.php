@@ -19,7 +19,7 @@ class AppService
     
     const SUPPORT_STATUS_WAITING_RESPONSE = 30;
     
-    const APP_ADMIN_EMAIL = "admin@baucars.com";
+    const APP_ADMIN_EMAIL = "support@baucars.com";
     
     /**
      */

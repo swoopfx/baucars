@@ -87,10 +87,12 @@ class BookingsController extends AbstractActionController
         $bookingService = $this->bookingService;
         $response = $this->getResponse();
         $jsonModel = new JsonModel();
+        
         $em = $this->entityManager;
         $request = $this->getRequest();
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
+            
             $bookingSession = $this->bookingService->getBookingSession();
             if ($post["pickUpAddress"] != "") {
                 // getDistance from distance matrix
@@ -106,6 +108,7 @@ class BookingsController extends AbstractActionController
                 
                 $bookingSession->pickupDate = $post["pickUpDate"];
                 $bookingSession->pickupTime = $post["pickUpTime"];
+                $bookingSession->isReturnTrip = $post['returnTrip'];
                 // Calculate Price
                 $distanceValue = $dm->rows[0]->elements[0]->distance->value;
                 $distanceText = $dm->rows[0]->elements[0]->distance->text;
@@ -211,7 +214,7 @@ class BookingsController extends AbstractActionController
                     
                     // Notify Controller
                     $generalService = $this->generalService;
-                    $pointer["to"] = "admin@baucars.com";
+                    $pointer["to"] = GeneralService::COMPANY_EMAIL;
                     $pointer["fromName"] = "System Robot";
                     $pointer['subject'] = "New Booking";
                     
@@ -263,7 +266,7 @@ class BookingsController extends AbstractActionController
                 
                 // send email
                 $generalService = $this->generalService;
-                $pointers["to"] = "admin@baucars.com";
+                $pointers["to"] = GeneralService::COMPANY_EMAIL;
                 $pointers["fromName"] = "System Robot";
                 $pointers['subject'] = "New Booking";
                 

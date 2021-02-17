@@ -216,6 +216,18 @@ $flashMessenger = $this->flashMessenger()
 														</div>
 													</div>
 
+													<div class="form-group row d-flex align-items-center mb-5">
+														<label class="col-lg-4 form-control-label">Return Trip</label>
+														<div class="col-lg-8">
+															<div class="form-group">
+																<div class="input-group">
+
+																	<input type="checkbox" v-model="roundTrip" ref="returnTrip" class="form-control" >
+																</div>
+															</div>
+														</div>
+													</div>
+
 
 
 													<div v-if="processing">
@@ -444,7 +456,7 @@ $flashMessenger = $this->flashMessenger()
 												<td>{{formatPHPDate(booking.pickupDate.date)}}</td>
 
 												<td><span style='width:100px;'><span :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></span></td>
-												<td>{{amountStatus(booking.transaction)}}</td>
+												<td>&#8358;{{amountStatus(booking.transaction)}}</td>
 												<td class="td-actions"> <a href="#"><i class="la la-info delete"></i></a></td>
 											</tr>
 
@@ -539,7 +551,7 @@ $flashMessenger = $this->flashMessenger()
 											<td>{{formatPHPDate(booking.pickupDate.date)}}</td>
 											<!-- <td>{{formatPHPDate(booking.endTime.date)}}</td> -->
 											<td><span style="width: 100px;" :class='bookingStatus(booking.status.id)'> {{booking.status.status}} </span></td>
-											<td>{{amountStatus(booking.transaction)}}</td>
+											<td>&#8358; {{amountStatus(booking.transaction)}}</td>
 											<td class="td-actions"><a v-if="booking.status.id == 5" @click="getBookingDetails(booking.bookingUid)" data-toggle="modal" data-target="#booking-details"><i class="la la-edit edit"></i></a> <a v-if="booking.status.id == 5" @click="onCancelBooking(booking.id)" href="#"><i class="la la-close delete"></i></a></td>
 										</tr>
 
@@ -899,7 +911,7 @@ $flashMessenger = $this->flashMessenger()
 		// geographical location types.
 		autocomplete = new google.maps.places.Autocomplete(
 			document.getElementById("autocomplete"), {
-				types: ["geocode"],
+				// types: ["geocode"],
 				componentRestrictions: {
 					'country': ['ng']
 				},
@@ -909,7 +921,7 @@ $flashMessenger = $this->flashMessenger()
 
 		destination = new google.maps.places.Autocomplete(
 			document.getElementById("destination"), {
-				types: ["geocode"],
+				// types: ["geocode"],
 				componentRestrictions: {
 					'country': ['ng']
 				},
@@ -1136,6 +1148,8 @@ $flashMessenger = $this->flashMessenger()
 				bookingPrice: "",
 				estimatedTime: "",
 
+				roundTrip:false,
+
 
 
 
@@ -1195,7 +1209,7 @@ $flashMessenger = $this->flashMessenger()
 				if (amount == null) {
 					return "Cash Trip";
 				} else {
-					return "&#8358; " + this.formatPrice(amount.amount);
+					return  this.formatPrice(amount.amount);
 				}
 			},
 
@@ -1540,6 +1554,7 @@ $flashMessenger = $this->flashMessenger()
 
 			initiatenewBooking() {
 				this.processing = true;
+				console.log(this.roundTrip);
 				if (this.pickUpAddress == "" || this.destinationAddress == "" || this.pickUpPlaceId == "" || this.destinationPlaceId == "" || this.$refs.pickupdate.value == "" || this.$refs.pickuptime.value == "") {
 					swal({
 						title: "Empty Data",
@@ -1563,6 +1578,7 @@ $flashMessenger = $this->flashMessenger()
 					formData.append("pickUpTime", this.$refs.pickuptime.value);
 					formData.append("numberOfSeats", this.selectedSeat);
 					formData.append("bookingClass", this.selectedBookingClass);
+					formData.append("returnTrip", this.roundTrip);
 					axios.post("/bookings/bookings/initiate-booking", formData).then(res => {
 						if (res.status == 201) {
 							this.isPreBooking = true;

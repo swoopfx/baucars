@@ -258,6 +258,52 @@ class Bookings
      * @var string
      */
     private $bookingsEstimatedPrice;
+    
+    /**
+     * @ORM\Column(name="is_active", type="boolean", nullable=false, options={"default":"1"})
+     * @var boolean
+     */
+    private $isActive;
+    
+    /**
+     * @ORM\Column(name="is_return_trip", type="boolean", nullable=false, options={"default":"0"})
+     * @var boolean
+     */
+    private $isReturnTrip;
+
+    /**
+     * @return the $isReturnTrip
+     */
+    public function getIsReturnTrip()
+    {
+        return $this->isReturnTrip;
+    }
+
+    /**
+     * @param boolean $isReturnTrip
+     */
+    public function setIsReturnTrip($isReturnTrip)
+    {
+        $this->isReturnTrip = $isReturnTrip;
+        return $this;
+    }
+
+    /**
+     * @return the $isActive
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
 
     // TODO - Insert your code here
     

@@ -37,7 +37,7 @@ $flashMessenger = $this->flashMessenger()
 </section>
 
 
-<section class="main--content">
+<section id="bookingBoard" class="main--content">
 	<div class="panel">
 		<!-- Records Header Start -->
 		<div class="records--header">
@@ -104,7 +104,7 @@ $flashMessenger = $this->flashMessenger()
 										<td><?php echo $this->myCurrency($booking["transaction"]['amount']) ?></td>
 
 										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-										<td><a href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-eye"></i></a></td>
+										<td><a href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-eye"></i></a> | <a href="<?php echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-trash"></i></a>  </td>
 									</tr>
 								<?php endforeach; ?>
 								<!-- Table Row End -->
@@ -118,3 +118,11 @@ $flashMessenger = $this->flashMessenger()
 		</div>
 	</div>
 </section>
+<script>
+ let bookingBoards = new Vue({
+	 el:"#bookingBoard",
+	 data:{
+
+	 }
+ });
+</script>

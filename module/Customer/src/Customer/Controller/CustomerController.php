@@ -569,7 +569,7 @@ class CustomerController extends AbstractActionController
                     
                     // Notify Controller
                     $generalService = $this->generalService;
-                    $pointer["to"] = "admin@baucars.com";
+                    $pointer["to"] = GeneralService::COMPANY_EMAIL;
                     $pointer["fromName"] = "System Robot";
                     $pointer['subject'] = "New Booking";
                     

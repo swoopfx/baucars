@@ -6,16 +6,16 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
                 'params' => array(
-                    'host' => 'localhost',
-                    'port' => '3306',
-                    // 'user' => "ezekiel",
-                    'user' => "root",
-                    // "password"=>"Oluwaseun1@",
-                    "password" => "",
+                    'host' => '127.0.0.1',
+                    'port' => '8889',
+                    'user' => "ezekiel",
+//                     'user' => "root",
+                    "password"=>"Oluwaseun1@",
+//                     "password" => "",
                     // 'password' => "Jolaoso1234@#$",
                     'dbname' => "baucars",
                     // 'dbname' => "baucars",
-                    'encoding' => 'utf8'
+//                     'encoding' => 'utf8'
                 )
             )
         )

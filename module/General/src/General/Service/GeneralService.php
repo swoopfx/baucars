@@ -33,7 +33,7 @@ class GeneralService
     const COMPANY_NAME = "BAU Cars Limited";
     
     
-    const COMPANY_EMAIL = "admin@baucars.com";
+    const COMPANY_EMAIL = "supports@baucars.com";
 
     /**
      */
