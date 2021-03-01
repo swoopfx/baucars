@@ -69,6 +69,38 @@ class BookingController extends AbstractActionController
         
         return $response;
     }
+    
+    public function removeAction(){
+        $em = $this->entityManager;
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if($request->isPost()){
+            $post = $request->getPost()->toArray();
+            $id = $post["id"];
+            /**
+             * 
+             * @var Bookings $bookingEntity
+             */
+            $bookingEntity = $em->find(Bookings::class, $id);
+            try{
+                $bookingEntity->setUpdatedOn(new \DateTime())->setIsActive(false);
+                
+                $em->persist($bookingEntity);
+                $em->flush();
+                
+                $this->flashmessenger()->addSuccessMessage("Successfully removed booking");
+                 $response->setStatusCode(204);
+            }catch (\Exception $e){
+                $response->setStatusCode(500);
+                $jsonModel->setVariables([
+                    "messages"=>"Something went wrong",
+                    "data"=>$e->getTrace()
+                ]);
+            }
+        }
+        return $jsonModel;
+    }
 
     public function boardAction()
     {

@@ -124,6 +124,10 @@ class BookingService
         $result = $repo->createQueryBuilder("a")
             ->select('a, s, bc')
             ->where('a.status=' . CustomerService::BOOKING_STATUS_INITIATED)
+            ->andWhere("a.isActive = :act")
+            ->setParameters([
+                "act"=>true
+            ])
             ->leftJoin("a.status", "s")
 //             ->leftJoin("a.bookingType", "bt")
             ->leftJoin("a.bookingClass", "bc")

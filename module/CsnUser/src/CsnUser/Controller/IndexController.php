@@ -452,7 +452,8 @@ class IndexController extends AbstractActionController
                     // ->getNavMenu();
                     $response->setStatusCode(Response::STATUS_CODE_400);
                     return $jsonModel->setVariables([
-                        "messages" => $this->translatorHelper->translate('Something went wrong during login! Please, try again later.')
+                        "messages" => $this->translatorHelper->translate('Something went wrong during login! Please, try again later.'),
+                        "data"=>$e->getTrace(),
                     ]);
                 }
             }
