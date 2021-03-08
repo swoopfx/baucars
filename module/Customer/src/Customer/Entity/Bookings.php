@@ -145,6 +145,13 @@ class Bookings
      * @var \DateTime
      */
     private $pickupDate;
+    
+    /**
+     * @ORM\Column(name="return_date", type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $returnDate;
 
     // /**
     // * @ORM\Column(name="pickup_time", type="time", nullable=true)
@@ -932,6 +939,23 @@ class Bookings
         $this->bookingsEstimatedPrice = $bookingsEstimatedPrice;
         return $this;
     }
+    /**
+     * @return the $returnDate
+     */
+    public function getReturnDate()
+    {
+        return $this->returnDate;
+    }
+
+    /**
+     * @param DateTime $returnDate
+     */
+    public function setReturnDate($returnDate)
+    {
+        $this->returnDate = $returnDate;
+        return $this;
+    }
+
 
 
 

@@ -34,6 +34,8 @@ class GeneralService
     
     
     const COMPANY_EMAIL = "supports@baucars.com";
+    
+    const RETURN_DAILY_CHARGE = 10000;
 
     /**
      */

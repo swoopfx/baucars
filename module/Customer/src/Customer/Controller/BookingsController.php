@@ -112,6 +112,9 @@ class BookingsController extends AbstractActionController
                 // Calculate Price
                 $distanceValue = $dm->rows[0]->elements[0]->distance->value;
                 $distanceText = $dm->rows[0]->elements[0]->distance->text;
+                if($bookingSession->isReturnTrip == 'true'){
+                    $bookingSession->returnDate = $post["returndate"]; 
+                }
                 $price = $bookingService->setDmDistance($distanceValue)->priceCalculator();
                 $timeText = $dm->rows[0]->elements[0]->duration->text;
                 $timeValue = $dm->rows[0]->elements[0]->duration->value;

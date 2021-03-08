@@ -228,6 +228,19 @@ $flashMessenger = $this->flashMessenger()
 														</div>
 													</div>
 
+<!-- 													<div v-if="roundTrip" class="form-group row d-flex align-items-center mb-5"> -->
+<!-- 														<label class="col-lg-4 form-control-label">Return Date</label> -->
+<!-- 														<div class="col-lg-8"> -->
+<!-- 															<div class="form-group"> -->
+<!-- 																<div class="input-group"> -->
+
+<!-- 																	<input type="date" ref="returndate" class="form-control" id="date" placeholder="Select value"> -->
+<!-- 																</div> -->
+<!-- 															</div> -->
+<!-- 														</div> -->
+<!-- 													</div> -->
+
+
 
 
 													<div v-if="processing">
@@ -1579,6 +1592,9 @@ $flashMessenger = $this->flashMessenger()
 					formData.append("numberOfSeats", this.selectedSeat);
 					formData.append("bookingClass", this.selectedBookingClass);
 					formData.append("returnTrip", this.roundTrip);
+					// if(this.roundTrip == true){
+					// formData.append("returndate", this.$refs.returndate.value);
+					// }
 					axios.post("/bookings/bookings/initiate-booking", formData).then(res => {
 						if (res.status == 201) {
 							this.isPreBooking = true;

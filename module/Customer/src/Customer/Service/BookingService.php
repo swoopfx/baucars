@@ -14,6 +14,7 @@ use General\Entity\BookingStatus;
 use General\Entity\BookingClass;
 use General\Entity\NumberOfSeat;
 use CsnUser\Entity\User;
+use General\Service\GeneralService;
 
 /**
  *
@@ -79,14 +80,15 @@ class BookingService
         
         // TODO - Insert your code here
     }
-    
-    public static function byPassCode(){
+
+    public static function byPassCode()
+    {
         $six_digit_random_number = mt_rand(100000, 999999);
         return $six_digit_random_number;
     }
 
-
-    public static function tripCode(){
+    public static function tripCode()
+    {
         $five_digit_random_number = mt_rand(100000, 999999);
         return $five_digit_random_number;
     }
@@ -126,11 +128,12 @@ class BookingService
             ->where('a.status=' . CustomerService::BOOKING_STATUS_INITIATED)
             ->andWhere("a.isActive = :act")
             ->setParameters([
-                "act"=>true
-            ])
+            "act" => true
+        ])
             ->leftJoin("a.status", "s")
-//             ->leftJoin("a.bookingType", "bt")
-            ->leftJoin("a.bookingClass", "bc")
+            ->
+        // ->leftJoin("a.bookingType", "bt")
+        leftJoin("a.bookingClass", "bc")
             ->
         // ->le
         setMaxResults(50)
@@ -163,29 +166,46 @@ class BookingService
     public function priceCalculator()
     {
         $bookingSession = $this->bookingSession;
-       $finalPrice = 0;
+        $finalPrice = 0;
         $dmDistance = $this->dmDistance / 1000;
         if ($dmDistance < $this->appSettings->getMinimumKilometer()) {
             $finalPrice = 1000;
         } elseif ($this->dmDistance > $this->appSettings->getMinimumKilometer() && $dmDistance < $this->pricaRangeSettings[0]->getMaximumKilometer()) {
             $finalPrice = round((($dmDistance * $this->pricaRangeSettings[0]->getPricePerKilometer()) + 100), 2);
         } elseif ($dmDistance > $this->pricaRangeSettings[0]->getMaximumKilometer() && $this->pricaRangeSettings[1]->getMaximumKilometer()) {
-            $finalPrice =  round((($dmDistance * $this->pricaRangeSettings[1]->getPricePerKilometer()) + 100), 2);
+            $finalPrice = round((($dmDistance * $this->pricaRangeSettings[1]->getPricePerKilometer()) + 100), 2);
         } else {
-            $finalPrice =  $dmDistance * 140;
+            $finalPrice = $dmDistance * 140;
         }
         
-        if($bookingSession->selectedBookingClass == "100"){
+        if ($bookingSession->selectedBookingClass == "100") {
             $finalPrice = $finalPrice + 5000;
         }
         
-        if($bookingSession->selectedNumberOfSeat == "20"){
+        if ($bookingSession->selectedNumberOfSeat == "20") {
             $finalPrice = round($finalPrice + ($finalPrice * 0.5));
         }
         
-        if($bookingSession->isReturnTrip == "true"){
-//             var_dump("KIIII");
+        if ($bookingSession->isReturnTrip == "true") {
             $finalPrice = $finalPrice + ($finalPrice * 0.5);
+            // var_dump("KIIII");
+//             if($bookingSession->objectreturnDate == NULL){
+//             $bookingSession->objectpickupDate = \DateTime::createFromFormat("Y-m-d H:i", $bookingSession->pickupDate . " " . $bookingSession->pickupTime);
+//             $bookingSession->objectreturnDate = \DateTime::createFromFormat("Y-m-d", $bookingSession->returnDate);
+//             }
+//             var_dump($pickupDate);
+//             var_dump($returnDate);
+//             $interval = $bookingSession->objectpickupDate->diff($bookingSession->objectreturnDate);
+//             var_dump($interval->days);
+//             if ($interval->days > 0) {
+//                 $activeHours = $interval->days ; // This is the amount of days that can be calculated
+// //                 var_dump($activeHours);
+//                 $activePayment = $activeHours * GeneralService::RETURN_DAILY_CHARGE;
+//                 $finalPrice = (2 * $finalPrice) + $activePayment;
+//             } else {
+               
+//             }
+            // calculate total time
         }
         
         return $finalPrice;
@@ -193,14 +213,14 @@ class BookingService
 
     public function createBooking()
     {
-        
         $bookingsEntity = new Bookings();
         $auth = $this->auth;
         $em = $this->entityManager;
         $bookingSession = $this->bookingSession;
         $bookingsEntity->setCreatedOn(new \DateTime())
             ->setBookingUid(CustomerService::bookingUid())
-            ->setUser($em->find(User::class, $this->auth->getIdentity()->getId()))
+            ->setUser($em->find(User::class, $this->auth->getIdentity()
+            ->getId()))
             ->setStatus($em->find(BookingStatus::class, CustomerService::BOOKING_STATUS_INITIATED))
             ->setPickUpAddress($bookingSession->pickUpAddress)
             ->setDestination($bookingSession->destinationAddress)
@@ -210,11 +230,12 @@ class BookingService
             ->setDestinationLatitude($bookingSession->destinationLatitude)
             ->setDestinationLongitude($bookingSession->destinationLongitude)
             ->setDestinationPlaceId($bookingSession->destinationPlaceId)
-            ->setPickupDate(\DateTime::createFromFormat("Y-m-d H:i", $bookingSession->pickupDate." ".$bookingSession->pickupTime))
+            ->setPickupDate(\DateTime::createFromFormat("Y-m-d H:i", $bookingSession->pickupDate . " " . $bookingSession->pickupTime))
             ->setCalculatedDistanceText($bookingSession->distanceText)
             ->setCalculatedDistanceValue($bookingSession->distanceValue)
             ->setCalculatedTimeText($bookingSession->timeText)
             ->setCalculatedTimeValue($bookingSession->timeValue)
+            ->setReturnDate(\DateTime::createFromFormat("Y-m-d", $bookingSession->returnDate))
             ->setByPassCode(self::byPassCode())
             ->setTripCode(self::tripCode())
             ->setBookingsEstimatedPrice($bookingSession->bookingPrice)
@@ -223,8 +244,7 @@ class BookingService
             ->setIsReturnTrip(($bookingSession->isReturnTrip == "true" ? true : false))
             ->setSeater($em->find(NumberOfSeat::class, $bookingSession->selectedNumberOfSeat));
         
-        
-            return $bookingsEntity;
+        return $bookingsEntity;
     }
 
     /**

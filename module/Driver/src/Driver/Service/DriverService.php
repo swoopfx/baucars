@@ -107,7 +107,10 @@ class DriverService
             $generalService = $this->generalService;
             $bookingService = $this->bookingService;
             $amotizedSession = $this->amotizedSession;
-           
+            $bookingSession = $bookingService->getBookingSession();
+            $bookingSession->isReturnTrip  = $booking->getIsReturnTrip();
+            $bookingSession->objectpickupDate = $booking->getPickupDate();
+            $bookingSession->objectreturnDate = $booking->getReturnDate();
             $appSettings = $generalService->getAppSeettings();
             $em = $this->entityManager;
             $appSettings = $generalService->getAppSeettings();
