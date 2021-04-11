@@ -152,6 +152,11 @@ $flashMessenger = $this->flashMessenger()
 											<td>Payment Method:</td>
 											<th><?php echo ($data->getTransaction() == NULL ? "Cash Trip" : "Credit Card" )?></th>
 										</tr>
+										<tr>
+											<td>Trip type</td>
+											<th><?php echo $this->isReturnTripHelper($data->getIsReturnTrip())?></th>
+										</tr>
+										
 									</tbody>
 								</table>
 							</div>

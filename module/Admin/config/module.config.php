@@ -6,6 +6,7 @@ use Admin\Controller\Factory\DriverControllerFactory;
 use Admin\Controller\Factory\CarControllerFactory;
 use Admin\Controller\Factory\SettingsControllerFactory;
 use Admin\Controller\Factory\SupportControllerFactory;
+use Admin\View\Helper\IsReturntriphelper;
 
 return array(
     'controllers' => array(
@@ -71,6 +72,11 @@ return array(
                 )
             )
         )
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'isReturnTripHelper'=>IsReturntriphelper::class
+        ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(

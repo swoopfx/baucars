@@ -28,7 +28,7 @@ echo $this->headtitle("Driver Controller");
 						</div>
 						<div v-if="byPassCode != ''">
 							<div class="text">
-							<div  class="number">{{byPassCode}}</div>
+								<div class="number">{{byPassCode}}</div>
 							</div>
 							<p>ENTER THIS BYPASS CODE</p>
 						</div>
@@ -189,7 +189,12 @@ echo $this->headtitle("Driver Controller");
 
 							<div class="circle">
 
-								<button type="button" data-toggle="modal" data-target="#onEndTrip" class="btn btn-danger btn-lg btn-block">End Trip</button>
+								<button @click="reachedDestination()" :disabled="isReachedDestination" v-if="activetrip[0].isReturnTrip && activetrip[0].firstLeg == null" class="btn btn-primary btn-lg btn-block">
+									<div v-if="isReachedDestination">...Processing</div>
+									<div v-else>Reached
+										Destination</div>
+								</button>
+								<button v-else type="button" data-toggle="modal" data-target="#onEndTrip" class="btn btn-danger btn-lg btn-block">End Trip</button>
 							</div>
 							<!-- Begin Other Stats -->
 							<div class="other-stats">
@@ -484,6 +489,7 @@ echo $this->headtitle("Driver Controller");
 				isRiderPaid: false,
 				isDriverCollectPayment: false,
 				isDriverArrived: false,
+				isReachedDestination: false,
 			}
 		},
 
@@ -631,6 +637,16 @@ echo $this->headtitle("Driver Controller");
 				});
 			},
 
+			reachedDestination() {
+				this.isReachedDestination = true;
+				let formData = new FormData();
+				formData.append("bookingid", this.activetrip[0].id);
+				axios.post("/driver/board/first-leg", formData).then(res => {
+					if (res.status == 201) {
+						window.location.reload();
+					}
+				}).catch();
+			},
 
 			endTrip() {
 				this.isEndTrip = true;
@@ -648,16 +664,17 @@ echo $this->headtitle("Driver Controller");
 
 			driverCollectedPayment() {
 				this.isRiderPaid = true;
-				let forData = new FormData();
+				let formData = new FormData();
 				formData.append("id", this.activetrip[0].id);
-				axios.post("/driver/board/paymentcollected", formData).then(res=>{
-					if(res.status == 204){
+				formData.append("amount", this.ridersPayment);
+				axios.post("/driver/board/paymentcollected", formData).then(res => {
+					if (res.status == 204) {
 						window.location.reload();
 					}
 				}).catch();
-			}, 
+			},
 
-			raiseclaim(){
+			raiseclaim() {
 
 			}
 

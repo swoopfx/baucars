@@ -16,7 +16,7 @@ $flashMessenger = $this->flashMessenger()
 <?php echo $flashMessenger->render('info',    array('alert', 'alert-dismissable', 'alert-info')); ?>
 <?php echo $flashMessenger->render('default', array('alert', 'alert-dismissable', 'alert-warning')); ?>
 <?php echo $flashMessenger->render('success', array('alert', 'alert-dismissable', 'alert-success')); ?>
-
+<?php $this->headLink()->appendStylesheet($this->basepath("css/jquery.timepicker.min.css")); ?>
 <div class="page-content" id="cutomerPage">
 
 	<div class="content-inner boxed mt-4 w-100">
@@ -210,7 +210,7 @@ $flashMessenger = $this->flashMessenger()
 															<div class="form-group">
 																<div class="input-group">
 
-																	<input ref="pickuptime" class="form-control" type="time" id="appt" name="appt">
+																	<input ref="pickuptime" class="form-control" type="text" id="appt" name="appt">
 																</div>
 															</div>
 														</div>
@@ -222,23 +222,23 @@ $flashMessenger = $this->flashMessenger()
 															<div class="form-group">
 																<div class="input-group">
 
-																	<input type="checkbox" v-model="roundTrip" ref="returnTrip" class="form-control" >
+																	<input type="checkbox" v-model="roundTrip" ref="returnTrip" class="form-control">
 																</div>
 															</div>
 														</div>
 													</div>
 
-<!-- 													<div v-if="roundTrip" class="form-group row d-flex align-items-center mb-5"> -->
-<!-- 														<label class="col-lg-4 form-control-label">Return Date</label> -->
-<!-- 														<div class="col-lg-8"> -->
-<!-- 															<div class="form-group"> -->
-<!-- 																<div class="input-group"> -->
+													<!-- 													<div v-if="roundTrip" class="form-group row d-flex align-items-center mb-5"> -->
+													<!-- 														<label class="col-lg-4 form-control-label">Return Date</label> -->
+													<!-- 														<div class="col-lg-8"> -->
+													<!-- 															<div class="form-group"> -->
+													<!-- 																<div class="input-group"> -->
 
-<!-- 																	<input type="date" ref="returndate" class="form-control" id="date" placeholder="Select value"> -->
-<!-- 																</div> -->
-<!-- 															</div> -->
-<!-- 														</div> -->
-<!-- 													</div> -->
+													<!-- 																	<input type="date" ref="returndate" class="form-control" id="date" placeholder="Select value"> -->
+													<!-- 																</div> -->
+													<!-- 															</div> -->
+													<!-- 														</div> -->
+													<!-- 													</div> -->
 
 
 
@@ -900,14 +900,24 @@ $flashMessenger = $this->flashMessenger()
 <script src="/admin/assets/vendors/js/nicescroll/nicescroll.min.js"></script>
 <script src="/admin/assets/vendors/js/app/app.min.js"></script>
 <script src="/admin/assets/js/components/validation/validation.min.js"></script>
+<script src="js/jquery.timepicker.min.js"></script>
 
 
 <!-- End Page Snippets -->
 <script>
+	jQuery(document).ready(function($) {
+		$('#appt').timepicker({
+			'step': 15,
+			'scrollDefault': 'now',
+			'forceRoundTime': true
+		});
+	});
 	let autocomplete;
 	let destination;
 	let place;
 	let bounds;
+
+
 
 	function initMap() {
 		const map = new google.maps.Map(document.getElementById("map"), {
@@ -974,7 +984,7 @@ $flashMessenger = $this->flashMessenger()
 
 	function addDestinationLocation() {
 		dropOff = destination.getPlace();
-		console.log(dropOff);
+
 
 		var dropLat = dropOff.geometry.location.lat();
 		var dropLong = dropOff.geometry.location.lng();
@@ -1161,7 +1171,7 @@ $flashMessenger = $this->flashMessenger()
 				bookingPrice: "",
 				estimatedTime: "",
 
-				roundTrip:false,
+				roundTrip: false,
 
 
 
@@ -1222,7 +1232,7 @@ $flashMessenger = $this->flashMessenger()
 				if (amount == null) {
 					return "Cash Trip";
 				} else {
-					return  this.formatPrice(amount.amount);
+					return this.formatPrice(amount.amount);
 				}
 			},
 

@@ -276,7 +276,7 @@ class DriverController extends AbstractActionController
             $em->flush();
             
             $generalService = $this->generalService;
-            $pointer["to"] = "admin@baucars.com";
+            $pointer["to"] = $bookingEntity->getUser()->getEmail();
             $pointer["fromName"] = "Bau Cars Controller";
             $pointer['subject'] = "Assigned Driver";
             
@@ -330,7 +330,7 @@ class DriverController extends AbstractActionController
                 // Send a mail to customer
                 
                 $generalService = $this->generalService;
-                $pointer["to"] = "admin@baucars.com";
+                $pointer["to"] = GeneralService::COMPANY_EMAIL;
                 $pointer["fromName"] = "Bau Cars Controller";
                 $pointer['subject'] = "Dispacthed Driver";
                 
@@ -396,7 +396,7 @@ class DriverController extends AbstractActionController
             $em->flush();
             
             $generalService = $this->generalService;
-            $pointer["to"] = "admin@baucars.com";
+            $pointer["to"] = GeneralService::COMPANY_EMAIL;
             $pointer["fromName"] = "Bau Cars Controller";
             $pointer['subject'] = "Re-Assigned Driver";
             

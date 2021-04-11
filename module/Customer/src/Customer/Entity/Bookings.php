@@ -277,6 +277,12 @@ class Bookings
      * @var boolean
      */
     private $isReturnTrip;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="BookingFirstLeg", mappedBy="booking")
+     * @var BookingFirstLeg
+     */
+    private $firstLeg;
 
     /**
      * @return the $isReturnTrip
@@ -955,6 +961,23 @@ class Bookings
         $this->returnDate = $returnDate;
         return $this;
     }
+    /**
+     * @return the $firstLeg
+     */
+    public function getFirstLeg()
+    {
+        return $this->firstLeg;
+    }
+
+    /**
+     * @param \Customer\Entity\BookingFirstLeg $firstLeg
+     */
+    public function setFirstLeg($firstLeg)
+    {
+        $this->firstLeg = $firstLeg;
+        return $this;
+    }
+
 
 
 

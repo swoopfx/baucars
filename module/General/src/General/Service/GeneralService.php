@@ -33,7 +33,7 @@ class GeneralService
     const COMPANY_NAME = "BAU Cars Limited";
     
     
-    const COMPANY_EMAIL = "supports@baucars.com";
+    const COMPANY_EMAIL = "support@baucars.com";
     
     const RETURN_DAILY_CHARGE = 10000;
 
@@ -58,8 +58,8 @@ class GeneralService
         $mailService = $this->mailService;
         // $der = new Message();
         $message = $mailService->getMessage();
-        $message->addTo($messagePointers['to'])
-            ->setFrom("admin@baucars.com", ($messagePointers['fromName'] == NULL ? self::COMPANY_NAME : $messagePointers["fromName"]))
+        $message->SetTo($messagePointers['to'])
+            ->setFrom(self::COMPANY_EMAIL, ($messagePointers['fromName'] == NULL ? self::COMPANY_NAME : $messagePointers["fromName"]))
             ->setSubject($messagePointers['subject']);
         
         if ($replyTo != "") {

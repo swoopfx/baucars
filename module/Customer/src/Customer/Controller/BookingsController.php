@@ -105,7 +105,7 @@ class BookingsController extends AbstractActionController
                 $bookingService->setRequestSession($post);
                 $bookingSession->selectedBookingClass = $post["bookingClass"];
                 $bookingSession->selectedNumberOfSeat = $post["numberOfSeats"];
-                
+//                 var_dump($post['pickUpTime']);
                 $bookingSession->pickupDate = $post["pickUpDate"];
                 $bookingSession->pickupTime = $post["pickUpTime"];
                 $bookingSession->isReturnTrip = $post['returnTrip'];
@@ -113,7 +113,7 @@ class BookingsController extends AbstractActionController
                 $distanceValue = $dm->rows[0]->elements[0]->distance->value;
                 $distanceText = $dm->rows[0]->elements[0]->distance->text;
                 if($bookingSession->isReturnTrip == 'true'){
-                    $bookingSession->returnDate = $post["returndate"]; 
+//                     $bookingSession->returnDate = $post["returndate"]; 
                 }
                 $price = $bookingService->setDmDistance($distanceValue)->priceCalculator();
                 $timeText = $dm->rows[0]->elements[0]->duration->text;
@@ -269,7 +269,7 @@ class BookingsController extends AbstractActionController
                 
                 // send email
                 $generalService = $this->generalService;
-                $pointers["to"] = GeneralService::COMPANY_EMAIL;
+                $pointers["to"] = "support@baucars.com";
                 $pointers["fromName"] = "System Robot";
                 $pointers['subject'] = "New Booking";
                 

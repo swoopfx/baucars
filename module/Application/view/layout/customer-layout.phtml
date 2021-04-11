@@ -48,7 +48,8 @@
         <?php
         
         echo $this->headScript()
-        ->prependFile("https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+//         ->prependFile("https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+        ->prependFile("js/jquery-3.6.0.min.js")
         ->prependFile("https://unpkg.com/sweetalert/dist/sweetalert.min.js")
         ->prependFile("https://cdn.jsdelivr.net/npm/vue-toast-notification")
         ->prependFile($this->basePath('js/axios.min.js'))

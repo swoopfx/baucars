@@ -112,8 +112,13 @@ class BookingService
         $em = $this->entityManager;
         $repo = $em->getRepository(Bookings::class);
         $result = $repo->createQueryBuilder('a')
-            ->where('a.status=' . CustomerService::BOOKING_STATUS_INITIATED)
+            ->where('a.status = :stat')
+            ->andWhere('a.isActive = :active')
             ->select('count(a.id)')
+            ->setParameters([
+                "active"=>TRUE,
+                "stat"=> CustomerService::BOOKING_STATUS_INITIATED
+            ])
             ->getQuery()
             ->getSingleScalarResult();
         return $result;
@@ -230,12 +235,12 @@ class BookingService
             ->setDestinationLatitude($bookingSession->destinationLatitude)
             ->setDestinationLongitude($bookingSession->destinationLongitude)
             ->setDestinationPlaceId($bookingSession->destinationPlaceId)
-            ->setPickupDate(\DateTime::createFromFormat("Y-m-d H:i", $bookingSession->pickupDate . " " . $bookingSession->pickupTime))
+            ->setPickupDate(\DateTime::createFromFormat("Y-m-d H:ia", $bookingSession->pickupDate . " " . $bookingSession->pickupTime))
             ->setCalculatedDistanceText($bookingSession->distanceText)
             ->setCalculatedDistanceValue($bookingSession->distanceValue)
             ->setCalculatedTimeText($bookingSession->timeText)
             ->setCalculatedTimeValue($bookingSession->timeValue)
-            ->setReturnDate(\DateTime::createFromFormat("Y-m-d", $bookingSession->returnDate))
+//             ->setReturnDate(\DateTime::createFromFormat("Y-m-d", $bookingSession->returnDate))
             ->setByPassCode(self::byPassCode())
             ->setTripCode(self::tripCode())
             ->setBookingsEstimatedPrice($bookingSession->bookingPrice)

@@ -68,7 +68,7 @@ class DriverService
             ->andWhere("d.isActive = :active")
             ->setParameters([
             "state" => self::DRIVER_STATUS_FREE,
-                "active"=>TRUE
+            "active" => TRUE
         ])
             ->getQuery();
         
@@ -102,62 +102,59 @@ class DriverService
      */
     public function amotizedTrip($booking)
     {
+        $generalService = $this->generalService;
+        $bookingService = $this->bookingService;
+        $amotizedSession = $this->amotizedSession;
+        $bookingSession = $bookingService->getBookingSession();
+        $bookingSession->isReturnTrip = $booking->getIsReturnTrip();
+        $bookingSession->objectpickupDate = $booking->getPickupDate();
+        // $bookingSession->objectreturnDate = $booking->getReturnDate();
+        $appSettings = $generalService->getAppSeettings();
+        $em = $this->entityManager;
+        $appSettings = $generalService->getAppSeettings();
         
-            
-            $generalService = $this->generalService;
-            $bookingService = $this->bookingService;
-            $amotizedSession = $this->amotizedSession;
-            $bookingSession = $bookingService->getBookingSession();
-            $bookingSession->isReturnTrip  = $booking->getIsReturnTrip();
-            $bookingSession->objectpickupDate = $booking->getPickupDate();
-            $bookingSession->objectreturnDate = $booking->getReturnDate();
-            $appSettings = $generalService->getAppSeettings();
-            $em = $this->entityManager;
-            $appSettings = $generalService->getAppSeettings();
-          
-            $estimatedSeconds = $booking->getCalculatedTimeValue();
-            $estimateMinutes = floor($estimatedSeconds / 60);
-          
-            $estimatedDistance = $booking->getCalculatedDistanceValue();
-            $activeTrip = $booking->getTrip();
-            $actualStarttime = $booking->getTrip()->getStarted();
-            $actualEndtime = $booking->getTrip()->getEnded();
-           
-            $actualTimeDifference = $actualStarttime->diff($actualEndtime);
-            $actualMinutes = $actualTimeDifference->days * 24 * 60;
-            $actualMinutes += $actualTimeDifference->h * 60;
-            $actualMinutes += $actualTimeDifference->i;
-           
-            $usableMinutes = $estimateMinutes + $appSettings->getGracePeriod();
-            $price = 0;
-            if ($usableMinutes <= $actualMinutes) {
-                // call
-                $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
-            } else {
-                $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
-                $extraTimeUsed = $actualMinutes - $usableMinutes;
-                
-                $amotizedSession->extraTimeUsed = $extraTimeUsed;
-                if($extraTimeUsed < 0){
-                    $amotizedSession->extraTimeUsed = 0;
-                }
-                if ($extraTimeUsed > 60) {
-                    $extraTimeMultiplier = $extraTimeUsed / 60;
-                    $extraCost = (ceil($extraTimeMultiplier) * $appSettings->getExtraHourFee());
-                    $amotizedSession->extraCost = $extraCost;
-                    $price = $price + $extraCost;
-                }
-            }
-            
-
-            
-            $amotizedSession->price = $price;
-            $amotizedSession->estimateMinutes = $estimateMinutes;
-            $amotizedSession->estimatedDistance= $estimatedDistance;
-            
-            $amotizedSession->actualMinutes = $actualMinutes;
-          
+        $estimatedSeconds = $booking->getCalculatedTimeValue();
+        $estimateMinutes = floor($estimatedSeconds / 60);
         
+        $estimatedDistance = $booking->getCalculatedDistanceValue();
+        $activeTrip = $booking->getTrip();
+        $actualStarttime = $booking->getTrip()->getStarted();
+        $actualEndtime = $booking->getTrip()->getEnded();
+        
+        $actualTimeDifference = $actualStarttime->diff($actualEndtime);
+        $actualMinutes = $actualTimeDifference->days * 24 * 60;
+        $actualMinutes += $actualTimeDifference->h * 60;
+        $actualMinutes += $actualTimeDifference->i;
+        // var_dump($actualMinutes);
+        $usableMinutes = $estimateMinutes + $appSettings->getGracePeriod();
+        // var_dump($usableMinutes);
+        $price = 0;
+        // if ($usableMinutes >= $actualMinutes) {
+        // // call
+        // var_dump("ggggg");
+        // $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
+        // } else {
+        $price = $bookingService->setDmDistance($estimatedDistance)->priceCalculator();
+        $extraTimeUsed = $actualMinutes - $usableMinutes;
+        
+        $amotizedSession->extraTimeUsed = $extraTimeUsed;
+        // var_dump($extraTimeUsed);
+        if ($extraTimeUsed < 0) {
+            $amotizedSession->extraTimeUsed = 0;
+        }
+        if ($extraTimeUsed > 60) {
+            $extraTimeMultiplier = $extraTimeUsed / 30;
+            $extraCost = (ceil($extraTimeMultiplier) * $appSettings->getExtraHourFee());
+            $amotizedSession->extraCost = $extraCost;
+            $price = $price + $extraCost;
+        }
+        // }
+        
+        $amotizedSession->price = $price;
+        $amotizedSession->estimateMinutes = $estimateMinutes;
+        $amotizedSession->estimatedDistance = $estimatedDistance;
+        
+        $amotizedSession->actualMinutes = $actualMinutes;
     }
 
     /**
@@ -229,7 +226,9 @@ class DriverService
         $this->bookingService = $bookingService;
         return $this;
     }
+
     /**
+     *
      * @return the $amotizedSession
      */
     public function getAmotizedSession()
@@ -238,13 +237,13 @@ class DriverService
     }
 
     /**
-     * @param \Zend\Session\Container $amotizedSession
+     *
+     * @param \Zend\Session\Container $amotizedSession            
      */
     public function setAmotizedSession($amotizedSession)
     {
         $this->amotizedSession = $amotizedSession;
         return $this;
     }
-
 }
 

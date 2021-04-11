@@ -17,12 +17,13 @@ class CustomerBookingRepository extends EntityRepository
 
     public function findBookingHistory($user)
     {
-        $dql = "SELECT b, d, s, t, bc FROM Customer\Entity\Bookings b  LEFT JOIN b.bookingClass bc LEFT JOIN b.assignedDriver d LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user ORDER BY  b.id DESC ";
+        $dql = "SELECT b, d, s, t, bc FROM Customer\Entity\Bookings b  LEFT JOIN b.bookingClass bc LEFT JOIN b.assignedDriver d LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user AND b.isActive = :active ORDER BY  b.id DESC ";
         
         $entity = $this->getEntityManager()
             ->createQuery($dql)
             ->setParameters([
-            "user" => $user
+            "user" => $user,
+                "active"=>TRUE
         ])
             ->setMaxResults(50)
             ->getResult(Query::HYDRATE_ARRAY);
@@ -38,12 +39,13 @@ class CustomerBookingRepository extends EntityRepository
      */
     public function findAllInititedBooking($user)
     {
-        $dql = "SELECT b, d, u, s, t FROM Customer\Entity\Bookings b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user AND b.status = :status ORDER BY b.id";
+        $dql = "SELECT b, d, u, s, t FROM Customer\Entity\Bookings b  LEFT JOIN b.assignedDriver d LEFT JOIN b.user u LEFT JOIN b.status s LEFT JOIN b.transaction t WHERE b.user = :user AND b.status = :status AND b.isActive = :active ORDER BY b.id";
         $result = $this->getEntityManager()
             ->createQuery($dql)
             ->setParameters([
             "user" => $user,
-            "status" => CustomerService::BOOKING_STATUS_INITIATED
+            "status" => CustomerService::BOOKING_STATUS_INITIATED,
+            "active" => TRUE
         ])
             ->getResult(Query::HYDRATE_ARRAY);
         return $result;
@@ -96,8 +98,8 @@ class CustomerBookingRepository extends EntityRepository
             ->select("count(b.id)")
             ->where("b.isActive = :active")
             ->setParameters([
-                "active"=>true
-            ])
+            "active" => true
+        ])
             ->getQuery()
             ->getSingleScalarResult();
         return $result;
@@ -110,7 +112,7 @@ class CustomerBookingRepository extends EntityRepository
             ->select([
             "b",
             "t",
-//             "bt",
+            // "bt",
             "u",
             "bc",
             "s"
@@ -121,10 +123,11 @@ class CustomerBookingRepository extends EntityRepository
             ->leftJoin("b.status", "s")
             ->where("b.isActive = :active")
             ->setParameters([
-                "active"=>true
-            ])
-//             ->leftJoin("b.bookingType", "bt")
-            ->leftJoin("b.bookingClass", "bc")
+            "active" => true
+        ])
+            ->
+        // ->leftJoin("b.bookingType", "bt")
+        leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
             ->orderBy("b.id", "DESC")
@@ -147,7 +150,7 @@ class CustomerBookingRepository extends EntityRepository
             ->andWhere("b.isActive = :act")
             ->setParameters([
             "status" => CustomerService::BOOKING_STATUS_INITIATED,
-                "act"=>true
+            "act" => true
         ])
             ->getQuery()
             ->getSingleScalarResult();
@@ -161,7 +164,7 @@ class CustomerBookingRepository extends EntityRepository
             ->select([
             "b",
             "t",
-//             "bt",
+            // "bt",
             "u",
             "bc",
             "s"
@@ -170,15 +173,16 @@ class CustomerBookingRepository extends EntityRepository
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
             ->leftJoin("b.status", "s")
-//             ->leftJoin("b.bookingType", "bt")
-            ->leftJoin("b.bookingClass", "bc")
+            ->
+        // ->leftJoin("b.bookingType", "bt")
+        leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
             ->where("b.status = :status")
             ->andWhere("b.isActive = :act")
             ->setParameters([
             "status" => CustomerService::BOOKING_STATUS_INITIATED,
-                "act"=>TRUE
+            "act" => TRUE
         ])
             ->orderBy("b.id", "DESC")
             ->getQuery()
@@ -207,7 +211,7 @@ class CustomerBookingRepository extends EntityRepository
             ->select([
             "b",
             "t",
-//             "bt",
+            // "bt",
             "u",
             "s",
             "bc"
@@ -216,8 +220,9 @@ class CustomerBookingRepository extends EntityRepository
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
             ->leftJoin("b.status", "s")
-//             ->leftJoin("b.bookingType", "bt")
-            ->leftJoin("b.bookingClass", "bc")
+            ->
+        // ->leftJoin("b.bookingType", "bt")
+        leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
             ->where("b.status = :status")
@@ -251,7 +256,7 @@ class CustomerBookingRepository extends EntityRepository
             ->select([
             "b",
             "t",
-//             "bt",
+            // "bt",
             "u",
             "bc",
             "s"
@@ -259,8 +264,9 @@ class CustomerBookingRepository extends EntityRepository
         ])
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
-//             ->leftJoin("b.bookingType", "bt")
-            ->leftJoin("b.status", "s")
+            ->
+        // ->leftJoin("b.bookingType", "bt")
+        leftJoin("b.status", "s")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
@@ -287,7 +293,7 @@ class CustomerBookingRepository extends EntityRepository
             "status" => CustomerService::BOOKING_STATUS_INITIATED,
             "status2" => CustomerService::BOOKING_STATUS_ASSIGN,
             "status3" => CustomerService::BOOKING_STATUS_PROCESSING,
-                "act"=>true
+            "act" => true
         ])
             ->getQuery()
             ->getSingleScalarResult();
@@ -301,7 +307,7 @@ class CustomerBookingRepository extends EntityRepository
             ->select([
             "b",
             "t",
-//             "bt",
+            // "bt",
             "u",
             "bc",
             "s"
@@ -309,13 +315,14 @@ class CustomerBookingRepository extends EntityRepository
         ])
             ->leftJoin("b.transaction", "t")
             ->leftJoin("b.user", "u")
-//             ->leftJoin("b.bookingType", "bt")
-            ->leftJoin("b.status", "s")
+            ->
+        // ->leftJoin("b.bookingType", "bt")
+        leftJoin("b.status", "s")
             ->leftJoin("b.bookingClass", "bc")
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
-           
-            ->where("b.status = :status")
+            ->
+        where("b.status = :status")
             ->andWhere("b.isActive = :act")
             ->orWhere("b.status = :status2")
             ->orWhere("b.status= :status3")
@@ -323,7 +330,7 @@ class CustomerBookingRepository extends EntityRepository
             "status" => CustomerService::BOOKING_STATUS_INITIATED,
             "status2" => CustomerService::BOOKING_STATUS_ASSIGN,
             "status3" => CustomerService::BOOKING_STATUS_PROCESSING,
-                "act"=>true
+            "act" => true
         ])
             ->orderBy("b.pickupDate", "ASC")
             ->getQuery()

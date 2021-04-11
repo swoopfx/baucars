@@ -18,6 +18,8 @@ use General\Entity\BookingStatus;
 use Driver\Entity\DriverState;
 use Driver\Entity\ByPass;
 use Customer\Entity\DriverArrived;
+use Driver\Entity\DriveColectedPayment;
+use Customer\Entity\BookingFirstLeg;
 
 /**
  *
@@ -98,10 +100,14 @@ class BoardController extends AbstractActionController
         $repo = $em->getRepository(Bookings::class);
         $data = $repo->createQueryBuilder("b")
             ->select([
-            "b, c,  a"
+            "b",
+            "c",
+            "a",
+                "fl"
         ])
             ->leftJoin("b.assignedDriver", "a")
             ->leftJoin("b.user", "c")
+            ->leftJoin("b.firstLeg", "fl")
             ->where("a.user = :user")
             ->andWhere("b.status = :status")
             ->setParameters([
@@ -379,6 +385,53 @@ class BoardController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function firstLegAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $bookingLeg = new BookingFirstLeg();
+                $bookingId = $this->params()->fromPost("bookingid");
+                $bookingEntity = $em->find(Bookings::class, $bookingId);
+                $bookingLeg->setBooking($bookingEntity)
+                    ->setLegTime(new \DateTime());
+                $em->persist($bookingLeg);
+                $this->flashmessenger()->addSuccessMessage("Successfully readed destination");
+                $em->persist($bookingLeg);
+                $em->flush();
+                
+                $response->setStatusCode(201);
+                $generalService = $this->generalService;
+                
+                $pointer["to"] = $bookingEntity->getUser()->getEmail();
+                $pointer["fromName"] = "Bau Cars System";
+                $pointer['subject'] = "Destination";
+                
+                $template['template'] = "driver-destination-reached";
+                $template["var"] = [
+                    "logo" => $this->url()->fromRoute('application', [
+                        'action' => 'application'
+                    ], [
+                        'force_canonical' => true
+                    ]) . "assets/img/logo.png",
+                   
+                    // "cancelDate" => $bookingEntity->getUpdatedOn()
+                ];
+                $generalService->sendMails($pointer, $template);
+                
+            } catch (\Exception $e) {
+                $response->setStatusCode(500);
+                $jsonModel->setVariables([
+                    'messages' => 'Something went wrong'
+                ]);
+            }
+        }
+        return $jsonModel;
+    }
+
     public function endtripAction()
     {
         $generalService = $this->generalService;
@@ -555,22 +608,30 @@ class BoardController extends AbstractActionController
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
             $id = $post["id"];
+            $amount = $post["amount"];
             $bookings = $em->find(Bookings::class, $id);
             try {
+                $collectedPayment = new DriveColectedPayment();
                 
-                $pointer["to"] = $bookings->getUser()->getEmail();
+                /**
+                 *
+                 * @var Bookings $bookings
+                 */
+                $bookings = $em->find(Bookings::class, $id);
+                $collectedPayment->setCreatedOn(new \DateTime())->setBooking($em->find(Bookings::class, $id));
+                
+                $em->persist($collectedPayment);
+                $em->flush();
+                
+                $pointer["to"] = GeneralService::COMPANY_EMAIL;
                 $pointer["fromName"] = "Bau Cars System";
-                $pointer['subject'] = "Trip Code";
+                $pointer['subject'] = "Driver Collected Funds";
                 
-                $template['template'] = "driver-trip-receipt";
+                $template['template'] = "driver-collected-funds";
                 $template["var"] = [
-                    "logo" => $this->url()->fromRoute('application', [
-                        'action' => 'application'
-                    ], [
-                        'force_canonical' => true
-                    ]) . "assets/img/logo.png",
-                    "amount"=>$amount,
-                    "tripCode" => $bookings->getTripCode()
+                    
+                    "funds" => $amount,
+                    "rider" => $bookings->getUser()->getFullName()
                 ];
                 $generalService->sendMails($pointer, $template);
                 
