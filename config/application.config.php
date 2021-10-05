@@ -12,7 +12,7 @@ return array(
         'Driver',
         'General',
         'Customer',
-        'Job',
+        'Job','Logistics','Wallet',
 //         'WasabiLib',
     ),
     
@@ -24,7 +24,7 @@ return array(
         // Module class.
         'module_paths' => array(
             './module',
-            './vendor'
+            './vendor','./module','./module'
         
         ),
         

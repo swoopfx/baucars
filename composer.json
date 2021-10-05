@@ -11,6 +11,7 @@
 		"php" : ">=5.3.3",
 		"zendframework/zendframework" : "~2.4",
 		"doctrine/doctrine-orm-module" : "1.1.8",
-		"acelaya/zf2-acmailer" : "5.2.1"
+		"acelaya/zf2-acmailer" : "5.2.1",
+		"lcobucci/jwt": "^4.1"
 	}
 }
