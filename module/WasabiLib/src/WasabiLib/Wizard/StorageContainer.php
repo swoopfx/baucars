@@ -16,8 +16,8 @@ THE SOFTWARE.
 
 namespace WasabiLib\Wizard;
 
-use Zend\Session\Container;
-use Zend\Session\ManagerInterface as Manager;
+use Laminas\Session\Container;
+use Laminas\Session\ManagerInterface as Manager;
 
 class StorageContainer extends Container {
 

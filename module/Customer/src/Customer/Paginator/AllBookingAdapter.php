@@ -1,7 +1,7 @@
 <?php
 namespace Customer\Paginator;
 
-use Zend\Paginator\Adapter\AdapterInterface;
+use Laminas\Paginator\Adapter\AdapterInterface;
 use Customer\Entity\Repostory\CustomerBookingRepository;
 
 /**

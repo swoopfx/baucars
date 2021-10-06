@@ -1,8 +1,8 @@
 <?php
 namespace Driver\Controller\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Driver\Controller\BoardController;
 use General\Service\GeneralService;
 
@@ -25,7 +25,7 @@ class BoardControllerFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

@@ -1,7 +1,7 @@
 <?php
 namespace General\View\Helper;
 
-use Zend\I18n\View\Helper\CurrencyFormat;
+use Laminas\I18n\View\Helper\CurrencyFormat;
 
 /**
  *

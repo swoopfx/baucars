@@ -13,19 +13,19 @@ namespace CsnUser\Controller;
  * @author Stoyan Revov <st.revov@gmail.com>
  * @author Martin Briglia <martin@mgscreativa.com>
  */
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Mail\Message;
-use Zend\Validator\Identical as IdenticalValidator;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\Mail\Message;
+use Laminas\Validator\Identical as IdenticalValidator;
 use CsnUser\Entity\User;
 use CsnUser\Options\ModuleOptions;
 // use CsnUser\Service\UserService as UserService;
 use General\Service\GeneralService;
 use CsnUser\Service\UserService;
 use General\Service\TriggerService;
-use Zend\Http\Response;
-use Zend\View\Model\JsonModel;
-use Zend\InputFilter\InputFilter;
+use Laminas\Http\Response;
+use Laminas\View\Model\JsonModel;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Registration controller
@@ -47,7 +47,7 @@ class RegistrationController extends AbstractActionController
 
     /**
      *
-     * @var Zend\Mvc\I18n
+     * @var Laminas\Mvc\I18n
      */
     protected $translatorHelper;
 
@@ -75,7 +75,7 @@ class RegistrationController extends AbstractActionController
 
     /**
      *
-     * @var Zend\Form\Form
+     * @var Laminas\Form\Form
      */
     protected $userFormHelper;
 
@@ -84,7 +84,7 @@ class RegistrationController extends AbstractActionController
      *
      * Displays user registration form using Doctrine ORM and Zend annotations
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function indexAction()
     {
@@ -331,44 +331,10 @@ class RegistrationController extends AbstractActionController
                     $entityManager->persist($user);
                     $entityManager->flush();
                     
-                    // register on pusher
-                    // $this->chatkitService->createUser([
-                    // 'id' => strval($user->getusername()),
-                    // 'name' => strval($user->getUsername())
-                    // ]);
-                    
-                    // $viewModel = new ViewModel(array(
-                    // 'email' => $user->getEmail(),
-                    // 'navMenu' => $this->options->getNavMenu()
-                    // ));
-                    // $viewModel->setTemplate('csn-user/registration/registration-success');
-                    // $this->generalService->sendMails($messagePointer, $template); // send email confirmation email
-                    // $triggerParams = array(
-                    // "user" => $user->getId()
-                    // );
-                    // $this->getEventManager()->trigger(TriggerService::USER_REGISTER_INITIATED, $this, $triggerParams);
-                    
+                   
                     $response->setStatusCode(Response::STATUS_CODE_201);
                     
-                    // $generalService = $this->generalService;
-                    // $pointer["to"] = $auth->getIdentity()->getEmail();
-                    // $pointer["fromName"] = "Bau Cars Limited";
-                    // $pointer['subject'] = "";
-                    
-                    // $template['template'] = "";
-                    // $template["var"] = [
-                    
-                    // ];
-                    
-                    // $generalService->sendMails($pointer, $template); $generalService = $this->generalService;
-                    // $pointer["to"] = $auth->getIdentity()->getEmail();
-                    // $pointer["fromName"] = "Bau Cars Limited";
-                    // $pointer['subject'] = "Booking Initiated";
-                    
-                    // $template['template'] = "";
-                    // $template["var"] = [
-                    
-                    // ];
+                  
                     
                     $this->generalService->sendMails($messagePointer, $template);
                     return $jsonModel;
@@ -398,7 +364,7 @@ class RegistrationController extends AbstractActionController
      *
      * Displays user edit profile form
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function editProfileAction()
     {
@@ -443,7 +409,7 @@ class RegistrationController extends AbstractActionController
      *
      * Displays user change password form
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function changePasswordAction()
     {
@@ -494,7 +460,7 @@ class RegistrationController extends AbstractActionController
      *
      * Send email reset link to user
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function resetPasswordAction()
     {
@@ -600,7 +566,7 @@ class RegistrationController extends AbstractActionController
      *
      * Displays user change email form
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function changeEmailAction()
     {
@@ -649,7 +615,7 @@ class RegistrationController extends AbstractActionController
      *
      * Displays user change security question form
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function changeSecurityQuestionAction()
     {
@@ -697,7 +663,7 @@ class RegistrationController extends AbstractActionController
      *
      * Checks for email validation through given token
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function confirmEmailAction()
     {
@@ -753,7 +719,7 @@ class RegistrationController extends AbstractActionController
      *
      * Confirms password change through given token
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function confirmEmailChangePasswordAction()
     {
@@ -918,7 +884,7 @@ class RegistrationController extends AbstractActionController
     // /**
     // * get translatorHelper
     // *
-    // * @return Zend\Mvc\I18n\Translator
+    // * @return Laminas\Mvc\I18n\Translator
     // */
     // private function getTranslatorHelper()
     // {
@@ -932,7 +898,7 @@ class RegistrationController extends AbstractActionController
     // /**
     // * get userFormHelper
     // *
-    // * @return Zend\Form\Form
+    // * @return Laminas\Form\Form
     // */
     // private function getUserFormHelper()
     // {

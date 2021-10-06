@@ -1,24 +1,31 @@
 <?php
+use Logistics\Controller\UserController;
+use Logistics\Controller\Factory\UserControllerFactory;
+
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Logistics\Controller\Logistics' => 'Logistics\Controller\LogisticsController',
+            'Logistics\Controller\Logistics' => 'Logistics\Controller\LogisticsController'
+        
         ),
+        'factories' => array(
+            "Logistics\Controller\User" => UserControllerFactory::class
+        )
     ),
     'router' => array(
         'routes' => array(
             'logistics' => array(
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => array(
                     // Change this to something specific to your module
-                    'route'    => '/logistics',
+                    'route' => '/logistics',
                     'defaults' => array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
                         '__NAMESPACE__' => 'Logistics\Controller',
-                        'controller'    => 'Logistics',
-                        'action'        => 'index',
-                    ),
+                        'controller' => 'Logistics',
+                        'action' => 'index'
+                    )
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
@@ -27,24 +34,23 @@ return array(
                     // you may want to remove it and replace it with more
                     // specific routes.
                     'default' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action]]',
+                            'route' => '/[:controller[/:action]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
                             ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
+                            'defaults' => array()
+                        )
+                    )
+                )
+            )
+        )
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'Logistics' => __DIR__ . '/../view',
-        ),
-    ),
+            'Logistics' => __DIR__ . '/../view'
+        )
+    )
 );

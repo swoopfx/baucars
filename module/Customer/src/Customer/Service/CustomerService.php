@@ -5,8 +5,8 @@ use Customer\Entity\CustomerBooking;
 use CsnUser\Entity\User;
 use Doctrine\ORM\EntityManager;
 use General\Entity\BookingClass;
-use Zend\Session\Container;
-use Zend\Authentication\AuthenticationService;
+use Laminas\Session\Container;
+use Laminas\Authentication\AuthenticationService;
 use General\Entity\BookingStatus;
 use General\Entity\BookingType;
 use General\Service\GeneralService;
@@ -419,7 +419,7 @@ class CustomerService
 
     /**
      *
-     * @param \Zend\Session\Container $bookingSession            
+     * @param \Laminas\Session\Container $bookingSession            
      */
     public function setBookingSession($bookingSession)
     {

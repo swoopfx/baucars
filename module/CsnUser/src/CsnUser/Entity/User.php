@@ -14,7 +14,7 @@
 namespace CsnUser\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Support\Entity\Support;
@@ -59,7 +59,7 @@ class User
 //      * @var string
 //      *
 //      * @ORM\Column(name="username", type="string", length=30, nullable=false, unique=true)
-//      * @Annotation\Type("Zend\Form\Element\Text")
+//      * @Annotation\Type("Laminas\Form\Element\Text")
 //      * @Annotation\Filter({"name":"StripTags"})
 //      * @Annotation\Filter({"name":"StringTrim"})
 //      * @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "min":6, "max":30}})
@@ -75,7 +75,7 @@ class User
     /**
      *
      * @var string @ORM\Column(name="phone_number", type="string", length=30, nullable=false, unique=true)
-     *      @Annotation\Type("Zend\Form\Element\Text")
+     *      @Annotation\Type("Laminas\Form\Element\Text")
      *      @Annotation\Filter({"name":"StripTags"})
      *      @Annotation\Filter({"name":"StringTrim"})
      *      @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "min":10, "max":12}})
@@ -92,7 +92,7 @@ class User
     /**
      *
      * @var string @ORM\Column(name="full_name", type="string", length=100, nullable=true)
-     *      @Annotation\Type("Zend\Form\Element\Text")
+     *      @Annotation\Type("Laminas\Form\Element\Text")
      *      @Annotation\Filter({"name":"StripTags"})
      *      @Annotation\Filter({"name":"StringTrim"})
      *      @Annotation\Validator({"name":"StringLength", "options":{ "encoding":"UTF-8", "max":40}})
@@ -103,7 +103,7 @@ class User
     // * @var string
     // *
     // * @ORM\Column(name="last_name", type="string", length=40, nullable=true)
-    // * @Annotation\Type("Zend\Form\Element\Text")
+    // * @Annotation\Type("Laminas\Form\Element\Text")
     // * @Annotation\Filter({"name":"StripTags"})
     // * @Annotation\Filter({"name":"StringTrim"})
     // * @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "max":40}})
@@ -113,7 +113,7 @@ class User
     /**
      *
      * @var string @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
-     *      @Annotation\Type("Zend\Form\Element\Email")
+     *      @Annotation\Type("Laminas\Form\Element\Email")
      *      @Annotation\Filter({"name":"StripTags"})
      *      @Annotation\Filter({"name":"StringTrim"})
      *      @Annotation\Validator({"name":"EmailAddress"})
@@ -128,7 +128,7 @@ class User
     /**
      *
      * @var string @ORM\Column(name="password", type="string", length=60, nullable=false)
-     *      @Annotation\Type("Zend\Form\Element\Password")
+     *      @Annotation\Type("Laminas\Form\Element\Password")
      *      @Annotation\Filter({"name":"StripTags"})
      *      @Annotation\Filter({"name":"StringTrim"})
      *      @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "min":4, "max":20}})
@@ -215,7 +215,7 @@ class User
     /**
      *
      * @var string @ORM\Column(name="answer", type="string", length=100, nullable=true)
-     *      @Annotation\Type("Zend\Form\Element\Text")
+     *      @Annotation\Type("Laminas\Form\Element\Text")
      *      @Annotation\Filter({"name":"StripTags"})
      *      @Annotation\Filter({"name":"StringTrim"})
      *      @Annotation\Filter({"name":"StringToLower", "options":{"encoding":"UTF-8"}})
@@ -232,7 +232,7 @@ class User
     /**
      *
      * @var string @ORM\Column(name="picture", type="string", length=255, nullable=true)
-     *      @Annotation\Type("Zend\Form\Element\File")
+     *      @Annotation\Type("Laminas\Form\Element\File")
      */
     protected $picture;
 

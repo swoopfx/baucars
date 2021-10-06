@@ -13,8 +13,8 @@
  */
 namespace CsnUser\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use CsnUser\Options\ModuleOptions;
 
 class ModuleOptionsFactory implements FactoryInterface

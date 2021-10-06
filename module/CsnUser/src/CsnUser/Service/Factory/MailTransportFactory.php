@@ -13,10 +13,10 @@
  */
 namespace CsnUser\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail\Transport\Smtp;
-use Zend\Mail\Transport\SmtpOptions;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Mail\Transport\Smtp;
+use Laminas\Mail\Transport\SmtpOptions;
 
 class MailTransportFactory implements FactoryInterface
 {

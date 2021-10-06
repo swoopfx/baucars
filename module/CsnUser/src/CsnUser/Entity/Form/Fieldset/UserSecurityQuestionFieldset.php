@@ -1,8 +1,8 @@
 <?php
 namespace CsnUser\Form\Fieldset;
 
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Form\Fieldset;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Form\Fieldset;
 
 /**
  *
@@ -61,7 +61,7 @@ class UserSecurityQuestionFieldset extends Fieldset implements InputFilterProvid
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\InputFilter\InputFilterProviderInterface::getInputFilterSpecification()
+     * @see \Laminas\InputFilter\InputFilterProviderInterface::getInputFilterSpecification()
      *
      */
     public function getInputFilterSpecification()

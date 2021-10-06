@@ -8,8 +8,8 @@
  */
 namespace Driver\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Driver\Service\DriverService;
@@ -17,7 +17,7 @@ use Customer\Entity\ActiveTrip;
 use Customer\Entity\Bookings;
 use Driver\Entity\DriverBio;
 use Customer\Entity\BookingActivity;
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 
 class DriverController extends AbstractActionController
 {

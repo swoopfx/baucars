@@ -1,11 +1,11 @@
 <?php
 namespace Customer\Paginator\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Customer\Paginator\AllBookingAdapter;
 use General\Service\GeneralService;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 use Customer\Entity\CustomerBooking;
 use Customer\Paginator\AdminInitiatedBooking;
 
@@ -28,7 +28,7 @@ class AdminInitiatedBookingFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

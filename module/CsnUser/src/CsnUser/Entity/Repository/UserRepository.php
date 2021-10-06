@@ -19,8 +19,8 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use CsnUser\Entity\User;
 
-// use Zend\InputFilter\InputFilter;
-// use Zend\InputFilter\Factory as InputFactory;
+// use Laminas\InputFilter\InputFilter;
+// use Laminas\InputFilter\Factory as InputFactory;
 
 /**
  * UserRepository

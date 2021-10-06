@@ -1,8 +1,8 @@
 <?php
 namespace CsnUser\Controller\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use CsnUser\Controller\IndexController;
 use CsnUser\Entity\User;
 use General\Service\GeneralService;
@@ -30,7 +30,7 @@ class IndexControllerFactory implements FactoryInterface
         $ctr->setTransLator($trans);
         $form = $serviceLocator->getServiceLocator()->get('csnuser_user_form');
 
-        $at = $serviceLocator->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        $at = $serviceLocator->getServiceLocator()->get('Laminas\Authentication\AuthenticationService');
 
         $op = $serviceLocator->getServiceLocator()->get('csnuser_module_options');
         $errorView = $serviceLocator->getServiceLocator()->get('csnuser_error_view');

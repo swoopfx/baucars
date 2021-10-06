@@ -9,7 +9,7 @@
 
 namespace Wallet\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class WalletController extends AbstractActionController
 {

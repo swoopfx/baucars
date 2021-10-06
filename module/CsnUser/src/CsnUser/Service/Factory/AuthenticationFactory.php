@@ -13,12 +13,12 @@
  */
 namespace CsnUser\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 // use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Identity\IdentityProviderInterface;
-use Zend\Authentication\AuthenticationServiceInterface;
+use Laminas\Authentication\AuthenticationServiceInterface;
 
 class AuthenticationFactory implements   FactoryInterface
 {

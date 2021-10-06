@@ -2,17 +2,17 @@
 namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
-use Zend\Http\Client;
-use Zend\Session\Container;
+use Laminas\Http\Client;
+use Laminas\Session\Container;
 use Application\Entity\Transactions;
 use General\Entity\TransactionStatus;
 use CsnUser\Entity\User;
 use Customer\Entity\CustomerBooking;
-use Zend\Http\Request;
+use Laminas\Http\Request;
 use Application\Entity\InitatedTransfer;
 use Application\Entity\TransferStatus;
 use Application\Entity\ConcludedTransfer;
-use Zend\Authentication\AuthenticationService;
+use Laminas\Authentication\AuthenticationService;
 
 /**
  *
@@ -486,7 +486,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Zend\Session\Container $flutterSession            
+     * @param \Laminas\Session\Container $flutterSession            
      */
     public function setFlutterSession($flutterSession)
     {
@@ -755,7 +755,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Zend\Authentication\AuthenticationService $auth            
+     * @param \Laminas\Authentication\AuthenticationService $auth            
      */
     public function setAuth($auth)
     {

@@ -1,7 +1,7 @@
 <?php
 namespace Customer\Paginator;
 
-use Zend\Paginator\Adapter\AdapterInterface;
+use Laminas\Paginator\Adapter\AdapterInterface;
 use CsnUser\Entity\Repository\UserRepository;
 
 /**
@@ -32,7 +32,7 @@ class CustomerAdapter implements AdapterInterface
      *
      * {@inheritdoc}
      *
-     * @see \Zend\Paginator\Adapter\AdapterInterface::getItems()
+     * @see \Laminas\Paginator\Adapter\AdapterInterface::getItems()
      */
     public function getItems($offset, $itemCountPerPage)
     {

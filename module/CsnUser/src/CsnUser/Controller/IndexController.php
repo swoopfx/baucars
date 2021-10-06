@@ -13,22 +13,22 @@
  */
 namespace CsnUser\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Session\SessionManager;
-// use Zend\Session\Config\StandardConfig;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\Session\SessionManager;
+// use Laminas\Session\Config\StandardConfig;
 use CsnUser\Entity\User;
 use CsnUser\Options\ModuleOptions;
 use CsnUser\Entity\Lastlogin;
 // use Users\Entity\BrokerActivation;
 // use Settings\Service\SettingsService;
 use Doctrine\ORM\EntityManager;
-use Zend\I18n\Translator\Translator;
-use Zend\Form\Form;
-use Zend\Authentication\AuthenticationService;
-use Zend\InputFilter\InputFilter;
-use Zend\View\Model\JsonModel;
-use Zend\Http\Response;
+use Laminas\I18n\Translator\Translator;
+use Laminas\Form\Form;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\InputFilter\InputFilter;
+use Laminas\View\Model\JsonModel;
+use Laminas\Http\Response;
 use CsnUser\Service\UserService;
 
 /**

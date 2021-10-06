@@ -18,7 +18,7 @@ namespace WasabiLib\Controller;
 
 use WasabiLib\Ajax\Redirect;
 use WasabiLib\Ajax\Response;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 abstract class WasabiAbstractActionController extends AbstractActionController {
 

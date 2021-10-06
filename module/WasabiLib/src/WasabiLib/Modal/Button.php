@@ -17,7 +17,7 @@
 
 namespace WasabiLib\Modal;
 use Wasabi\Modal\Exception;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 
 class Button extends WasabiModalElementConfigurator {
@@ -64,7 +64,7 @@ class Button extends WasabiModalElementConfigurator {
     }
 
     /**
-     * @param string | \Zend\View\Model\ViewModel $buttonText
+     * @param string | \Laminas\View\Model\ViewModel $buttonText
      */
     public function setButtonText($buttonText) {
         if($this->ajax) {

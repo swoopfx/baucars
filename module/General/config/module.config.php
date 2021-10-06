@@ -5,6 +5,8 @@ use General\Service\Factory\GeneralServiceFactory;
 use General\Service\Factory\FlutterwaveServiceFactory;
 use General\View\Helper\MyCurrency;
 use General\View\Helper\StatusHelper;
+use General\Service\JwtService;
+use General\Service\Factory\JwtServiceFactory;
 
 return array(
     'controllers' => array(
@@ -16,6 +18,7 @@ return array(
         'factories' => array(
             "General\Service\GeneralService"=>GeneralServiceFactory::class,
             "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
+            "General\Service\JwtService" =>JwtServiceFactory::class
         ),
     ),
     'router' => array(

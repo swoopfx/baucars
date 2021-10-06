@@ -1,8 +1,8 @@
 <?php
 namespace Application\Controller\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Application\Controller\IndexController;
 use General\Service\GeneralService;
 
@@ -25,7 +25,7 @@ class IndexControllerFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

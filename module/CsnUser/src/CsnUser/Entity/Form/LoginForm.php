@@ -1,7 +1,7 @@
 <?php
 namespace CsnUser\Form;
 
-use Zend\Form\Form;
+use Laminas\Form\Form;
 
 /**
  *
@@ -39,7 +39,7 @@ class LoginForm extends Form
     public function addCommon(){
         $this->form->add(array(
             'name' => 'csrf',
-            'type' => 'Zend\Form\Element\Csrf',
+            'type' => 'Laminas\Form\Element\Csrf',
             'options' => array(
                 'csrf_options' => array(
                     'timeout' => 600
@@ -51,7 +51,7 @@ class LoginForm extends Form
         
         $this->form->add(array(
             'name' => 'submit',
-            'type' => 'Zend\Form\Element\Submit',
+            'type' => 'Laminas\Form\Element\Submit',
             'attributes' => array(
                 'type' => 'submit'
             )

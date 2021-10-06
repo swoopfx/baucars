@@ -2,9 +2,13 @@
 namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
-use Zend\Authentication\AuthenticationService;
+use Laminas\Authentication\AuthenticationService;
 use General\Entity\AppSettings;
 use General\Entity\PriceRange;
+use Carnage\JwtZendAuth\Authentication\Storage\Header;
+use Carnage\JwtZendAuth\Authentication\Storage\Cookie;
+use Carnage\JwtZendAuth\Authentication\Storage\Jwt;
+use Laminas\Http\Request;
 
 /**
  *
@@ -25,6 +29,18 @@ class GeneralService
      * @var AuthenticationService
      */
     private $auth;
+    
+   /**
+    * 
+    * @var Request
+    */
+    private $request ;
+    
+    /**
+     * 
+     * @var Cookie
+     */
+    private $jwtCookie;
 
     private $mailService;
 
@@ -180,5 +196,83 @@ class GeneralService
         $this->renderer = $renderer;
         return $this;
     }
+    /**
+     * @return the $jwtAuth
+     */
+    public function getJwtAuth()
+    {
+        return $this->jwtAuth;
+    }
+    /**
+     * @return the $jwtStorage
+     */
+    public function getJwtStorage()
+    {
+        return $this->jwtStorage;
+    }
+
+    /**
+     * @param field_type $jwtStorage
+     */
+    public function setJwtStorage($jwtStorage)
+    {
+        $this->jwtStorage = $jwtStorage;
+        return $this;
+    }
+    /**
+     * @return the $jwtHeader
+     */
+    public function getJwtHeader()
+    {
+        return $this->jwtHeader;
+    }
+
+    /**
+     * @return the $jwtCookie
+     */
+    public function getJwtCookie()
+    {
+        return $this->jwtCookie;
+    }
+
+    /**
+     * @param \Carnage\JwtZendAuth\Authentication\Storage\Header $jwtHeader
+     */
+    public function setJwtHeader($jwtHeader)
+    {
+        $this->jwtHeader = $jwtHeader;
+        return $this;
+    }
+
+    /**
+     * @param \Carnage\JwtZendAuth\Authentication\Storage\Cookie $jwtCookie
+     */
+    public function setJwtCookie($jwtCookie)
+    {
+        $this->jwtCookie = $jwtCookie;
+        return $this;
+    }
+    /**
+     * @return the $request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param \Laminas\Http\Request $request
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+
+
+
+    
+
 }
 

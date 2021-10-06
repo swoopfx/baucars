@@ -13,8 +13,8 @@
  */
 namespace CsnUser\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use CsnUser\Entity\User;
 use CsnUser\Options\ModuleOptions;
 use CsnUser\Service\UserService as UserCredentialsService;
@@ -39,13 +39,13 @@ class AdminController extends AbstractActionController
 
     /**
      *
-     * @var Zend\Mvc\I18n\Translator
+     * @var Laminas\Mvc\I18n\Translator
      */
     protected $translatorHelper;
 
     /**
      *
-     * @var Zend\Form\Form
+     * @var Laminas\Form\Form
      */
     protected $userFormHelper;
 
@@ -54,7 +54,7 @@ class AdminController extends AbstractActionController
      *
      * Method to show an user list
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function indexAction()
     {
@@ -76,7 +76,7 @@ class AdminController extends AbstractActionController
      *
      * Method to create an user
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function createUserAction()
     {
@@ -126,7 +126,7 @@ class AdminController extends AbstractActionController
      *
      * Method to update an user
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function editUserAction()
     {
@@ -190,7 +190,7 @@ class AdminController extends AbstractActionController
      *
      * Method to delete an user from his ID
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function deleteUserAction()
     {
@@ -230,7 +230,7 @@ class AdminController extends AbstractActionController
      *
      * Method to disable an user from his ID
      *
-     * @return Zend\View\Model\ViewModel
+     * @return Laminas\View\Model\ViewModel
      */
     public function setUserStateAction()
     {
@@ -298,7 +298,7 @@ class AdminController extends AbstractActionController
     /**
      * get translatorHelper
      *
-     * @return Zend\Mvc\I18n\Translator
+     * @return Laminas\Mvc\I18n\Translator
      */
     private function getTranslatorHelper()
     {
@@ -312,7 +312,7 @@ class AdminController extends AbstractActionController
     /**
      * get userFormHelper
      *
-     * @return Zend\Form\Form
+     * @return Laminas\Form\Form
      */
     private function getUserFormHelper()
     {

@@ -16,8 +16,8 @@ THE SOFTWARE.
 
 namespace WasabiLib;
 
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use Laminas\ModuleManager\Feature\AutoloaderProviderInterface;
+use Laminas\ModuleManager\Feature\ViewHelperProviderInterface;
 
 class Module implements AutoloaderProviderInterface, ViewHelperProviderInterface
 {
@@ -29,7 +29,7 @@ class Module implements AutoloaderProviderInterface, ViewHelperProviderInterface
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
@@ -38,10 +38,10 @@ class Module implements AutoloaderProviderInterface, ViewHelperProviderInterface
     }
 
     /**
-     * Expected to return \Zend\ServiceManager\Config object or array to
+     * Expected to return \Laminas\ServiceManager\Config object or array to
      * seed such an object.
      *
-     * @return array|\Zend\ServiceManager\Config
+     * @return array|\Laminas\ServiceManager\Config
      */
     public function getViewHelperConfig() {
         // TODO: Implement getViewHelperConfig() method.

@@ -1,11 +1,11 @@
 <?php
 namespace Customer\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Customer\Service\CustomerService;
 use General\Service\GeneralService;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 
 /**
  *
@@ -26,7 +26,7 @@ class CustomerServiceFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

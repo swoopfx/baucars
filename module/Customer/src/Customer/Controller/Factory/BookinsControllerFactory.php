@@ -1,8 +1,8 @@
 <?php
 namespace Customer\Controller\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Customer\Entity\Bookings;
 use Customer\Controller\BookingsController;
 
@@ -25,7 +25,7 @@ class BookinsControllerFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

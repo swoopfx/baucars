@@ -1,18 +1,18 @@
 <?php
 namespace CsnUser\Form\Fieldset;
 
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Form\Fieldset;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Form\Fieldset;
 use CsnUser\Entity\User;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DoctrineModule\Validator\UniqueObject;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
-use Zend\Validator\EmailAddress;
-use Zend\Validator\Regex;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
+use Laminas\Validator\EmailAddress;
+use Laminas\Validator\Regex;
 use DoctrineModule\Validator\ObjectExists;
 use DoctrineModule\Validator\NoObjectExists;
-use Zend\Validator\Identical;
+use Laminas\Validator\Identical;
 
 /**
  *
@@ -53,7 +53,7 @@ class UserBasicFieldset extends Fieldset implements InputFilterProviderInterface
         ));
         $this->add(array(
             'name' => 'email',
-            'type' => 'Zend\Form\Element\Email',
+            'type' => 'Laminas\Form\Element\Email',
             'options' => array(
                 'label' => 'Staff Email',
                 'label_attributes' => array(
@@ -70,7 +70,7 @@ class UserBasicFieldset extends Fieldset implements InputFilterProviderInterface
         ));
         $this->add(array(
             'name' => 'password',
-            'type' => 'Zend\Form\Element\Password',
+            'type' => 'Laminas\Form\Element\Password',
             'options' => array(
                 'label' => 'Proposed Password',
                 'label_attributes' => array(
@@ -86,7 +86,7 @@ class UserBasicFieldset extends Fieldset implements InputFilterProviderInterface
         
         $this->add(array(
             'name' => 'passwordVerify',
-            'type' => 'Zend\Form\Element\Password',
+            'type' => 'Laminas\Form\Element\Password',
             'options' => array(
                 'label' => 'Confirm Password',
                 'label_attributes' => array(
@@ -125,7 +125,7 @@ class UserBasicFieldset extends Fieldset implements InputFilterProviderInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\InputFilter\InputFilterProviderInterface::getInputFilterSpecification()
+     * @see \Laminas\InputFilter\InputFilterProviderInterface::getInputFilterSpecification()
      *
      */
     public function getInputFilterSpecification()
@@ -224,7 +224,7 @@ class UserBasicFieldset extends Fieldset implements InputFilterProviderInterface
                         )
                     ),
                     array(
-                        'name' => 'Zend\Validator\StringLength',
+                        'name' => 'Laminas\Validator\StringLength',
                         'options' => array(
                             'messages' => array(),
                             'min' => 3,

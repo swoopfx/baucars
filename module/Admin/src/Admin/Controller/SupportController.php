@@ -1,11 +1,11 @@
 <?php
 namespace Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Support;
 
 /**

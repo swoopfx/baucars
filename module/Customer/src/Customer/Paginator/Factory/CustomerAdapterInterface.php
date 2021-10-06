@@ -1,12 +1,12 @@
 <?php
 namespace Customer\Paginator\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Customer\Paginator\CustomerAdapter;
 use Doctrine\ORM\EntityManager;
 use CsnUser\Entity\User;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 /**
  *
@@ -27,7 +27,7 @@ class CustomerAdapterInterface implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

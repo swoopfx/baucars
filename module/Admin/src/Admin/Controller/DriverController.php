@@ -1,14 +1,14 @@
 <?php
 namespace Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Doctrine\ORM\EntityManager;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use Application\Entity\Cars;
 use Doctrine\ORM\Query;
 use General\Entity\MotorMake;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 use Driver\Entity\DriverBio;
 use CsnUser\Entity\User;
 use CsnUser\Entity\Role;
@@ -20,7 +20,7 @@ use Customer\Entity\CustomerBooking;
 use Customer\Entity\BookingActivity;
 use General\Entity\BookingStatus;
 use Customer\Service\CustomerService;
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 use General\Service\GeneralService;
 use Customer\Entity\DispatchDriver;
 use Customer\Entity\Bookings;

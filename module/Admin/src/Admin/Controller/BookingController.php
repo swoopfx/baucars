@@ -1,14 +1,14 @@
 <?php
 namespace Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Doctrine\ORM\EntityManager;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 use Customer\Service\BookingService;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 use Customer\Entity\CustomerBooking;
 use Customer\Paginator\AllBookingAdapter;
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 use Customer\Service\CustomerService;
 use Doctrine\ORM\Query;
 use Customer\Entity\Bookings;
@@ -125,7 +125,7 @@ class BookingController extends AbstractActionController
     /**
      * A list of active trip in decing order
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function activeAction()
     {
@@ -139,7 +139,7 @@ class BookingController extends AbstractActionController
     /**
      * A list of canceld booking in descending order
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function cancelAction()
     {
@@ -153,7 +153,7 @@ class BookingController extends AbstractActionController
     /**
      * Defines all upcoming initite
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function upcomingAction()
     {
@@ -322,7 +322,7 @@ class BookingController extends AbstractActionController
     /**
      * Sends an email notification informing the the customer
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function sendbookingpriceAction()
     {

@@ -15,12 +15,12 @@ THE SOFTWARE.
  */
 
 namespace WasabiLib\View;
-use Zend\Http\Response;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver\TemplateMapResolver;
-use Zend\View\Strategy\PhpRendererStrategy;
-use Zend\View\View;
+use Laminas\Http\Response;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Resolver\TemplateMapResolver;
+use Laminas\View\Strategy\PhpRendererStrategy;
+use Laminas\View\View;
 
 /**
  * Class WasabiModal

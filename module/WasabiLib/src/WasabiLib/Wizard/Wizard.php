@@ -19,13 +19,13 @@ namespace WasabiLib\Wizard;
 use WasabiLib\Ajax\DomManipulator;
 use WasabiLib\Ajax\InnerHtml;
 use WasabiLib\Controller\WasabiAbstractActionController;
-use Zend\EventManager\ResponseCollection;
-use Zend\Http\Request as HttpRequest;
-use Zend\Http\Response as HttpResponse;
+use Laminas\EventManager\ResponseCollection;
+use Laminas\Http\Request as HttpRequest;
+use Laminas\Http\Response as HttpResponse;
 use WasabiLib\Wizard\StepCollection;
 use WasabiLib\Wizard\WizardInterface;
 use WasabiLib\Ajax\ResponseConfigurator;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 //use WasabiLib\Wizard\
 use WasabiLib\Wizard\ArrayIterator;
 

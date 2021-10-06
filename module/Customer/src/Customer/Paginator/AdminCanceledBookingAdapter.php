@@ -1,7 +1,7 @@
 <?php
 namespace Customer\Paginator;
 
-use Zend\Paginator\Adapter\AdapterInterface;
+use Laminas\Paginator\Adapter\AdapterInterface;
 use Customer\Entity\Repostory\CustomerBookingRepository;
 
 /**
@@ -27,7 +27,7 @@ class AdminCanceledBookingAdapter implements AdapterInterface
     }
     /**
      * {@inheritDoc}
-     * @see \Zend\Paginator\Adapter\AdapterInterface::getItems()
+     * @see \Laminas\Paginator\Adapter\AdapterInterface::getItems()
      */
     public function getItems($offset, $itemCountPerPage)
     {

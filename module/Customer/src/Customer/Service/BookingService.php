@@ -2,11 +2,11 @@
 namespace Customer\Service;
 
 use Doctrine\ORM\EntityManager;
-use Zend\Authentication\AuthenticationService;
+use Laminas\Authentication\AuthenticationService;
 use Customer\Entity\CustomerBooking;
-use Zend\Session\Container;
-use Zend\Http\Client;
-use Zend\Http\Request;
+use Laminas\Session\Container;
+use Laminas\Http\Client;
+use Laminas\Http\Request;
 use General\Entity\AppSettings;
 use General\Entity\PriceRange;
 use Customer\Entity\Bookings;
@@ -282,7 +282,7 @@ class BookingService
 
     /**
      *
-     * @param \Zend\Authentication\AuthenticationService $auth            
+     * @param \Laminas\Authentication\AuthenticationService $auth            
      */
     public function setAuth($auth)
     {
@@ -301,7 +301,7 @@ class BookingService
 
     /**
      *
-     * @param \Zend\Session\Container $bookingSession            
+     * @param \Laminas\Session\Container $bookingSession            
      */
     public function setBookingSession($bookingSession)
     {

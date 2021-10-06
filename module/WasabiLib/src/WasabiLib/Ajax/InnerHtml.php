@@ -16,11 +16,11 @@
  */
 namespace WasabiLib\Ajax;
 
-use Zend\View\Model\ViewModel;
-use Zend\View\Exception;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Strategy\PhpRendererStrategy;
-use Zend\View\View;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Exception;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Strategy\PhpRendererStrategy;
+use Laminas\View\View;
 
 class InnerHtml extends GenericMessage {
     const ACTION_TYPE_REPLACE = "ACTION_TYPE_REPLACE";
@@ -28,7 +28,7 @@ class InnerHtml extends GenericMessage {
     const ACTION_TYPE_REMOVE = "ACTION_TYPE_REMOVE"; //element remove
 
     /**
-     * @var \Zend\View\Model\ViewModel
+     * @var \Laminas\View\Model\ViewModel
      */
     protected $viewModel = null;
 
@@ -60,7 +60,7 @@ class InnerHtml extends GenericMessage {
     /**
      * Set service locator
      *
-     * @param \Zend\View\Renderer\RendererInterface $renderer
+     * @param \Laminas\View\Renderer\RendererInterface $renderer
      */
     public function setRenderer(RendererInterface $renderer) {
         $this->renderer = $renderer;
@@ -78,7 +78,7 @@ class InnerHtml extends GenericMessage {
 
     /**
      * Sets a view model
-     * @param \Zend\View\Model\ViewModel $viewModel
+     * @param \Laminas\View\Model\ViewModel $viewModel
      */
     public function setViewModel(ViewModel $viewModel) {
         $this->viewModel = $viewModel;
@@ -86,7 +86,7 @@ class InnerHtml extends GenericMessage {
 
     /**
      * Returns a view model
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function getViewModel() {
         $this->initViewModel();
@@ -142,7 +142,7 @@ class InnerHtml extends GenericMessage {
         if($this->renderer && $this->viewModel) {
             $viewRender = $this->renderer;
             $view = new View();
-            $view->setResponse(new \Zend\Http\Response());
+            $view->setResponse(new \Laminas\Http\Response());
             $view->getEventManager()->attach(new PhpRendererStrategy($viewRender));
             $view->render($this->viewModel);
             $html = $view->getResponse()->getContent();

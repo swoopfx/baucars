@@ -1,8 +1,8 @@
 <?php
 namespace CsnUser\Controller\Plugin\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use CsnUser\Controller\Plugin\RedirectPlugin;
 use General\Service\GeneralService;
 
@@ -25,7 +25,7 @@ class RedirectPluginFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

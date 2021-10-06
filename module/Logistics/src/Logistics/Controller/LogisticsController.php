@@ -9,7 +9,7 @@
 
 namespace Logistics\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class LogisticsController extends AbstractActionController
 {
@@ -24,4 +24,8 @@ class LogisticsController extends AbstractActionController
         // are working when you browse to /logistics/logistics/foo
         return array();
     }
+    
+//     public function boardAction
+
+//     public function active
 }

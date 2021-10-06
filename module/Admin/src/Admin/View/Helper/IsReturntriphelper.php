@@ -1,16 +1,16 @@
 <?php
 namespace Admin\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 
 class IsReturntriphelper extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
      * {@inheritDoc}
-     * @see \Zend\ServiceManager\ServiceLocatorAwareInterface::setServiceLocator()
+     * @see \Laminas\ServiceManager\ServiceLocatorAwareInterface::setServiceLocator()
      */
-    public function setServiceLocator(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function setServiceLocator(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         // TODO Auto-generated method stub
         
@@ -18,7 +18,7 @@ class IsReturntriphelper extends AbstractHelper implements ServiceLocatorAwareIn
 
     /**
      * {@inheritDoc}
-     * @see \Zend\ServiceManager\ServiceLocatorAwareInterface::getServiceLocator()
+     * @see \Laminas\ServiceManager\ServiceLocatorAwareInterface::getServiceLocator()
      */
     public function getServiceLocator()
     {

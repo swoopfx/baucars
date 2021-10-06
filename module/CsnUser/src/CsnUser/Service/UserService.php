@@ -13,7 +13,7 @@
  */
 namespace CsnUser\Service;
 
-use Zend\Crypt\Password\Bcrypt;
+use Laminas\Crypt\Password\Bcrypt;
 use CsnUser\Entity\User;
 use Wallet\Entity\Wallet;
 

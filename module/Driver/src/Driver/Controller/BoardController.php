@@ -1,13 +1,13 @@
 <?php
 namespace Driver\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Driver\Service\DriverService;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Model\JsonModel;
 use Customer\Entity\Bookings;
 use Doctrine\ORM\Query;
 use Customer\Service\CustomerService;

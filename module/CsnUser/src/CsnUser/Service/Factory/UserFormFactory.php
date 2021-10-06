@@ -13,8 +13,8 @@
  */
 namespace CsnUser\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder as DoctrineAnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineModule\Validator\NoObjectExists as NoObjectExistsValidator;
@@ -26,7 +26,7 @@ class UserFormFactory implements FactoryInterface
 
     /**
      *
-     * @var Zend\Form\Form
+     * @var Laminas\Form\Form
      */
     private $form;
 
@@ -50,13 +50,13 @@ class UserFormFactory implements FactoryInterface
 
     /**
      *
-     * @var Zend\Mvc\I18n\Translator
+     * @var Laminas\Mvc\I18n\Translator
      */
     protected $translatorHelper;
 
     /**
      *
-     * @var Zend\Mvc\I18n\Translator
+     * @var Laminas\Mvc\I18n\Translator
      */
     protected $url;
 
@@ -71,7 +71,7 @@ class UserFormFactory implements FactoryInterface
      *
      * Method to create the Doctrine ORM user form for edit/create users
      *
-     * @return Zend\Form\Form
+     * @return Laminas\Form\Form
      */
     public function createUserForm($userEntity, $formName = 'LogIn')
     {
@@ -196,7 +196,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'csrf',
-            'type' => 'Zend\Form\Element\Csrf',
+            'type' => 'Laminas\Form\Element\Csrf',
             'options' => array(
                 'csrf_options' => array(
                     'timeout' => 600
@@ -206,9 +206,9 @@ class UserFormFactory implements FactoryInterface
         
         $this->form->add(array(
             'name' => 'captcha',
-            'type' => 'Zend\Form\Element\Captcha',
+            'type' => 'Laminas\Form\Element\Captcha',
             'options' => array(
-                'captcha' => new \Zend\Captcha\Figlet(array(
+                'captcha' => new \Laminas\Captcha\Figlet(array(
                     'wordLen' => $this->getOptions()
                         ->getCaptchaCharNum()
                 ))
@@ -217,7 +217,7 @@ class UserFormFactory implements FactoryInterface
         
         $this->form->add(array(
             'name' => 'submit',
-            'type' => 'Zend\Form\Element\Submit',
+            'type' => 'Laminas\Form\Element\Submit',
             'attributes' => array(
                 'type' => 'submit'
             )
@@ -231,7 +231,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'usernameOrEmail',
-            'type' => 'Zend\Form\Element\Text',
+            'type' => 'Laminas\Form\Element\Text',
             'attributes' => array(
                 'type' => 'text'
             ),
@@ -242,7 +242,7 @@ class UserFormFactory implements FactoryInterface
         
         $this->form->add(array(
             'name' => 'rememberme',
-            'type' => 'Zend\Form\Element\Checkbox',
+            'type' => 'Laminas\Form\Element\Checkbox',
             'options' => array(
                 'label' => $this->getTranslatorHelper()
                     ->translate('Remember me?')
@@ -257,7 +257,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'passwordVerify',
-            'type' => 'Zend\Form\Element\Password',
+            'type' => 'Laminas\Form\Element\Password',
             'attributes' => array(
                 'required' => true,
                 'type' => 'password'
@@ -266,7 +266,7 @@ class UserFormFactory implements FactoryInterface
         
         $this->form->add(array(
             'name' => 'login',
-            'type' => 'Zend\Form\Element\Button',
+            'type' => 'Laminas\Form\Element\Button',
             'attributes' => array(
                 'class' => 'btn btn btn-warning btn-lg',
                 'onclick' => 'window.location="' . $this->getUrlPlugin()
@@ -285,7 +285,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'role',
-            'type' => 'Zend\Form\Element\Radio',
+            'type' => 'Laminas\Form\Element\Radio',
             
             'options' => array(
                 'label' => 'Select a Category',
@@ -315,7 +315,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'newPasswordVerify',
-            'type' => 'Zend\Form\Element\Password',
+            'type' => 'Laminas\Form\Element\Password',
             'attributes' => array(
                 'required' => true,
                 'type' => 'password'
@@ -330,7 +330,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'usernameOrEmail',
-            'type' => 'Zend\Form\Element\Text',
+            'type' => 'Laminas\Form\Element\Text',
             'attributes' => array(
                 'type' => 'text',
                 'required' => 'true'
@@ -339,7 +339,7 @@ class UserFormFactory implements FactoryInterface
         
         $this->form->add(array(
             'name' => 'login',
-            'type' => 'Zend\Form\Element\Button',
+            'type' => 'Laminas\Form\Element\Button',
             'attributes' => array(
                 'class' => 'btn btn btn-warning btn-lg',
                 'onclick' => 'window.location="' . $this->getUrlPlugin()
@@ -361,7 +361,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'newEmail',
-            'type' => 'Zend\Form\Element\Email',
+            'type' => 'Laminas\Form\Element\Email',
             'attributes' => array(
                 'type' => 'email',
                 'required' => 'true'
@@ -370,7 +370,7 @@ class UserFormFactory implements FactoryInterface
         
         $this->form->add(array(
             'name' => 'newEmailVerify',
-            'type' => 'Zend\Form\Element\Email',
+            'type' => 'Laminas\Form\Element\Email',
             'attributes' => array(
                 'type' => 'email',
                 'required' => 'true'
@@ -385,7 +385,7 @@ class UserFormFactory implements FactoryInterface
     {
         $this->form->add(array(
             'name' => 'passwordVerify',
-            'type' => 'Zend\Form\Element\Password',
+            'type' => 'Laminas\Form\Element\Password',
             'attributes' => array(
                 'required' => true,
                 'type' => 'password'
@@ -695,7 +695,7 @@ class UserFormFactory implements FactoryInterface
     /**
      * get translatorHelper
      *
-     * @return Zend\Mvc\I18n\Translator
+     * @return Laminas\Mvc\I18n\Translator
      */
     private function getTranslatorHelper()
     {
@@ -709,7 +709,7 @@ class UserFormFactory implements FactoryInterface
     /**
      * get urlPlugin
      *
-     * @return Zend\Mvc\Controller\Plugin\Url
+     * @return Laminas\Mvc\Controller\Plugin\Url
      */
     private function getUrlPlugin()
     {

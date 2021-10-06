@@ -13,15 +13,15 @@
  */
 namespace CsnUser;
 
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\MvcEvent;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\MvcEvent;
 use General\Service\TriggerService;
 use Wallet\Entity\Wallet;
 use Wallet\Entity\Credit;
 use Wallet\Service\WalletService;
 use Wallet\Service\CreditService;
 
-// use Zend\EventManager\StaticEventManager;
+// use Laminas\EventManager\StaticEventManager;
 // use Wallet\Entity\Wallet;
 // use Wallet\Service\WalletService;
 class Module
@@ -35,7 +35,7 @@ class Module
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__
                 )
@@ -60,7 +60,7 @@ class Module
         $shareEventManager = $e->getApplication()
             ->getEventManager()
             ->getSharedManager();
-//         $shareEventManager->attach("Zend\Mvc\Controller\AbstractActionController", TriggerService::USER_REGISTER_INITIATED, function ($e) use ($sm) {
+//         $shareEventManager->attach("Laminas\Mvc\Controller\AbstractActionController", TriggerService::USER_REGISTER_INITIATED, function ($e) use ($sm) {
 //             // Handle all post initiate user register event handler here
            
 //         });

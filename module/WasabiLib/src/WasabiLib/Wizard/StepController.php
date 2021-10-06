@@ -18,15 +18,15 @@ namespace WasabiLib\Wizard;
 
 use WasabiLib\Ajax\DomManipulator;
 use WasabiLib\Controller\WasabiAbstractActionController;
-use Zend\Form\Form;
-use Zend\Http\Request;
-use Zend\ServiceManager\Exception;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\Form\Form;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\Exception;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Model\ViewModel;
 
 use Closure;
-use Zend\View\View;
+use Laminas\View\View;
 
 class StepController extends WasabiAbstractActionController implements ServiceLocatorInterface {
     /**

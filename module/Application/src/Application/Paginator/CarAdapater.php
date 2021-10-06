@@ -1,7 +1,7 @@
 <?php
 namespace Application\Paginator;
 
-use Zend\Paginator\Adapter\AdapterInterface;
+use Laminas\Paginator\Adapter\AdapterInterface;
 use Application\Entity\Repository\CarRepository;
 
 /**
@@ -28,7 +28,7 @@ class CarAdapater implements AdapterInterface
     }
     /**
      * {@inheritDoc}
-     * @see \Zend\Paginator\Adapter\AdapterInterface::getItems()
+     * @see \Laminas\Paginator\Adapter\AdapterInterface::getItems()
      */
     public function getItems($offset, $itemCountPerPage)
     {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Query;
 use Customer\Service\CustomerService;
 use Customer\Entity\Bookings;
 use Customer\Service\BookingService;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 
 /**
  *
@@ -238,7 +238,7 @@ class DriverService
 
     /**
      *
-     * @param \Zend\Session\Container $amotizedSession            
+     * @param \Laminas\Session\Container $amotizedSession            
      */
     public function setAmotizedSession($amotizedSession)
     {

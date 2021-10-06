@@ -1,15 +1,15 @@
 <?php
 namespace Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Paginator\CarAdapater;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 use Doctrine\ORM\EntityManager;
 use Application\Entity\Cars;
 use Doctrine\ORM\Query;
-use Zend\Mvc\MvcEvent;
-use Zend\InputFilter\InputFilter;
+use Laminas\Mvc\MvcEvent;
+use Laminas\InputFilter\InputFilter;
 
 /**
  *

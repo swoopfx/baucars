@@ -13,9 +13,9 @@
  */
 namespace CsnUser\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Model\ViewModel;
 
 class ErrorViewFactory implements FactoryInterface
 {

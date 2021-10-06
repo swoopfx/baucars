@@ -1,10 +1,10 @@
 <?php
 namespace General\Service\Factory;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use General\Service\FlutterwaveService;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 
 /**
  *
@@ -25,7 +25,7 @@ class FlutterwaveServiceFactory implements FactoryInterface
     /**
      * (non-PHPdoc)
      *
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      *
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

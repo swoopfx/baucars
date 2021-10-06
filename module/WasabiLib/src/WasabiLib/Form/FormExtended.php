@@ -17,8 +17,8 @@
 namespace WasabiLib\Form;
 
 
-use Zend\Form\ElementInterface;
-use Zend\Form\Form;
+use Laminas\Form\ElementInterface;
+use Laminas\Form\Form;
 use WasabiLib\Ajax\DomManipulator;
 
 class FormExtended extends Form {

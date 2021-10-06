@@ -18,15 +18,15 @@
 namespace WasabiLib\Modal;
 use WasabiLib\Ajax\GenericMessage;
 use WasabiLib\Ajax\ResponseConfigurator;
-use Zend\Http\Response;
-use Zend\View\Exception;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Renderer\RendererInterface;
-use Zend\View\Resolver\TemplateMapResolver;
+use Laminas\Http\Response;
+use Laminas\View\Exception;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\RendererInterface;
+use Laminas\View\Resolver\TemplateMapResolver;
 use WasabiLib\Ajax\InnerHtml;
-use Zend\View\Strategy\PhpRendererStrategy;
-use Zend\View\View;
+use Laminas\View\Strategy\PhpRendererStrategy;
+use Laminas\View\View;
 
 /**
  * Class WasabiModal
@@ -119,22 +119,22 @@ class WasabiModalView extends ResponseConfigurator {
     protected $templateExtension = "phtml";
 
     /**
-     * @var \Zend\View\Resolver\TemplateMapResolver
+     * @var \Laminas\View\Resolver\TemplateMapResolver
      */
     protected $resolver = null;
 
     /**
-     * @var \Zend\View\Renderer\PhpRenderer
+     * @var \Laminas\View\Renderer\PhpRenderer
      */
     protected $renderer = null;
 
     /**
-     * @var \Zend\View\Model\ViewModel
+     * @var \Laminas\View\Model\ViewModel
      */
     protected $viewModel = null;
 
     /**
-     * @var \Zend\View\View
+     * @var \Laminas\View\View
      */
     protected $view = null;
 
@@ -154,12 +154,12 @@ class WasabiModalView extends ResponseConfigurator {
         $this->innerHtml = new InnerHtml($this->selector, null);
 
         /**
-         * @var $this->resolver \Zend\View\Resolver\TemplateMapResolver
+         * @var $this->resolver \Laminas\View\Resolver\TemplateMapResolver
          */
         $this->resolver = new TemplateMapResolver();
 
         /**
-         * @var $this->renderer \Zend\View\Renderer\PhpRenderer
+         * @var $this->renderer \Laminas\View\Renderer\PhpRenderer
          */
         $this->renderer->resolver()->attach($this->resolver);
 
@@ -180,7 +180,7 @@ class WasabiModalView extends ResponseConfigurator {
     }
 
     /**
-     * @param mixed | string | \Zend\View\Model\ViewModel $content
+     * @param mixed | string | \Laminas\View\Model\ViewModel $content
      */
     public function setContent($content) {
         $this->content = $content;
@@ -383,7 +383,7 @@ class WasabiModalView extends ResponseConfigurator {
         // Prepare the content configuration
         $content = isset($config["content"]) ? $config["content"] : $this->content;
 
-        if(is_object($content) && get_class($content) === "Zend\\View\\Model\\ViewModel") {
+        if(is_object($content) && get_class($content) === "Laminas\\View\\Model\\ViewModel") {
             $this->resolver->add(array($content->getTemplate() => $this->getTemplatePath($content->getTemplate())));
             $this->viewModel->addChild($content, "content");
         } else {
@@ -458,7 +458,7 @@ class WasabiModalView extends ResponseConfigurator {
                     unset($model["template"]);
                     $viewModel = new ViewModel($model);
                     $viewModel->setTemplate($template);
-                    if(is_object($model["content"]) && get_class($model["content"]) === "Zend\\View\\Model\\ViewModel") {
+                    if(is_object($model["content"]) && get_class($model["content"]) === "Laminas\\View\\Model\\ViewModel") {
                         $this->resolver->add(array($model["content"]->getTemplate() => $this->getTemplatePath($model["content"]->getTemplate())));
                         $viewModel->addChild($model["content"], "content");
                         unset($model["content"]);

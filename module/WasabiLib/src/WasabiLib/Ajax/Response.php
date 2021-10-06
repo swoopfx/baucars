@@ -16,7 +16,7 @@
  */
 namespace WasabiLib\Ajax;
 
-use Zend\Code\Exception\InvalidArgumentException;
+use Laminas\Code\Exception\InvalidArgumentException;
 
 class Response{
 
@@ -32,7 +32,7 @@ class Response{
      * Adds an object which implements the interfaces ResponseTypeInterface or ResponseConfiguratorInterface or an
      * array of objects which implement the ResponseTypeInterface.
      * @param $object array | ResponseConfiguratorInterface | ResponseTypeInterface
-     * @throws \Zend\Code\Exception\InvalidArgumentException
+     * @throws \Laminas\Code\Exception\InvalidArgumentException
      */
     public function add($object){
 

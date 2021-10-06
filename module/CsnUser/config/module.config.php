@@ -38,7 +38,7 @@ return array(
         'routes' => array(
             
             'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Laminas\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route' => '/',
                     'defaults' => array(
@@ -79,7 +79,7 @@ return array(
             ),
 
             'login' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Laminas\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route' => '/login',
                     'defaults' => array(
@@ -91,7 +91,7 @@ return array(
             ),
 
             'logout' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Laminas\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route' => '/logout',
                     'defaults' => array(
@@ -152,7 +152,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Zend\Authentication\AuthenticationService' => 'CsnUser\Service\Factory\AuthenticationFactory',
+            'Laminas\Authentication\AuthenticationService' => 'CsnUser\Service\Factory\AuthenticationFactory',
             'mail.transport' => 'CsnUser\Service\Factory\MailTransportFactory',
             'csnuser_module_options' => 'CsnUser\Service\Factory\ModuleOptionsFactory',
             'csnuser_error_view' => 'CsnUser\Service\Factory\ErrorViewFactory',

@@ -1,15 +1,15 @@
 <?php
 namespace Customer\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 use General\Service\GeneralService;
 use Doctrine\ORM\EntityManager;
 use Customer\Service\BookingService;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use General\Entity\NumberOfSeat;
 use Doctrine\ORM\Query;
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 use General\Service\FlutterwaveService;
 use WasabiLib\Ajax\Response;
 use WasabiLib\Ajax\GritterMessage;
@@ -80,7 +80,7 @@ class BookingsController extends AbstractActionController
     /**
      * Use this to initiate the booking
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function initiateBookingAction()
     {
@@ -170,7 +170,7 @@ class BookingsController extends AbstractActionController
     /**
      * Use this to conclude booking after Payment
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function completebookingAction()
     {

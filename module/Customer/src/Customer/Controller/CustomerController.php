@@ -8,23 +8,23 @@
  */
 namespace Customer\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
-use Zend\View\Model\JsonModel;
-use Zend\Http\Response;
+use Laminas\View\Model\JsonModel;
+use Laminas\Http\Response;
 use Customer\Service\CustomerService;
 use General\Entity\BookingType;
 use Customer\Entity\CustomerBooking;
 use General\Entity\BookingStatus;
 use General\Entity\BookingClass;
 use General\Service\FlutterwaveService;
-use Zend\Mvc\MvcEvent;
+use Laminas\Mvc\MvcEvent;
 use Doctrine\ORM\Query;
 use Customer\Entity\BookingActivity;
 use Application\Entity\Support;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 use Application\Entity\SupportMessages;
 use Application\Entity\SupportStatus;
 use Application\Service\AppService;
@@ -194,7 +194,7 @@ class CustomerController extends AbstractActionController
     /**
      * Gets all booking Service Type
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function bookingServiceTypeAction()
     {
@@ -278,7 +278,7 @@ class CustomerController extends AbstractActionController
     /**
      * A quisk ist of active trips
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function activebookingAction()
     {
@@ -385,7 +385,7 @@ class CustomerController extends AbstractActionController
     /**
      * Creates a booking
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function createBookingAction()
     {
@@ -601,7 +601,7 @@ class CustomerController extends AbstractActionController
 
     /**
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function bookingErrorAction()
     {

@@ -8,10 +8,10 @@
  */
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use CsnUser\Service\UserService;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 use General\Service\GeneralService;
 
 class IndexController extends AbstractActionController
