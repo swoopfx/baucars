@@ -7,6 +7,7 @@ use Lcobucci\JWT\Token;
 // use function bin2hex;
 // use function random_bytes;
 use Laminas\Http\Request;
+use Lcobucci\JWT\UnencryptedToken;
 
 /**
  *
@@ -32,8 +33,8 @@ final class JWTIssuer
 
     public function issueToken($data): Token
     {
-       
-//         $now = new DateTimeImmutable();
+        
+        // $now = new DateTimeImmutable();
         return $this->config->builder()
             ->issuedBy($this->baseUrl())
             ->permittedFor($this->baseUrl() . "/logistics")
@@ -41,6 +42,34 @@ final class JWTIssuer
             ->relatedTo($data['uid'])
             ->withClaim('uid', $data["uid"])
             ->getToken($this->config->signer(), $this->config->signingKey());
+    }
+
+    public function parseToken($jwt)
+    {
+        $config = $this->config;
+        if (isEmpty($jwt)) {
+            throw new Exception("No token provided");
+        }
+        $token = $config->parser()->parse($jwt);
+        
+        if ($token instanceof UnencryptedToken) {
+            $constraint = $config->validationConstraints();
+            if ($config->validator()->validate($token, $constraint)) {
+                return $token;
+            } else {
+                throw new Exception("Not Authenticated");
+            }
+        } else {
+            throw new Exception("Invalid token");
+        }
+        
+        return null;
+    }
+    
+    
+    public function clearToken(){
+        $config = $this->config;
+//         $config->
     }
 
     private function baseUrl()

@@ -4,6 +4,7 @@ namespace JWT\Service;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Json\Json;
+use Laminas\Http\Request;
 
 /**
  *
@@ -17,11 +18,25 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
 
     private $auth;
 
+    /**
+     *
+     * @var Request
+     */
     private $requestObject;
 
     private $responseObject;
 
+    /**
+     *
+     * @var JWTService
+     */
     private $jwtService;
+
+    /**
+     *
+     * @var string
+     */
+    private $token;
 
     // TODO - Insert your code here
     
@@ -95,17 +110,55 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
             
             $user = $this->entityManager->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
             if (count($user) == 0) {
-                $response->setCustomStatusCode(498);
-                $response->setReasonPhrase('Invalid token!');
-                return $jsonModel->setVariables([
-                    "messages" => "The username or email is not valid!"
-                ]);
                 
-                throw new 
+                throw new Exception("The username or email is not valid!");
+            }
+            
+            $user = $user[0];
+            
+            if (! $user->getEmailConfirmed() == 1) {
+                throw new Exception("You are yet to confirm your email! please go to the registered email to confirm your account");
+            }
+            if ($user->getState()->getId() < 2) {
+                throw new Exception("Your account is disabled");
+            }
+            
+            $adapter->setIdentity($user->getPhoneNumber());
+            $adapter->setCredential($data["password"]);
+            
+            $authResult = $authService->authenticate();
+            
+            if ($authResult->isValid()) {
+                $identity = $authResult->getIdentity();
+                $authService->getStorage()->write($identity);
+                
+                // generate jwt token
+                return $this->jwtService->generate($user->getId());
+            } else {
+                throw new Exception("Invalid Credentials");
             }
         } else {
-            return Json::encode($inputFilter->getMessages());
+            throw new Exception(Json::encode($inputFilter->getMessages()));
         }
+    }
+
+    private function getAuthorizationHeader()
+    {
+        $requestObject = $this->requestObject;
+        $authorizationHeader = $requestObject->getHeader('Authorization')->getFieldValue();
+        return $authorizationHeader;
+    }
+
+    private function getBearerToken()
+    {
+        $headers = $this->getAuthorizationHeader();
+        // HEADER: Get the access token from the header
+        if (! empty($headers)) {
+            if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+                return $matches[1];
+            }
+        }
+        return null;
     }
 
     /**
@@ -116,7 +169,11 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function hasIdentity()
     {
-        // TODO Auto-generated method stub
+        if ($this->getIdentity() instanceof Exception) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -127,7 +184,16 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function getIdentity()
     {
-        // TODO Auto-generated method stub
+        //
+        $jwt = $this->getBearerToken();
+        $jwtServe = $this->jwtService;
+        try {
+            $token = $jwtServe->validate($jwt);
+            $uid = $token->claims()->get("uid");
+            return $uid;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -214,6 +280,25 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
     public function setResponseObject($responseObject)
     {
         $this->responseObject = $responseObject;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $jwtService
+     */
+    public function getJwtService()
+    {
+        return $this->jwtService;
+    }
+
+    /**
+     *
+     * @param \General\Service\JwtService $jwtService            
+     */
+    public function setJwtService($jwtService)
+    {
+        $this->jwtService = $jwtService;
         return $this;
     }
 }

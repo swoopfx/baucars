@@ -9,9 +9,13 @@ namespace JWT\Service;
 class JWTService
 {
     
+    /**
+     * 
+     * @var JWTIssuer
+     */
     private $jwtIssuer;
     
-    private $claim;
+//     private $claim;
 
     // TODO - Insert your code here
     
@@ -24,16 +28,42 @@ class JWTService
     }
     
     
-    public function generate(){
+    public function generate($claim){
         $jwtIssuer = $this->jwtIssuer;
         if($jwtIssuer instanceof  JWTIssuer){
-            return $jwtIssuer->issueToken($this->claim);
+            return $jwtIssuer->issueToken($claim)->toString();
         }
     }
     
     
-    public function validate(){
-        
+   
+    
+    
+    public function validate($jwt){
+        return $this->jwtIssuer->parseToken($jwt);
     }
+    
+    
+   
+    
+    
+    
+    /**
+     * @return the $jwtIssuer
+     */
+    public function getJwtIssuer()
+    {
+        return $this->jwtIssuer;
+    }
+
+    /**
+     * @param field_type $jwtIssuer
+     */
+    public function setJwtIssuer($jwtIssuer)
+    {
+        $this->jwtIssuer = $jwtIssuer;
+        return $this;
+    }
+
 }
 
