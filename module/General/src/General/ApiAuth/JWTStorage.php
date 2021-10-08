@@ -59,6 +59,7 @@ class JWTStorage implements StorageInterface
      */
     public function __construct(JwtService $jwt, StorageInterface $wrapped, $expirationSecs = self::DEFAULT_EXPIRATION_SECS)
     {
+        
         $this->jwt = $jwt;
         $this->wrapped = $wrapped;
         $this->expirationSecs = $expirationSecs;

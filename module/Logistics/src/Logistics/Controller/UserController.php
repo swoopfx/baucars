@@ -5,6 +5,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Carnage\JwtZendAuth\Authentication\Storage\Jwt;
 use General\Service\JwtService;
+use General\ApiAuth\JWTStorage;
+use JWT\Service\JWTIssuer;
 
 /**
  *
@@ -14,12 +16,12 @@ use General\Service\JwtService;
 class UserController extends AbstractActionController
 {
     
-    
     /**
      * 
-     * @var JwtService
+     * @var JWTIssuer
      */
-   private $jwtService;
+    private  $jwtStorage;
+  
 
     // TODO - Insert your code here
     
@@ -36,16 +38,20 @@ class UserController extends AbstractActionController
         $jsonModel = new JsonModel();
         $response = $this->getResponse();
         $request = $this->getRequest();
-//         print_r($this->jwtHeader);
-
         
         if($request->isPost()){
-           $data = [];
-           $jsonModel->setVariables([
-               "token"=>($this->jwtService->createSignedTokenLoc())
-           ]);
+            $post = $request->getPost();
+           try {
+              
+               
+           } catch (\Exception $e) {
+           }
+          
         }else{
-            
+            $response->setStatusCode(401);
+            $jsonModel->setVariables([
+                "message"=>"Not Authorized",
+            ]);
         }
         return $jsonModel;
         
@@ -62,21 +68,26 @@ class UserController extends AbstractActionController
         return $jsonModel;
     }
     /**
-     * @return the $jwtService
+     * @return the $jwtStorage
      */
-    public function getJwtService()
+    public function getJwtStorage()
     {
-        return $this->jwtService;
+        return $this->jwtStorage;
     }
 
     /**
-     * @param field_type $jwtService
+     * @param field_type $jwtStorage
      */
-    public function setJwtService($jwtService)
+    public function setJwtStorage($jwtStorage)
     {
-        $this->jwtService = $jwtService;
+        $this->jwtStorage = $jwtStorage;
         return $this;
     }
+
+   
+    
+    
+    
 
    
 

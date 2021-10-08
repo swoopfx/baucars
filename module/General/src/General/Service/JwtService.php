@@ -6,6 +6,7 @@ use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Configuration;
 use Laminas\Stdlib\DateTime;
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
 
 /**
  *

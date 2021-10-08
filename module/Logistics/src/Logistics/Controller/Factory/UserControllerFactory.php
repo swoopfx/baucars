@@ -6,6 +6,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Logistics\Controller\UserController;
 use General\Service\GeneralService;
 use General\Service\JwtService;
+use General\ApiAuth\JWTStorage;
+use JWT\Service\JWTIssuer;
 
 /**
  *
@@ -33,10 +35,11 @@ class UserControllerFactory implements FactoryInterface
     {
         $ctr = new UserController();
         $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
-        
-        $jwtService = $serviceLocator->getServiceLocator()->get("General\Service\JwtService");
-        
-        $ctr->setJwtService($jwtService);
+       
+        $jwtStorage = $serviceLocator->getServiceLocator()->get(JWTIssuer::class);
+//         $ctr->setJwtService($jwtService);
+       
+        $ctr->setJwtStorage($jwtStorage);
         return $ctr;
     }
 }

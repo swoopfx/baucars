@@ -63,8 +63,8 @@
         "laminas/laminas-view": "^2.5",
         "laminas/laminas-xmlrpc": "^2.5",
         "zendframework/zendxml": "^1.0.1",
-        "lcobucci/jwt": "^3.0",
-        "firebase/php-jwt": "^5.4"
+        "firebase/php-jwt": "^5.4",
+        "lcobucci/jwt": "^4.1"
         
     }
 }

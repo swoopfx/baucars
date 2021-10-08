@@ -7,6 +7,13 @@ use General\View\Helper\MyCurrency;
 use General\View\Helper\StatusHelper;
 use General\Service\JwtService;
 use General\Service\Factory\JwtServiceFactory;
+use General\ApiAuth\JWTStorage;
+use General\ApiAuth\Header;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use General\ApiAuth\Factory\HeaderFactory;
+use General\ApiAuth\Cookie;
+use General\ApiAuth\Factory\CookieFactory;
+use General\ApiAuth\Factory\JwtStorageFactory;
 
 return array(
     'controllers' => array(
@@ -18,9 +25,30 @@ return array(
         'factories' => array(
             "General\Service\GeneralService"=>GeneralServiceFactory::class,
             "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
-            "General\Service\JwtService" =>JwtServiceFactory::class
+            "General\Service\JwtService" =>JwtServiceFactory::class,
+            JWTStorage::class=>JwtStorageFactory::class,
+            Cookie::class=>CookieFactory::class,
+            Header::class=>HeaderFactory::class
         ),
     ),
+    'jwt_auth' => [
+        'signer' => Sha256::class,
+        'readOnly' => false,
+        'signKey' => '',
+        'verifyKey' => '',
+        'expiry' => 600,
+        'cookieOptions' => [
+            'path' => '/',
+            'domain' => null,
+            'secure' => true,
+            'httpOnly' => true,
+        ],
+        'storage' => [
+            'adaptor' => Header::class,
+            'useChainAdaptor' => false,
+            'adaptors' => [],
+        ],
+    ],
     'router' => array(
         'routes' => array(
             'general' => array(
