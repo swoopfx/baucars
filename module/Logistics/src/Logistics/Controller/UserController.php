@@ -35,25 +35,7 @@ class UserController extends AbstractActionController
     
     public function loginAction(){
         
-        $jsonModel = new JsonModel();
-        $response = $this->getResponse();
-        $request = $this->getRequest();
-        
-        if($request->isPost()){
-            $post = $request->getPost();
-           try {
-              
-               
-           } catch (\Exception $e) {
-           }
-          
-        }else{
-            $response->setStatusCode(401);
-            $jsonModel->setVariables([
-                "message"=>"Not Authorized",
-            ]);
-        }
-        return $jsonModel;
+       
         
     }
     

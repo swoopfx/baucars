@@ -31,7 +31,7 @@ class LogisticsRequest
 
     /**
      * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
-     * @var User
+     * @var User 
      */
     private $user;
 

@@ -86,5 +86,141 @@ class Wallet
         
         // TODO - Insert your code here
     }
+    /**
+     * @return the $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return the $walletUid
+     */
+    public function getWalletUid()
+    {
+        return $this->walletUid;
+    }
+
+    /**
+     * @return the $balance
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @return the $user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return the $createdOn
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * @return the $updatedOn
+     */
+    public function getUpdatedOn()
+    {
+        return $this->updatedOn;
+    }
+
+    /**
+     * @return the $passcode
+     */
+    public function getPasscode()
+    {
+        return $this->passcode;
+    }
+
+    /**
+     * @return the $walletActivity
+     */
+    public function getWalletActivity()
+    {
+        return $this->walletActivity;
+    }
+
+    /**
+     * @param number $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param string $walletUid
+     */
+    public function setWalletUid($walletUid)
+    {
+        $this->walletUid = $walletUid;
+        return $this;
+    }
+
+    /**
+     * @param string $balance
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+        return $this;
+    }
+
+    /**
+     * @param \Wallet\Entity\User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $createdOn
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $updatedOn
+     */
+    public function setUpdatedOn($updatedOn)
+    {
+        $this->updatedOn = $updatedOn;
+        return $this;
+    }
+
+    /**
+     * @param \Wallet\Entity\WalletPasscode $passcode
+     */
+    public function setPasscode($passcode)
+    {
+        $this->passcode = $passcode;
+        return $this;
+    }
+
+    /**
+     * @param \Wallet\Entity\Collection $walletActivity
+     */
+    public function setWalletActivity($walletActivity)
+    {
+        $this->walletActivity = $walletActivity;
+        return $this;
+    }
+
 }
 

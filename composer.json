@@ -64,7 +64,8 @@
         "laminas/laminas-xmlrpc": "^2.5",
         "zendframework/zendxml": "^1.0.1",
         "firebase/php-jwt": "^5.4",
-        "lcobucci/jwt": "^4.1"
+        "lcobucci/jwt": "^4.1",
+        "google/apiclient": "^2.11"
         
     }
 }
