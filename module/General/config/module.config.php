@@ -26,9 +26,7 @@ return array(
             "General\Service\GeneralService"=>GeneralServiceFactory::class,
             "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
             "General\Service\JwtService" =>JwtServiceFactory::class,
-            JWTStorage::class=>JwtStorageFactory::class,
-            Cookie::class=>CookieFactory::class,
-            Header::class=>HeaderFactory::class
+           
         ),
     ),
     'jwt_auth' => [

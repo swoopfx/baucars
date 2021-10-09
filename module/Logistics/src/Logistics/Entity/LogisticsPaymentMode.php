@@ -1,6 +1,8 @@
 <?php
 namespace Logistics\Entity;
 
+use Doctrine\ORM\Mappinga as ORM;
+
 /**
  *
  * @author mac
@@ -9,7 +11,20 @@ namespace Logistics\Entity;
 class LogisticsPaymentMode
 {
 
-    // TODO - Insert your code here
+    /**
+     *
+     * @var integer @ORM\Column(name="id", type="integer")
+     *      @ORM\Id
+     *      @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     */
+    private $id;
+    
+    /**
+     * @ORM\
+     * @var string
+     */
+    private $mode;
     
     /**
      */
