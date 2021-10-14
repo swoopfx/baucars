@@ -5,6 +5,15 @@ use Laminas\InputFilter\InputFilter;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Json\Json;
 use Laminas\Http\Request;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use CsnUser\Entity\User;
+use CsnUser\Service\UserService;
+use General\Service\GeneralService;
+use DoctrineModule\Validator\NoObjectExists;
+use Laminas\Validator\EmailAddress;
+use Laminas\Validator\Hostname;
+use Doctrine\ORM\EntityManager;
+use Laminas\Authentication\AuthenticationService;
 
 /**
  *
@@ -14,9 +23,19 @@ use Laminas\Http\Request;
 class ApiAuthenticationService implements AuthenticationServiceInterface
 {
 
+    /**
+     *
+     * @var AuthenticationService
+     */
     private $authenticationService;
 
     private $auth;
+
+    /**
+     *
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
      *
@@ -38,6 +57,21 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     private $token;
 
+    private $authData;
+
+    /**
+     *
+     * @var GeneralService
+     */
+    private $generalService;
+
+    /**
+     *
+     * @var
+     *
+     */
+    private $urlPlugin;
+
     // TODO - Insert your code here
     
     /**
@@ -48,7 +82,7 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
         // TODO - Insert your code here
     }
 
-    public function authenticate($data)
+    public function authenticate()
     {
         $inputFilter = new InputFilter();
         $inputFilter->add(array(
@@ -99,28 +133,28 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
             )
         ));
         
-        $inputFilter->setData($data);
+        $inputFilter->setData($this->authData);
         
         if ($inputFilter->isValid()) {
             $data = $inputFilter->getValues();
-            
             $authService = $this->authenticationService;
             $adapter = $authService->getAdapter();
-            $phoneOrEmail = $data["username"];
+            $phoneOrEmail = $data["phoneOrEmail"];
+            $em = $this->entityManager;
+            $user = $em->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
             
-            $user = $this->entityManager->createQuery("SELECT u FROM CsnUser\Entity\User u WHERE u.email = '$phoneOrEmail' OR u.phoneNumber = '$phoneOrEmail'")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
             if (count($user) == 0) {
                 
-                throw new Exception("The username or email is not valid!");
+                throw new \Exception(Json::encode("Invalid Credentials"));
             }
             
             $user = $user[0];
             
             if (! $user->getEmailConfirmed() == 1) {
-                throw new Exception("You are yet to confirm your email! please go to the registered email to confirm your account");
+                throw new \Exception(Json::encode("You are yet to confirm your email! please go to the registered email to confirm your account"));
             }
             if ($user->getState()->getId() < 2) {
-                throw new Exception("Your account is disabled");
+                throw new \Exception(Json::encode("Your account is disabled"));
             }
             
             $adapter->setIdentity($user->getPhoneNumber());
@@ -135,30 +169,216 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
                 // generate jwt token
                 return $this->jwtService->generate($user->getId());
             } else {
-                throw new Exception("Invalid Credentials");
+                throw new \Exception(Json::encode("Invalid Credentials"));
             }
         } else {
-            throw new Exception(Json::encode($inputFilter->getMessages()));
+            throw new \Exception(Json::encode($inputFilter->getMessages()));
+        }
+    }
+
+    public function register()
+    {
+        $inputFilter = new InputFilter();
+        $inputFilter->add(array(
+            'name' => 'phoneNumber',
+            'required' => true,
+            'allow_empty' => false,
+            'filters' => array(
+                array(
+                    'name' => 'StripTags'
+                ),
+                array(
+                    'name' => 'StringTrim'
+                )
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            'isEmpty' => 'Phone number  is required'
+                        )
+                    )
+                ),
+                
+                array(
+                    'name' => 'DoctrineModule\Validator\NoObjectExists',
+                    'options' => array(
+                        'use_context' => true,
+                        'object_repository' => $this->entityManager->getRepository('CsnUser\Entity\User'),
+                        'object_manager' => $this->entityManager,
+                        'fields' => array(
+                            'phoneNumber'
+                        ),
+                        'messages' => array(
+                            
+                            NoObjectExists::ERROR_OBJECT_FOUND => 'Someone else is registered with this phone Number'
+                        )
+                    )
+                )
+            )
+        ));
+        
+        $inputFilter->add(array(
+            'name' => 'email',
+            'required' => true,
+            'allow_empty' => false,
+            'filters' => array(
+                array(
+                    'name' => 'StripTags'
+                ),
+                array(
+                    'name' => 'StringTrim'
+                )
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            'isEmpty' => 'Email is required'
+                        )
+                    )
+                ),
+                
+                array(
+                    'name' => 'DoctrineModule\Validator\NoObjectExists',
+                    'options' => array(
+                        'use_context' => true,
+                        'object_repository' => $this->entityManager->getRepository('CsnUser\Entity\User'),
+                        'object_manager' => $this->entityManager,
+                        'fields' => array(
+                            'email'
+                        ),
+                        'messages' => array(
+                            
+                            NoObjectExists::ERROR_OBJECT_FOUND => 'Someone else is registered with this email'
+                        )
+                    )
+                ),
+                
+                [
+                    'name' => 'EmailAddress',
+                    'options' => [
+                        'allow' => Hostname::ALLOW_DNS,
+                        'useMxCheck' => false
+                    ]
+                ]
+            
+            )
+        ));
+        
+        $inputFilter->add(array(
+            'name' => 'fullname',
+            'required' => true,
+            'allow_empty' => false,
+            'filters' => array(
+                array(
+                    'name' => 'StripTags'
+                ),
+                array(
+                    'name' => 'StringTrim'
+                )
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            'isEmpty' => 'Your Full Name is required'
+                        )
+                    )
+                )
+            )
+        ));
+        
+        $inputFilter->add(array(
+            'name' => 'password',
+            'required' => true,
+            'allow_empty' => false,
+            'filters' => array(
+                array(
+                    'name' => 'StripTags'
+                ),
+                array(
+                    'name' => 'StringTrim'
+                )
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            'isEmpty' => 'Password is required'
+                        )
+                    )
+                )
+            )
+        ));
+        
+        $inputFilter->setData($this->authData);
+        if ($inputFilter->isValid()) {
+            $data = $inputFilter->getValues();
+            $entityManager = $this->entityManager;
+            
+            $user = new User();
+            $user->setState($entityManager->find('CsnUser\Entity\State', UserService::USER_STATE_ENABLED));
+            $user->setPhoneNumber(str_replace("-", "", $data["phoneNumber"]));
+            $user->setPassword(UserService::encryptPassword($data["password"]));
+            $user->setRegistrationToken(md5(uniqid(mt_rand(), true)));
+            $user->setUserUid(UserService::createUserUid());
+            $user->setFullName($data["fullname"]);
+            $user->setEmail($data['email']);
+            $user->setRole($entityManager->find("CsnUser\Entity\Role", UserService::USER_ROLE_CUSTOMER));
+            $user->setRegistrationDate(new \DateTime());
+            $user->setUpdatedOn(new \DateTime());
+            $user->setEmailConfirmed(false);
+            
+            $entityManager->persist($user);
+            
+            $entityManager->flush();
+            
+            return [
+                $user->getRegistrationToken(),
+                $user->getEmail()
+            ];
+        } else {
+            
+            throw new \Exception(Json::encode($inputFilter->getMessages()));
         }
     }
 
     private function getAuthorizationHeader()
     {
         $requestObject = $this->requestObject;
+        
+        if (! $requestObject->getHeader('Authorization')) {
+            // var_dump("NOOOO");
+            throw new \Exception("Authorization Absent");
+        }
         $authorizationHeader = $requestObject->getHeader('Authorization')->getFieldValue();
         return $authorizationHeader;
     }
 
     private function getBearerToken()
     {
-        $headers = $this->getAuthorizationHeader();
+        $requestObject = $this->requestObject;
+        
+        if (!$requestObject->getHeader('Authorization')) {
+           
+            throw new \Exception("Authorization Absent");
+        }else{
+        $authorizationHeader = $requestObject->getHeader('Authorization')->getFieldValue();
+        
         // HEADER: Get the access token from the header
-        if (! empty($headers)) {
-            if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+        if (! empty($authorizationHeader)) {
+            if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
+               
                 return $matches[1];
             }
         }
-        return null;
+    }
+//         return null;
     }
 
     /**
@@ -169,11 +389,13 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function hasIdentity()
     {
-        if ($this->getIdentity() instanceof Exception) {
+        if ($this->getIdentity() instanceof \Exception) {
             return false;
         } else {
             return true;
         }
+
+       
     }
 
     /**
@@ -184,15 +406,25 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function getIdentity()
     {
-        //
-        $jwt = $this->getBearerToken();
-        $jwtServe = $this->jwtService;
-        try {
+       
+//         var_dump($this->getBearerToken());
+//         var_dump("KKKKKK");
+        if ($this->getBearerToken() instanceof \Exception) {
+           
+            throw new \Exception("No way");
+        } else {
+            $jwt = $this->getBearerToken();
+            $jwtServe = $this->jwtService;
+            
             $token = $jwtServe->validate($jwt);
-            $uid = $token->claims()->get("uid");
-            return $uid;
-        } catch (Exception $e) {
-            return $e->getMessage();
+            if ($token instanceof \Exception) {
+                throw new \Exception("NO WAAAY");
+            } else {
+               
+                $uid = $token->claims()->get("uid");
+               
+                return $uid;
+            }
         }
     }
 
@@ -204,7 +436,7 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function clearIdentity()
     {
-        // TODO Auto-generated method stub
+        return "";
     }
 
     /**
@@ -299,6 +531,101 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
     public function setJwtService($jwtService)
     {
         $this->jwtService = $jwtService;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $token
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     *
+     * @param string $token            
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $authData
+     */
+    public function getAuthData()
+    {
+        return $this->authData;
+    }
+
+    /**
+     *
+     * @param field_type $authData            
+     */
+    public function setAuthData($authData)
+    {
+        $this->authData = $authData;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $entityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     *
+     * @param field_type $entityManager            
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $generalService
+     */
+    public function getGeneralService()
+    {
+        return $this->generalService;
+    }
+
+    /**
+     *
+     * @return the $urlPlugin
+     */
+    public function getUrlPlugin()
+    {
+        return $this->urlPlugin;
+    }
+
+    /**
+     *
+     * @param \General\Service\GeneralService $generalService            
+     */
+    public function setGeneralService($generalService)
+    {
+        $this->generalService = $generalService;
+        return $this;
+    }
+
+    /**
+     *
+     * @param field_type $urlPlugin            
+     */
+    public function setUrlPlugin($urlPlugin)
+    {
+        $this->urlPlugin = $urlPlugin;
         return $this;
     }
 }

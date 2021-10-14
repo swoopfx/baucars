@@ -5,11 +5,20 @@ use JWT\Service\JWTIssuer;
 use JWT\Service\Factory\JWTIssuerFactory;
 use JWT\Service\ApiAuthenticationService;
 use JWT\Service\Factory\ApiAuthenticationServiceFactory;
+use JWT\Controller\Factory\JWTControllerFactory;
+use JWT\Controller\Factory\ApiControllerFactory;
+use JWT\Service\JWTService;
+use JWT\Service\Factory\JWTServiceFactory;
 
 return array(
     'controllers' => array(
         'invokables' => array(
-            'JWT\Controller\JWT' => 'JWT\Controller\JWTController',
+            
+        ),
+        'factories' => array(
+            'JWT\Controller\JWT' => JWTControllerFactory::class,
+            'JWT\Controller\Api'=>ApiControllerFactory::class
+            
         ),
     ),
     'router' => array(
@@ -18,7 +27,7 @@ return array(
                 'type'    => 'Literal',
                 'options' => array(
                     // Change this to something specific to your module
-                    'route'    => '/jWT',
+                    'route'    => '/jwt',
                     'defaults' => array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
@@ -53,6 +62,7 @@ return array(
         'factories' => array(
             JWTConfiguration::class=>JWTConfigurationFactory::class,
             JWTIssuer::class=>JWTIssuerFactory::class,
+            JWTService::class=>JWTServiceFactory::class,
             ApiAuthenticationService::class=>ApiAuthenticationServiceFactory::class
         ),
     ),
@@ -60,5 +70,8 @@ return array(
         'template_path_stack' => array(
             'JWT' => __DIR__ . '/../view',
         ),
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],
     ),
 );

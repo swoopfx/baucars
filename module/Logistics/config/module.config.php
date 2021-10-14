@@ -1,15 +1,20 @@
 <?php
+namespace Logistics;
+
+
 use Logistics\Controller\UserController;
 use Logistics\Controller\Factory\UserControllerFactory;
+use Logistics\Controller\Factory\LogisticsControllerFactory;
 
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Logistics\Controller\Logistics' => 'Logistics\Controller\LogisticsController'
+//              => 'Logistics\Controller\LogisticsController'
         
         ),
         'factories' => array(
-            "Logistics\Controller\User" => UserControllerFactory::class
+            "Logistics\Controller\User" => UserControllerFactory::class,
+            'Logistics\Controller\Logistics'=>LogisticsControllerFactory::class
         )
     ),
     'router' => array(
@@ -51,6 +56,23 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'Logistics' => __DIR__ . '/../view'
+        )
+    ),
+    
+    'doctrine' => array(
+        'driver' => array(
+            __NAMESPACE__ . '_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(
+                    __DIR__ . '/../src/' . __NAMESPACE__ . '/Entity'
+                )
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                )
+            )
         )
     )
 );

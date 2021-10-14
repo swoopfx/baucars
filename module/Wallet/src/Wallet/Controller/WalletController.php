@@ -10,18 +10,32 @@
 namespace Wallet\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use General\Service\GeneralService;
+use Doctrine\ORM\EntityManager;
+use Wallet\Entity\Wallet;
 
 class WalletController extends AbstractActionController
 {
-    public function indexAction()
-    {
-        return array();
-    }
-
-    public function fooAction()
-    {
-        // This shows the :controller and :action parameters in default route
-        // are working when you browse to /wallet/wallet/foo
-        return array();
+    
+    /**
+     * 
+     * @var GeneralService
+     */
+    private $generalService;
+    
+    
+    public function indexAction(){
+        /**
+         * 
+         * @var EntityManager $em
+         */
+        $user = $this->identity();
+        $em = $this->generalService->getEntityManager();
+        $jsonModel = new JsonModel();
+        $repo = $em->getRepository(Wallet::class)->findOneBy([
+            "user"=> $user->getId(),
+        ]);
+        return $jsonModel;
     }
 }

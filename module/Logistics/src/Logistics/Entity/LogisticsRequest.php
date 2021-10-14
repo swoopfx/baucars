@@ -6,7 +6,7 @@ use CsnUser\Entity\User;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="logistics_service")
+ * @ORM\Table(name="logistics_request")
  *
  * @author mac
  *        
@@ -89,6 +89,12 @@ class LogisticsRequest
      * @var LogisticsInvoice
      */
     private $invoice;
+    
+    /**
+     * 
+     * @var boolean
+     */
+    private $isActive;
 
     // private
     

@@ -11,10 +11,17 @@ namespace JWT\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
+use JWT\Service\ApiAuthenticationService;
 
 class JWTController extends AbstractActionController
 {
     private $googleClient;
+    
+    /**
+     * 
+     * @var ApiAuthenticationService
+     */
+    private $apiAuthService;
     
 //     private 
     public function indexAction()
@@ -39,9 +46,13 @@ class JWTController extends AbstractActionController
         if($request->isPost()){
             $post = $request->getPost();
             try {
-                
+                $token = $this->apiAuthService->authenticate($post);
+                $jsonModel->setVariables([
+                    "token" => $token
+                ]);
                 
             } catch (\Exception $e) {
+                return $e->getMessage();
             }
             
         }else{
@@ -56,6 +67,10 @@ class JWTController extends AbstractActionController
     
     public function registerAction(){
         $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        if($request->isPost()){
+            
+        }
         return $jsonModel;
     }
     
@@ -72,4 +87,38 @@ class JWTController extends AbstractActionController
     public function googleregisterAction(){
         
     }
+    /**
+     * @return the $googleClient
+     */
+    public function getGoogleClient()
+    {
+        return $this->googleClient;
+    }
+
+    /**
+     * @return the $apiAuthService
+     */
+    public function getApiAuthService()
+    {
+        return $this->apiAuthService;
+    }
+
+    /**
+     * @param field_type $googleClient
+     */
+    public function setGoogleClient($googleClient)
+    {
+        $this->googleClient = $googleClient;
+        return $this;
+    }
+
+    /**
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService
+     */
+    public function setApiAuthService($apiAuthService)
+    {
+        $this->apiAuthService = $apiAuthService;
+        return $this;
+    }
+
 }

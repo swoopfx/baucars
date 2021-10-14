@@ -29,7 +29,7 @@ class LogisticsDeliveryType
     private $type;
     
     /**
-     * @ORM\Column(name="", type="text", nullable=true)
+     * @ORM\Column(name="ldescription", type="text", nullable=true)
      * @var string
      */
     private $description;
@@ -41,5 +41,56 @@ class LogisticsDeliveryType
         
         // TODO - Insert your code here
     }
+    /**
+     * @return the $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return the $type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return the $description
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param number $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
 }
 

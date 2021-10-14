@@ -63,7 +63,7 @@ class User
 //      * @Annotation\Filter({"name":"StripTags"})
 //      * @Annotation\Filter({"name":"StringTrim"})
 //      * @Annotation\Validator({"name":"StringLength", "options":{"encoding":"UTF-8", "min":6, "max":30}})
-//      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[ña-zÑA-Z][ña-zÑA-Z0-9\_\-]+$/"}})
+//      * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[ï¿½a-zï¿½A-Z][ï¿½a-zï¿½A-Z0-9\_\-]+$/"}})
 //      * @Annotation\Required(true)
 //      * @Annotation\Attributes({
 //      *   "type":"text",
@@ -333,6 +333,14 @@ class User
      * @var \DateTime
      */
     private $updatedOn;
+    
+    /**
+     * @ORM\Column(name="google_id", type="string", nullable=true)
+     * @var string
+     */
+    private $googleId;
+    
+    
 
     public function __construct()
     {
@@ -964,5 +972,22 @@ class User
         $this->fullName = $fullName;
         return $this;
     }
+    /**
+     * @return the $googleId
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param string $googleId
+     */
+    public function setGoogleId($googleId)
+    {
+        $this->googleId = $googleId;
+        return $this;
+    }
+
 
 }

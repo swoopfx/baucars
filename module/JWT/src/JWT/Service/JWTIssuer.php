@@ -8,6 +8,7 @@ use Lcobucci\JWT\Token;
 // use function random_bytes;
 use Laminas\Http\Request;
 use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Validation\Constraint;
 
 /**
  *
@@ -36,32 +37,45 @@ final class JWTIssuer
         
         // $now = new DateTimeImmutable();
         return $this->config->builder()
-            ->issuedBy($this->baseUrl())
+            ->issuedBy($this->baseUrl().":2007")
             ->permittedFor($this->baseUrl() . "/logistics")
             ->identifiedBy(bin2hex(random_bytes(16)))
-            ->relatedTo($data['uid'])
-            ->withClaim('uid', $data["uid"])
+            ->relatedTo($data)
+            ->withClaim('uid', $data)
             ->getToken($this->config->signer(), $this->config->signingKey());
     }
 
     public function parseToken($jwt)
     {
+       
         $config = $this->config;
-        if (isEmpty($jwt)) {
-            throw new Exception("No token provided");
-        }
-        $token = $config->parser()->parse($jwt);
+       
         
-        if ($token instanceof UnencryptedToken) {
-            $constraint = $config->validationConstraints();
-            if ($config->validator()->validate($token, $constraint)) {
+//         $config->setValidationConstraints([
+//             "iss"=>$this->baseUrl()
+//         ]);
+       
+        if (!isset($jwt)) {
+            throw new \Exception("No token provided");
+            exit();
+        }
+       
+        $token = $config->parser()->parse($jwt);
+       
+        
+//         if ($token instanceof UnencryptedToken) {
+            
+        $constraint = $config->validationConstraints();
+
+            var_dump($config->validator()->validate($token, ...$constraint));
+            if ($config->validator()->validate($token, ...$constraint)) {
                 return $token;
             } else {
-                throw new Exception("Not Authenticated");
+                return null;
             }
-        } else {
-            throw new Exception("Invalid token");
-        }
+//         } else {
+//             throw new \Exception("Invalid token");
+//         }
         
         return null;
     }
@@ -69,7 +83,6 @@ final class JWTIssuer
     
     public function clearToken(){
         $config = $this->config;
-//         $config->
     }
 
     private function baseUrl()

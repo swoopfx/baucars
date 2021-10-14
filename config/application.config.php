@@ -13,9 +13,13 @@ return array(
         'Driver',
         'General',
         'Customer',
-        'Job','Logistics','Wallet','JWT',
+        'Job',
+        'Logistics',
+        'Wallet',
+        'JWT',
+//         "JwtLaminasAuth"
         
-//         'WasabiLib',
+        // 'WasabiLib',
     ),
     
     // These are various options for the listeners attached to the ModuleManager
@@ -26,7 +30,10 @@ return array(
         // Module class.
         'module_paths' => array(
             './module',
-            './vendor','./module','./module','./module'
+            './vendor',
+            './module',
+            './module',
+            './module'
         
         ),
         

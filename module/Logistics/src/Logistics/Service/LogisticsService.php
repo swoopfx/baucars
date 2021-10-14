@@ -3,6 +3,7 @@ namespace Logistics\Service;
 
 use Laminas\Http\Request;
 use Laminas\Http\Client;
+use Laminas\Json\Json;
 
 /**
  *
@@ -12,6 +13,11 @@ use Laminas\Http\Client;
 class LogisticsService
 {
 
+    const LOGISTICS_DELIVERY_TYPE_NORMAL = 10;
+    
+    const LOGISTICS_PAYMENT_MODE_WALLET = 10;
+    
+    const LOGISTICS_PAYMENT_MODE_CARD = 20;
     private $generalService;
     
     /**
@@ -38,8 +44,8 @@ class LogisticsService
             $response = $client->send();
             
             if ($response->isSuccess()) {
-                // print_r($response->getBody());
-                return json_decode($response->getBody());
+                
+                return Json::decode($response->getBody());
             }
         } else {
             throw new \Exception("Absent Identifier");
@@ -48,7 +54,7 @@ class LogisticsService
     
     
     public function priceCalculator(){
-        
+       
     }
     
     
