@@ -9,6 +9,7 @@ use Lcobucci\JWT\Token;
 use Laminas\Http\Request;
 use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint;
+use Lcobucci\JWT\Validation\Constraint\IdentifiedBy;
 
 /**
  *
@@ -37,7 +38,7 @@ final class JWTIssuer
         
         // $now = new DateTimeImmutable();
         return $this->config->builder()
-            ->issuedBy($this->baseUrl().":2007")
+            ->issuedBy($this->baseUrl() . ":2007")
             ->permittedFor($this->baseUrl() . "/logistics")
             ->identifiedBy(bin2hex(random_bytes(16)))
             ->relatedTo($data)
@@ -47,41 +48,38 @@ final class JWTIssuer
 
     public function parseToken($jwt)
     {
-       
-        $config = $this->config;
-       
-        
-//         $config->setValidationConstraints([
-//             "iss"=>$this->baseUrl()
-//         ]);
-       
-        if (!isset($jwt)) {
-            throw new \Exception("No token provided");
-            exit();
-        }
-       
-        $token = $config->parser()->parse($jwt);
-       
-        
-//         if ($token instanceof UnencryptedToken) {
+        try {
+            $config = $this->config;
             
-        $constraint = $config->validationConstraints();
-
-            var_dump($config->validator()->validate($token, ...$constraint));
-            if ($config->validator()->validate($token, ...$constraint)) {
-                return $token;
-            } else {
-                return null;
+            if (! isset($jwt)) {
+                throw new \Exception("No token provided");
+                exit();
             }
-//         } else {
-//             throw new \Exception("Invalid token");
-//         }
-        
-        return null;
+            
+            $token = $config->parser()->parse($jwt);
+            
+            $config->setValidationConstraints(new IdentifiedBy($token->claims()
+                ->get("jti")));
+            
+            // var_dump($token);
+            if ($token instanceof UnencryptedToken) {
+                
+                $constraint = $config->validationConstraints();
+                
+                // var_dump($config->validator()->validate($token, ...$constraint));
+                if ($config->validator()->validate($token, ...$constraint)) {
+                    return $token;
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception $e) {
+            throw new \Exception("Could not be validated");
+        }
     }
-    
-    
-    public function clearToken(){
+
+    public function clearToken()
+    {
         $config = $this->config;
     }
 

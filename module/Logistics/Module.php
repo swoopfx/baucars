@@ -54,23 +54,32 @@ class Module implements AutoloaderProviderInterface
              * @var ApiAuthenticationService $apiAuthService
              */
             $apiAuthService = $sm->get(ApiAuthenticationService::class);
-            // var_dump($apiAuthService->hasIdentity());
+            $controller = $e->getTarget();
             
-            if (! $apiAuthService->hasIdentity()) {
-                
-                $controller = $e->getTarget();
-                
-                
-                $response = $e->getResponse();
-                $response->getHeaders()
-                    ->addHeaders(array(
-                    'Content-Type' => 'application/json'
-                    //
-                ));
+            $response = $e->getResponse();
+            $response->getHeaders()
+                ->addHeaders(array(
+                'Content-Type' => 'application/json'
+                //
+            ));
+               
+            if (is_bool($apiAuthService->hasIdentity())) {
+                if (! $apiAuthService->hasIdentity()) {
+                    
+//                     var_dump($apiAuthService->hasIdentity())
+                    // set status 403 (forbidden)
+                    $response->setStatusCode(403);
+                    $response->setContent(Json::encode([
+                        "message" => "Not Authorizes"
+                    ]));
+                    
+                    return $response;
+                }
+            } else {
                 // set status 403 (forbidden)
                 $response->setStatusCode(403);
                 $response->setContent(Json::encode([
-                    "message" => "NOt Authorizes"
+                    "message" => "Not Authorized"
                 ]));
                 
                 return $response;

@@ -353,7 +353,7 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
         $requestObject = $this->requestObject;
         
         if (! $requestObject->getHeader('Authorization')) {
-            // var_dump("NOOOO");
+           
             throw new \Exception("Authorization Absent");
         }
         $authorizationHeader = $requestObject->getHeader('Authorization')->getFieldValue();
@@ -364,21 +364,21 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
     {
         $requestObject = $this->requestObject;
         
-        if (!$requestObject->getHeader('Authorization')) {
-           
+        if (! $requestObject->getHeader('Authorization')) {
+            
             throw new \Exception("Authorization Absent");
-        }else{
-        $authorizationHeader = $requestObject->getHeader('Authorization')->getFieldValue();
-        
-        // HEADER: Get the access token from the header
-        if (! empty($authorizationHeader)) {
-            if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
-               
-                return $matches[1];
+        } else {
+            $authorizationHeader = $requestObject->getHeader('Authorization')->getFieldValue();
+            
+            // HEADER: Get the access token from the header
+            if (! empty($authorizationHeader)) {
+                if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
+                    
+                    return $matches[1];
+                }
             }
         }
-    }
-//         return null;
+        // return null;
     }
 
     /**
@@ -389,12 +389,16 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function hasIdentity()
     {
-        if ($this->getIdentity() instanceof \Exception) {
+       
+        try {
+            if ($this->getIdentity() instanceof  \Exception) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (\Exception $e) {
             return false;
-        } else {
-            return true;
         }
-
        
     }
 
@@ -406,25 +410,26 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
      */
     public function getIdentity()
     {
-       
-//         var_dump($this->getBearerToken());
-//         var_dump("KKKKKK");
-        if ($this->getBearerToken() instanceof \Exception) {
-           
-            throw new \Exception("No way");
-        } else {
-            $jwt = $this->getBearerToken();
-            $jwtServe = $this->jwtService;
-            
-            $token = $jwtServe->validate($jwt);
-            if ($token instanceof \Exception) {
-                throw new \Exception("NO WAAAY");
+        try {
+            if ($this->getBearerToken() instanceof \Exception) {
+                
+                throw new \Exception("No way");
             } else {
-               
-                $uid = $token->claims()->get("uid");
-               
-                return $uid;
+                $jwt = $this->getBearerToken();
+                $jwtServe = $this->jwtService;
+                
+                $token = $jwtServe->validate($jwt);
+                if ($token == null) {
+                    throw new Exception("OHHH NO");
+                } else {
+                    
+                    $uid = $token->claims()->get("uid");
+                    
+                    return $uid;
+                }
             }
+        } catch (\Exception $e) {
+            throw new \Exception("No Authorized");
         }
     }
 
