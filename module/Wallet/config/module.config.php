@@ -1,8 +1,16 @@
 <?php
+namespace  Wallet;
+use Wallet\Controller\Factory\WalletControllerFactory;
+use Wallet\Controller\Factory\ApiControllerFactory;
+
 return array(
     'controllers' => array(
-        'invokables' => array(
-            'Wallet\Controller\Wallet' => 'Wallet\Controller\WalletController',
+//         'invokables' => array(
+//             'Wallet\Controller\Wallet' => 'Wallet\Controller\WalletController',
+//         ),
+        'factories' => array(
+            "Wallet\Controller\Wallet"=>WalletControllerFactory::class,
+            "Wallet\Controller\Api"=>ApiControllerFactory::class,
         ),
     ),
     'router' => array(
@@ -47,4 +55,21 @@ return array(
             'Wallet' => __DIR__ . '/../view',
         ),
     ),
+    
+    'doctrine' => array(
+        'driver' => array(
+            __NAMESPACE__ . '_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(
+                    __DIR__ . '/../src/' . __NAMESPACE__ . '/Entity'
+                )
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                )
+            )
+        )
+    )
 );

@@ -1,20 +1,19 @@
 <?php
-namespace Logistics\Controller\Factory;
+namespace Wallet\Controller\Factory;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Logistics\Controller\UserController;
+use Wallet\Controller\ApiController;
 use General\Service\GeneralService;
-use General\Service\JwtService;
-use General\ApiAuth\JWTStorage;
-use JWT\Service\JWTIssuer;
+use JWT\Service\ApiAuthenticationService;
+use General\Service\FlutterwaveService;
 
 /**
  *
  * @author mac
  *        
  */
-class UserControllerFactory implements FactoryInterface
+class ApiControllerFactory implements FactoryInterface
 {
 
     /**
@@ -33,13 +32,13 @@ class UserControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $ctr = new UserController();
+        $ctr = new ApiController();
         $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
-       
-        $jwtStorage = $serviceLocator->getServiceLocator()->get(JWTIssuer::class);
-//         $ctr->setJwtService($jwtService);
-       
-        $ctr->setJwtStorage($jwtStorage);
+        $apiAuthService = $serviceLocator->getServiceLocator()->get(ApiAuthenticationService::class);
+        $flutterwaveService = $serviceLocator->getServiceLocator()->get(FlutterwaveService::class);
+        $ctr->setApiAuthService($apiAuthService)
+            ->setGeneralService($generalService)
+            ->setFlutterwaveService($flutterwaveService);
         return $ctr;
     }
 }

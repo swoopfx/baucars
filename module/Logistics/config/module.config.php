@@ -5,6 +5,8 @@ namespace Logistics;
 use Logistics\Controller\UserController;
 use Logistics\Controller\Factory\UserControllerFactory;
 use Logistics\Controller\Factory\LogisticsControllerFactory;
+use Logistics\Service\LogisticsService;
+use Logistics\Service\Factory\LogisticsServiceFactory;
 
 return array(
     'controllers' => array(
@@ -57,6 +59,12 @@ return array(
         'template_path_stack' => array(
             'Logistics' => __DIR__ . '/../view'
         )
+    ),
+    
+    'service_manager' => array(
+        'factories' => array(
+            LogisticsService::class=>LogisticsServiceFactory::class
+        ),
     ),
     
     'doctrine' => array(

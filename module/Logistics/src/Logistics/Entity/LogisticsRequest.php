@@ -24,74 +24,167 @@ class LogisticsRequest
     private $id;
 
     /**
+     * @ORM\Column(name="logistics_uid", type="string", nullable=false)
+     * 
+     * @var string
+     */
+    private $logisticsUid;
+
+    /**
      * @ORM\ManyToOne(targetEntity="LogisticsServiceType")
+     *
      * @var LogisticsServiceType
      */
     private $serviceType;
 
     /**
      * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
-     * @var User 
+     *
+     * @var User
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="LogisticsPaymentMode")
+     *
      * @var LogisticsPaymentMode
      */
     private $paymentmode;
 
     /**
-     * @ORM\Column(name="pickup_address", type="string", nullable=true)
-     * 
-     * @var string
+     * This is the distance value in meters
+     * @ORM\Column(name="calculated_distance_value", type="string", nullable=true)
+     *
+     * @var string;
      */
-    private $pickupAddress;
+    private $calculatedDistanceValue;
 
     /**
-     * @ORM\Column(name="drop_off_address", type="string", nullable=true)
-     * 
+     * This is the distance value in km
+     * @ORM\Column(name="calculated_distance_text", type="string", nullable=true)
+     *
      * @var string
      */
-    private $dropOffAddress;
+    private $calculatedDistanceText;
+
+    /**
+     * @ORM\Column(name="calculated_time_value", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $calculatedTimeValue;
+
+    // in secounds
+    
+    /**
+     * @ORM\Column(name="calculated_time_text", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $calculatedTimeText;
+
+    // in minutes
+    
+    /**
+     * @ORM\Column(name="pick_up_address", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $pickUpAddress;
+
+    /**
+     * @ORM\Column(name="pick_up_longitude", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $pickupLongitude;
+
+    /**
+     * @ORM\Column(name="pick_up_latitude", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $pickupLatitude;
+
+    /**
+     * @ORM\Column(name="pickup_place_id", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $pickupPlaceId;
+
+    /**
+     * @ORM\Column(name="destination", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $destination;
+
+    /**
+     * @ORM\Column(name="destination_longitude", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $destinationLongitude;
+
+    /**
+     * @ORM\Column(name="destination_latitude", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $destinationLatitude;
+
+    /**
+     * @ORM\Column(name="destination_place_id", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $destinationPlaceId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio", inversedBy="booking")
+     *
+     * @var DriverBio
+     */
+    private $assignedDriver;
 
     /**
      * @ORM\Column(name="item_name", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $itemName;
 
     /**
      * @ORM\Column(name="delivery_note", type="text", nullable=true)
-     * 
+     *
      * @var string
      */
     private $deliveryNote;
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     * 
+     *
      * @var Datetime
      */
     private $createdOn;
 
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * 
+     *
      * @var Datetime
      */
     private $updatedOn;
 
     /**
      * @ORM\ManyToOne(targetEntity="LogisticsInvoice")
-     * 
+     *
      * @var LogisticsInvoice
      */
     private $invoice;
-    
+
     /**
-     * 
+     *
      * @var boolean
      */
     private $isActive;
@@ -105,7 +198,9 @@ class LogisticsRequest
         
         // TODO - Insert your code here
     }
+
     /**
+     *
      * @return the $id
      */
     public function getId()
@@ -114,6 +209,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $serviceType
      */
     public function getServiceType()
@@ -122,6 +218,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $user
      */
     public function getUser()
@@ -130,6 +227,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $paymentmode
      */
     public function getPaymentmode()
@@ -138,6 +236,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $pickupAddress
      */
     public function getPickupAddress()
@@ -146,6 +245,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $dropOffAddress
      */
     public function getDropOffAddress()
@@ -154,6 +254,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $itemName
      */
     public function getItemName()
@@ -162,6 +263,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $deliveryNote
      */
     public function getDeliveryNote()
@@ -170,6 +272,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $createdOn
      */
     public function getCreatedOn()
@@ -178,6 +281,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $updatedOn
      */
     public function getUpdatedOn()
@@ -186,6 +290,7 @@ class LogisticsRequest
     }
 
     /**
+     *
      * @return the $invoice
      */
     public function getInvoice()
@@ -194,7 +299,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param number $id
+     *
+     * @param number $id            
      */
     public function setId($id)
     {
@@ -203,7 +309,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param \Logistics\Entity\LogisticsServiceType $serviceType
+     *
+     * @param \Logistics\Entity\LogisticsServiceType $serviceType            
      */
     public function setServiceType($serviceType)
     {
@@ -212,7 +319,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param \CsnUser\Entity\User $user
+     *
+     * @param \CsnUser\Entity\User $user            
      */
     public function setUser($user)
     {
@@ -221,7 +329,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param \Logistics\Entity\LogisticsPaymentMode $paymentmode
+     *
+     * @param \Logistics\Entity\LogisticsPaymentMode $paymentmode            
      */
     public function setPaymentmode($paymentmode)
     {
@@ -230,7 +339,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param string $pickupAddress
+     *
+     * @param string $pickupAddress            
      */
     public function setPickupAddress($pickupAddress)
     {
@@ -239,7 +349,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param string $dropOffAddress
+     *
+     * @param string $dropOffAddress            
      */
     public function setDropOffAddress($dropOffAddress)
     {
@@ -248,7 +359,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param string $itemName
+     *
+     * @param string $itemName            
      */
     public function setItemName($itemName)
     {
@@ -257,7 +369,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param string $deliveryNote
+     *
+     * @param string $deliveryNote            
      */
     public function setDeliveryNote($deliveryNote)
     {
@@ -266,7 +379,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param \Logistics\Entity\Datetime $createdOn
+     *
+     * @param \Logistics\Entity\Datetime $createdOn            
      */
     public function setCreatedOn($createdOn)
     {
@@ -275,7 +389,8 @@ class LogisticsRequest
     }
 
     /**
-     * @param \Logistics\Entity\Datetime $updatedOn
+     *
+     * @param \Logistics\Entity\Datetime $updatedOn            
      */
     public function setUpdatedOn($updatedOn)
     {
@@ -284,11 +399,266 @@ class LogisticsRequest
     }
 
     /**
-     * @param \Logistics\Entity\LogisticsInvoice $invoice
+     *
+     * @param \Logistics\Entity\LogisticsInvoice $invoice            
      */
     public function setInvoice($invoice)
     {
         $this->invoice = $invoice;
+        return $this;
+    }
+    /**
+     * @return the $logisticsUid
+     */
+    public function getLogisticsUid()
+    {
+        return $this->logisticsUid;
+    }
+
+    /**
+     * @return the $calculatedDistanceValue
+     */
+    public function getCalculatedDistanceValue()
+    {
+        return $this->calculatedDistanceValue;
+    }
+
+    /**
+     * @return the $calculatedDistanceText
+     */
+    public function getCalculatedDistanceText()
+    {
+        return $this->calculatedDistanceText;
+    }
+
+    /**
+     * @return the $calculatedTimeValue
+     */
+    public function getCalculatedTimeValue()
+    {
+        return $this->calculatedTimeValue;
+    }
+
+    /**
+     * @return the $calculatedTimeText
+     */
+    public function getCalculatedTimeText()
+    {
+        return $this->calculatedTimeText;
+    }
+
+    /**
+     * @return the $pickUpAddress
+     */
+    public function getPickUpAddress()
+    {
+        return $this->pickUpAddress;
+    }
+
+    /**
+     * @return the $pickupLongitude
+     */
+    public function getPickupLongitude()
+    {
+        return $this->pickupLongitude;
+    }
+
+    /**
+     * @return the $pickupLatitude
+     */
+    public function getPickupLatitude()
+    {
+        return $this->pickupLatitude;
+    }
+
+    /**
+     * @return the $pickupPlaceId
+     */
+    public function getPickupPlaceId()
+    {
+        return $this->pickupPlaceId;
+    }
+
+    /**
+     * @return the $destination
+     */
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @return the $destinationLongitude
+     */
+    public function getDestinationLongitude()
+    {
+        return $this->destinationLongitude;
+    }
+
+    /**
+     * @return the $destinationLatitude
+     */
+    public function getDestinationLatitude()
+    {
+        return $this->destinationLatitude;
+    }
+
+    /**
+     * @return the $destinationPlaceId
+     */
+    public function getDestinationPlaceId()
+    {
+        return $this->destinationPlaceId;
+    }
+
+    /**
+     * @return the $assignedDriver
+     */
+    public function getAssignedDriver()
+    {
+        return $this->assignedDriver;
+    }
+
+    /**
+     * @return the $isActive
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param string $logisticsUid
+     */
+    public function setLogisticsUid($logisticsUid)
+    {
+        $this->logisticsUid = $logisticsUid;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\string; $calculatedDistanceValue
+     */
+    public function setCalculatedDistanceValue($calculatedDistanceValue)
+    {
+        $this->calculatedDistanceValue = $calculatedDistanceValue;
+        return $this;
+    }
+
+    /**
+     * @param string $calculatedDistanceText
+     */
+    public function setCalculatedDistanceText($calculatedDistanceText)
+    {
+        $this->calculatedDistanceText = $calculatedDistanceText;
+        return $this;
+    }
+
+    /**
+     * @param string $calculatedTimeValue
+     */
+    public function setCalculatedTimeValue($calculatedTimeValue)
+    {
+        $this->calculatedTimeValue = $calculatedTimeValue;
+        return $this;
+    }
+
+    /**
+     * @param string $calculatedTimeText
+     */
+    public function setCalculatedTimeText($calculatedTimeText)
+    {
+        $this->calculatedTimeText = $calculatedTimeText;
+        return $this;
+    }
+
+    /**
+     * @param string $pickUpAddress
+     */
+    public function setPickUpAddress($pickUpAddress)
+    {
+        $this->pickUpAddress = $pickUpAddress;
+        return $this;
+    }
+
+    /**
+     * @param string $pickupLongitude
+     */
+    public function setPickupLongitude($pickupLongitude)
+    {
+        $this->pickupLongitude = $pickupLongitude;
+        return $this;
+    }
+
+    /**
+     * @param string $pickupLatitude
+     */
+    public function setPickupLatitude($pickupLatitude)
+    {
+        $this->pickupLatitude = $pickupLatitude;
+        return $this;
+    }
+
+    /**
+     * @param string $pickupPlaceId
+     */
+    public function setPickupPlaceId($pickupPlaceId)
+    {
+        $this->pickupPlaceId = $pickupPlaceId;
+        return $this;
+    }
+
+    /**
+     * @param string $destination
+     */
+    public function setDestination($destination)
+    {
+        $this->destination = $destination;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationLongitude
+     */
+    public function setDestinationLongitude($destinationLongitude)
+    {
+        $this->destinationLongitude = $destinationLongitude;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationLatitude
+     */
+    public function setDestinationLatitude($destinationLatitude)
+    {
+        $this->destinationLatitude = $destinationLatitude;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationPlaceId
+     */
+    public function setDestinationPlaceId($destinationPlaceId)
+    {
+        $this->destinationPlaceId = $destinationPlaceId;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\DriverBio $assignedDriver
+     */
+    public function setAssignedDriver($assignedDriver)
+    {
+        $this->assignedDriver = $assignedDriver;
+        return $this;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
         return $this;
     }
 

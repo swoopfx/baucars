@@ -9,7 +9,17 @@ use General\Service\GeneralService;
 
 /**
  *
- * @OA\Info(title="APi Authentication ", version="1.0")
+ * @OA\Info(title="Baucars Logistics documentation", version="1.0", description="This API is used for the implemetation of BAUCARS mobile app ")
+ * @OA\SecurityScheme(
+ *   type="http",
+ *   description="use jwt/api/login to get jwt key",
+ *   name="Authorization",
+ *   in="header",
+ *   scheme="bearer",
+ *   bearerFormat="JWT",
+ *   securityScheme="bearerAuth"
+ * )
+ *
  *
  * @author mac
  *        
@@ -24,9 +34,9 @@ class ApiController extends AbstractActionController
      * @var ApiAuthenticationService
      */
     private $apiAuthService;
-    
+
     /**
-     * 
+     *
      * @var GeneralService
      */
     private $generalService;
@@ -79,7 +89,8 @@ class ApiController extends AbstractActionController
                 $token = $this->apiAuthService->setAuthData($post)->authenticate();
                 
                 $jsonModel->setVariables([
-                    "token" => $token
+                    "token" => $token,
+                    "token_type" => "Bearer"
                 ]);
                 $response->setStatusCode(200);
             } catch (\Exception $e) {
@@ -153,7 +164,7 @@ class ApiController extends AbstractActionController
                 
                 $template['template'] = "email-app-user-registration";
                 $template['var'] = $var;
-//                 var_dump($registered[1]);
+                // var_dump($registered[1]);
                 $messagePointer['to'] = $registered[1];
                 $messagePointer['fromName'] = "BAU CARS";
                 $messagePointer['subject'] = "BAU CARS: Confirm Email";
@@ -175,19 +186,16 @@ class ApiController extends AbstractActionController
         }
         return $jsonModel;
     }
-    
-    
-    public function refreshtokenAction(){
-        
-    }
-    
-    
-    public function logoutAction(){
-        
+
+    public function refreshtokenAction()
+    {}
+
+    public function logoutAction()
+    {
         $jsonModel = new JsonModel();
         
         $jsonModel->setVariables([
-            "token" => $this->apiAuthService->clearIdentity(),
+            "token" => $this->apiAuthService->clearIdentity()
         ]);
     }
 
@@ -239,7 +247,9 @@ class ApiController extends AbstractActionController
         $this->apiAuthService = $apiAuthService;
         return $this;
     }
+
     /**
+     *
      * @return the $generalService
      */
     public function getGeneralService()
@@ -248,13 +258,13 @@ class ApiController extends AbstractActionController
     }
 
     /**
-     * @param \General\Service\GeneralService $generalService
+     *
+     * @param \General\Service\GeneralService $generalService            
      */
     public function setGeneralService($generalService)
     {
         $this->generalService = $generalService;
         return $this;
     }
-
 }
 

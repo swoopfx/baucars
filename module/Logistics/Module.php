@@ -70,7 +70,7 @@ class Module implements AutoloaderProviderInterface
                     // set status 403 (forbidden)
                     $response->setStatusCode(403);
                     $response->setContent(Json::encode([
-                        "message" => "Not Authorizes"
+                        "message" => "Not Authorized"
                     ]));
                     
                     return $response;

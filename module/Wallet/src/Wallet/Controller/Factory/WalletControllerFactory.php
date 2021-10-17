@@ -5,6 +5,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Wallet\Controller\WalletController;
 use General\Service\GeneralService;
+use JWT\Service\ApiAuthenticationService;
 
 /**
  *
@@ -33,6 +34,8 @@ class WalletControllerFactory implements FactoryInterface
         
        $ctr = new WalletController();
        $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
+       $apiAuthService = $serviceLocator->getServiceLocatro()->get(ApiAuthenticationService::class);
+       $ctr->setGeneralService($generalService)->setApiAuthService($apiAuthService);
        return $ctr;
     }
 }

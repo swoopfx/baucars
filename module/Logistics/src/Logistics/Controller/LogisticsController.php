@@ -5,8 +5,7 @@
  * @link      http://github.com/zendframework/Logistics for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
- * 
- * @OA\Info(title="APi Authentication ", version="1.0")
+ *  
  * 
  */
 namespace Logistics\Controller;
@@ -20,6 +19,8 @@ use Logistics\Entity\LogisticsPaymentMode;
 use Logistics\Entity\LogisticsServiceType;
 use function GuzzleHttp\json_decode;
 use Laminas\Json\Json;
+use Logistics\Service\LogisticsService;
+use JWT\Service\ApiAuthenticationService;
 
 class LogisticsController extends AbstractActionController
 {
@@ -31,6 +32,18 @@ class LogisticsController extends AbstractActionController
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     *
+     * @var LogisticsService
+     */
+    private $logisticsService;
+
+    /**
+     *
+     * @var ApiAuthenticationService
+     */
+    private $apiAuthService;
 
     public function indexAction()
     {
@@ -52,15 +65,49 @@ class LogisticsController extends AbstractActionController
      * @OA\GET( path="/logistics/logistics/delivery-type", tags={"Logistics"},
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
      * )
      *
      * @return \Laminas\View\Model\JsonModel
      */
     public function deliveryTypeAction()
     {
+        try {
+            
+            $this->apiAuthService->getIdentity();
+            $jsonModel = new JsonModel();
+            $em = $this->entityManager;
+            $repo = $em->getRepository(LogisticsDeliveryType::class);
+            
+            $data = $repo->createQueryBuilder("l")
+                ->select("l")
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY)
+                ->getArrayResult();
+            
+            $jsonModel->setVariables([
+                "data" => $data
+            ]);
+            return $jsonModel;
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
+        }
+    }
+
+    /**
+     * @OA\GET( path="/logistics/logistics/payment-mode", tags={"Logistics"},
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
+     * )
+     *
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function paymentModeAction()
+    {
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
-        $repo = $em->getRepository(LogisticsDeliveryType::class);
+        $repo = $em->getRepository(LogisticsPaymentMode::class);
         
         $data = $repo->createQueryBuilder("l")
             ->select("l")
@@ -75,35 +122,10 @@ class LogisticsController extends AbstractActionController
     }
 
     /**
-     * @OA\GET( path="/logistics/logistics/payment-mode", tags={"Logistics"},
-     * @OA\Response(response="200", description="Success"),
-     * @OA\Response(response="403", description="Error"),
-     * )
-     *
-     * @return \Laminas\View\Model\JsonModel
-     */
-    public function paymentModeAction()
-    {
-        $jsonModel = new JsonModel();
-        $em = $this->entityManager;
-        $repo = $em->getRepository(LogisticsPaymentMode::class);
-        
-        $data = $repo->createQueryBuilder("l")
-        ->select("l")
-        ->getQuery()
-        ->setHydrationMode(Query::HYDRATE_ARRAY)
-        ->getArrayResult();
-        
-        $jsonModel->setVariables([
-            "data" => $data
-        ]);
-        return $jsonModel;
-    }
-
-    /**
      * @OA\GET( path="/logistics/logistics/service-type", tags={"Logistics"},
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
      * )
      *
      * @return \Laminas\View\Model\JsonModel
@@ -115,10 +137,10 @@ class LogisticsController extends AbstractActionController
         $repo = $em->getRepository(LogisticsServiceType::class);
         
         $data = $repo->createQueryBuilder("l")
-        ->select("l")
-        ->getQuery()
-        ->setHydrationMode(Query::HYDRATE_ARRAY)
-        ->getArrayResult();
+            ->select("l")
+            ->getQuery()
+            ->setHydrationMode(Query::HYDRATE_ARRAY)
+            ->getArrayResult();
         
         $jsonModel->setVariables([
             "data" => $data
@@ -126,23 +148,126 @@ class LogisticsController extends AbstractActionController
         return $jsonModel;
     }
 
-    public function logisticsRequestAction()
+    /**
+     *
+     *
+     *
+     * @OA\POST( path="/logistics/logistics/calculate-stats", tags={"Logistics"}, description="Used to get Statistics inforamtion about the package about to be delivered this information is only required to be displayed only",
+     *
+     * @OA\RequestBody(
+     * @OA\MediaType(
+     * mediaType="application/json",
+     * @OA\Schema(required={"destinationPlaceId", "pickUpPlaceId", "destinationAddress", "pickAddress", "pickupLong", "pickupLat", "destinationLat", "destinationLong", "quantity", "iten_name"},
+     * @OA\Property(property="destinationPlaceId", type="string", example="ahjk4858yhdkkh", description="Google Place id (Unique) of the Destination"),
+     * @OA\Property(property="pickUpPlaceId", type="string", example="dhklsjhblaknfn38784nj", description="Google Place id (Unique) of the pickup"),
+     * @OA\Property(property="pickAddress", type="string", example="Kola Oyewo street surulere, lagos Nigeria", description="Pick up Address"),
+     * @OA\Property(property="destinationAddress", type="string", example="Fatai Abduwahid street Ijegun, lagos Nigeria", description="Destination Address"),
+     * @OA\Property(property="pickupLat", type="string", example="3.4723495", description="The latitude of the pickup address"),
+     * @OA\Property(property="pickupLong", type="string", example="3.4723495", description="The longitude of the pickup address"),
+     * @OA\Property(property="destinationLat", type="string", example="3.4723495", description="The latitude of the destination address "),
+     * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
+     * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
+     * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
+     * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
+     *
+     * )
+     * ),
+     * ),
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="401", description="Not Authorized"),
+     * @OA\Response(response="403", description="Not permitted"),
+     *
+     * security={{"bearerAuth":{}}}
+     *
+     * )
+     *
+     * requires
+     *
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function calculateStatsAction()
     {
-        // $jsonModel = new
-    }
-    
-    public function calculateStatsAction(){
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
         $response = $this->getResponse();
         $response->setStatusCode(400);
-        if($request->isPost()){
-            $post = Json::decode(file_get_contents("php://input"));
-            
-        }else{
+        if ($request->isPost()) {
+            try {
+                $post = Json::decode(file_get_contents("php://input"));
+                // var_dump(get_object_vars($post));
+                $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
+                $response->setStatusCode(200);
+                $jsonModel->setVariables([
+                    "data" => $data
+                ]);
+            } catch (\Exception $e) {
+                $response->setStatusCode(401);
+                
+                $jsonModel->setVariables([
+                    "error" => Json::decode($e->getMessage())
+                ]);
+            }
+        } else {
             $jsonModel->setVariables([
-                "message"=>"Not Authorized"
+                "message" => "Not Authorized"
             ]);
+        }
+        return $jsonModel;
+    }
+
+    /**
+     *
+     *
+     *
+     * @OA\POST( path="/logistics/logistics/create-request", tags={"Logistics"}, description="Used to create a request of service ",
+     *
+     * @OA\RequestBody(
+     * @OA\MediaType(
+     * mediaType="application/json",
+     * @OA\Schema(required={"destinationPlaceId", "pickUpPlaceId", "destinationAddress", "pickAddress"},
+     * @OA\Property(property="destinationPlaceId", type="string", example="ahjk4858yhdkkh", description="Google Place id (Unique) of the Destination"),
+     * @OA\Property(property="pickUpPlaceId", type="string", example="dhklsjhblaknfn38784nj", description="Google Place id (Unique) of the pickup"),
+     * @OA\Property(property="pickAddress", type="string", example="Kola Oyewo street surulere, lagos Nigeria", description="Pick up Address"),
+     * @OA\Property(property="destinationAddress", type="string", example="Fatai Abduwahid street Ijegun, lagos Nigeria", description="Destination Address"),
+     * @OA\Property(property="pickupLat", type="string", example="3.4723495", description="The latitude of the pickup address"),
+     * @OA\Property(property="pickupLong", type="string", example="3.4723495", description="The longitude of the pickup address"),
+     * @OA\Property(property="destinationLat", type="string", example="3.4723495", description="The latitude of the destination address "),
+     * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
+     * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
+     * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
+     * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
+     *
+     * )
+     * ),
+     * ),
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="401", description="Not Authorized"),
+     * @OA\Response(response="403", description="Not permitted"),
+     *
+     * security={{"bearerAuth":{}}}
+     *
+     * )
+     *
+     * requires
+     *
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function createRequestAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $response->setStatusCode(400);
+        if ($request->isPost()) {
+            try {
+                $post = Json::decode(file_get_contents("php://input"));
+                // var_dump(get_object_vars($post));
+                // $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
+                $response->setStatusCode(201);
+                $jsonModel->setVariables([
+                    "data" => $data
+                ]);
+            } catch (\Exception $e) {}
         }
         return $jsonModel;
     }
@@ -182,6 +307,44 @@ class LogisticsController extends AbstractActionController
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $logisticsService
+     */
+    public function getLogisticsService()
+    {
+        return $this->logisticsService;
+    }
+
+    /**
+     *
+     * @param \Logistics\Service\LogisticsService $logisticsService            
+     */
+    public function setLogisticsService($logisticsService)
+    {
+        $this->logisticsService = $logisticsService;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $apiAuthService
+     */
+    public function getApiAuthService()
+    {
+        return $this->apiAuthService;
+    }
+
+    /**
+     *
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService            
+     */
+    public function setApiAuthService($apiAuthService)
+    {
+        $this->apiAuthService = $apiAuthService;
         return $this;
     }
 }

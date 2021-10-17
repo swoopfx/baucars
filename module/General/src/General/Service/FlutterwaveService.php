@@ -27,6 +27,11 @@ class FlutterwaveService
     const TRANSFER_STATUS_COMPLETED = 200;
 
     const TRANSFER_STATUS_FAILED = 300;
+    
+    
+    const PAYMENT_SUCCESS = "success";
+    
+    const  PAYMENT_FAILED = "failed";
 
     private $jsonContent = "application/json";
 
@@ -159,6 +164,35 @@ class FlutterwaveService
         $flutterSessioin = $this->flutterSession;
         $body = [
             "txref" => $this->txRef,
+            "SECKEY" => $this->flutterwaveSecretKey
+        ];
+        $this->header["Content-Type"] = $this->jsonContent;
+        $client = new Client();
+        $client->setMethod("POST");
+        $client->setUri($endPoint);
+        $client->setHeaders($this->header);
+        $client->setRawBody(json_encode($body));
+        $response = $client->send();
+        if ($response->isSuccess()) {
+            $rBody = json_decode($response->getBody());
+            
+            $flutterSessioin->amountPayed = $rBody->data->amount;
+            // $flutterSessioin->
+            // insert into transation table
+            return $rBody;
+        } else {
+            // store in database information about the booking
+            $rBody = json_decode($response->getBody());
+            throw new \Exception("Verification Error");
+        }
+    }
+    
+    public function verifyPaymentApi($data)
+    {
+        $endPoint = "https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify";
+        $flutterSessioin = $this->flutterSession;
+        $body = [
+            "txref" => $data["txRef"],
             "SECKEY" => $this->flutterwaveSecretKey
         ];
         $this->header["Content-Type"] = $this->jsonContent;
