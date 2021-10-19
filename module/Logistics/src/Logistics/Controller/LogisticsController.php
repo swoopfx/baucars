@@ -132,34 +132,40 @@ class LogisticsController extends AbstractActionController
      */
     public function serviceTypeAction()
     {
-        $jsonModel = new JsonModel();
-        $em = $this->entityManager;
-        $repo = $em->getRepository(LogisticsServiceType::class);
-        
-        $data = $repo->createQueryBuilder("l")
-            ->select("l")
-            ->getQuery()
-            ->setHydrationMode(Query::HYDRATE_ARRAY)
-            ->getArrayResult();
-        
-        $jsonModel->setVariables([
-            "data" => $data
-        ]);
-        return $jsonModel;
+        try {
+            // var_dump("KIIY");
+            $jsonModel = new JsonModel();
+            $em = $this->entityManager;
+            $repo = $em->getRepository(LogisticsServiceType::class);
+            
+            $data = $repo->createQueryBuilder("l")
+                ->select("l")
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY)
+                ->getArrayResult();
+            
+            $jsonModel->setVariables([
+                "data" => $data
+            ]);
+            return $jsonModel;
+        } catch (\Exception $e) {}
     }
+    
+    
+    
 
     /**
      *
      *
      *
-     * @OA\POST( path="/logistics/logistics/calculate-stats", tags={"Logistics"}, description="Used to get Statistics inforamtion about the package about to be delivered this information is only required to be displayed only",
+     * @OA\POST( path="/logistics/logistics/calculate-stats", tags={"Logistics"}, description="Used to get Statistics inforamtion about the package about to be delivered this information is only required to be displayed only, once this is successfully acquired, a call to flutterwave payment gateway should be made, the",
      *
      * @OA\RequestBody(
      * @OA\MediaType(
      * mediaType="application/json",
      * @OA\Schema(required={"destinationPlaceId", "pickUpPlaceId", "destinationAddress", "pickAddress", "pickupLong", "pickupLat", "destinationLat", "destinationLong", "quantity", "iten_name"},
-     * @OA\Property(property="destinationPlaceId", type="string", example="ahjk4858yhdkkh", description="Google Place id (Unique) of the Destination"),
-     * @OA\Property(property="pickUpPlaceId", type="string", example="dhklsjhblaknfn38784nj", description="Google Place id (Unique) of the pickup"),
+     * @OA\Property(property="destinationPlaceId", type="string", example="EjFJbnQnbCBBaXJwb3J0IFJkLCBNYWZvbHVrdSBPc2hvZGksIExhZ29zLCBOaWdlcmlhIi4qLAoUChIJjagx-h6OOxARwyZNkX_GTysSFAoSCZk5KvookjsQEfChu91LMqjX", description="Google Place id (Unique) of the Destination"),
+     * @OA\Property(property="pickUpPlaceId", type="string", example="ChIJS9Q72lL0OxARKJ3cGrQfM0c", description="Google Place id (Unique) of the pickup"),
      * @OA\Property(property="pickAddress", type="string", example="Kola Oyewo street surulere, lagos Nigeria", description="Pick up Address"),
      * @OA\Property(property="destinationAddress", type="string", example="Fatai Abduwahid street Ijegun, lagos Nigeria", description="Destination Address"),
      * @OA\Property(property="pickupLat", type="string", example="3.4723495", description="The latitude of the pickup address"),
@@ -168,6 +174,8 @@ class LogisticsController extends AbstractActionController
      * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
      * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
      * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
+     * @OA\Property(property="service_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/service-type url"),
+     * @OA\Property(property="delivery_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/delivery-type url"),
      * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
      *
      * )
@@ -187,31 +195,37 @@ class LogisticsController extends AbstractActionController
      */
     public function calculateStatsAction()
     {
-        $jsonModel = new JsonModel();
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        $response->setStatusCode(400);
-        if ($request->isPost()) {
-            try {
-                $post = Json::decode(file_get_contents("php://input"));
-                // var_dump(get_object_vars($post));
-                $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
-                $response->setStatusCode(200);
+        try {
+            // $this->apiAuthService->getIdentity();
+            $jsonModel = new JsonModel();
+            $request = $this->getRequest();
+            $response = $this->getResponse();
+            $response->setStatusCode(400);
+            if ($request->isPost()) {
+                try {
+                    $post = Json::decode(file_get_contents("php://input"));
+                    var_dump(get_object_vars($post));
+                    $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
+                    $response->setStatusCode(200);
+                    $jsonModel->setVariables([
+                        "data" => $data
+                    ]);
+                } catch (\Exception $e) {
+                    $response->setStatusCode(401);
+                    
+                    $jsonModel->setVariables([
+                        "error" => $e->getMessage()
+                    ]);
+                }
+            } else {
                 $jsonModel->setVariables([
-                    "data" => $data
-                ]);
-            } catch (\Exception $e) {
-                $response->setStatusCode(401);
-                
-                $jsonModel->setVariables([
-                    "error" => Json::decode($e->getMessage())
+                    "message" => "Not Authorized"
                 ]);
             }
-        } else {
-            $jsonModel->setVariables([
-                "message" => "Not Authorized"
-            ]);
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
         }
+        
         return $jsonModel;
     }
 
@@ -225,8 +239,8 @@ class LogisticsController extends AbstractActionController
      * @OA\MediaType(
      * mediaType="application/json",
      * @OA\Schema(required={"destinationPlaceId", "pickUpPlaceId", "destinationAddress", "pickAddress"},
-     * @OA\Property(property="destinationPlaceId", type="string", example="ahjk4858yhdkkh", description="Google Place id (Unique) of the Destination"),
-     * @OA\Property(property="pickUpPlaceId", type="string", example="dhklsjhblaknfn38784nj", description="Google Place id (Unique) of the pickup"),
+     * @OA\Property(property="destinationPlaceId", type="string", example="EjFJbnQnbCBBaXJwb3J0IFJkLCBNYWZvbHVrdSBPc2hvZGksIExhZ29zLCBOaWdlcmlhIi4qLAoUChIJjagx-h6OOxARwyZNkX_GTysSFAoSCZk5KvookjsQEfChu91LMqjX", description="Google Place id (Unique) of the Destination"),
+     * @OA\Property(property="pickUpPlaceId", type="string", example="ChIJS9Q72lL0OxARKJ3cGrQfM0c", description="Google Place id (Unique) of the pickup"),
      * @OA\Property(property="pickAddress", type="string", example="Kola Oyewo street surulere, lagos Nigeria", description="Pick up Address"),
      * @OA\Property(property="destinationAddress", type="string", example="Fatai Abduwahid street Ijegun, lagos Nigeria", description="Destination Address"),
      * @OA\Property(property="pickupLat", type="string", example="3.4723495", description="The latitude of the pickup address"),
@@ -235,8 +249,13 @@ class LogisticsController extends AbstractActionController
      * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
      * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
      * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
+     * @OA\Property(property="amount_payed", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
+     * @OA\Property(property="flutterwave_tx_ref", type="string", example="4rjduhkjaj45kl7lkjj", description="This is a unique identifier from flutterwave"),
+     * @OA\Property(property="status", type="string", example="success", description="This could either be success or error if the response code is 400 according to flutterwave "),
+     * @OA\Property(property="service_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/service-type url"),
+     * @OA\Property(property="payment_mode", type="integer", example=20, description="This is an id referenced from the logistics/logistics/payment-mode url"),
+     * @OA\Property(property="delivery_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/delivery-type url"),
      * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
-     *
      * )
      * ),
      * ),
@@ -261,13 +280,16 @@ class LogisticsController extends AbstractActionController
         if ($request->isPost()) {
             try {
                 $post = Json::decode(file_get_contents("php://input"));
-                // var_dump(get_object_vars($post));
-                // $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
+                
                 $response->setStatusCode(201);
                 $jsonModel->setVariables([
                     "data" => $data
                 ]);
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+                $jsonModel->setVariables([
+                    "message" => "Not Authorized"
+                ]);
+            }
         }
         return $jsonModel;
     }

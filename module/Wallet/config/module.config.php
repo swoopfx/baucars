@@ -2,6 +2,8 @@
 namespace  Wallet;
 use Wallet\Controller\Factory\WalletControllerFactory;
 use Wallet\Controller\Factory\ApiControllerFactory;
+use Wallet\Service\WalletService;
+use Wallet\Service\Factory\WalletServiceFactory;
 
 return array(
     'controllers' => array(
@@ -11,6 +13,11 @@ return array(
         'factories' => array(
             "Wallet\Controller\Wallet"=>WalletControllerFactory::class,
             "Wallet\Controller\Api"=>ApiControllerFactory::class,
+        ),
+    ),
+    'service_manager' => array(
+        'factories' => array(
+            WalletService::class=>WalletServiceFactory::class
         ),
     ),
     'router' => array(

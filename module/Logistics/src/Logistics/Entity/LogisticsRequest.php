@@ -447,13 +447,13 @@ class LogisticsRequest
         return $this->calculatedTimeText;
     }
 
-    /**
-     * @return the $pickUpAddress
-     */
-    public function getPickUpAddress()
-    {
-        return $this->pickUpAddress;
-    }
+//     /**
+//      * @return the $pickUpAddress
+//      */
+//     public function getPickUpAddress()
+//     {
+//         return $this->pickUpAddress;
+//     }
 
     /**
      * @return the $pickupLongitude
@@ -572,14 +572,14 @@ class LogisticsRequest
         return $this;
     }
 
-    /**
-     * @param string $pickUpAddress
-     */
-    public function setPickUpAddress($pickUpAddress)
-    {
-        $this->pickUpAddress = $pickUpAddress;
-        return $this;
-    }
+//     /**
+//      * @param string $pickUpAddress
+//      */
+// //     public function setPickUpAddress($pickUpAddress)
+// //     {
+// //         $this->pickUpAddress = $pickUpAddress;
+// //         return $this;
+// //     }
 
     /**
      * @param string $pickupLongitude

@@ -7,6 +7,7 @@ use Wallet\Controller\ApiController;
 use General\Service\GeneralService;
 use JWT\Service\ApiAuthenticationService;
 use General\Service\FlutterwaveService;
+use Wallet\Service\WalletService;
 
 /**
  *
@@ -33,11 +34,15 @@ class ApiControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $ctr = new ApiController();
+        
         $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
         $apiAuthService = $serviceLocator->getServiceLocator()->get(ApiAuthenticationService::class);
         $flutterwaveService = $serviceLocator->getServiceLocator()->get(FlutterwaveService::class);
+        $walletService = $serviceLocator->getServiceLocator()->get(WalletService::class);
+//        var_dump($walletService);
         $ctr->setApiAuthService($apiAuthService)
             ->setGeneralService($generalService)
+            ->setWalletService($walletService)
             ->setFlutterwaveService($flutterwaveService);
         return $ctr;
     }

@@ -68,8 +68,7 @@ class Wallet
     
     /**
      *
-     * @ORM\OneToOne(targetEntity="WalletPasscode", mappedBy="wallet")
-     * @var WalletPasscode
+     * @ORM\Column(name="wallet_passcode", type="string", nullable=true)
      */
     private $passcode;
     

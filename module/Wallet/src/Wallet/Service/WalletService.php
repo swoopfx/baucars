@@ -10,6 +10,7 @@ use CsnUser\Entity\User;
 use JWT\Service\ApiAuthenticationService;
 use General\Service\ExecutionInterface;
 use Wallet\Entity\WalletActivityType;
+use Application\Entity\Transactions;
 
 /**
  *
@@ -24,9 +25,9 @@ class WalletService implements ExecutionInterface
      * @var FlutterwaveService
      */
     private $flutterwaveService;
-    
+
     /**
-     * 
+     *
      * @var EntityManager
      */
     private $entityManager;
@@ -42,13 +43,10 @@ class WalletService implements ExecutionInterface
      * @var ApiAuthenticationService
      */
     private $apiAuthService;
-    
-    
-    const  WALLET_ACTIVITY_WITHDRAWAL = 10;
-    
-    const  WALLET_ACTIVITY_DEPOSIT = 20;
-    
-    
+
+    const WALLET_ACTIVITY_WITHDRAWAL = 10;
+
+    const WALLET_ACTIVITY_DEPOSIT = 20;
 
     /**
      */
@@ -56,6 +54,37 @@ class WalletService implements ExecutionInterface
     {
         
         // TODO - Insert your code here
+    }
+
+    public function chargeWallet($amount)
+    {
+       
+        $auth = $this->apiAuthService;
+        $userid = $auth->getIdentity();
+        $em = $this->entityManager;
+        
+        /**
+         *
+         * @var Wallet $wallet
+         */
+        $wallet = $em->getRepository(Wallet::class)->findOneBy([
+            "user" => $userid
+        ]);
+        $balance = ($wallet == null ? 0 : $wallet->getBalance());
+        
+        if ($amount > $balance) {
+          
+            throw new \Exception("Insufficient funds");
+        } else {
+            $newBalance = $wallet->getBalance() - $amount;
+            $wallet->setBalance($newBalance)->setUpdatedOn(new \Datetime());
+            
+            $this->createWalletActivity(self::WALLET_ACTIVITY_WITHDRAWAL, $amount, $newBalance);
+            $em->persist($wallet);
+            
+            $em->flush();
+            return $wallet;
+        }
     }
 
     public function fundWalletLogic($data)
@@ -82,17 +111,26 @@ class WalletService implements ExecutionInterface
              * @var Wallet $walletEntity
              */
             $walletEntity = $em->find(Wallet::class, $walletId);
+            $newBalance = 0;
             if ($walletEntity == NULL) {
+                $newBalance = 0 + $amount;
                 $this->createnewWallet($user, $amount);
             } else {
                 $newBalance = $walletEntity->getBalance() + $amount;
                 $walletEntity->setBalance($newBalance)->setUpdatedOn(new \Datetime());
             }
+            $this->createWalletActivity(self::WALLET_ACTIVITY_DEPOSIT, $amount, $newBalance);
+            
+            // transaction
+            // email notification
             return $walletEntity;
         } catch (\Exception $e) {
             throw new Exception("Can not fund wallet now");
         }
     }
+
+    private function debitwallet()
+    {}
 
     private function createnewWallet(User $user, float $amount = 0)
     {
@@ -111,17 +149,30 @@ class WalletService implements ExecutionInterface
             throw new Exception("Cannot Create wallet");
         }
     }
-    
-    
-    private function createWalletActivity(){
+
+    private function createWalletActivity($type, $amount, $balance)
+    {
         $em = $this->entityManager;
-       try {
-           $walletActivity = new WalletActivity();
-           
-           $em->persist($walletActivity);
-       } catch (\Exception $e) {
-           throw new Exception("Cannot Create wallet");
-       }
+        try {
+            $walletActivity = new WalletActivity();
+            /**
+             *
+             * @var WalletActivityType $walletActivityTypeEntity
+             */
+            $walletActivityTypeEntity = $em->find(WalletActivityType::class, $type);
+            $walletActivity->setActivityType($walletActivityTypeEntity)
+                ->setCreatedOn(new \Datetime())
+                ->setWalletBalance($balance)
+                ->setActivityDescription("A {$walletActivityTypeEntity->getType()} of {$amount}, was carried out on your wallet, with balance of {$balance}");
+            $em->persist($walletActivity);
+        } catch (\Exception $e) {
+            throw new Exception("Cannot Create wallet");
+        }
+    }
+
+    private function createtransaction()
+    {
+        try {} catch (\Exception $e) {}
     }
 
     // public function get
@@ -163,7 +214,9 @@ class WalletService implements ExecutionInterface
         $this->generalService = $generalService;
         return $this;
     }
+
     /**
+     *
      * @return the $entityManager
      */
     public function getEntityManager()
@@ -172,6 +225,7 @@ class WalletService implements ExecutionInterface
     }
 
     /**
+     *
      * @return the $apiAuthService
      */
     public function getApiAuthService()
@@ -180,7 +234,8 @@ class WalletService implements ExecutionInterface
     }
 
     /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @param \Doctrine\ORM\EntityManager $entityManager            
      */
     public function setEntityManager($entityManager)
     {
@@ -189,23 +244,24 @@ class WalletService implements ExecutionInterface
     }
 
     /**
-     * @param \JWT\Service\ApiAuthenticationService $apiAuthService
+     *
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService            
      */
     public function setApiAuthService($apiAuthService)
     {
         $this->apiAuthService = $apiAuthService;
         return $this;
     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
+     *
      * @see \General\Service\ExecutionInterface::execute()
      */
     public function execute()
     {
-       $this->entityManager->flush();
-        
+        $this->entityManager->flush();
     }
-
-
 }
 

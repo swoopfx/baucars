@@ -9,6 +9,8 @@ use Wallet\Entity\Wallet;
 use General\Service\GeneralService;
 use General\Service\FlutterwaveService;
 use JWT\Service\ApiAuthenticationService;
+use Wallet\Service\WalletService;
+use Laminas\InputFilter\InputFilter;
 
 /**
  *
@@ -35,6 +37,12 @@ class ApiController extends AbstractActionController
      * @var FlutterwaveService
      */
     private $flutterwaveService;
+
+    /**
+     *
+     * @var WalletService
+     */
+    private $walletService;
 
     /**
      */
@@ -110,12 +118,105 @@ class ApiController extends AbstractActionController
                 "user" => $userId
             ]);
             $jsonModel->setVariables([
-                "balance" => $repo->getBalance() ?? 0
+                "balance" => ($repo == null ? 0 : $repo->getBalance())
             ]);
             return $jsonModel;
         } catch (\Exception $e) {
             return Json::encode($e->getMessage());
         }
+    }
+
+    /**
+     *
+     *
+     *
+     * @OA\POST( path="/wallet/api/charge-wallet", tags={"Wallet"}, description="This is used to charge the wallet of the user",
+     *
+     * @OA\RequestBody(
+     * @OA\MediaType(
+     * mediaType="application/json",
+     * @OA\Schema(required={"amount"},
+     * @OA\Property(property="amount", type="float", example="240.90"),
+     *
+     * )
+     * ),
+     * ),
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="401", description="Not Authorized"),
+     * @OA\Response(response="403", description="Not permitted"),
+     *
+     * security={{"bearerAuth":{}}}
+     *
+     * )
+     *
+     * requires
+     *
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function chargeWalletAction()
+    {
+        try {
+            
+            $jsonModel = new JsonModel();
+            $request = $this->getRequest();
+            $response = $this->getResponse();
+            $response->setStatusCode(400);
+            if ($request->isPost()) {
+                // $post = $request->getPost();
+                $post = Json::decode(file_get_contents("php://input"));
+                
+                try {
+                    $inputFilter = new InputFilter();
+                    $inputFilter->add(array(
+                        'name' => 'amount',
+                        'required' => true,
+                        'allow_empty' => false,
+                        'filters' => array(
+                            array(
+                                'name' => 'StripTags'
+                            ),
+                            array(
+                                'name' => 'StringTrim'
+                            )
+                        ),
+                        'validators' => array(
+                            array(
+                                'name' => 'NotEmpty',
+                                'options' => array(
+                                    'messages' => array(
+                                        'isEmpty' => 'Amount is required'
+                                    )
+                                )
+                            )
+                        )
+                    ));
+                    $inputFilter->setData(get_object_vars($post));
+                    
+                    if ($inputFilter->isValid()) {
+                        $data = $inputFilter->getValues();
+                        
+                        $response = $this->walletService->chargeWallet($data["amount"]);
+                    } else {
+                        $jsonModel->setVariables([
+                            "message" => $inputFilter->getMessages()
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    $jsonModel->setVariables([
+                        "message" => $e->getMessage()
+                    ]);
+                }
+            } else {
+                $jsonModel->setVariables([
+                    "message" => "Invalid Action"
+                ]);
+            }
+        } catch (\Exception $e) {
+            $jsonModel->setVariables([
+                "Noooo"
+            ]);
+        }
+        return $jsonModel;
     }
 
     /**
@@ -149,8 +250,6 @@ class ApiController extends AbstractActionController
         }
     }
 
-    
-    
     /**
      *
      *
@@ -260,6 +359,25 @@ class ApiController extends AbstractActionController
     public function setFlutterwaveService($flutterwaveService)
     {
         $this->flutterwaveService = $flutterwaveService;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $walletService
+     */
+    public function getWalletService()
+    {
+        return $this->walletService;
+    }
+
+    /**
+     *
+     * @param \Wallet\Service\WalletService $walletService            
+     */
+    public function setWalletService($walletService)
+    {
+        $this->walletService = $walletService;
         return $this;
     }
 }

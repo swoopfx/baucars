@@ -34,7 +34,7 @@ class WalletServiceFactory implements FactoryInterface
     {
         $xserv = new WalletService();
         $generalService = $serviceLocator->get(GeneralService::class);
-        $flutterwaveService = $generalService->get(FlutterwaveService::class);
+        $flutterwaveService = $serviceLocator->get(FlutterwaveService::class);
         $apiAuthService = $serviceLocator->get(ApiAuthenticationService::class);
         $entityManager = $generalService->getEntityManager();
         $xserv->setFlutterwaveService($flutterwaveService)
