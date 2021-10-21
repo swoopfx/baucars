@@ -11,6 +11,7 @@ use General\Service\FlutterwaveService;
 use JWT\Service\ApiAuthenticationService;
 use Wallet\Service\WalletService;
 use Laminas\InputFilter\InputFilter;
+use CsnUser\Entity\User;
 
 /**
  *
@@ -105,9 +106,7 @@ class ApiController extends AbstractActionController
              */
             
             $apiAuthService = $this->apiAuthService;
-            
             $userId = $apiAuthService->getIdentity();
-            
             $em = $this->generalService->getEntityManager();
             $jsonModel = new JsonModel();
             /**
@@ -195,7 +194,11 @@ class ApiController extends AbstractActionController
                     if ($inputFilter->isValid()) {
                         $data = $inputFilter->getValues();
                         
-                        $response = $this->walletService->chargeWallet($data["amount"]);
+                        $resp = $this->walletService->chargeWallet($data["amount"]);
+                        $response->setStatusCode(201);
+                        $jsonModel->setVariables([
+                            "message" => "Success"
+                        ]);
                     } else {
                         $jsonModel->setVariables([
                             "message" => $inputFilter->getMessages()
@@ -252,6 +255,51 @@ class ApiController extends AbstractActionController
 
     /**
      *
+     * @OA\GET( path="/wallet/api/prefund-wallet", tags={"Wallet"}, description="Call this function to get details that would be fed to the flutterwave api",
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
+     * )
+     *
+     * @return \Laminas\View\Model\JsonModel
+     *
+     *
+     */
+    public function prefundWalletAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        try {
+            $em = $this->generalService->getEntityManager();
+            $userid = $this->apiAuthService->getIdentity();
+            /**
+             *
+             * @var User $user
+             */
+            $user = $em->find(User::class, $userid);
+            $flutterwaveService = $this->flutterwaveService;
+            $jsonModel->setVariables([
+                "channel" => "Flutterwave",
+                "public_key" => $flutterwaveService->getFlutterwavePublicKey(),
+                "secret_key" => $flutterwaveService->getFlutterwaveSecretKey(),
+                "encrption_key" => $flutterwaveService->getFlutterwaveEncrypKey(),
+                "bau_tx_ref" => uniqid("inv"),
+                "customer" => [
+                    'uid' => $user->getUserUid(),
+                    "full_name" => $user->getFullName(),
+                    "email" => $user->getEmail()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            $response->setStatusCode(403);
+            return Json::encode($e->getMessage());
+        }
+        return $jsonModel;
+    }
+
+    /**
+     *
      *
      *
      * @OA\POST( path="/wallet/api/fund-wallet", tags={"Wallet"}, description="This function is called after a successful call to fluuterwave portal and ",
@@ -259,23 +307,14 @@ class ApiController extends AbstractActionController
      * @OA\RequestBody(
      * @OA\MediaType(
      * mediaType="application/json",
-     * @OA\Schema(required={"tx_ref_Id", "status", "destinationAddress", "pickAddress"},
+     * @OA\Schema(required={"txRef", "status"},
      * @OA\Property(property="status", type="string", example="success", description="Flutterwave transaction reference Id"),
-     * @OA\Property(property="tx_ref_Id", type="string", example="dhklsjhblaknfn38784nj", description="Google Place id (Unique) of the pickup"),
-     * @OA\Property(property="pickAddress", type="string", example="Kola Oyewo street surulere, lagos Nigeria", description="Pick up Address"),
-     * @OA\Property(property="destinationAddress", type="string", example="Fatai Abduwahid street Ijegun, lagos Nigeria", description="Destination Address"),
-     * @OA\Property(property="pickupLat", type="string", example="3.4723495", description="The latitude of the pickup address"),
-     * @OA\Property(property="pickupLong", type="string", example="3.4723495", description="The longitude of the pickup address"),
-     * @OA\Property(property="destinationLat", type="string", example="3.4723495", description="The latitude of the destination address "),
-     * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
-     * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
-     * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
-     * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
+     * @OA\Property(property="txRef", type="string", example="booking61706f10b762a", description="Google Place id (Unique) of the pickup"),
      *
      * )
      * ),
      * ),
-     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="201", description="Success"),
      * @OA\Response(response="401", description="Not Authorized"),
      * @OA\Response(response="403", description="Not permitted"),
      *
@@ -292,16 +331,25 @@ class ApiController extends AbstractActionController
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
         $response = $this->getResponse();
+        $response->setStatusCode(400);
         try {
             if ($request->isPost()) {
                 $post = Json::decode(file_get_contents("php://input"));
+                $this->walletService->fundWalletLogic(get_object_vars($post));
+               
+                $response->setStatusCode(201);
+                $jsonModel->setVariables([
+                    "message"=>"Wallet Funded"
+                ]);
             } else {
                 $response->setStatusCode(403);
                 $jsonModel->setVariables([
-                    "message" => "Not Paerminted Verb"
+                    "message" => "Not Perminted Verb"
                 ]);
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
+        }
         return $jsonModel;
     }
 

@@ -7,6 +7,13 @@ use Laminas\Json\Json;
 use Laminas\InputFilter\InputFilter;
 use Laminas\View\Model\JsonModel;
 use Logistics\Entity\LogisticsRequest;
+use Doctrine\ORM\EntityManager;
+use Logistics\Entity\LogisticsPaymentMode;
+use Logistics\Entity\LogisticsServiceType;
+use CsnUser\Entity\User;
+use JWT\Service\ApiAuthenticationService;
+use Wallet\Service\WalletService;
+use General\Service\FlutterwaveService;
 
 /**
  *
@@ -41,6 +48,30 @@ class LogisticsService
 
     // kilometers
     private $generalService;
+
+    /**
+     *
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     *
+     * @var ApiAuthenticationService
+     */
+    private $apiAuthService;
+
+    /**
+     *
+     * @var WalletService
+     */
+    private $walletService;
+
+    /**
+     *
+     * @var FlutterwaveService
+     */
+    private $flutterwaveService;
 
     /**
      */
@@ -453,7 +484,7 @@ class LogisticsService
             $data["price"] = $price;
             $data['distance'] = $distanceText;
             $data["distanceValue"] = $distanceValue;
-            $data["txRef"] = $this->invoiceuid();
+            $data["bauTxRef"] = $this->invoiceuid();
             return $data;
         } else {
             
@@ -768,6 +799,19 @@ class LogisticsService
                 $data["price"] = $price;
                 $data['distanceText'] = $distanceText;
                 $data["distanceValue"] = $distanceValue;
+                if ($data["status"] == FlutterwaveService::PAYMENT_SUCCESS) {
+                    if ($data["payment_mode"] == self::LOGISTICS_PAYMENT_MODE_CARD) {
+                        $res = $this->flutterwaveService->verifyPaymentApi($data);
+                        if($res instanceof  \Exception){
+                            throw new \Exception("We cound not charge your card");
+                        }
+                    }
+                    $this->hydrateLogisticRequest($data);
+                    $transactionData = []; //TODO creates transaction data
+                    $this->flutterwaveService->hydrateTransactionApi($transactionData);
+                    // send email
+                    
+                }
                 
                 $data = [];
             } else {}
@@ -780,7 +824,30 @@ class LogisticsService
     private function hydrateLogisticRequest($data)
     {
         $logistics = new LogisticsRequest();
-        // $logistics->setCalculatedDistanceText
+        $em = $this->entityManager;
+        $logistics->setCalculatedDistanceText($data["distance"])
+            ->setCalculatedDistanceValue($data["distanceValue"])
+            ->
+        // ->setCalculatedTimeText($data[""])
+        setCreatedOn(new \Datetime())
+            ->setDeliveryNote($data["note"])
+            ->setDestination($data["destinationAddress"])
+            ->setDestinationLatitude($data["destinationLat"])
+            ->setDestinationLongitude($data["destinationLong"])
+            ->setDestinationPlaceId($data["destinationPlaceId"])
+            ->setIsActive(TRUE)
+            ->setItemName($data["iten_name"])
+            ->setLogisticsUid(uniqid("lr"))
+            ->setPaymentmode($em->find(LogisticsPaymentMode::class, $data["payment_mode"]))
+            ->setPickupAddress($data["pickAddress"])
+            ->setPickupLatitude($data["pickupLat"])
+            ->setPickupLongitude($data["pickupLong"])
+            ->setPickupPlaceId($data["pickUpPlaceId"])
+            ->setServiceType($em->find(LogisticsServiceType::class, $data["service_type"]))
+            ->setUpdatedOn(new \Datetime())
+            ->setQuantity($data["quantity"])
+            ->setUser($em->find(User::class, $this->apiAuthService->getIdentity()));
+        $em->persist($logistics);
     }
 
     /**
@@ -801,5 +868,79 @@ class LogisticsService
         $this->generalService = $generalService;
         return $this;
     }
+
+    /**
+     *
+     * @return the $entityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     *
+     * @param \Doctrine\ORM\EntityManager $entityManager            
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $apiAuthService
+     */
+    public function getApiAuthService()
+    {
+        return $this->apiAuthService;
+    }
+
+    /**
+     *
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService            
+     */
+    public function setApiAuthService($apiAuthService)
+    {
+        $this->apiAuthService = $apiAuthService;
+        return $this;
+    }
+
+    /**
+     *
+     * @return the $walletService
+     */
+    public function getWalletService()
+    {
+        return $this->walletService;
+    }
+
+    /**
+     *
+     * @param \Wallet\Service\WalletService $walletService            
+     */
+    public function setWalletService($walletService)
+    {
+        $this->walletService = $walletService;
+        return $this;
+    }
+    /**
+     * @return the $flutterwaveService
+     */
+    public function getFlutterwaveService()
+    {
+        return $this->flutterwaveService;
+    }
+
+    /**
+     * @param \General\Service\FlutterwaveService $flutterwaveService
+     */
+    public function setFlutterwaveService($flutterwaveService)
+    {
+        $this->flutterwaveService = $flutterwaveService;
+        return $this;
+    }
+
 }
 

@@ -28,31 +28,84 @@ class LogisticsTransaction
      */
     private $invoice;
 
+    
+
+   
     /**
-     * @ORM\Column(name="transaction_uid", type="string", nullable=false)
+     * @ORM\Column(name="transaction_uid", type="string", nullable=true)
      * 
      * @var string
      */
-    private $transactionUd;
+    private $transactionUid;
 
     /**
-     * @ORM\ManyToOne(targetEntity="LogisticsInvoiceStatus")
-     * 
-     * @var LogisticsInvoiceStatus
+     * @ORM\Column(name="tx_ref", type="string", nullable=true)
+     *
+     * @var string
      */
-    private $tranactionStatus;
+    private $txRef;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="General\Entity\TransactionStatus")
+     *
+     * @var TransactionStatus
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(name="amount", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $amount;
+
+    /**
+     * @ORM\Column(name="flw_id", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $flwId;
+
+    /**
+     * @ORM\Column(name="flw_ref", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $flwRef;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="CsnUser\Entity\User")
+     *
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToOne(targetEntity="LogisticsRequest", inversedBy="transaction")
+     * 
+     * @var LogisticsRequest
+     */
+    private $LogisticsRequest;
+
+    /**
+     * This is the amount left after deductions
+     * @ORM\Column(name="settled_amount", type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $settledAmount;
 
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     * 
-     * @var Datetime
+     *
+     * @var \DateTime
      */
     private $createdOn;
 
     /**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * 
-     * @var Datetime
+     *
+     * @var \DateTime
      */
     private $updatedOn;
 
@@ -80,19 +133,75 @@ class LogisticsTransaction
     }
 
     /**
-     * @return the $transactionUd
+     * @return the $transactionUid
      */
-    public function getTransactionUd()
+    public function getTransactionUid()
     {
-        return $this->transactionUd;
+        return $this->transactionUid;
     }
 
     /**
-     * @return the $tranactionStatus
+     * @return the $txRef
      */
-    public function getTranactionStatus()
+    public function getTxRef()
     {
-        return $this->tranactionStatus;
+        return $this->txRef;
+    }
+
+    /**
+     * @return the $status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return the $amount
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @return the $flwId
+     */
+    public function getFlwId()
+    {
+        return $this->flwId;
+    }
+
+    /**
+     * @return the $flwRef
+     */
+    public function getFlwRef()
+    {
+        return $this->flwRef;
+    }
+
+    /**
+     * @return the $user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return the $LogisticsRequest
+     */
+    public function getLogisticsRequest()
+    {
+        return $this->LogisticsRequest;
+    }
+
+    /**
+     * @return the $settledAmount
+     */
+    public function getSettledAmount()
+    {
+        return $this->settledAmount;
     }
 
     /**
@@ -130,25 +239,88 @@ class LogisticsTransaction
     }
 
     /**
-     * @param string $transactionUd
+     * @param string $transactionUid
      */
-    public function setTransactionUd($transactionUd)
+    public function setTransactionUid($transactionUid)
     {
-        $this->transactionUd = $transactionUd;
+        $this->transactionUid = $transactionUid;
         return $this;
     }
 
     /**
-     * @param \Logistics\Entity\LogisticsInvoiceStatus $tranactionStatus
+     * @param string $txRef
      */
-    public function setTranactionStatus($tranactionStatus)
+    public function setTxRef($txRef)
     {
-        $this->tranactionStatus = $tranactionStatus;
+        $this->txRef = $txRef;
         return $this;
     }
 
     /**
-     * @param \Logistics\Entity\Datetime $createdOn
+     * @param \Logistics\Entity\TransactionStatus $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @param string $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+    /**
+     * @param string $flwId
+     */
+    public function setFlwId($flwId)
+    {
+        $this->flwId = $flwId;
+        return $this;
+    }
+
+    /**
+     * @param string $flwRef
+     */
+    public function setFlwRef($flwRef)
+    {
+        $this->flwRef = $flwRef;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\LogisticsRequest $LogisticsRequest
+     */
+    public function setLogisticsRequest($LogisticsRequest)
+    {
+        $this->LogisticsRequest = $LogisticsRequest;
+        return $this;
+    }
+
+    /**
+     * @param string $settledAmount
+     */
+    public function setSettledAmount($settledAmount)
+    {
+        $this->settledAmount = $settledAmount;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $createdOn
      */
     public function setCreatedOn($createdOn)
     {
@@ -157,13 +329,15 @@ class LogisticsTransaction
     }
 
     /**
-     * @param \Logistics\Entity\Datetime $updatedOn
+     * @param DateTime $updatedOn
      */
     public function setUpdatedOn($updatedOn)
     {
         $this->updatedOn = $updatedOn;
         return $this;
     }
+
+   
 
 }
 

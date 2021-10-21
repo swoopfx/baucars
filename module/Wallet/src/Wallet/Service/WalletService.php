@@ -56,9 +56,14 @@ class WalletService implements ExecutionInterface
         // TODO - Insert your code here
     }
 
+    /**
+     * This is called when a deduction is made from the wallet
+     * @param unknown $amount
+     * @throws \Exception
+     * @return \Wallet\Entity\Wallet
+     */
     public function chargeWallet($amount)
     {
-       
         $auth = $this->apiAuthService;
         $userid = $auth->getIdentity();
         $em = $this->entityManager;
@@ -73,7 +78,7 @@ class WalletService implements ExecutionInterface
         $balance = ($wallet == null ? 0 : $wallet->getBalance());
         
         if ($amount > $balance) {
-          
+            
             throw new \Exception("Insufficient funds");
         } else {
             $newBalance = $wallet->getBalance() - $amount;
@@ -89,12 +94,23 @@ class WalletService implements ExecutionInterface
 
     public function fundWalletLogic($data)
     {
-        if ($data->status == FlutterwaveService::PAYMENT_SUCCESS) {
-            // $
+        if ($data["status"] == FlutterwaveService::PAYMENT_SUCCESS) {
+            $verifyData = $this->flutterwaveService->verifyPaymentApi($data);
+            if ($verifyData instanceof \Exception) {
+                throw new Exception("Payment Veirification Error");
+            } elseif ($verifyData->status == "success") {
+               
+                return $this->fundwallet($verifyData->data->chargedamount);
+            } else {
+                throw new \Exception("Payment Not Successfull");
+            }
+            // fun the wallet
+        } else {
+            throw new \Exception("Payment Not Successful");
         }
     }
 
-    private function fundwallet(int $walletId = null, float $amount = 0)
+    private function fundwallet($amount = 0)
     {
         /**
          *
@@ -103,6 +119,10 @@ class WalletService implements ExecutionInterface
         $em = $this->generalService->getEntityManager();
         try {
             $userId = $this->apiAuthService->getIdentity();
+            /**
+             *
+             * @var User $user
+             */
             $user = $em->find(User::class, $userId);
             $walletActivity = new WalletActivity();
             
@@ -110,17 +130,19 @@ class WalletService implements ExecutionInterface
              *
              * @var Wallet $walletEntity
              */
-            $walletEntity = $em->find(Wallet::class, $walletId);
+            $walletEntity = $user->getWallet();
             $newBalance = 0;
             if ($walletEntity == NULL) {
                 $newBalance = 0 + $amount;
                 $this->createnewWallet($user, $amount);
             } else {
+                
                 $newBalance = $walletEntity->getBalance() + $amount;
                 $walletEntity->setBalance($newBalance)->setUpdatedOn(new \Datetime());
             }
+            $em->persist($walletEntity);
             $this->createWalletActivity(self::WALLET_ACTIVITY_DEPOSIT, $amount, $newBalance);
-            
+            $em->flush();
             // transaction
             // email notification
             return $walletEntity;

@@ -340,6 +340,12 @@ class User
      */
     private $googleId;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Wallet\Entity\Wallet", mappedBy="user")
+     * @var Wallet
+     */
+    private $wallet;
+    
     
 
     public function __construct()

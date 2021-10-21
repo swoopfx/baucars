@@ -66,10 +66,10 @@ class User extends \CsnUser\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'userUid', 'phoneNumber', 'fullName', 'email', 'password', 'role', 'language', 'state', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'question', 'answer', 'picture', 'registrationDate', 'registrationToken', 'emailConfirmed', 'friendsWithMe', 'myFriends', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'lastlogin', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'updatedOn'];
+            return ['__isInitialized__', 'id', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'userUid', 'phoneNumber', 'fullName', 'email', 'password', 'role', 'language', 'state', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'question', 'answer', 'picture', 'registrationDate', 'registrationToken', 'emailConfirmed', 'friendsWithMe', 'myFriends', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'lastlogin', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'updatedOn', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'googleId', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'wallet'];
         }
 
-        return ['__isInitialized__', 'id', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'userUid', 'phoneNumber', 'fullName', 'email', 'password', 'role', 'language', 'state', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'question', 'answer', 'picture', 'registrationDate', 'registrationToken', 'emailConfirmed', 'friendsWithMe', 'myFriends', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'lastlogin', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'updatedOn'];
+        return ['__isInitialized__', 'id', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'userUid', 'phoneNumber', 'fullName', 'email', 'password', 'role', 'language', 'state', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'question', 'answer', 'picture', 'registrationDate', 'registrationToken', 'emailConfirmed', 'friendsWithMe', 'myFriends', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'lastlogin', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'updatedOn', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'googleId', '' . "\0" . 'CsnUser\\Entity\\User' . "\0" . 'wallet'];
     }
 
     /**
@@ -761,6 +761,28 @@ class User extends \CsnUser\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFullName', [$fullName]);
 
         return parent::setFullName($fullName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getGoogleId()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getGoogleId', []);
+
+        return parent::getGoogleId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setGoogleId($googleId)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setGoogleId', [$googleId]);
+
+        return parent::setGoogleId($googleId);
     }
 
 }

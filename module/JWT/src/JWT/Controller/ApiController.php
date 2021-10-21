@@ -63,8 +63,8 @@ class ApiController extends AbstractActionController
      * @OA\MediaType(
      * mediaType="multipart/form-data",
      * @OA\Schema(required={"phoneOrEmail", "password"},
-     * @OA\Property(property="phoneOrEmail", type="string"),
-     * @OA\Property(property="password", type="string", writeOnly="true"),
+     * @OA\Property(property="phoneOrEmail", type="string", example="ezekiel_a@yahoo.com"),
+     * @OA\Property(property="password", type="string", example="Oluwaseun1"),
      * )
      * ),
      * ),

@@ -13,6 +13,8 @@ use Application\Entity\InitatedTransfer;
 use Application\Entity\TransferStatus;
 use Application\Entity\ConcludedTransfer;
 use Laminas\Authentication\AuthenticationService;
+use Logistics\Entity\LogisticsTransaction;
+use Logistics\Entity\LogisticsRequest;
 
 /**
  *
@@ -189,8 +191,10 @@ class FlutterwaveService
     
     public function verifyPaymentApi($data)
     {
+        
         $endPoint = "https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify";
-        $flutterSessioin = $this->flutterSession;
+//         $flutterSessioin = $this->flutterSession;
+        
         $body = [
             "txref" => $data["txRef"],
             "SECKEY" => $this->flutterwaveSecretKey
@@ -202,16 +206,19 @@ class FlutterwaveService
         $client->setHeaders($this->header);
         $client->setRawBody(json_encode($body));
         $response = $client->send();
+        
         if ($response->isSuccess()) {
+            
             $rBody = json_decode($response->getBody());
             
-            $flutterSessioin->amountPayed = $rBody->data->amount;
+            $data['amountPayed'] = $rBody->data->amount;
+           
             // $flutterSessioin->
             // insert into transation table
             return $rBody;
         } else {
             // store in database information about the booking
-            $rBody = json_decode($response->getBody());
+//             $rBody = json_decode($response->getBody());
             throw new \Exception("Verification Error");
         }
     }
@@ -256,6 +263,54 @@ class FlutterwaveService
         // send transaction mail to customer
         return $transactionEntity;
         
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+        }
+        
+        // send transaction mail
+    }
+    
+    
+    /**
+     *
+     * @return \Application\Entity\Transactions
+     */
+    public function hydrateTransactionApi($data)
+    {
+        try {
+            
+            $em = $this->entityManager;
+            
+            $transactionEntity = new LogisticsTransaction();
+//             $flutterSession = $this->flutterSession;
+            $transactionEntity->setCreatedOn(new \DateTime())
+            ->setAmount($data["amountPaid"])
+            ->setFlwId($data["flwId"])
+            ->setFlwRef($data["flwRef"])
+            ->setTransactionUid(FlutterwaveService::transactionUid())
+            ->setStatus($em->find(TransactionStatus::class, self::TRANSFER_STATUS_COMPLETED))
+            ->setSettledAmount($this->settledAmount)
+            ->setTxRef($data["txRef"])
+            ->setLogisticsRequest($em->find(LogisticsRequest::class, $data["logistics"]))
+            ->setUser($em->find(User::class, $data["user"]));
+            
+            $em->persist($transactionEntity);
+            $generalService = $this->generalService;
+            $pointer["to"] = $data["userEmail"];
+            $pointer["fromName"] = "Bau Cars Limited";
+            $pointer['subject'] = "Successfull Transaction";
+            
+            $template['template'] = "general-mail-transaction-success";
+            $template["var"] = [
+                "amount" => $data["amountPaid"],
+                "fullname" => $data["userFullname"],
+                "logo" => "KK",
+//                 "bookingUid" => $this->booking->getBookingUid()
+            ];
+            $generalService->sendMails($pointer, $template);
+            // send transaction mail to customer
+            return $transactionEntity;
+            
         } catch (Exception $e) {
             var_dump($e->getMessage());
         }
