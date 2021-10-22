@@ -250,7 +250,7 @@ class LogisticsController extends AbstractActionController
      * @OA\Property(property="txRef", type="string", example="inv61706f10b762a", description="This is transaction unique identifier generated from the calculate-stats url must always be attached be it wallet or card payment"),
      * @OA\Property(property="status", type="string", example="success", description="This could either be success or error if the response code is 400 according to flutterwave "),
      * @OA\Property(property="service_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/service-type url"),
-     * @OA\Property(property="payment_mod", type="integer", example=20, description="This is an id referenced from the logistics/logistics/payment-mode url"),
+     * @OA\Property(property="payment_mode", type="integer", example=20, description="This is an id referenced from the logistics/logistics/payment-mode url"),
      * @OA\Property(property="delivery_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/delivery-type url"),
      * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
      * )
@@ -277,7 +277,7 @@ class LogisticsController extends AbstractActionController
         if ($request->isPost()) {
             try {
                 $post = Json::decode(file_get_contents("php://input"));
-                
+                $this->logisticsService->createRequest(get_object_vars($post));
                 $response->setStatusCode(201);
                 $jsonModel->setVariables([
                     "data" => $data

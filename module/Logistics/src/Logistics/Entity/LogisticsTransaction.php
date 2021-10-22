@@ -23,6 +23,23 @@ class LogisticsTransaction
     private $id;
 
     /**
+     * @param LogisticsPaymentMode $paymentMode
+     */
+    public function setPaymentMode($paymentMode)
+    {
+        $this->paymentMode = $paymentMode;
+        return $this;
+    }
+
+    /**
+     * @return LogisticsPaymentMode
+     */
+    public function getPaymentMode()
+    {
+        return $this->paymentMode;
+    }
+
+    /**
      * @ORM\ManyToOne(targetEntity="LogisticsInvoice")
      * @var LogisticsInvoice
      */
@@ -96,7 +113,7 @@ class LogisticsTransaction
     private $settledAmount;
 
     /**
-     * @ORM\Column(name="created_on", type="datetime", nullable=true)
+     * @ORM\Column(name="created_on", type="datetime", nullable=false)
      *
      * @var \DateTime
      */
@@ -108,6 +125,12 @@ class LogisticsTransaction
      * @var \DateTime
      */
     private $updatedOn;
+
+    /**
+     * @ORM\ManyToOne (targetEntity="LogisticsPaymentMode")
+     * @var LogisticsPaymentMode
+     */
+    private $paymentMode;
 
     /**
      */

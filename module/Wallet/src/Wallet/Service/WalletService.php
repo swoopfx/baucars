@@ -1,4 +1,5 @@
 <?php
+
 namespace Wallet\Service;
 
 use General\Service\FlutterwaveService;
@@ -15,7 +16,7 @@ use Application\Entity\Transactions;
 /**
  *
  * @author mac
- *        
+ *
  */
 class WalletService implements ExecutionInterface
 {
@@ -52,22 +53,25 @@ class WalletService implements ExecutionInterface
      */
     public function __construct()
     {
-        
+
         // TODO - Insert your code here
     }
 
     /**
      * This is called when a deduction is made from the wallet
      * @param unknown $amount
-     * @throws \Exception
      * @return \Wallet\Entity\Wallet
+     * @throws \Exception
      */
     public function chargeWallet($amount)
     {
         $auth = $this->apiAuthService;
         $userid = $auth->getIdentity();
         $em = $this->entityManager;
-        
+        /**
+         * @var  User
+         */
+        $user = $em->find(User::class, $userid)
         /**
          *
          * @var Wallet $wallet
@@ -78,15 +82,29 @@ class WalletService implements ExecutionInterface
         $balance = ($wallet == null ? 0 : $wallet->getBalance());
         
         if ($amount > $balance) {
-            
+
             throw new \Exception("Insufficient funds");
         } else {
             $newBalance = $wallet->getBalance() - $amount;
             $wallet->setBalance($newBalance)->setUpdatedOn(new \Datetime());
-            
+
             $this->createWalletActivity(self::WALLET_ACTIVITY_WITHDRAWAL, $amount, $newBalance);
+
             $em->persist($wallet);
-            
+            $generalService = $this->generalService;
+            $pointer["to"] = $user->getEmail();
+            $pointer["fromName"] = "Bau Dispatch";
+            $pointer['subject'] = "Wallet Transaction";
+
+            $template['template'] = "general-mail-transaction-success";
+            $template["var"] = array(
+                "amount" => $amount,
+                "fullname" => $user->getFullName(),
+                "logo" => "KK"
+            );
+            $generalService->sendMails($pointer, $template);
+
+
             $em->flush();
             return $wallet;
         }
@@ -99,7 +117,7 @@ class WalletService implements ExecutionInterface
             if ($verifyData instanceof \Exception) {
                 throw new Exception("Payment Veirification Error");
             } elseif ($verifyData->status == "success") {
-               
+
                 return $this->fundwallet($verifyData->data->chargedamount);
             } else {
                 throw new \Exception("Payment Not Successfull");
@@ -125,7 +143,7 @@ class WalletService implements ExecutionInterface
              */
             $user = $em->find(User::class, $userId);
             $walletActivity = new WalletActivity();
-            
+
             /**
              *
              * @var Wallet $walletEntity
@@ -136,7 +154,7 @@ class WalletService implements ExecutionInterface
                 $newBalance = 0 + $amount;
                 $this->createnewWallet($user, $amount);
             } else {
-                
+
                 $newBalance = $walletEntity->getBalance() + $amount;
                 $walletEntity->setBalance($newBalance)->setUpdatedOn(new \Datetime());
             }
@@ -152,20 +170,21 @@ class WalletService implements ExecutionInterface
     }
 
     private function debitwallet()
-    {}
+    {
+    }
 
     private function createnewWallet(User $user, float $amount = 0)
     {
         $em = $this->generalService->getEntityManager();
         try {
-            
+
             $walletEntity = new Wallet();
             $walletEntity->setBalance($amount)
                 ->setCreatedOn(new \Datetime())
                 ->setPasscode(mt_rand(100000, 999999))
                 ->setUser($user)
                 ->setWalletUid(uniqid("book"));
-            
+
             $em->persist($walletEntity);
         } catch (\Exception $e) {
             throw new Exception("Cannot Create wallet");
@@ -194,11 +213,13 @@ class WalletService implements ExecutionInterface
 
     private function createtransaction()
     {
-        try {} catch (\Exception $e) {}
+        try {
+        } catch (\Exception $e) {
+        }
     }
 
     // public function get
-    
+
     /**
      *
      * @return the $flutterwaveService
@@ -219,7 +240,7 @@ class WalletService implements ExecutionInterface
 
     /**
      *
-     * @param \General\Service\FlutterwaveService $flutterwaveService            
+     * @param \General\Service\FlutterwaveService $flutterwaveService
      */
     public function setFlutterwaveService($flutterwaveService)
     {
@@ -229,7 +250,7 @@ class WalletService implements ExecutionInterface
 
     /**
      *
-     * @param \Wallet\Service\GeneralService; $generalService            
+     * @param \Wallet\Service\GeneralService; $generalService
      */
     public function setGeneralService($generalService)
     {
@@ -257,7 +278,7 @@ class WalletService implements ExecutionInterface
 
     /**
      *
-     * @param \Doctrine\ORM\EntityManager $entityManager            
+     * @param \Doctrine\ORM\EntityManager $entityManager
      */
     public function setEntityManager($entityManager)
     {
@@ -267,7 +288,7 @@ class WalletService implements ExecutionInterface
 
     /**
      *
-     * @param \JWT\Service\ApiAuthenticationService $apiAuthService            
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService
      */
     public function setApiAuthService($apiAuthService)
     {

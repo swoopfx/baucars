@@ -1278,6 +1278,7 @@ $flashMessenger = $this->flashMessenger()
 			},
 			// Begin Present function 
 			getBookingHistory() {
+
 				axios.get("/customer/booking-history").then(res => {
 					if (res.status == 200) {
 						this.bookingHistory = res.data.data;

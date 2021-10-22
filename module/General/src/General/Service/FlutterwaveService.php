@@ -1,4 +1,5 @@
 <?php
+
 namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -15,11 +16,12 @@ use Application\Entity\ConcludedTransfer;
 use Laminas\Authentication\AuthenticationService;
 use Logistics\Entity\LogisticsTransaction;
 use Logistics\Entity\LogisticsRequest;
+use Logistics\Entity\LogisticsPaymentMode;
 
 /**
  *
  * @author otaba
- *        
+ *
  */
 class FlutterwaveService
 {
@@ -29,10 +31,10 @@ class FlutterwaveService
     const TRANSFER_STATUS_COMPLETED = 200;
 
     const TRANSFER_STATUS_FAILED = 300;
-    
-    
+
+
     const PAYMENT_SUCCESS = "success";
-    
+
     const  PAYMENT_FAILED = "failed";
 
     private $jsonContent = "application/json";
@@ -82,9 +84,9 @@ class FlutterwaveService
     private $flutterwaveEncrypKey;
 
     // private $
-    
+
     // Flutterwave
-    
+
     /**
      *
      * @var string
@@ -177,7 +179,7 @@ class FlutterwaveService
         $response = $client->send();
         if ($response->isSuccess()) {
             $rBody = json_decode($response->getBody());
-            
+
             $flutterSessioin->amountPayed = $rBody->data->amount;
             // $flutterSessioin->
             // insert into transation table
@@ -188,13 +190,13 @@ class FlutterwaveService
             throw new \Exception("Verification Error");
         }
     }
-    
+
     public function verifyPaymentApi($data)
     {
-        
+
         $endPoint = "https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify";
 //         $flutterSessioin = $this->flutterSession;
-        
+
         $body = [
             "txref" => $data["txRef"],
             "SECKEY" => $this->flutterwaveSecretKey
@@ -206,13 +208,13 @@ class FlutterwaveService
         $client->setHeaders($this->header);
         $client->setRawBody(json_encode($body));
         $response = $client->send();
-        
+
         if ($response->isSuccess()) {
-            
+
             $rBody = json_decode($response->getBody());
-            
+
             $data['amountPayed'] = $rBody->data->amount;
-           
+
             // $flutterSessioin->
             // insert into transation table
             return $rBody;
@@ -230,47 +232,47 @@ class FlutterwaveService
     public function hydrateTransaction()
     {
         try {
-        
-        $em = $this->entityManager;
-        $auth = $this->auth;
-        $transactionEntity = new Transactions();
-        $flutterSession = $this->flutterSession;
-        $transactionEntity->setCreatedOn(new \DateTime())
-            ->setAmount($this->amountPayed)
-            ->setFlwId($this->flwId)
-            ->setFlwRef($this->flwRef)
-            ->setTransactionUid(FlutterwaveService::transactionUid())
-            ->setStatus($em->find(TransactionStatus::class, $this->transactStatus))
-            ->setSettledAmount($this->settledAmount)
-            ->setTxRef($this->txRef)
-            ->setBooking($this->booking)
-            ->setUser($em->find(User::class, $this->transactUser));
-        
-        $em->persist($transactionEntity);
-        $generalService = $this->generalService;
-        $pointer["to"] = $auth->getIdentity()->getEmail();
-        $pointer["fromName"] = "Bau Cars Limited";
-        $pointer['subject'] = "Successfull Transaction";
-        
-        $template['template'] = "general-mail-transaction-success";
-        $template["var"] = [
-            "amount" => $this->amountPayed,
-            "fullname" => $this->booking->getUser()->getFullName(),
-            "logo" => "KK",
-            "bookingUid" => $this->booking->getBookingUid()
-        ];
-        $generalService->sendMails($pointer, $template);
-        // send transaction mail to customer
-        return $transactionEntity;
-        
+
+            $em = $this->entityManager;
+            $auth = $this->auth;
+            $transactionEntity = new Transactions();
+            $flutterSession = $this->flutterSession;
+            $transactionEntity->setCreatedOn(new \DateTime())
+                ->setAmount($this->amountPayed)
+                ->setFlwId($this->flwId)
+                ->setFlwRef($this->flwRef)
+                ->setTransactionUid(FlutterwaveService::transactionUid())
+                ->setStatus($em->find(TransactionStatus::class, $this->transactStatus))
+                ->setSettledAmount($this->settledAmount)
+                ->setTxRef($this->txRef)
+                ->setBooking($this->booking)
+                ->setUser($em->find(User::class, $this->transactUser));
+
+            $em->persist($transactionEntity);
+            $generalService = $this->generalService;
+            $pointer["to"] = $auth->getIdentity()->getEmail();
+            $pointer["fromName"] = "Bau Cars Limited";
+            $pointer['subject'] = "Successfull Transaction";
+
+            $template['template'] = "general-mail-transaction-success";
+            $template["var"] = [
+                "amount" => $this->amountPayed,
+                "fullname" => $this->booking->getUser()->getFullName(),
+                "logo" => "KK",
+                "bookingUid" => $this->booking->getBookingUid()
+            ];
+            $generalService->sendMails($pointer, $template);
+            // send transaction mail to customer
+            return $transactionEntity;
+
         } catch (Exception $e) {
             var_dump($e->getMessage());
         }
-        
+
         // send transaction mail
     }
-    
-    
+
+
     /**
      *
      * @return \Application\Entity\Transactions
@@ -278,28 +280,29 @@ class FlutterwaveService
     public function hydrateTransactionApi($data)
     {
         try {
-            
+
             $em = $this->entityManager;
-            
+
             $transactionEntity = new LogisticsTransaction();
 //             $flutterSession = $this->flutterSession;
             $transactionEntity->setCreatedOn(new \DateTime())
-            ->setAmount($data["amountPaid"])
-            ->setFlwId($data["flwId"])
-            ->setFlwRef($data["flwRef"])
-            ->setTransactionUid(FlutterwaveService::transactionUid())
-            ->setStatus($em->find(TransactionStatus::class, self::TRANSFER_STATUS_COMPLETED))
-            ->setSettledAmount($this->settledAmount)
-            ->setTxRef($data["txRef"])
-            ->setLogisticsRequest($em->find(LogisticsRequest::class, $data["logistics"]))
-            ->setUser($em->find(User::class, $data["user"]));
-            
+                ->setAmount($data["amountPaid"])
+                ->setFlwId($data["flwId"])
+                ->setFlwRef($data["flwRef"])
+                ->setTransactionUid(FlutterwaveService::transactionUid())
+                ->setStatus($em->find(TransactionStatus::class, self::TRANSFER_STATUS_COMPLETED))
+                ->setSettledAmount($data["settledAmount"])
+                ->setTxRef($data["txRef"])
+                ->setPaymentMode($em->find(LogisticsPaymentMode::class, $data["paymentmode"]))
+                ->setLogisticsRequest($em->find(LogisticsRequest::class, $data["logistics"]))
+                ->setUser($em->find(User::class, $data["user"]));
+
             $em->persist($transactionEntity);
             $generalService = $this->generalService;
             $pointer["to"] = $data["userEmail"];
             $pointer["fromName"] = "Bau Cars Limited";
             $pointer['subject'] = "Successfull Transaction";
-            
+
             $template['template'] = "general-mail-transaction-success";
             $template["var"] = [
                 "amount" => $data["amountPaid"],
@@ -310,11 +313,11 @@ class FlutterwaveService
             $generalService->sendMails($pointer, $template);
             // send transaction mail to customer
             return $transactionEntity;
-            
+
         } catch (Exception $e) {
             var_dump($e->getMessage());
         }
-        
+
         // send transaction mail
     }
 
@@ -326,7 +329,7 @@ class FlutterwaveService
             "currency" => "NGN",
             "amount" => $this->settledAmount
         ];
-        
+
         // $this->header["Content-Type"] = $this->jsonContent;
         $client = new Client();
         $client->setMethod(Request::METHOD_GET);
@@ -352,13 +355,13 @@ class FlutterwaveService
     /**
      * This function initiates transfer of funds to the account of the company
      *
-     * @throws \Exception
      * @return mixed
+     * @throws \Exception
      */
     public function initiateTrasnfer()
     {
         $transfercost = $this->transaferCost();
-        
+
         $this->initiatedTransferId = $this->hydrateTransferInitiate();
         $transferCharge = $transfercost->data[0]->fee + 15;
         $uid = $this->transferUid();
@@ -380,15 +383,15 @@ class FlutterwaveService
         $client->setHeaders($this->header);
         $client->setRawBody(json_encode($body));
         $response = $client->send();
-        
+
         if ($response->isSuccess()) {
             $rBody = json_decode($response->getBody());
-            
+
             if ($rBody->status == "success") {
                 $rData = $rBody->data;
                 $this->hydrateTransferConclude($rBody);
             }
-            
+
             return $rBody;
         } else {
             // Signa
@@ -426,7 +429,7 @@ class FlutterwaveService
             ->setRaveId($data->data->id)
             ->setRaveMessage($data->message)
             ->setRaveRef($data->data->reference);
-        
+
         $initiatedTransafer->setUpdatedOn(new \DateTime())->setTransferStatus($em->find(TransferStatus::class, self::TRANSFER_STATUS_COMPLETED));
         $em->persist($conclude);
         $em->persist($initiatedTransafer);
@@ -480,7 +483,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Doctrine\ORM\EntityManager $entityManager            
+     * @param \Doctrine\ORM\EntityManager $entityManager
      */
     public function setEntityManager($entityManager)
     {
@@ -490,7 +493,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $generalService            
+     * @param field_type $generalService
      */
     public function setGeneralService($generalService)
     {
@@ -500,7 +503,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param string $flutterwavePublicKey            
+     * @param string $flutterwavePublicKey
      */
     public function setFlutterwavePublicKey($flutterwavePublicKey)
     {
@@ -510,7 +513,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param string $flutterwaveSecretKey            
+     * @param string $flutterwaveSecretKey
      */
     public function setFlutterwaveSecretKey($flutterwaveSecretKey)
     {
@@ -520,7 +523,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param string $flutterwaveEncrypKey            
+     * @param string $flutterwaveEncrypKey
      */
     public function setFlutterwaveEncrypKey($flutterwaveEncrypKey)
     {
@@ -575,7 +578,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Laminas\Session\Container $flutterSession            
+     * @param \Laminas\Session\Container $flutterSession
      */
     public function setFlutterSession($flutterSession)
     {
@@ -585,7 +588,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $flutterwaveConfig            
+     * @param field_type $flutterwaveConfig
      */
     public function setFlutterwaveConfig($flutterwaveConfig)
     {
@@ -595,7 +598,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param string $txRef            
+     * @param string $txRef
      */
     public function setTxRef($txRef)
     {
@@ -605,7 +608,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param string $amountPayed            
+     * @param string $amountPayed
      */
     public function setAmountPayed($amountPayed)
     {
@@ -653,7 +656,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param number $transactStatus            
+     * @param number $transactStatus
      */
     public function setTransactStatus($transactStatus)
     {
@@ -663,7 +666,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $flwRef            
+     * @param field_type $flwRef
      */
     public function setFlwRef($flwRef)
     {
@@ -673,7 +676,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $flwId            
+     * @param field_type $flwId
      */
     public function setFlwId($flwId)
     {
@@ -692,7 +695,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $transactUser            
+     * @param field_type $transactUser
      */
     public function setTransactUser($transactUser)
     {
@@ -711,7 +714,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $settledAmount            
+     * @param field_type $settledAmount
      */
     public function setSettledAmount($settledAmount)
     {
@@ -730,7 +733,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Bookings           
+     * @param \Bookings
      */
     public function setBooking($booking)
     {
@@ -767,7 +770,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $transferRecipientAcc            
+     * @param field_type $transferRecipientAcc
      */
     public function setTransferRecipientAcc($transferRecipientAcc)
     {
@@ -777,7 +780,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $transaferRecipientBank            
+     * @param field_type $transaferRecipientBank
      */
     public function setTransaferRecipientBank($transaferRecipientBank)
     {
@@ -787,7 +790,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $transferAmount            
+     * @param field_type $transferAmount
      */
     public function setTransferAmount($transferAmount)
     {
@@ -806,7 +809,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param field_type $initiatedTransferId            
+     * @param field_type $initiatedTransferId
      */
     public function setInitiatedTransferId($initiatedTransferId)
     {
@@ -825,7 +828,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param number $transactionId            
+     * @param number $transactionId
      */
     public function setTransactionId($transactionId)
     {
@@ -844,7 +847,7 @@ class FlutterwaveService
 
     /**
      *
-     * @param \Laminas\Authentication\AuthenticationService $auth            
+     * @param \Laminas\Authentication\AuthenticationService $auth
      */
     public function setAuth($auth)
     {
