@@ -6,7 +6,6 @@ use Laminas\Http\Request;
 use Laminas\Http\Client;
 use Laminas\Json\Json;
 use Laminas\InputFilter\InputFilter;
-use Laminas\View\Model\JsonModel;
 use Logistics\Entity\LogisticsRequest;
 use Doctrine\ORM\EntityManager;
 use Logistics\Entity\LogisticsPaymentMode;

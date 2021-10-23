@@ -16,7 +16,7 @@ return array(
         'Job',
         'Logistics',
         'Wallet',
-        'JWT',
+        'JWT'
 //         "JwtLaminasAuth"
         
         // 'WasabiLib',

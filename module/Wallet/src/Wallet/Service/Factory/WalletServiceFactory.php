@@ -16,13 +16,7 @@ use JWT\Service\ApiAuthenticationService;
 class WalletServiceFactory implements FactoryInterface
 {
 
-    /**
-     */
-    public function __construct()
-    {
-        
-        // TODO - Insert your code here
-    }
+   
 
     /**
      * (non-PHPdoc)

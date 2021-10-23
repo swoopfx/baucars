@@ -3,7 +3,6 @@ namespace General;
 
 use General\Service\Factory\GeneralServiceFactory;
 use General\Service\Factory\FlutterwaveServiceFactory;
-use General\Service\GeneralService;
 use General\View\Helper\MyCurrency;
 use General\View\Helper\StatusHelper;
 use General\Service\JwtService;
@@ -24,7 +23,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            GeneralService::class=>GeneralServiceFactory::class,
+            "General\Service\GeneralService"=>GeneralServiceFactory::class,
             "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
             "General\Service\JwtService" =>JwtServiceFactory::class,
            

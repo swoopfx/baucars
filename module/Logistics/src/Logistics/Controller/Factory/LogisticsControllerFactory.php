@@ -16,13 +16,7 @@ use JWT\Service\ApiAuthenticationService;
 class LogisticsControllerFactory implements FactoryInterface
 {
 
-    /**
-     */
-    public function __construct()
-    {
-        
-        // TODO - Insert your code here
-    }
+   
 
     /**
      * (non-PHPdoc)
@@ -36,9 +30,7 @@ class LogisticsControllerFactory implements FactoryInterface
         $ctr = new LogisticsController();
 
         $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
-//        var_dump("LLL");
         $logisticsService = $serviceLocator->getServiceLocator()->get(LogisticsService::class);
-var_dump("OOOOOOO");
         $apiAuthService = $serviceLocator->getServiceLocator()->get(ApiAuthenticationService::class);
         // var_dump($generalService->getEntityManager());
 

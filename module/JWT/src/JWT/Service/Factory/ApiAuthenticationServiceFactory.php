@@ -25,7 +25,7 @@ class ApiAuthenticationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-         var_dump("SKSKS");
+         
         $xserv = new ApiAuthenticationService();
 
         $authenticationService = $serviceLocator->get('Laminas\Authentication\AuthenticationService');

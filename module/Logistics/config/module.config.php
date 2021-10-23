@@ -2,20 +2,16 @@
 namespace Logistics;
 
 
-use Logistics\Controller\UserController;
-use Logistics\Controller\Factory\UserControllerFactory;
+
 use Logistics\Controller\Factory\LogisticsControllerFactory;
 use Logistics\Service\LogisticsService;
 use Logistics\Service\Factory\LogisticsServiceFactory;
 
 return array(
     'controllers' => array(
-        'invokables' => array(
-//              => 'Logistics\Controller\LogisticsController'
-        
-        ),
+
         'factories' => array(
-            "Logistics\Controller\User" => UserControllerFactory::class,
+
             'Logistics\Controller\Logistics'=>LogisticsControllerFactory::class
         )
     ),
@@ -43,7 +39,7 @@ return array(
                     'default' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/[:controller[/:action]]',
+                            'route' => '/[:controller[/:action[/:uid]]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
