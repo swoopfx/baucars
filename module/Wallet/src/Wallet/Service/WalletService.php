@@ -71,7 +71,7 @@ class WalletService implements ExecutionInterface
         /**
          * @var  User
          */
-        $user = $em->find(User::class, $userid)
+        $user = $em->find(User::class, $userid);
         /**
          *
          * @var Wallet $wallet

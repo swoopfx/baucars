@@ -33,7 +33,7 @@ class WalletServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $xserv = new WalletService();
-        $generalService = $serviceLocator->get(GeneralService::class);
+    $generalService = $serviceLocator->get(GeneralService::class);
         $flutterwaveService = $serviceLocator->get(FlutterwaveService::class);
         $apiAuthService = $serviceLocator->get(ApiAuthenticationService::class);
         $entityManager = $generalService->getEntityManager();

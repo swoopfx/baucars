@@ -1,6 +1,7 @@
 <?php
 namespace Logistics\Service\Factory;
 
+use General\Service\GeneralService;
 use Laminas\ServiceManager\FactoryInterface;
 use Logistics\Service\LogisticsService;
 use JWT\Service\ApiAuthenticationService;
@@ -34,15 +35,20 @@ class LogisticsServiceFactory implements FactoryInterface
     public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $xserv = new LogisticsService();
-        $generalService = $serviceLocator->get("General\Service\GeneralService");
+        $generalService = $serviceLocator->get(GeneralService::class);
+        var_dump("OLLL");
         $apiAuthService = $serviceLocator->set(ApiAuthenticationService::class);
+        var_dump("SER");
         $walletService = $serviceLocator->get(WalletService::class);
+        var_dump("WAller");
+        var_dump("JUUUS");
         $flutterwaveService = $serviceLocator->get(FlutterwaveService::class);
         $xserv->setGeneralService($generalService)
             ->setEntityManager($generalService->getEntityManager())
             ->setWalletService($walletService)
             ->setFlutterwaveService($flutterwaveService)
             ->setApiAuthService($apiAuthService);
+
         return $xserv;
     }
 }

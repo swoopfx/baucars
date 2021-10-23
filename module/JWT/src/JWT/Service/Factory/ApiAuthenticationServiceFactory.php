@@ -15,13 +15,7 @@ use JWT\Service\JWTService;
 class ApiAuthenticationServiceFactory implements FactoryInterface
 {
 
-    /**
-     */
-    public function __construct()
-    {
-        
-        // TODO - Insert your code here
-    }
+
 
     /**
      * (non-PHPdoc)
@@ -31,7 +25,9 @@ class ApiAuthenticationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+         var_dump("SKSKS");
         $xserv = new ApiAuthenticationService();
+
         $authenticationService = $serviceLocator->get('Laminas\Authentication\AuthenticationService');
         $generalService = $serviceLocator->get(GeneralService::class);
         $urlPlugin = $serviceLocator->get("ControllerPluginManager")->get("Url");
@@ -42,7 +38,7 @@ class ApiAuthenticationServiceFactory implements FactoryInterface
             ->setRequestObject($requestObject)
             ->setEntityManager($generalService->getEntityManager())
             ->setGeneralService($generalService)
-            ->setUrlPlugin($urlPlugin)
+//            ->setUrlPlugin($urlPlugin)
             ->setJwtService($jwtService);
         return $xserv;
     }

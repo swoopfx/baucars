@@ -46,7 +46,8 @@ return array(
                             'route' => '/[:controller[/:action]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                "uid"=>"[a-zA-Z0-9_-]*"
                             ),
                             'defaults' => array()
                         )

@@ -809,10 +809,10 @@ class LogisticsService
                             throw new \Exception("We cound not charge your card");
                         }
                         $transactionData["amountPaid"] = $verifiedData->data->chargedamount;
-                        $transactionData["flwId"] = $verifyData->data->txid;
-                        $transactionData["flwRef"] = $verifyData->data->flwref;
-                        $transactionData["settledAmount"] = $verifyData->data->amountsettledforthistransaction;
-                        $transactionData["txRef"] = $verifyData->data->txref;
+                        $transactionData["flwId"] = $verifiedData->data->txid;
+                        $transactionData["flwRef"] =  $verifiedData->data->flwref;
+                        $transactionData["settledAmount"] = $verifiedData->data->amountsettledforthistransaction;
+                        $transactionData["txRef"] = $verifiedData->data->txref;
 
 
                     } else {
