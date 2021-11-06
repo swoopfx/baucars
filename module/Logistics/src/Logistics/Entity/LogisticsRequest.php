@@ -192,8 +192,8 @@ class LogisticsRequest
     private $isActive ;
 
     /**
-     * @ORM\OneToMany (targetEntity="LogisticsTransaction", mappedBy="request")
-     * @var Collection
+     * @ORM\OneToOne (targetEntity="LogisticsTransaction", mappedBy="LogisticsRequest")
+     * @var LogisticsTransaction
      */
     private $logisticsTransaction;
 
@@ -203,11 +203,7 @@ class LogisticsRequest
      */
     private $status;
     
-    /**
-     * 
-     * @var 
-     */
-    private $transaction;
+   
 
     // private
     
@@ -216,7 +212,7 @@ class LogisticsRequest
     public function __construct()
     {
         
-        $this->logisticsTransaction = new ArrayCollection();
+//         $this->logisticsTransaction = new ArrayCollection();
     }
     /**
      * @return the $id

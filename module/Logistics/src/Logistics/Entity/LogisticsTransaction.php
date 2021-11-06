@@ -23,27 +23,12 @@ class LogisticsTransaction
     private $id;
 
     /**
-     * @ORM\ManyToOne (targetEntity="LogisticsRequest", inversedBy="logisticsTransaction")
+     * @ORM\OneToOne (targetEntity="LogisticsRequest", inversedBy="logisticsTransaction")
      * @var LogisticsRequest
      */
     private $request;
 
-    /**
-     * @param LogisticsPaymentMode $paymentMode
-     */
-    public function setPaymentMode($paymentMode)
-    {
-        $this->paymentMode = $paymentMode;
-        return $this;
-    }
-
-    /**
-     * @return LogisticsPaymentMode
-     */
-    public function getPaymentMode()
-    {
-        return $this->paymentMode;
-    }
+   
 
     /**
      * @ORM\ManyToOne(targetEntity="LogisticsInvoice")
@@ -104,7 +89,7 @@ class LogisticsTransaction
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="LogisticsRequest", inversedBy="transaction")
+     * @ORM\OneToOne(targetEntity="LogisticsRequest", inversedBy="logisticsTransaction")
      * 
      * @var LogisticsRequest
      */
@@ -364,6 +349,24 @@ class LogisticsTransaction
     {
         $this->updatedOn = $updatedOn;
         return $this;
+    }
+    
+    
+    /**
+     * @param LogisticsPaymentMode $paymentMode
+     */
+    public function setPaymentMode($paymentMode)
+    {
+        $this->paymentMode = $paymentMode;
+        return $this;
+    }
+    
+    /**
+     * @return LogisticsPaymentMode
+     */
+    public function getPaymentMode()
+    {
+        return $this->paymentMode;
     }
 
    

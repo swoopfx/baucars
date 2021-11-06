@@ -56,10 +56,12 @@ class LogisticsController extends AbstractActionController
             "l",
             "st",
             "u",
-            "sta"
+            "sta",
+            "t"
         ])
             ->leftJoin("l.serviceType", "st")
             ->leftJoin("l.user", "u")
+            ->leftJoin("l.logisticsTransaction", "t")
             ->leftJoin("l.status", "sta")
             ->getQuery()
             ->setHydrationMode(Query::HYDRATE_ARRAY);
@@ -85,11 +87,13 @@ class LogisticsController extends AbstractActionController
             "l",
             "st",
             "u",
-            "sta"
+            "sta",
+            "t"
         ])
             ->leftJoin("l.serviceType", "st")
             ->leftJoin("l.user", "u")
             ->leftJoin("l.status", "sta")
+            ->leftJoin("l.logisticsTransaction", "t")
             ->where("l.status = :status")
             ->setParameters([
             "status" => LogisticsService::LOGISTICS_STATUS_PROCESSING
@@ -118,11 +122,13 @@ class LogisticsController extends AbstractActionController
             "l",
             "st",
             "u",
+            "t",
             "sta"
         ])
             ->leftJoin("l.serviceType", "st")
             ->leftJoin("l.user", "u")
             ->leftJoin("l.status", "sta")
+            ->leftJoin("l.logisticsTransaction", "t")
             ->where("l.status = :status")
             ->andWhere("l.isActive = :active")
             ->setParameters([
@@ -153,11 +159,13 @@ class LogisticsController extends AbstractActionController
             "l",
             "st",
             "u",
-            "sta"
+            "sta",
+            "t"
         ])
             ->leftJoin("l.serviceType", "st")
             ->leftJoin("l.user", "u")
             ->leftJoin("l.status", "sta")
+            ->leftJoin("l.logisticsTransaction", "t")
             ->where("l.status = :status")
             ->andWhere("l.isActive = :active")
             ->setParameters([
@@ -188,10 +196,13 @@ class LogisticsController extends AbstractActionController
             "l",
             "st",
             "u",
-            "sta"
+            "sta",
+            
+            "t"
         ])
             ->leftJoin("l.serviceType", "st")
             ->leftJoin("l.user", "u")
+            ->leftJoin("l.logisticsTransaction", "t")
             ->leftJoin("l.status", "sta")
             ->where("l.status = :status")
             ->andWhere("l.isActive = :active")
@@ -223,10 +234,12 @@ class LogisticsController extends AbstractActionController
             "l",
             "st",
             "u",
-            "sta"
+            "sta",
+            "t"
         ])
             ->leftJoin("l.serviceType", "st")
             ->leftJoin("l.user", "u")
+            ->leftJoin("l.logisticsTransaction", "t")
             ->leftJoin("l.status", "sta")
             ->where("l.status = :status")
             ->andWhere("l.isActive = :active")
