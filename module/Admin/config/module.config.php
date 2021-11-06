@@ -7,6 +7,7 @@ use Admin\Controller\Factory\CarControllerFactory;
 use Admin\Controller\Factory\SettingsControllerFactory;
 use Admin\Controller\Factory\SupportControllerFactory;
 use Admin\View\Helper\IsReturntriphelper;
+use Admin\Controller\Factory\LogisticsControllerFactory;
 
 return array(
     'controllers' => array(
@@ -21,6 +22,7 @@ return array(
             "Admin\Controller\Car"=>CarControllerFactory::class,
             "Admin\Controller\Settings"=>SettingsControllerFactory::class,
             "Admin\Controller\Support"=>SupportControllerFactory::class,
+            "Admin\Controller\Logistics"=>LogisticsControllerFactory::class,
         )
     ),
     'router' => array(

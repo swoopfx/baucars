@@ -23,6 +23,12 @@ class LogisticsTransaction
     private $id;
 
     /**
+     * @ORM\ManyToOne (targetEntity="LogisticsRequest", inversedBy="logisticsTransaction")
+     * @var LogisticsRequest
+     */
+    private $request;
+
+    /**
      * @param LogisticsPaymentMode $paymentMode
      */
     public function setPaymentMode($paymentMode)

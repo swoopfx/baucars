@@ -221,7 +221,7 @@ class FlutterwaveService
         } else {
             // store in database information about the booking
 //             $rBody = json_decode($response->getBody());
-            throw new \Exception("Verification Error");
+            throw new \Exception("We could not verify ur payment");
         }
     }
 
@@ -277,7 +277,7 @@ class FlutterwaveService
      *
      * @return \Application\Entity\Transactions
      */
-    public function hydrateTransactionApi($data)
+    public function hydrateTransactionApi($data, $lo = null)
     {
         try {
 
@@ -294,7 +294,7 @@ class FlutterwaveService
                 ->setSettledAmount($data["settledAmount"])
                 ->setTxRef($data["txRef"])
                 ->setPaymentMode($em->find(LogisticsPaymentMode::class, $data["paymentmode"]))
-                ->setLogisticsRequest($em->find(LogisticsRequest::class, $data["logistics"]))
+                ->setLogisticsRequest($lo)
                 ->setUser($em->find(User::class, $data["user"]));
 
             $em->persist($transactionEntity);
@@ -310,7 +310,7 @@ class FlutterwaveService
                 "logo" => "KK",
 //                 "bookingUid" => $this->booking->getBookingUid()
             ];
-            $generalService->sendMails($pointer, $template);
+//             $generalService->sendMails($pointer, $template);
             // send transaction mail to customer
             return $transactionEntity;
 

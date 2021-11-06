@@ -1,5 +1,4 @@
 <?php
-
 namespace Logistics\Service;
 
 use Laminas\Http\Request;
@@ -14,11 +13,12 @@ use CsnUser\Entity\User;
 use JWT\Service\ApiAuthenticationService;
 use Wallet\Service\WalletService;
 use General\Service\FlutterwaveService;
+use Logistics\Entity\LogisticsRequestStatus;
 
 /**
  *
  * @author mac
- *
+ *        
  */
 class LogisticsService
 {
@@ -45,6 +45,18 @@ class LogisticsService
     const LOGISTICS_DELIVERY_MODE_NORMAL = 10;
 
     const LOGISTICS_DELIVERY_MODE_EXPRESS = 20;
+
+    const LOGISTICS_STATUS_INITIATED = 10;
+
+    const LOGISTICS_STATUS_ASSIGNED = 20;
+
+    const LOGISTICS_STATUS_DELIVERED = 30;
+
+    const LOGISTICS_STATUS_CANCELED = 40;
+
+    const LOGISTICS_STATUS_REJECTED = 50;
+
+    const LOGISTICS_STATUS_PROCESSING = 60;
 
     // kilometers
     private $generalService;
@@ -77,7 +89,7 @@ class LogisticsService
      */
     public function __construct()
     {
-
+        
         // TODO - Insert your code here
     }
 
@@ -98,17 +110,17 @@ class LogisticsService
     public function distanceMatrix($matrix1, $matrix2)
     {
         if ($matrix1 != NULL && $matrix2 != NULL) {
-
+            
             $endPoint = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:{$matrix1}&key=AIzaSyBobkXMM-uzqQLM5pqs_n7prJKJJ4-JK5I&destinations=place_id:{$matrix2}";
             $client = new Client();
-
+            
             $client->setMethod(Request::METHOD_GET);
             $client->setUri($endPoint);
-
+            
             $response = $client->send();
-
+            
             if ($response->isSuccess()) {
-
+                
                 return Json::decode($response->getBody());
             }
         } else {
@@ -136,8 +148,8 @@ class LogisticsService
 
     /**
      *
-     * @param int $distanceValue
-     * @param int $serviceType
+     * @param int $distanceValue            
+     * @param int $serviceType            
      * @return number
      */
     private function normalpricing(int $distanceValue, int $serviceType = null)
@@ -152,8 +164,8 @@ class LogisticsService
 
     /**
      *
-     * @param int $distanceValue
-     * @param int $serviceType
+     * @param int $distanceValue            
+     * @param int $serviceType            
      * @return number
      */
     private function expresspricing(int $distanceValue, int $serviceType = null)
@@ -167,19 +179,18 @@ class LogisticsService
     }
 
     private function filter($post)
-    {
-    }
+    {}
 
     /**
      * This fun
      *
-     * @param array $post
+     * @param array $post            
      * @return array
      */
     public function priceandDistanceCalculator($post)
     {
         $inputFilter = new InputFilter();
-
+        
         $inputFilter->add(array(
             'name' => 'pickUpPlaceId',
             'required' => true,
@@ -201,10 +212,10 @@ class LogisticsService
                         )
                     )
                 )
-
+            
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'destinationPlaceId',
             'required' => true,
@@ -226,10 +237,10 @@ class LogisticsService
                         )
                     )
                 )
-
+            
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'pickAddress',
             'required' => true,
@@ -253,7 +264,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'destinationAddress',
             'required' => true,
@@ -277,7 +288,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'pickupLat',
             'required' => true,
@@ -301,7 +312,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'pickupLong',
             'required' => true,
@@ -325,7 +336,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'destinationLat',
             'required' => true,
@@ -349,7 +360,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'destinationLong',
             'required' => true,
@@ -373,7 +384,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'quantity',
             'required' => true,
@@ -397,7 +408,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'iten_name',
             'required' => true,
@@ -421,7 +432,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'service_type',
             'required' => true,
@@ -445,7 +456,7 @@ class LogisticsService
                 )
             )
         ));
-
+        
         $inputFilter->add(array(
             'name' => 'delivery_type',
             'required' => true,
@@ -470,13 +481,13 @@ class LogisticsService
             )
         ));
         $inputFilter->setData($post);
-
+        
         if ($inputFilter->isValid()) {
             // var_dump("Something");
             $data = $inputFilter->getValues();
-
+            
             $dm = $this->distanceMatrix($data["pickUpPlaceId"], $data["destinationPlaceId"]);
-
+            
             $distanceValue = $dm->rows[0]->elements[0]->distance->value;
             // var_dump($distanceValue);
             $distanceText = $dm->rows[0]->elements[0]->distance->text;
@@ -488,16 +499,17 @@ class LogisticsService
             $data["bauTxRef"] = $this->invoiceuid();
             return $data;
         } else {
-
+            
             throw new \Exception(Json::encode($inputFilter->getMessages()));
         }
     }
 
     public function createRequest($post)
     {
+        $em = $this->entityManager;
         if ($post["status"] == "success") {
             $inputFilter = new InputFilter();
-
+            
             $inputFilter->add(array(
                 'name' => 'pickUpPlaceId',
                 'required' => true,
@@ -519,10 +531,10 @@ class LogisticsService
                             )
                         )
                     )
-
+                
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'destinationPlaceId',
                 'required' => true,
@@ -544,10 +556,10 @@ class LogisticsService
                             )
                         )
                     )
-
+                
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'pickAddress',
                 'required' => true,
@@ -571,7 +583,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'destinationAddress',
                 'required' => true,
@@ -595,7 +607,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'pickupLat',
                 'required' => true,
@@ -619,7 +631,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'pickupLong',
                 'required' => true,
@@ -643,7 +655,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'destinationLat',
                 'required' => true,
@@ -667,7 +679,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'destinationLong',
                 'required' => true,
@@ -691,7 +703,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'quantity',
                 'required' => true,
@@ -715,7 +727,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'item_name',
                 'required' => true,
@@ -739,7 +751,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'service_type',
                 'required' => true,
@@ -763,7 +775,7 @@ class LogisticsService
                     )
                 )
             ));
-
+            
             $inputFilter->add(array(
                 'name' => 'delivery_type',
                 'required' => true,
@@ -787,12 +799,77 @@ class LogisticsService
                     )
                 )
             ));
+            
+            $inputFilter->add(array(
+                'name' => 'status',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Payment Status is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'payment_mode',
+                'required' => true,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'messages' => array(
+                                'isEmpty' => 'Payment Method is required'
+                            )
+                        )
+                    )
+                )
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'note',
+                'required' => false,
+                'allow_empty' => false,
+                'filters' => array(
+                    array(
+                        'name' => 'StripTags'
+                    ),
+                    array(
+                        'name' => 'StringTrim'
+                    )
+                ),
+                'validators' => array(
+                )
+            ));
             $inputFilter->setData($post);
+            // var_dump("HERE");
             if ($inputFilter->isValid()) {
                 $data = $inputFilter->getValues();
                 $dm = $this->distanceMatrix($data["pickUpPlaceId"], $data["destinationPlaceId"]);
                 $transactionData = array();
-
+                
                 $distanceValue = $dm->rows[0]->elements[0]->distance->value;
                 // var_dump($distanceValue);
                 $distanceText = $dm->rows[0]->elements[0]->distance->text;
@@ -801,40 +878,50 @@ class LogisticsService
                 $data["price"] = $price;
                 $data['distanceText'] = $distanceText;
                 $data["distanceValue"] = $distanceValue;
+                
                 if ($data["status"] == FlutterwaveService::PAYMENT_SUCCESS) {
+                    
                     if ($data["payment_mode"] == self::LOGISTICS_PAYMENT_MODE_CARD) {
-                        $verifiedData = $this->flutterwaveService->verifyPaymentApi($data);
+                        // var_dump("LOO");
+                        $verifiedData = $this->flutterwaveService->verifyPaymentApi($post);
                         if ($verifiedData instanceof \Exception) {
                             throw new \Exception("We cound not charge your card");
                         }
+                        
+                        // var_dump($verifiedData->data->chargedamount);
                         $transactionData["amountPaid"] = $verifiedData->data->chargedamount;
                         $transactionData["flwId"] = $verifiedData->data->txid;
-                        $transactionData["flwRef"] =  $verifiedData->data->flwref;
+                        $transactionData["flwRef"] = $verifiedData->data->flwref;
                         $transactionData["settledAmount"] = $verifiedData->data->amountsettledforthistransaction;
                         $transactionData["txRef"] = $verifiedData->data->txref;
-
-
                     } else {
+                        // var_dump();
                         $transactionData["txRef"] = $post["txRef"];
                         $transactionData["amountPaid"] = $data["price"];
                     }
                     $logistics = $this->hydrateLogisticRequest($data);
                     $transactionData["logistics"] = $logistics->getId();
+                    // var_dump($logistics);
                     $transactionData["paymentmode"] = $post["payment_mode"];
                     $transactionData["user"] = $this->apiAuthService->getIdentity();
-                    $this->flutterwaveService->hydrateTransactionApi($transactionData);
-
-
+                    
+                    $this->flutterwaveService->hydrateTransactionApi($transactionData, $logistics);
+                    
                     // send email
-
+                    
+                    $em->flush();
+                    return $data;
+                }else{
+                    throw new \Exception("The transaction was not successfull");
                 }
-
-                $data = [];
+                
+                
             } else {
+                throw new \Exception($inputFilter->getMessages());
             }
         } else {
             // payment was not successfull
-            throw new \Exception(Json::encode("We could not process you payment"));
+            throw new \Exception("We could not process you payment");
         }
     }
 
@@ -842,18 +929,18 @@ class LogisticsService
     {
         $logistics = new LogisticsRequest();
         $em = $this->entityManager;
-        $logistics->setCalculatedDistanceText($data["distance"])
+        $logistics->setCalculatedDistanceText($data["distanceText"])
             ->setCalculatedDistanceValue($data["distanceValue"])
             ->
-            // ->setCalculatedTimeText($data[""])
-            setCreatedOn(new \Datetime())
+        // ->setCalculatedTimeText($data[""])
+        setCreatedOn(new \Datetime())
             ->setDeliveryNote($data["note"])
             ->setDestination($data["destinationAddress"])
             ->setDestinationLatitude($data["destinationLat"])
             ->setDestinationLongitude($data["destinationLong"])
             ->setDestinationPlaceId($data["destinationPlaceId"])
             ->setIsActive(TRUE)
-            ->setItemName($data["iten_name"])
+            ->setItemName($data["item_name"])
             ->setLogisticsUid(uniqid("lr"))
             ->setPaymentmode($em->find(LogisticsPaymentMode::class, $data["payment_mode"]))
             ->setPickupAddress($data["pickAddress"])
@@ -863,6 +950,7 @@ class LogisticsService
             ->setServiceType($em->find(LogisticsServiceType::class, $data["service_type"]))
             ->setUpdatedOn(new \Datetime())
             ->setQuantity($data["quantity"])
+            ->setStatus($em->find(LogisticsRequestStatus::class, LogisticsService::LOGISTICS_STATUS_INITIATED))
             ->setUser($em->find(User::class, $this->apiAuthService->getIdentity()));
         $em->persist($logistics);
         return $logistics;
@@ -879,7 +967,7 @@ class LogisticsService
 
     /**
      *
-     * @param field_type $generalService
+     * @param field_type $generalService            
      */
     public function setGeneralService($generalService)
     {
@@ -898,7 +986,7 @@ class LogisticsService
 
     /**
      *
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager            
      */
     public function setEntityManager($entityManager)
     {
@@ -917,7 +1005,7 @@ class LogisticsService
 
     /**
      *
-     * @param \JWT\Service\ApiAuthenticationService $apiAuthService
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService            
      */
     public function setApiAuthService($apiAuthService)
     {
@@ -936,7 +1024,7 @@ class LogisticsService
 
     /**
      *
-     * @param \Wallet\Service\WalletService $walletService
+     * @param \Wallet\Service\WalletService $walletService            
      */
     public function setWalletService($walletService)
     {
@@ -945,6 +1033,7 @@ class LogisticsService
     }
 
     /**
+     *
      * @return the $flutterwaveService
      */
     public function getFlutterwaveService()
@@ -953,13 +1042,13 @@ class LogisticsService
     }
 
     /**
-     * @param \General\Service\FlutterwaveService $flutterwaveService
+     *
+     * @param \General\Service\FlutterwaveService $flutterwaveService            
      */
     public function setFlutterwaveService($flutterwaveService)
     {
         $this->flutterwaveService = $flutterwaveService;
         return $this;
     }
-
 }
 

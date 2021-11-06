@@ -8,12 +8,12 @@
  *
  *
  */
-
 namespace Logistics\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Doctrine\ORM\EntityManager;
+use Lcobucci\JWT\Exception;
 use Logistics\Entity\LogisticsDeliveryType;
 use Doctrine\ORM\Query;
 use Logistics\Entity\LogisticsPaymentMode;
@@ -23,6 +23,7 @@ use Logistics\Service\LogisticsService;
 use JWT\Service\ApiAuthenticationService;
 use Logistics\Entity\LogisticsRequest;
 use Logistics\Entity\LogisticsBikeRiders;
+use function GuzzleHttp\json_decode;
 
 class LogisticsController extends AbstractActionController
 {
@@ -60,9 +61,9 @@ class LogisticsController extends AbstractActionController
     }
 
     // public function boardAction
-
+    
     // public function active
-
+    
     /**
      * @OA\GET( path="/logistics/logistics/delivery-type", tags={"Logistics"},
      * @OA\Response(response="200", description="Success"),
@@ -75,18 +76,18 @@ class LogisticsController extends AbstractActionController
     public function deliveryTypeAction()
     {
         try {
-
+            
             $this->apiAuthService->getIdentity();
             $jsonModel = new JsonModel();
             $em = $this->entityManager;
             $repo = $em->getRepository(LogisticsDeliveryType::class);
-
+            
             $data = $repo->createQueryBuilder("l")
                 ->select("l")
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
                 ->getArrayResult();
-
+            
             $jsonModel->setVariables(array(
                 "data" => $data
             ));
@@ -110,13 +111,13 @@ class LogisticsController extends AbstractActionController
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
         $repo = $em->getRepository(LogisticsPaymentMode::class);
-
+        
         $data = $repo->createQueryBuilder("l")
             ->select("l")
             ->getQuery()
             ->setHydrationMode(Query::HYDRATE_ARRAY)
             ->getArrayResult();
-
+        
         $jsonModel->setVariables(array(
             "data" => $data
         ));
@@ -139,19 +140,18 @@ class LogisticsController extends AbstractActionController
             $jsonModel = new JsonModel();
             $em = $this->entityManager;
             $repo = $em->getRepository(LogisticsServiceType::class);
-
+            
             $data = $repo->createQueryBuilder("l")
                 ->select("l")
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
                 ->getArrayResult();
-
+            
             $jsonModel->setVariables(array(
                 "data" => $data
             ));
             return $jsonModel;
-        } catch (\Exception $e) {
-        }
+        } catch (\Exception $e) {}
     }
 
     /**
@@ -204,7 +204,7 @@ class LogisticsController extends AbstractActionController
             if ($request->isPost()) {
                 try {
                     $post = Json::decode(file_get_contents("php://input"));
-
+                    
                     $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
                     $response->setStatusCode(200);
                     $jsonModel->setVariables([
@@ -212,7 +212,7 @@ class LogisticsController extends AbstractActionController
                     ]);
                 } catch (\Exception $e) {
                     $response->setStatusCode(401);
-
+                    
                     $jsonModel->setVariables([
                         "error" => $e->getMessage()
                     ]);
@@ -225,7 +225,7 @@ class LogisticsController extends AbstractActionController
         } catch (\Exception $e) {
             return Json::encode($e->getMessage());
         }
-
+        
         return $jsonModel;
     }
 
@@ -248,9 +248,9 @@ class LogisticsController extends AbstractActionController
      * @OA\Property(property="destinationLat", type="string", example="3.4723495", description="The latitude of the destination address "),
      * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
      * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
-     * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
-     *
-     * @OA\Property(property="txRef", type="string", example="inv61706f10b762a", description="This is transaction unique identifier generated from the calculate-stats url must always be attached be it wallet or card payment"),
+     * @OA\Property(property="item_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
+     * @OA\Property(property="amountPayed", type="string", example="3100", description="This is the amount paid for the successfull transaction, deduced form the value of price in the calculated-stats"),
+     * @OA\Property(property="txRef", type="string", example="booking61706f10b762a", description="This is transaction unique identifier generated from the calculate-stats url must always be attached be it wallet or card payment"),
      * @OA\Property(property="status", type="string", example="success", description="This could either be success or error if the response code is 400 according to flutterwave "),
      * @OA\Property(property="service_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/service-type url"),
      * @OA\Property(property="payment_mode", type="integer", example=20, description="This is an id referenced from the logistics/logistics/payment-mode url"),
@@ -286,9 +286,9 @@ class LogisticsController extends AbstractActionController
                     "data" => $data
                 ));
             } catch (\Exception $e) {
-                $jsonModel->setVariables([
-                    "message" => "Not Authorized"
-                ]);
+                $jsonModel->setVariables(array(
+                    "message" => $e->getMessage()
+                ));
             }
         }
         return $jsonModel;
@@ -301,6 +301,7 @@ class LogisticsController extends AbstractActionController
      * security={{"bearerAuth":{}}}
      * )
      * Gets a list of all active request associated to this user
+     *
      * @return JsonModel
      */
     public function requestsAction()
@@ -308,13 +309,14 @@ class LogisticsController extends AbstractActionController
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
         $repo = $em->getRepository(LogisticsRequest::class);
-        $data = $repo->createQueryBuilder("s")->select(array(
+        $data = $repo->createQueryBuilder("s")
+            ->select(array(
             "s"
         ))
             ->where("s.isActive = :active")
             ->setParameters(array(
-                "active" => true,
-            ))
+            "active" => true
+        ))
             ->getQuery()
             ->setHydrationMode(Query::HYDRATE_ARRAY)
             ->getArrayResult();
@@ -326,74 +328,147 @@ class LogisticsController extends AbstractActionController
 
     /**
      * @OA\GET( path="/logistics/logistics/riderinfo/{uid}", tags={"RIDER"}, description="This Gets a riders information usually associated to an active ride",
-     *  @OA\Parameter(in="path", name="uid"),
+     * @OA\Parameter(in="path", name="uid"),
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
      * security={{"bearerAuth":{}}}
-     *     )
+     * )
      * Gets a riders information usually associated to an active ride
+     *
      * @return JsonModel
      */
     public function riderinfoAction()
     {
         try {
-//            var_dump("LOO");
+            // var_dump("LOO");
             $this->apiAuthService->getIdentity();
             $jsonModel = new JsonModel();
             $em = $this->entityManager;
-
+            
             $response = $this->getResponse();
             $uid = $this->params()->fromRoute("uid", null);
-            var_dump($uid);
             if ($uid != null) {
                 $repo = $em->getRepository(LogisticsBikeRiders::class);
                 $data = $repo->createQueryBuilder('s')
-                    ->select(array("s", "u"))
+                    ->select(array(
+                    "s",
+                    "u"
+                ))
                     ->leftJoin("s.user", "u")
                     ->where("s.riderUid = :uid")
                     ->setParameters(array(
-                        "uid" => $uid
-                    ))->getQuery()
+                    "uid" => $uid
+                ))
+                    ->getQuery()
                     ->setHydrationMode(Query::HYDRATE_ARRAY)
                     ->getArrayResult();
-
+                
                 $jsonModel->setVariables(array(
-                    "data"=>$data
+                    "data" => $data
                 ));
             } else {
                 $response->setStatusCode(400);
                 $jsonModel->setVariables(array(
                     "message" => "Absent Identifier"
                 ));
-
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return Json::encode($e->getMessage());
         }
-
+        
         return $jsonModel;
     }
 
-
     /**
-     * * @OA\GET( path="/logistics/logistics/rideinfo", tags={"Logistics"}, description="This gets an information for an active ride",
+     * * @OA\GET( path="/logistics/logistics/rideinfo/{uid}", tags={"Logistics"}, description="This gets an information for an active ride",
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
      * security={{"bearerAuth":{}}}
-     *     )
+     * )
      *
      * gets an information for an active ride
+     *
      * @return JsonModel
      */
     public function rideinfoAction()
     {
-        $jsonModel = new JsonModel();
-
+        try {
+            $jsonModel = new JsonModel();
+            $em = $this->entityManager;
+            $response = $this->getResponse();
+            $response->setStatusCode(400);
+            $uid = $this->params()->fromRoute("uid", null);
+            if ($uid != null) {
+                $repo = $em->getRepository(LogisticsRequest::class);
+                $data = $repo->createQueryBuilder("s")
+                    ->select(array(
+                    "s",
+                    "t",
+                    "pm",
+                    "ad",
+                    "tr"
+                ))
+                    ->leftJoin("s.serviceType", "t")
+                    ->leftJoin("s.LogisticsPaymentMode", "pm")
+                    ->leftJoin("s.assignedRider", "ad")
+                    ->leftJoin("s.logisticsTransaction", "tr")
+                    ->where("s.logisticsUid = :uid")
+                    ->andWhere("s.isActive = :active")
+                    ->setParameters(array(
+                    "active" => true,
+                    "uid" => $uid
+                ))
+                    ->getQuery()
+                    ->setHydrationMode(Query::HYDRATE_ARRAY)
+                    ->getArrayResult();
+                $response->setStatusCode(200);
+                $jsonModel->setVariables(array(
+                    "data" => $data
+                ));
+            } else {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables(array(
+                    "message" => "Absent Identifier"
+                ));
+            }
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
+        }
+        
         return $jsonModel;
     }
 
-//    public function
+    public function ridehistroryAction()
+    {
+        try {
+            $userId = $this->apiAuthService->getIdentity();
+            $jsonModel = new JsonModel();
+            $em = $this->entityManager;
+            $repo = $em->getRepository(LogisticsRequest::class);
+            $data = $repo->createQueryBuilder("s")
+                ->select(array(
+                "s",
+                "u",
+                "st"
+            ))
+                ->leftJoin("s.status", "st")
+                ->leftJoin("s.user", "u")
+                ->where("s.user = :user")
+                ->setParameters(array(
+                "user" => $userId
+            ))
+                ->setMaxResults(15)
+                ->getQuery()
+                ->getResult(Query::HYDRATE_ARRAY);
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
+        }
+        
+        return $jsonModel;
+    }
 
+    // public function
+    
     /**
      *
      * @return the $generalService
@@ -405,7 +480,7 @@ class LogisticsController extends AbstractActionController
 
     /**
      *
-     * @param field_type $generalService
+     * @param field_type $generalService            
      */
     public function setGeneralService($generalService)
     {
@@ -424,7 +499,7 @@ class LogisticsController extends AbstractActionController
 
     /**
      *
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager            
      */
     public function setEntityManager($entityManager)
     {
@@ -443,7 +518,7 @@ class LogisticsController extends AbstractActionController
 
     /**
      *
-     * @param \Logistics\Service\LogisticsService $logisticsService
+     * @param \Logistics\Service\LogisticsService $logisticsService            
      */
     public function setLogisticsService($logisticsService)
     {
@@ -462,7 +537,7 @@ class LogisticsController extends AbstractActionController
 
     /**
      *
-     * @param \JWT\Service\ApiAuthenticationService $apiAuthService
+     * @param \JWT\Service\ApiAuthenticationService $apiAuthService            
      */
     public function setApiAuthService($apiAuthService)
     {

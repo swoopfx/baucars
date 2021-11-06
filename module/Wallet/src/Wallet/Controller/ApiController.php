@@ -197,8 +197,8 @@ class ApiController extends AbstractActionController
                         $resp = $this->walletService->chargeWallet($data["amount"]);
                         $response->setStatusCode(201);
                         $jsonModel->setVariables([
-                            "message" => "Success",
-                            "txRef"=>uniqid("inv"),
+                            "message" => "success",
+                            "txRef" => uniqid("inv")
                         ]);
                     } else {
                         $jsonModel->setVariables([
@@ -256,7 +256,7 @@ class ApiController extends AbstractActionController
 
     /**
      *
-     * @OA\GET( path="/wallet/api/prefund-wallet", tags={"Wallet"}, description="Call this function to get details that would be fed to the flutterwave api",
+     * @OA\GET( path="/wallet/api/prefund-wallet", tags={"Wallet"}, description="This api is prequel funding of a wallet. it retrives preconfig parameters required to fund the wallet. Call this function to get details that would be fed to the flutterwave api",
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
      * security={{"bearerAuth":{}}}
@@ -337,10 +337,10 @@ class ApiController extends AbstractActionController
             if ($request->isPost()) {
                 $post = Json::decode(file_get_contents("php://input"));
                 $this->walletService->fundWalletLogic(get_object_vars($post));
-               
+                
                 $response->setStatusCode(201);
                 $jsonModel->setVariables([
-                    "message"=>"Wallet Funded"
+                    "message" => "Wallet Funded"
                 ]);
             } else {
                 $response->setStatusCode(403);

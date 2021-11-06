@@ -2,8 +2,10 @@
 
 namespace Admin\Controller\Factory;
 
-use Admin\Controller\LogisticsConroller;
+// use Admin\Controller\LogisticsConroller;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use General\Service\GeneralService;
+use Admin\Controller\LogisticsController;
 
 class LogisticsControllerFactory implements \Laminas\ServiceManager\FactoryInterface
 {
@@ -13,7 +15,10 @@ class LogisticsControllerFactory implements \Laminas\ServiceManager\FactoryInter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-         $ctr = new LogisticsConroller();
+         $ctr = new LogisticsController();
+         $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
+         $em = $generalService->getEntityManager();
+         $ctr->setEntityManager($em)->setGeneralService($generalService);
          return $ctr;
     }
 }

@@ -1,8 +1,10 @@
 <?php
 namespace Logistics\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use CsnUser\Entity\User;
+use Google\Collection;
 
 /**
  * @ORM\Entity
@@ -142,11 +144,11 @@ class LogisticsRequest
     private $destinationPlaceId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Driver\Entity\DriverBio", inversedBy="booking")
+     * @ORM\ManyToOne(targetEntity="LogisticsBikeRiders", inversedBy="booking")
      *
-     * @var DriverBio
+     * @var LogisticsBikeRiders
      */
-    private $assignedDriver;
+    private $assignedRider;
 
     /**
      * @ORM\Column(name="item_name", type="string", nullable=true)
@@ -189,6 +191,24 @@ class LogisticsRequest
      */
     private $isActive ;
 
+    /**
+     * @ORM\OneToMany (targetEntity="LogisticsTransaction", mappedBy="request")
+     * @var Collection
+     */
+    private $logisticsTransaction;
+
+    /**
+     * @ORM\ManyToOne (targetEntity="LogisticsRequestStatus")
+     * @var LogisticsRequestStatus
+     */
+    private $status;
+    
+    /**
+     * 
+     * @var 
+     */
+    private $transaction;
+
     // private
     
     /**
@@ -196,8 +216,450 @@ class LogisticsRequest
     public function __construct()
     {
         
-        // TODO - Insert your code here
+        $this->logisticsTransaction = new ArrayCollection();
     }
+    /**
+     * @return the $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return the $logisticsUid
+     */
+    public function getLogisticsUid()
+    {
+        return $this->logisticsUid;
+    }
+
+    /**
+     * @return the $serviceType
+     */
+    public function getServiceType()
+    {
+        return $this->serviceType;
+    }
+
+    /**
+     * @return the $user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return the $paymentmode
+     */
+    public function getPaymentmode()
+    {
+        return $this->paymentmode;
+    }
+
+    /**
+     * @return the $calculatedDistanceValue
+     */
+    public function getCalculatedDistanceValue()
+    {
+        return $this->calculatedDistanceValue;
+    }
+
+    /**
+     * @return the $calculatedDistanceText
+     */
+    public function getCalculatedDistanceText()
+    {
+        return $this->calculatedDistanceText;
+    }
+
+    /**
+     * @return the $calculatedTimeValue
+     */
+    public function getCalculatedTimeValue()
+    {
+        return $this->calculatedTimeValue;
+    }
+
+    /**
+     * @return the $calculatedTimeText
+     */
+    public function getCalculatedTimeText()
+    {
+        return $this->calculatedTimeText;
+    }
+
+    /**
+     * @return the $pickUpAddress
+     */
+    public function getPickUpAddress()
+    {
+        return $this->pickUpAddress;
+    }
+
+    /**
+     * @return the $pickupLongitude
+     */
+    public function getPickupLongitude()
+    {
+        return $this->pickupLongitude;
+    }
+
+    /**
+     * @return the $pickupLatitude
+     */
+    public function getPickupLatitude()
+    {
+        return $this->pickupLatitude;
+    }
+
+    /**
+     * @return the $pickupPlaceId
+     */
+    public function getPickupPlaceId()
+    {
+        return $this->pickupPlaceId;
+    }
+
+    /**
+     * @return the $destination
+     */
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @return the $destinationLongitude
+     */
+    public function getDestinationLongitude()
+    {
+        return $this->destinationLongitude;
+    }
+
+    /**
+     * @return the $destinationLatitude
+     */
+    public function getDestinationLatitude()
+    {
+        return $this->destinationLatitude;
+    }
+
+    /**
+     * @return the $destinationPlaceId
+     */
+    public function getDestinationPlaceId()
+    {
+        return $this->destinationPlaceId;
+    }
+
+    /**
+     * @return the $assignedRider
+     */
+    public function getAssignedRider()
+    {
+        return $this->assignedRider;
+    }
+
+    /**
+     * @return the $itemName
+     */
+    public function getItemName()
+    {
+        return $this->itemName;
+    }
+
+    /**
+     * @return the $deliveryNote
+     */
+    public function getDeliveryNote()
+    {
+        return $this->deliveryNote;
+    }
+
+    /**
+     * @return the $createdOn
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * @return the $updatedOn
+     */
+    public function getUpdatedOn()
+    {
+        return $this->updatedOn;
+    }
+
+    /**
+     * @return the $quantity
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @return the $isActive
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @return the $logisticsTransaction
+     */
+    public function getLogisticsTransaction()
+    {
+        return $this->logisticsTransaction;
+    }
+
+    /**
+     * @return the $status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param number $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param string $logisticsUid
+     */
+    public function setLogisticsUid($logisticsUid)
+    {
+        $this->logisticsUid = $logisticsUid;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\LogisticsServiceType $serviceType
+     */
+    public function setServiceType($serviceType)
+    {
+        $this->serviceType = $serviceType;
+        return $this;
+    }
+
+    /**
+     * @param \CsnUser\Entity\User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\LogisticsPaymentMode $paymentmode
+     */
+    public function setPaymentmode($paymentmode)
+    {
+        $this->paymentmode = $paymentmode;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\string; $calculatedDistanceValue
+     */
+    public function setCalculatedDistanceValue($calculatedDistanceValue)
+    {
+        $this->calculatedDistanceValue = $calculatedDistanceValue;
+        return $this;
+    }
+
+    /**
+     * @param string $calculatedDistanceText
+     */
+    public function setCalculatedDistanceText($calculatedDistanceText)
+    {
+        $this->calculatedDistanceText = $calculatedDistanceText;
+        return $this;
+    }
+
+    /**
+     * @param string $calculatedTimeValue
+     */
+    public function setCalculatedTimeValue($calculatedTimeValue)
+    {
+        $this->calculatedTimeValue = $calculatedTimeValue;
+        return $this;
+    }
+
+    /**
+     * @param string $calculatedTimeText
+     */
+    public function setCalculatedTimeText($calculatedTimeText)
+    {
+        $this->calculatedTimeText = $calculatedTimeText;
+        return $this;
+    }
+
+    /**
+     * @param string $pickUpAddress
+     */
+    public function setPickUpAddress($pickUpAddress)
+    {
+        $this->pickUpAddress = $pickUpAddress;
+        return $this;
+    }
+
+    /**
+     * @param string $pickupLongitude
+     */
+    public function setPickupLongitude($pickupLongitude)
+    {
+        $this->pickupLongitude = $pickupLongitude;
+        return $this;
+    }
+
+    /**
+     * @param string $pickupLatitude
+     */
+    public function setPickupLatitude($pickupLatitude)
+    {
+        $this->pickupLatitude = $pickupLatitude;
+        return $this;
+    }
+
+    /**
+     * @param string $pickupPlaceId
+     */
+    public function setPickupPlaceId($pickupPlaceId)
+    {
+        $this->pickupPlaceId = $pickupPlaceId;
+        return $this;
+    }
+
+    /**
+     * @param string $destination
+     */
+    public function setDestination($destination)
+    {
+        $this->destination = $destination;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationLongitude
+     */
+    public function setDestinationLongitude($destinationLongitude)
+    {
+        $this->destinationLongitude = $destinationLongitude;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationLatitude
+     */
+    public function setDestinationLatitude($destinationLatitude)
+    {
+        $this->destinationLatitude = $destinationLatitude;
+        return $this;
+    }
+
+    /**
+     * @param string $destinationPlaceId
+     */
+    public function setDestinationPlaceId($destinationPlaceId)
+    {
+        $this->destinationPlaceId = $destinationPlaceId;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\LogisticsBikeRiders $assignedRider
+     */
+    public function setAssignedRider($assignedRider)
+    {
+        $this->assignedRider = $assignedRider;
+        return $this;
+    }
+
+    /**
+     * @param string $itemName
+     */
+    public function setItemName($itemName)
+    {
+        $this->itemName = $itemName;
+        return $this;
+    }
+
+    /**
+     * @param string $deliveryNote
+     */
+    public function setDeliveryNote($deliveryNote)
+    {
+        $this->deliveryNote = $deliveryNote;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\Datetime $createdOn
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\Datetime $updatedOn
+     */
+    public function setUpdatedOn($updatedOn)
+    {
+        $this->updatedOn = $updatedOn;
+        return $this;
+    }
+
+    /**
+     * @param number $quantity
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+        return $this;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
+    /**
+     * @param \Google\Collection $logisticsTransaction
+     */
+    public function setLogisticsTransaction($logisticsTransaction)
+    {
+        $this->logisticsTransaction = $logisticsTransaction;
+        return $this;
+    }
+
+    /**
+     * @param \Logistics\Entity\LogisticsRequestStatus $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
 
 
 }
