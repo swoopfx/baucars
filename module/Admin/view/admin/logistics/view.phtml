@@ -1,5 +1,5 @@
 <?php
-echo $this->headtitle("Booking");
+echo $this->headtitle("Logistics Info");
 
 ?>
 <?php
@@ -23,7 +23,7 @@ $flashMessenger = $this->flashMessenger()
 			<div class="row">
 				<div class="col-lg-6">
 					<!-- Page Title Start -->
-					<h2 class="page--title h5">Booking View</h2>
+					<h2 class="page--title h5">View Logistics</h2>
 					<!-- Page Title End -->
 
 
@@ -37,7 +37,7 @@ $flashMessenger = $this->flashMessenger()
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Process Booking</h5>
+					<h5 class="modal-title">Process Logistics</h5>
 
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 				</div>
@@ -74,9 +74,9 @@ $flashMessenger = $this->flashMessenger()
 			<div class="records--header">
 				<div class="title fa-shopping-bag">
 					<h3 class="h3">
-						Booking Details <?php if ($data->getAssignedDriver() == null) : ?><a
+						Booking Details <?php //if ($data->getAssignedDriver() == null) : ?><a
 							href="#processModal" data-toggle="modal"
-							class="btn btn-sm btn-outline-info">Process Booking</a><?php endif; ?>
+							class="btn btn-sm btn-outline-info">Process Booking</a><?php //endif; ?>
 					</h3>
 				</div>
 			</div>
@@ -89,10 +89,10 @@ $flashMessenger = $this->flashMessenger()
 			<div class="records--body">
 				<div class="title">
 					<h6 class="h6">
-						BOOKING REF # <?php echo strtoupper($data->getBookingUid()) ?><span
-							class="text-lightergray"> - <?php echo $this->dateformat($data->getCreatedOn(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, "en_us") ?>
+						LOGISTICS REF # <?php echo strtoupper($data["logisticsUid"]) ?><span
+							class="text-lightergray"> - <?php echo $this->dateformat($data["createdOn"], IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, "en_us") ?>
 						</span>
-						<button class="btn btn-danger"><?php echo $data->getStatus()->getStatus() ?></button>
+						<button class="btn btn-danger"><?php echo $data["status"]["status"] ?></button>
 					</h6>
 				</div>
 
@@ -116,45 +116,45 @@ $flashMessenger = $this->flashMessenger()
 								<table class="table table-simple">
 									<tbody>
 										<tr>
-											<td>BOOKING REF:</td>
-											<th><a href="#" class="btn-link"><?php echo strtoupper($data->getBookingUid()) ?></a>
+											<td>LOGISTICS REF:</td>
+											<th><a href="#" class="btn-link"><?php echo strtoupper($data["logisticsUid"]) ?></a>
 											</th>
 										</tr>
 										<tr>
 											<td>PICK UP Address</td>
-											<th><?php echo $data->getPickUpAddress() ?></th>
+											<th><?php echo $data["pickUpAddress"] ?></th>
 										</tr>
 										<tr>
 											<td>Destination Address</td>
-											<th><?php echo $data->getDestination() ?></th>
+											<th><?php echo $data["destination"] ?></th>
 										</tr>
 										<tr>
-											<td>Booking Pick Up</td>
-											<th><?php echo $this->dateformat($data->getPickupDate(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>
+											<td>Quantity</td>
+											<th><?php echo $data["quantity"] ?></th>
 										</tr>
 										<tr>
-											<td>Booking End On:</td>
-											<th><?php //echo $this->dateformat($data->getEndTime(), IntlDateFormatter::LONG, IntlDateFormatter::SHORT, "en_us") ?></th>
+											<td>Item:</td>
+											<th><?php echo $data["itemName"] ?></th>
 										</tr>
 										<tr>
-											<td>Booking TYpe</td>
-											<th><span class="label label-success"><?php //echo $data->getBookingType()->getBookingType() ?></span></th>
+											<td>Delivery Note</td>
+											<th><span class="label label-success"><?php echo $data["deliveryNote"] ?></span></th>
 										</tr>
 										<tr>
 											<td>Service Type</td>
-											<th><span class="label label-warning"><?php echo $data->getBookingClass()->getBookingClass() ?></span></th>
+											<th><span class="label label-warning"><?php echo $data["serviceType"]["type"] ?></span></th>
 										</tr>
 										<tr>
 											<td>Amount Payed:</td>
-											<th><?php echo ($data->getTransaction() == NULL ? "Cash Trip" :$this->myCurrency($data->getTransaction()->getAmount())) ?></th>
+											<th><?php echo $this->myCurrency($data["logisticsTransaction"]["amount"]) ?></th>
 										</tr>
 										<tr>
 											<td>Payment Method:</td>
-											<th><?php echo ($data->getTransaction() == NULL ? "Cash Trip" : "Credit Card" )?></th>
+											<th><?php echo $data["paymentmode"]["mode"] ?></th>
 										</tr>
 										<tr>
 											<td>Trip type</td>
-											<th><?php echo $this->isReturnTripHelper($data->getIsReturnTrip())?></th>
+											<th><?php //echo $this->isReturnTripHelper($data->getIsReturnTrip())?></th>
 										</tr>
 										
 									</tbody>
@@ -169,32 +169,32 @@ $flashMessenger = $this->flashMessenger()
 
 										<tr>
 											<td>Users ID:</td>
-											<th><?php echo strtoupper($data->getUser()->getUserUid()) ?></th>
+											<th><?php echo strtoupper($data["user"]["userUid"]) ?></th>
 										</tr>
 										<tr>
 											<td>Users Name:</td>
-											<th><?php echo $data->getUser()->getFullName() ?></th>
+											<th><?php echo $data["user"]["lastname"] ?></th>
 										</tr>
 										<tr>
 											<td>User Email</td>
-											<th><?php echo $data->getUser()->getEmail() ?></th>
+											<th><?php echo $data["user"]["email"] ?></th>
 										</tr>
 										<tr>
 											<td>Users Phone</td>
-											<th><?php echo $data->getUser()->getPhoneNumber() ?></th>
+											<th><?php echo $data["user"]["phoneNumber"] ?></th>
 										</tr>
 										<tr>
 											<td>Registered On</td>
-											<th><?php echo $this->dateformat($data->getUser()->getRegistrationDate(), IntlDateFormatter::FULL, IntlDateFormatter::NONE) ?></th>
+											<th><?php echo $this->dateformat($data["user"]["registrationDate"], IntlDateFormatter::FULL, IntlDateFormatter::NONE) ?></th>
 										</tr>
 
-										<tr>
-											<td>Users Staus:</td>
-											<th>0123 1234 123</th>
-										</tr>
+<!-- 										<tr> -->
+<!-- 											<td>Users Staus:</td> -->
+<!-- 											<th>0123 1234 123</th> -->
+<!-- 										</tr> -->
 										<tr>
 											<td>Users Last Login</td>
-											<th><?php echo $this->dateformat($data->getUser()->getLastlogin()->getLastlogin(), IntlDateFormatter::FULL, IntlDateFormatter::NONE) ?></th>
+											<th><?php //echo $this->dateformat($data->getUser()->getLastlogin()->getLastlogin(), IntlDateFormatter::FULL, IntlDateFormatter::NONE) ?></th>
 										</tr>
 
 									</tbody>
@@ -209,66 +209,27 @@ $flashMessenger = $this->flashMessenger()
 						<div class="row">
 							<div class="col-md-6">
 								<h4 class="subtitle">Assigned Driver</h4>
-								<?php if ($data->getAssignedDriver() != null) : ?>
+								<?php //if ($data->getAssignedDriver() != null) : ?>
 									<table class="table table-simple">
 									<tbody>
 										<tr>
 											<td>Driver Name</td>
-											<th><?php echo $data->getAssignedDriver()->getUser()->getFullName() ?></th>
+											<th><?php //echo $data->getAssignedDriver()->getUser()->getFullName() ?></th>
 										</tr>
 										<tr>
 											<td>Driver ID</td>
-											<th><?php echo strtoupper($data->getAssignedDriver()->getDiverUid()) ?></th>
+											<th><?php //echo strtoupper($data->getAssignedDriver()->getDiverUid()) ?></th>
 										</tr>
 										<tr>
 											<td>Driving Since</td>
-											<th><?php echo ($data->getAssignedDriver()->getDriverSince() != "" ? $this->dateformat($data->getAssignedDriver()->getDriverSince(), IntlDateFormatter::MEDIUM) : "") ?></th>
+											<th><?php //echo ($data->getAssignedDriver()->getDriverSince() != "" ? $this->dateformat($data->getAssignedDriver()->getDriverSince(), IntlDateFormatter::MEDIUM) : "") ?></th>
 										</tr>
 									</tbody>
 								</table>
-								<?php endif; ?>
+								<?php //endif; ?>
 							</div>
 
-							<div class="col-md-6">
-								<h4 class="subtitle">Car Details</h4>
-								<?php
-        
-        if ($data->getAssignedDriver() != null) :
-            if ($data->getAssignedDriver()->getAssisnedCar() != null) :
-                $cars = $data->getAssignedDriver()->getAssisnedCar();
-                // var_dump($cars);
-                // var_dump(count($cars));
-                foreach ($cars as $car) :
-                    
-                    ?>
-								
-										<table class="table table-simple">
-									<tbody>
-										<tr>
-											<td>Plate Number</td>
-											<th><?php echo ($car->getPlatNumber() != null ? $car->getPlatNumber() : "") ?></th>
-										</tr>
-										<tr>
-											<td>Motor Type</td>
-											<th><?php echo ($car->getMotorMake() != null ? $car->getMotorMake()->getCarMake()  : "") ?></th>
-										</tr>
-										<tr>
-											<td>Car Model:</td>
-											<th><?php echo ($car->getMotorName() != null ? $car->getMotorName() : "") ?></th>
-										</tr>
-
-									</tbody>
-								</table>
-								<?php
-                endforeach
-                ;
-								endif;
-								endif;
-            
-        
-        ?>
-
-							</div>
+							
 						</div>
 					</div>
 					<!-- Tab Pane End -->
@@ -287,7 +248,7 @@ $flashMessenger = $this->flashMessenger()
 				inactiveDivers: [],
 				selectDriver: "",
 				showAssignButton: false,
-				bookingId: <?php echo $data->getId() ?>,
+				bookingId: <?php //echo $data->getId() ?>,
 
 				isAssigningDriver: false,
 			}

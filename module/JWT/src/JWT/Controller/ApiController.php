@@ -11,13 +11,13 @@ use General\Service\GeneralService;
  *
  * @OA\Info(title="Baucars Logistics documentation", version="1.0", description="This API is used for the implemetation of BAUCARS mobile app ")
  * @OA\SecurityScheme(
- *   type="http",
- *   description="use jwt/api/login to get jwt key",
- *   name="Authorization",
- *   in="header",
- *   scheme="bearer",
- *   bearerFormat="JWT",
- *   securityScheme="bearerAuth"
+ * type="http",
+ * description="use jwt/api/login to get jwt key",
+ * name="Authorization",
+ * in="header",
+ * scheme="bearer",
+ * bearerFormat="JWT",
+ * securityScheme="bearerAuth"
  * )
  *
  *
@@ -186,6 +186,8 @@ class ApiController extends AbstractActionController
         }
         return $jsonModel;
     }
+
+   
 
     public function refreshtokenAction()
     {}

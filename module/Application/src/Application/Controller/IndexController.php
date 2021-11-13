@@ -57,6 +57,10 @@ class IndexController extends AbstractActionController
         return new ViewModel();
     }
 
+    public function packageAction(){
+        return new ViewModel();
+    }
+
     public function contactusAction()
     {
         $jsonModel = new JsonModel();

@@ -99,14 +99,14 @@ $flashMessenger = $this->flashMessenger()
 									<tr>
 
 										<td><?php echo strtoupper($booking["logisticsUid"]) ?></td>
-										<td><?php echo $booking["user"]["fullName"] ?></td>
+										<td><?php echo $booking["user"]["lastname"] ?></td>
 										<td><a href="#" class="btn-link"><strong>Service Type : </strong><?php echo $booking["serviceType"]["type"] ?> <br>
 										</td>
 										<td><?php echo $this->statusHelper($booking["status"]) ?></td>
 										<td><?php echo $this->myCurrency($booking["logisticsTransaction"]['amount']) ?></td>
 
 										<!--                                                 <td><span class="text-muted">#BG6R9853lP</span></td> -->
-										<td><a href="<?php //echo $this->url("admin/default", ["controller" => "booking", "action" => "view", "id" => $booking["bookingUid"]]) ?>"><i class="fa fa-eye"></i></a> | <a href="#" @click="deleteBooking('<?php echo $booking["id"]?>')"><i class="fa fa-trash"></i></a> </td>
+										<td><a href="<?php echo $this->url("admin/default", ["controller" => "logistics", "action" => "view", "id" => $booking["logisticsUid"]]) ?>"><i class="fa fa-eye"></i></a> | <a href="#" @click="deleteBooking('<?php echo $booking["id"]?>')"><i class="fa fa-trash"></i></a> </td>
 									</tr>
 								<?php endforeach; ?>
 								<!-- Table Row End -->

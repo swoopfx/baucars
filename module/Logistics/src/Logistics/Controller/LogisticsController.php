@@ -24,6 +24,7 @@ use JWT\Service\ApiAuthenticationService;
 use Logistics\Entity\LogisticsRequest;
 use Logistics\Entity\LogisticsBikeRiders;
 use function GuzzleHttp\json_decode;
+use CsnUser\Entity\User;
 
 class LogisticsController extends AbstractActionController
 {
@@ -64,6 +65,55 @@ class LogisticsController extends AbstractActionController
     
     // public function active
     
+    /**
+     * @OA\GET( path="/logistics/logistics/user-profile", tags={"User"},
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
+     * )
+     *
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function userProfileAction()
+    {
+        try {
+            
+            $userId = $this->apiAuthService->getIdentity();
+            $jsonModel = new JsonModel();
+            // var_dump($userId);
+            
+            $em = $this->entityManager;
+            $data = $em->getRepository(User::class)
+                ->createQueryBuilder("u")
+                ->select([
+                "u.userUid",
+                "u.phoneNumber",
+                "u.fullName",
+                "u.email",
+                // "u.state",
+                "st.state",
+                "u.registrationDate",
+                "w.balance"
+            ])
+                ->innerJoin("u.state", "st")
+                ->innerJoin("u.wallet", "w")
+                ->where("u.id = :id")
+                ->setParameters([
+                "id" => $userId
+            ])
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY)
+                ->getArrayResult();
+            
+            $jsonModel->setVariables(array(
+                "data" => $data
+            ));
+            return $jsonModel;
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
+        }
+    }
+
     /**
      * @OA\GET( path="/logistics/logistics/delivery-type", tags={"Logistics"},
      * @OA\Response(response="200", description="Success"),
@@ -328,7 +378,7 @@ class LogisticsController extends AbstractActionController
 
     /**
      * @OA\GET( path="/logistics/logistics/riderinfo/{uid}", tags={"RIDER"}, description="This Gets a riders information usually associated to an active ride",
-     * @OA\Parameter(in="path", name="uid"),
+     * @OA\Parameter(in="path", name="uid", description="This is the unique identifier (riderUid) of the rider"),
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
      * security={{"bearerAuth":{}}}
