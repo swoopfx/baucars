@@ -14,9 +14,9 @@ return array(
         'General',
         'Customer',
         'Job',
-        'Logistics',
+        'JWT',
         'Wallet',
-        'JWT'
+        'Logistics',
 //         "JwtLaminasAuth"
         
         // 'WasabiLib',
@@ -30,10 +30,8 @@ return array(
         // Module class.
         'module_paths' => array(
             './module',
-            './vendor',
-            './module',
-            './module',
-            './module'
+            './vendor'
+           
         
         ),
         

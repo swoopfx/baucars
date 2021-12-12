@@ -35,6 +35,12 @@ class LogisticsServiceType
      * @var string
      */
     private $description;
+    
+    /**
+     * @ORM\Column(name="image", type="string", nullable=true)
+     * @var string
+     */
+    private $image;
     /**
      */
     public function __construct()
@@ -92,6 +98,23 @@ class LogisticsServiceType
         $this->description = $description;
         return $this;
     }
+    /**
+     * @return the $image
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
 
 }
 

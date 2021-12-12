@@ -49,7 +49,7 @@
 
 
 
-	let = new Vue({
+	let ser= new Vue({
 		el: "#signup",
 		data() {
 			return {
@@ -79,16 +79,17 @@
 				return this.reg.test(this.email);
 			}
 		},
+		
 
 		methods: {
 			register() {
 				if (this.password !== this.confirm_parrword) {
 					swal({
-								title: "Errr!",
-								text: "Your password dont match",
-								icon: "error",
-								button: "Back",
-							});
+						title: "Errr!",
+						text: "Your password dont match",
+						icon: "error",
+						button: "Back",
+					});
 				} else {
 					let formData = new FormData();
 					formData.append("phoneNumber", this.phoneNumber);
@@ -103,18 +104,18 @@
 								text: "Please verify your email, a mail has been sent to you!",
 								icon: "success",
 								button: "Continue!",
-							}).then(res=>{
+							}).then(res => {
 								location.reload();
 							});
 						}
-					}).catch(err=>{
-						
+					}).catch(err => {
+
 						this.$toast.open({
-								message: err.response.data.messages,
-								type: "error",
-								duration: 5000,
-								dismissible: true
-							})
+							message: err.response.data.messages,
+							type: "error",
+							duration: 5000,
+							dismissible: true
+						})
 					});
 				}
 			},

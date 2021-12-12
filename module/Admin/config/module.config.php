@@ -1,4 +1,5 @@
 <?php
+
 use Admin\Controller\Factory\AdminControllerFactory;
 use Admin\Controller\Factory\CustomerControllerFactory;
 use Admin\Controller\Factory\BookingControllerFactory;
@@ -8,6 +9,7 @@ use Admin\Controller\Factory\SettingsControllerFactory;
 use Admin\Controller\Factory\SupportControllerFactory;
 use Admin\View\Helper\IsReturntriphelper;
 use Admin\Controller\Factory\LogisticsControllerFactory;
+use Admin\Controller\Factory\RidersControllerFactory;
 
 return array(
     'controllers' => array(
@@ -19,10 +21,11 @@ return array(
             "Admin\Controller\Customer" => CustomerControllerFactory::class,
             "Admin\Controller\Booking" => BookingControllerFactory::class,
             "Admin\Controller\Driver" => DriverControllerFactory::class,
-            "Admin\Controller\Car"=>CarControllerFactory::class,
-            "Admin\Controller\Settings"=>SettingsControllerFactory::class,
-            "Admin\Controller\Support"=>SupportControllerFactory::class,
-            "Admin\Controller\Logistics"=>LogisticsControllerFactory::class,
+            "Admin\Controller\Riders" => RidersControllerFactory::class,
+            "Admin\Controller\Car" => CarControllerFactory::class,
+            "Admin\Controller\Settings" => SettingsControllerFactory::class,
+            "Admin\Controller\Support" => SupportControllerFactory::class,
+            "Admin\Controller\Logistics" => LogisticsControllerFactory::class,
         )
     ),
     'router' => array(
@@ -54,7 +57,7 @@ return array(
                                 'id' => '[a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                               
+
                             ),
                             'defaults' => array()
                         )
@@ -68,7 +71,7 @@ return array(
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 "page" => "[0-9]+"
                             )
-                            
+
                         )
                     )
                 )
@@ -77,27 +80,27 @@ return array(
     ),
     'view_helpers' => array(
         'invokables' => array(
-            'isReturnTripHelper'=>IsReturntriphelper::class
+            'isReturnTripHelper' => IsReturntriphelper::class
         ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(
             'Admin' => __DIR__ . '/../view',
-            
-            
+
+
         ),
-        "template_map"=>[
+        "template_map" => [
             'booking-menu-list' => __DIR__ . '/../view/admin/booking/partial/booking_menu_list.phtml',
-            
+
             // customer partials 
             'admin-customer-sidebar' => __DIR__ . '/../view/admin/customer/partials/admin-customer-sidebar-snippet.phtml',
             'admin-customer-top' => __DIR__ . '/../view/admin/customer/partials/admin-customer-top-snippet.phtml',
-            
+
             // email
             'admin-new-booking' => __DIR__ . '/../view/email/admin-user-new-booking.phtml',
-            
+
             // Page Count
-            "admin-driver-pagecount"=>__DIR__ . '/../view/partials/admin-driver-pagecount.phtml'
+            "admin-driver-pagecount" => __DIR__ . '/../view/partials/admin-driver-pagecount.phtml'
         ],
         'strategies' => array(
             'ViewJsonStrategy'

@@ -410,7 +410,7 @@ class LogisticsService
         ));
         
         $inputFilter->add(array(
-            'name' => 'iten_name',
+            'name' => 'item_name',
             'required' => true,
             'allow_empty' => false,
             'filters' => array(

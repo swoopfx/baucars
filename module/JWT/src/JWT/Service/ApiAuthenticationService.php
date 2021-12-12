@@ -166,13 +166,26 @@ class ApiAuthenticationService implements AuthenticationServiceInterface
                 $authService->getStorage()->write($identity);
 
                 // generate jwt token
-                return $this->jwtService->generate($user->getId());
+                $data = [];
+                $data["token"] = $this->jwtService->generate($user->getId());
+                $data["userid"] = $user->getId();
+                return $data;
             } else {
                 throw new \Exception(Json::encode("Invalid Credentials"));
             }
         } else {
             throw new \Exception(Json::encode($inputFilter->getMessages()));
         }
+    }
+    
+    
+    public function refreshToken($uid){
+//         var_dump($uid);
+        $data = [];
+//         var_dump($this->jwtService->generate($uid));
+        $data["token"] = $this->jwtService->generate($uid);
+        $data["userid"] = $uid;
+        return $data;
     }
 
     public function register()

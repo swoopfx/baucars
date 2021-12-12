@@ -70,6 +70,11 @@
         ?>
 
     </head>
+	<style>
+		[v-cloak]{
+			display: none;
+		}
+	</style>
 <body>
 
 	<!-- Wrapper Start -->
@@ -221,6 +226,11 @@
 							<li class="active"><a
 								href="<?php  echo $this->url("admin/default", ["controller"=>"driver", "action"=>"drivers"])?>">
 									<i class="fa fa-spinner"></i> <span>Driver</span>
+							</a></li>
+
+							<li class="active"><a
+								href="<?php  echo $this->url("admin/default", ["controller"=>"riders", "action"=>"riders"])?>">
+									<i class="fa fa-spinner"></i> <span>Riders</span>
 							</a></li>
 							<li class="active"><a
 								href="<?php  echo $this->url("admin/default", ["controller"=>"car", "action"=>"index"]) ?>">

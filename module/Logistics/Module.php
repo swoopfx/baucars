@@ -66,7 +66,7 @@ class Module implements AutoloaderProviderInterface
             if (is_bool($apiAuthService->hasIdentity())) {
                 if (! $apiAuthService->hasIdentity()) {
                     
-//                     var_dump($apiAuthService->hasIdentity())
+                   //                     var_dump($apiAuthService->hasIdentity())
                     // set status 403 (forbidden)
                     $response->setStatusCode(403);
                     $response->setContent(Json::encode([
@@ -81,7 +81,10 @@ class Module implements AutoloaderProviderInterface
                 $response->setContent(Json::encode([
                     "message" => "Not Authorized"
                 ]));
-                
+    $response->getHeaders()->addHeaderLine('Access-Control-Allow-Origin', '*');
+    $response->getHeaders()->addHeaderLine('Access-Control-Allow-Credentials', 'true');
+    $response->getHeaders()->addHeaderLine('Access-Control-Allow-Methods', 'POST PUT DELETE GET');
+    
                 return $response;
             }
         });

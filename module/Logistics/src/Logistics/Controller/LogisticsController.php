@@ -79,7 +79,7 @@ class LogisticsController extends AbstractActionController
         try {
             
             $userId = $this->apiAuthService->getIdentity();
-            $jsonModel = new JsonModel();
+            
             // var_dump($userId);
             
             $em = $this->entityManager;
@@ -104,10 +104,9 @@ class LogisticsController extends AbstractActionController
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
                 ->getArrayResult();
-            
-            $jsonModel->setVariables(array(
-                "data" => $data
-            ));
+                $jsonModel = new JsonModel($data[0]);
+//             $jsonModel->setVariable("", 
+//             );
             return $jsonModel;
         } catch (\Exception $e) {
             return Json::encode($e->getMessage());
@@ -187,6 +186,7 @@ class LogisticsController extends AbstractActionController
     {
         try {
             // var_dump("KIIY");
+            $this->apiAuthService->getIdentity();
             $jsonModel = new JsonModel();
             $em = $this->entityManager;
             $repo = $em->getRepository(LogisticsServiceType::class);
@@ -196,10 +196,15 @@ class LogisticsController extends AbstractActionController
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
                 ->getArrayResult();
+                $jsonModel = new JsonModel($data);
+//             $jsonModel->setVariables(array(
+//                 "data" => $data
+//             ));
+            $response = $this->getResponse();
+            $response->getHeaders()->addHeaderLine('Access-Control-Allow-Origin', '*');
+            $response->getHeaders()->addHeaderLine('Access-Control-Allow-Credentials', 'true');
+            $response->getHeaders()->addHeaderLine('Access-Control-Allow-Methods', 'POST PUT DELETE GET');
             
-            $jsonModel->setVariables(array(
-                "data" => $data
-            ));
             return $jsonModel;
         } catch (\Exception $e) {}
     }
@@ -223,7 +228,7 @@ class LogisticsController extends AbstractActionController
      * @OA\Property(property="destinationLat", type="string", example="3.4723495", description="The latitude of the destination address "),
      * @OA\Property(property="destinationLong", type="string", example="3.4723495", description="The longitude of the destination address "),
      * @OA\Property(property="quantity", type="integer", example=2, description="The qauntity of the item"),
-     * @OA\Property(property="iten_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
+     * @OA\Property(property="item_name", type="string", example="Bag of oranges", description="Identifier description of tha package"),
      * @OA\Property(property="service_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/service-type url"),
      * @OA\Property(property="delivery_type", type="integer", example=10, description="This is an id referenced from the logistics/logistics/delivery-type url"),
      * @OA\Property(property="note", type="string", example="I want this package delivered before 10am ", description="Additional information for the package"),
