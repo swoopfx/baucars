@@ -104,9 +104,9 @@ class LogisticsController extends AbstractActionController
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
                 ->getArrayResult();
-                $jsonModel = new JsonModel($data[0]);
-//             $jsonModel->setVariable("", 
-//             );
+            $jsonModel = new JsonModel($data[0]);
+            // $jsonModel->setVariable("",
+            // );
             return $jsonModel;
         } catch (\Exception $e) {
             return Json::encode($e->getMessage());
@@ -196,10 +196,10 @@ class LogisticsController extends AbstractActionController
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
                 ->getArrayResult();
-                $jsonModel = new JsonModel($data);
-//             $jsonModel->setVariables(array(
-//                 "data" => $data
-//             ));
+            $jsonModel = new JsonModel($data);
+            // $jsonModel->setVariables(array(
+            // "data" => $data
+            // ));
             $response = $this->getResponse();
             $response->getHeaders()->addHeaderLine('Access-Control-Allow-Origin', '*');
             $response->getHeaders()->addHeaderLine('Access-Control-Allow-Credentials', 'true');
@@ -348,6 +348,51 @@ class LogisticsController extends AbstractActionController
         }
         return $jsonModel;
     }
+    
+     /**
+     * @OA\POST( path="/logistics/logistics/deleterequest", tags={"Logistics"}, description="This Get a list of all active Logistics request",
+     * 
+     * * @OA\RequestBody(
+     * @OA\MediaType(
+     * mediaType="application/json",
+     * @OA\Schema(required={"id"},
+     * @OA\Property(property="id", type="string", example="1", description="Identifier for the request to be deleted "),
+     * 
+     * )
+     * ),
+     * ),
+     * 
+     * 
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
+     * )
+     * Gets a list of all active request associated to this user
+     *
+     * @return JsonModel
+     */
+    public function deleterequestAction(){
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = Json::decode(file_get_contents("php://input"));
+            $post = get_object_vars($post);
+            /**
+             * 
+             * @var LogisticsRequest $requestEntity
+             */
+            $requestEntity  = $em->find(LogisticsRequest::class, $post["id"]);
+            $requestEntity->setIsActive(FALSE)->setUpdatedOn(new \Datetime());
+            
+            $em->persist($requestEntity);
+            $em->flush();
+            
+            $response->setStatusCode(202);
+        }
+        return $jsonModel;
+    }
 
     /**
      * @OA\GET( path="/logistics/logistics/requests", tags={"Logistics"}, description="This Get a list of all active Logistics request",
@@ -366,9 +411,14 @@ class LogisticsController extends AbstractActionController
         $repo = $em->getRepository(LogisticsRequest::class);
         $data = $repo->createQueryBuilder("s")
             ->select(array(
-            "s"
+            "s",
+            "t",
+            "st"
         ))
+            ->leftJoin("s.serviceType", "t")
+            ->leftJoin("s.status", "st")
             ->where("s.isActive = :active")
+            ->orderBy("s.id", "DESC")
             ->setParameters(array(
             "active" => true
         ))
@@ -435,7 +485,8 @@ class LogisticsController extends AbstractActionController
     }
 
     /**
-     * * @OA\GET( path="/logistics/logistics/rideinfo/{uid}", tags={"Logistics"}, description="This gets an information for an active ride",
+     * @OA\GET( path="/logistics/logistics/rideinfo/{uid}", tags={"Logistics"}, description="This gets an information for an active ride",
+     * @OA\Parameter(in="path", name="uid", description="This is the unique identifier of the ride"),
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
      * security={{"bearerAuth":{}}}
@@ -451,20 +502,22 @@ class LogisticsController extends AbstractActionController
             $jsonModel = new JsonModel();
             $em = $this->entityManager;
             $response = $this->getResponse();
-            $response->setStatusCode(400);
+            $response->setStatusCode(422);
             $uid = $this->params()->fromRoute("uid", null);
             if ($uid != null) {
                 $repo = $em->getRepository(LogisticsRequest::class);
+                
                 $data = $repo->createQueryBuilder("s")
                     ->select(array(
                     "s",
                     "t",
-                    "pm",
+                    // "pm",
                     "ad",
-                    "tr"
+                    "tr",
+                        "st"
                 ))
                     ->leftJoin("s.serviceType", "t")
-                    ->leftJoin("s.LogisticsPaymentMode", "pm")
+                    ->leftJoin("s.status", "st")
                     ->leftJoin("s.assignedRider", "ad")
                     ->leftJoin("s.logisticsTransaction", "tr")
                     ->where("s.logisticsUid = :uid")
@@ -476,9 +529,11 @@ class LogisticsController extends AbstractActionController
                     ->getQuery()
                     ->setHydrationMode(Query::HYDRATE_ARRAY)
                     ->getArrayResult();
+                // var_dump("Here");
+                // var_dump($data);
                 $response->setStatusCode(200);
                 $jsonModel->setVariables(array(
-                    "data" => $data
+                    "data" => $data[0]
                 ));
             } else {
                 $response->setStatusCode(400);

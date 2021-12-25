@@ -113,12 +113,32 @@ class WalletService implements ExecutionInterface
     public function fundWalletLogic($data)
     {
         if ($data["status"] == FlutterwaveService::PAYMENT_SUCCESS) {
+//             $verifyData = $this->flutterwaveService->verifyPaymentApi($data);
+//             if ($verifyData instanceof \Exception) {
+//                 throw new Exception("Payment Veirification Error");
+//             } elseif ($verifyData->status == "success") {
+
+                return $this->fundwallet($data['amountPayed']);
+            
+            // fun the wallet
+        } else {
+            throw new \Exception("Payment Not Successful");
+        }
+    }
+    
+    
+    public function verifyPayment($data){
+        if ($data["status"] == FlutterwaveService::PAYMENT_SUCCESS) {
             $verifyData = $this->flutterwaveService->verifyPaymentApi($data);
             if ($verifyData instanceof \Exception) {
                 throw new Exception("Payment Veirification Error");
             } elseif ($verifyData->status == "success") {
-
-                return $this->fundwallet($verifyData->data->chargedamount);
+                
+//                 return $this->fundwallet($verifyData->data->chargedamount);
+                return [
+                    "chargedAmount"=>$verifyData->data->chargedamount,
+                    "status"=>true
+                ];
             } else {
                 throw new \Exception("Payment Not Successfull");
             }
@@ -127,6 +147,10 @@ class WalletService implements ExecutionInterface
             throw new \Exception("Payment Not Successful");
         }
     }
+    
+//     public function verifyPaymentmonnify(){
+//         if()
+//     }
 
     private function fundwallet($amount = 0)
     {

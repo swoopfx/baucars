@@ -14,6 +14,10 @@ use General\ApiAuth\Factory\HeaderFactory;
 use General\ApiAuth\Cookie;
 use General\ApiAuth\Factory\CookieFactory;
 use General\ApiAuth\Factory\JwtStorageFactory;
+use General\Service\Factory\MonnifyServiceFactory;
+use General\Service\MonnifyService;
+use General\Service\PaystackService;
+use General\Service\Factory\PaystackServiceFactory;
 
 return array(
     'controllers' => array(
@@ -26,6 +30,8 @@ return array(
             "General\Service\GeneralService"=>GeneralServiceFactory::class,
             "General\Service\FlutterwaveService"=>FlutterwaveServiceFactory::class,
             "General\Service\JwtService" =>JwtServiceFactory::class,
+            MonnifyService::class =>MonnifyServiceFactory::class,
+            PaystackService::class=>PaystackServiceFactory::class,
            
         ),
     ),

@@ -8,6 +8,8 @@ use General\Service\GeneralService;
 use JWT\Service\ApiAuthenticationService;
 use General\Service\FlutterwaveService;
 use Wallet\Service\WalletService;
+use General\Service\MonnifyService;
+use General\Service\PaystackService;
 
 /**
  *
@@ -38,11 +40,15 @@ class ApiControllerFactory implements FactoryInterface
         $generalService = $serviceLocator->getServiceLocator()->get(GeneralService::class);
         $apiAuthService = $serviceLocator->getServiceLocator()->get(ApiAuthenticationService::class);
         $flutterwaveService = $serviceLocator->getServiceLocator()->get(FlutterwaveService::class);
+        $monnifyService = $serviceLocator->getServiceLocator()->get(MonnifyService::class);
+        $paystackService= $serviceLocator->getServiceLocator()->get(PaystackService::class);
         $walletService = $serviceLocator->getServiceLocator()->get(WalletService::class);
-//        var_dump($walletService);
+        // var_dump($walletService);
         $ctr->setApiAuthService($apiAuthService)
+            ->setMonnifyService($monnifyService)
             ->setGeneralService($generalService)
             ->setWalletService($walletService)
+            ->setPaystackService($paystackService)
             ->setFlutterwaveService($flutterwaveService);
         return $ctr;
     }
