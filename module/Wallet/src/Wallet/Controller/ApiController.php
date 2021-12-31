@@ -212,8 +212,9 @@ class ApiController extends AbstractActionController
                         $resp = $this->walletService->chargeWallet($data["amount"]);
                         $response->setStatusCode(201);
                         $jsonModel->setVariables([
-                            "message" => "success",
-                            "txRef" => uniqid("inv")
+                            "status" => "success",
+                            "txRef" => uniqid("inv"),
+                            "paid"=> $data["amount"]
                         ]);
                     } else {
                         $jsonModel->setVariables([

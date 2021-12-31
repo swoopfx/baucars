@@ -91,6 +91,7 @@ return array(
         ),
         "template_map" => [
             'booking-menu-list' => __DIR__ . '/../view/admin/booking/partial/booking_menu_list.phtml',
+            'dispatch-menu-list' => __DIR__ . '/../view/admin/logistics/partial/disapatch_menu_list.phtml',
 
             // customer partials 
             'admin-customer-sidebar' => __DIR__ . '/../view/admin/customer/partials/admin-customer-sidebar-snippet.phtml',

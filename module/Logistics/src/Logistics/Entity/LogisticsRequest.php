@@ -144,9 +144,9 @@ class LogisticsRequest
     private $destinationPlaceId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="LogisticsBikeRiders", inversedBy="booking")
+     * @ORM\ManyToOne(targetEntity="Rider", inversedBy="dispatch")
      *
-     * @var LogisticsBikeRiders
+     * @var Rider
      */
     private $assignedRider;
 
@@ -576,7 +576,7 @@ class LogisticsRequest
     }
 
     /**
-     * @param \Logistics\Entity\LogisticsBikeRiders $assignedRider
+     * @param \Logistics\Entity\Rider $assignedRider
      */
     public function setAssignedRider($assignedRider)
     {

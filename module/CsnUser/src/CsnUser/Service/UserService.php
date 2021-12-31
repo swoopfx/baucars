@@ -23,6 +23,8 @@ class UserService
     const USER_ROLE_GUEST = 1;
 
     const USER_ROLE_DRIVER = 20;
+    
+    const USER_ROLE_RIDER = 21;
 
     const USER_ROLE_CUSTOMER = 30;
 

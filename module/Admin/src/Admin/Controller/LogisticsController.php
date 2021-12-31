@@ -13,6 +13,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Laminas\Paginator\Paginator;
 use Logistics\Service\LogisticsService;
 use Laminas\View\Model\JsonModel;
+use Logistics\Entity\LogisticsRequestStatus;
 
 // use Laminas\View\Model\JsonModel;
 
@@ -193,7 +194,7 @@ class LogisticsController extends AbstractActionController
         return $viewModel;
     }
 
-    public function inTransiTripAction()
+    public function inTransitTripAction()
     {
         $em = $this->entityManager;
         $page = $this->params()->fromQuery("page", NULL) ?? 1;
@@ -230,7 +231,7 @@ class LogisticsController extends AbstractActionController
         return $viewModel;
     }
 
-    public function canceledAction()
+    public function cancelAction()
     {
         $em = $this->entityManager;
         $page = $this->params()->fromQuery("page", NULL) ?? 1;
@@ -324,6 +325,71 @@ class LogisticsController extends AbstractActionController
         $jsonModel->setVariables([
             "data" => $data
         ]);
+        return $jsonModel;
+    }
+
+    /**
+     * Changes the state of the Dispact to delivered
+     * 
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function delieveredDispatchAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost();
+//             var_dump($post);
+            /**
+             *
+             * @var LogisticsRequest $dispatchEntity
+             */
+            $dispatchEntity = $em->find(LogisticsRequest::class, $post["id"]);
+            $dispatchEntity->setStatus($em->find(LogisticsRequestStatus::class, LogisticsService::LOGISTICS_STATUS_DELIVERED))
+                ->setUpdatedOn(new \Datetime());
+            $em->persist($dispatchEntity);
+            $em->flush();
+            
+            // Send Email here
+            // TO-DO set rider free
+            $response->setStatusCode(201);
+            $this->flashMessenger()->addSuccessMessage("The Customer has been notified of the package delivery status");
+        }
+        return $jsonModel;
+    }
+
+    /**
+     * Changes the state of the dispatch to canceled
+     * 
+     * @return \Laminas\View\Model\JsonModel
+     */
+    public function canceldDispatcthAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            /**
+             *
+             * @var LogisticsRequest $dispatchEntity
+             */
+            $dispatchEntity = $em->find(LogisticsRequest::class, $post["id"]);
+            $dispatchEntity->setStatus($em->find(LogisticsRequestStatus::class, LogisticsService::LOGISTICS_STATUS_CANCELED))
+                ->setUpdatedOn(new \Datetime());
+            
+            // TO-DO set rider free
+            $em->persist($dispatchEntity);
+            $em->flush();
+            
+            // Send Email here
+            
+            $response->setStatusCode(202);
+            $this->flashMessenger()->addSuccessMessage("The dispatch request has been successfully cancelled");
+        }
         return $jsonModel;
     }
 

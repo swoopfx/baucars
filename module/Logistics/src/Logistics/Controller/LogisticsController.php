@@ -25,6 +25,7 @@ use Logistics\Entity\LogisticsRequest;
 use Logistics\Entity\LogisticsBikeRiders;
 use function GuzzleHttp\json_decode;
 use CsnUser\Entity\User;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 class LogisticsController extends AbstractActionController
 {
@@ -377,6 +378,7 @@ class LogisticsController extends AbstractActionController
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
+            try{
             $post = Json::decode(file_get_contents("php://input"));
             $post = get_object_vars($post);
             /**
@@ -384,12 +386,21 @@ class LogisticsController extends AbstractActionController
              * @var LogisticsRequest $requestEntity
              */
             $requestEntity  = $em->find(LogisticsRequest::class, $post["id"]);
+            if($requestEntity == null){
+                throw new \Exception("Absent Entity");
+            }
             $requestEntity->setIsActive(FALSE)->setUpdatedOn(new \Datetime());
             
             $em->persist($requestEntity);
             $em->flush();
             
             $response->setStatusCode(202);
+            }catch (\Exception $e){
+//                 var_dump($e->getMessage());
+                return $jsonModel->setVariables([
+                    "error"=>$e->getMessage()
+                ]);
+            }
         }
         return $jsonModel;
     }
@@ -406,6 +417,8 @@ class LogisticsController extends AbstractActionController
      */
     public function requestsAction()
     {
+        try{
+           $is =  $this->apiAuthService->getIdentity();
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
         $repo = $em->getRepository(LogisticsRequest::class);
@@ -413,14 +426,18 @@ class LogisticsController extends AbstractActionController
             ->select(array(
             "s",
             "t",
-            "st"
+            "st",
+                "u"
         ))
             ->leftJoin("s.serviceType", "t")
+            ->leftJoin("s.user", "u")
             ->leftJoin("s.status", "st")
             ->where("s.isActive = :active")
+            ->andWhere("s.user = :user")
             ->orderBy("s.id", "DESC")
             ->setParameters(array(
-            "active" => true
+            "active" => true,
+                "user"=>$is
         ))
             ->getQuery()
             ->setHydrationMode(Query::HYDRATE_ARRAY)
@@ -428,6 +445,11 @@ class LogisticsController extends AbstractActionController
         $jsonModel->setVariables(array(
             "data" => $data
         ));
+        }catch (\Exception $e){
+            $jsonModel->setVariables([
+                "error"=>$e->getMessage()
+            ]);
+        }
         return $jsonModel;
     }
 

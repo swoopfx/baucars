@@ -14,6 +14,7 @@ use JWT\Service\ApiAuthenticationService;
 use Wallet\Service\WalletService;
 use General\Service\FlutterwaveService;
 use Logistics\Entity\LogisticsRequestStatus;
+use Logistics\Entity\LogisticsActivity;
 
 /**
  *
@@ -96,6 +97,18 @@ class LogisticsService
     private function invoiceuid()
     {
         return uniqid("invoice");
+    }
+
+    public function createLogisticsActivity(int $dispatchId, String $info)
+    {
+        $em = $this->entityManager;
+        $logisticsActivity = new LogisticsActivity();
+        $logisticsActivity->setCreatedOn(new \Datetime())
+            ->setDispatch($em->find(LogisticsRequest::class, $dispatchId))
+            ->setInformation($info);
+        
+        $em->persist($logisticsActivity);
+//         $em->flush();
     }
 
     /**
@@ -860,8 +873,7 @@ class LogisticsService
                         'name' => 'StringTrim'
                     )
                 ),
-                'validators' => array(
-                )
+                'validators' => array()
             ));
             $inputFilter->setData($post);
             // var_dump("HERE");
@@ -881,41 +893,45 @@ class LogisticsService
                 
                 if ($data["status"] == FlutterwaveService::PAYMENT_SUCCESS) {
                     
-//                     if ($data["payment_mode"] == self::LOGISTICS_PAYMENT_MODE_CARD) {
-//                         // var_dump("LOO");
-//                         $verifiedData = $this->flutterwaveService->verifyPaymentApi($post);
-//                         if ($verifiedData instanceof \Exception) {
-//                             throw new \Exception("We cound not charge your card");
-//                         }
-                        
-//                         // var_dump($verifiedData->data->chargedamount);
-//                         $transactionData["amountPaid"] = $verifiedData->data->chargedamount;
-//                         $transactionData["flwId"] = $verifiedData->data->txid;
-//                         $transactionData["flwRef"] = $verifiedData->data->flwref;
-//                         $transactionData["settledAmount"] = $verifiedData->data->amountsettledforthistransaction;
-//                         $transactionData["txRef"] = $verifiedData->data->txref;
-//                     } else {
-//                         // var_dump();
-//                         $transactionData["txRef"] = $post["txRef"];
-//                         $transactionData["amountPaid"] = $data["price"];
-//                     }
+                    // if ($data["payment_mode"] == self::LOGISTICS_PAYMENT_MODE_CARD) {
+                    // // var_dump("LOO");
+                    // $verifiedData = $this->flutterwaveService->verifyPaymentApi($post);
+                    // if ($verifiedData instanceof \Exception) {
+                    // throw new \Exception("We cound not charge your card");
+                    // }
+                    
+                    // // var_dump($verifiedData->data->chargedamount);
+                    // $transactionData["amountPaid"] = $verifiedData->data->chargedamount;
+                    // $transactionData["flwId"] = $verifiedData->data->txid;
+                    // $transactionData["flwRef"] = $verifiedData->data->flwref;
+                    // $transactionData["settledAmount"] = $verifiedData->data->amountsettledforthistransaction;
+                    // $transactionData["txRef"] = $verifiedData->data->txref;
+                    // } else {
+                    // // var_dump();
+                    // $transactionData["txRef"] = $post["txRef"];
+                    // $transactionData["amountPaid"] = $data["price"]; amountPayed
+                    // }
                     $logistics = $this->hydrateLogisticRequest($data);
-//                     $transactionData["logistics"] = $logistics->getId();
+                    $transactionData["logistics"] = $logistics->getId();
+                    $transactionData["amountPaid"] = ($post["amountPayed"] / 100);
+                    // $transactionData["amountPaid"] = $verifiedData->data->chargedamount;
+                    // $transactionData["flwId"] = $verifiedData->data->txid;
+                    $transactionData["flwRef"] = $post["txRef"];
+                    $transactionData["settledAmount"] = $post["price"];
+                    $transactionData["txRef"] = $post["txRef"];
                     // var_dump($logistics);
-//                     $transactionData["paymentmode"] = $post["payment_mode"];
+                    $transactionData["paymentmode"] = $post["payment_mode"];
                     $transactionData["user"] = $this->apiAuthService->getIdentity();
                     $data["uid"] = $logistics->getLogisticsUid();
-//                     $this->flutterwaveService->hydrateTransactionApi($transactionData, $logistics);
+                    $this->flutterwaveService->hydrateTransactionApi($transactionData, $logistics);
                     
                     // send email
                     
                     $em->flush();
                     return $data;
-                }else{
+                } else {
                     throw new \Exception("The transaction was not successfull");
                 }
-                
-                
             } else {
                 throw new \Exception($inputFilter->getMessages());
             }
@@ -949,7 +965,6 @@ class LogisticsService
             ->setPickupPlaceId($data["pickUpPlaceId"])
             ->setServiceType($em->find(LogisticsServiceType::class, $data["service_type"]))
             ->setUpdatedOn(new \Datetime())
-            
             ->setQuantity($data["quantity"])
             ->setStatus($em->find(LogisticsRequestStatus::class, LogisticsService::LOGISTICS_STATUS_INITIATED))
             ->setUser($em->find(User::class, $this->apiAuthService->getIdentity()));

@@ -61,29 +61,29 @@ $flashMessenger = $this->flashMessenger()
 
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Register A Driver</h5>
+					<h5 class="modal-title">Register A Rider</h5>
 
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 				</div>
 
 				<div class="modal-body pt-4">
 					<div class="form-group">
-						<label> <span class="label-text">Driver Full Name</span> <input type="text" v-model='fullname' ref="fullname" class="form-control">
+						<label> <span class="label-text">Rider Full Name</span> <input type="text" v-model='fullname' ref="fullname" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Phone Number</span> <input type="text" @input="acceptNumber" v-model="phoneNumber" ref="phonenumber" class="form-control">
+						<label> <span class="label-text">Rider Phone Number</span> <input type="text" @input="acceptNumber" v-model="phoneNumber" ref="phonenumber" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Email</span> <input type="email" v-model="email" ref="email" class="form-control">
+						<label> <span class="label-text">Rider Email</span> <input type="email" v-model="email" ref="email" class="form-control">
 						</label>
 					</div>
 
 					<div class="form-group">
-						<label> <span class="label-text">Driver Date of Birth</span> <input type="date" v-model="driver_dob" ref="driver_dob" class="form-control">
+						<label> <span class="label-text">Rider Date of Birth</span> <input type="date" v-model="driver_dob" ref="driver_dob" class="form-control">
 						</label>
 					</div>
 
@@ -96,28 +96,7 @@ $flashMessenger = $this->flashMessenger()
 
 					<hr>
 
-					<h5>Assign a Car</h5>
-
-					<div class="form-group">
-						<label> <span class="label-text">Car Plate Number</span> <input type="text" v-model="car_platenumber" ref="car_platenumber" placeholder="Car Plate Number" class="form-control">
-						</label>
-					</div>
-
-					<div class="form-group">
-						<label> <span v-if="cars.length" class="label-text">Car Make</span>
-							<!-- <div class="col-md-10"> --> <select name="select" v-model="selectedCar" class="form-control">
-								<option v-for="car in cars" :key="car.id" :value="car.id">{{car.carMake}}</option>
-
-							</select>
-						</label>
-						<!-- </div> -->
-					</div>
-
-
-					<div class="form-group">
-						<label> <span class="label-text">Car Type</span> <input ref="carType" v-model="carType" type="text" class="form-control">
-						</label>
-					</div>
+					
 
 					<div v-if="isCreating">
 						<img src="/ajax-loader.gif">
@@ -235,10 +214,10 @@ $flashMessenger = $this->flashMessenger()
 							?>
 									<tr>
 
-										<td><?php echo strtoupper($driver["diverUid"]) ?></td>
+										<td><?php echo strtoupper($driver["riderUid"]) ?></td>
 										<td><strong>Name :</strong><a href="#" class="btn-link"><?php echo $driver["user"]["fullName"] ?></a><br>
 											<strong>Phone :</strong><a href="#" class="btn-link"><?php echo $driver["user"]["phoneNumber"] ?></a><br>
-											<strong>Driving Since :</strong><?php echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM) ?>
+											<!-- <strong>Driving Since :</strong><?php //echo $this->dateformat($driver["driverSince"], IntlDateFormatter::MEDIUM) ?> -->
 										</td>
 										<td>
 											<?php if (count($driver["assisnedCar"]) > 0) : ?>
