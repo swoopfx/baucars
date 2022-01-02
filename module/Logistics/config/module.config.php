@@ -55,7 +55,10 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'Logistics' => __DIR__ . '/../view'
-        )
+        ),
+        "template_map"=>[
+            'logistics_create_request' => __DIR__ . '/../view/email/logistics_create_request.phtml',
+        ]
     ),
     
     'service_manager' => array(

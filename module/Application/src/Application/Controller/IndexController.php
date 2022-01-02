@@ -32,6 +32,11 @@ class IndexController extends AbstractActionController
 //         return $this->redirect()->toUrl($baseUrl . "/" . UserService::routeManager($this->identity()));
 //     }
 
+    
+    public function blueindexAction(){
+        return new ViewModel();
+    }
+
     public function indexAction()
     {
         return new ViewModel();

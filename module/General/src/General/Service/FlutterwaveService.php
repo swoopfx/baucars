@@ -310,11 +310,11 @@ class FlutterwaveService
                 "logo" => "KK"
                 // "bookingUid" => $this->booking->getBookingUid()
             ];
-            $generalService->sendMails($pointer, $template);
+//             $generalService->sendMails($pointer, $template);
             // send transaction mail to customer
             return $transactionEntity;
         } catch (Exception $e) {
-            var_dump($e->getMessage());
+//             var_dump($e->getMessage());
         }
         
         // send transaction mail

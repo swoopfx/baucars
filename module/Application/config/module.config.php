@@ -20,7 +20,7 @@ return array(
                     'route' => '/app',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Index',
-                        'action' => 'index'
+                        'action' => 'blueindex'
                     )
                 )
             ),
@@ -35,7 +35,7 @@ return array(
                     'defaults' => array(
                         '__NAMESPACE__' => 'Application\Controller',
                         'controller' => 'Index',
-                        'action' => 'index'
+                        'action' => 'blueindex'
                     )
                 ),
                 'may_terminate' => true,
@@ -105,7 +105,7 @@ return array(
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
         'template_map' => array(
-            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/layout' => __DIR__ . '/../view/layout/blue-layout.phtml',
             "layout/login" => __DIR__ . '/../view/layout/login-layout.phtml',
             "soon"=> __DIR__ . '/../view/layout/coming-soon-layout.phtml',
             "layout/control" => __DIR__ . '/../view/layout/admin-layout.phtml',

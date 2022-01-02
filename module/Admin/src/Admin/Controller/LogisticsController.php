@@ -109,6 +109,7 @@ class LogisticsController extends AbstractActionController
             ->leftJoin("l.user", "u")
             ->leftJoin("l.logisticsTransaction", "t")
             ->leftJoin("l.status", "sta")
+            ->orderBy("l.id", "DESC")
             ->getQuery()
             ->setHydrationMode(Query::HYDRATE_ARRAY);
         $doctrinePaginator = new DoctrinePaginator(new ORMPaginator($query, false));
@@ -140,6 +141,7 @@ class LogisticsController extends AbstractActionController
             ->leftJoin("l.user", "u")
             ->leftJoin("l.status", "sta")
             ->leftJoin("l.logisticsTransaction", "t")
+            ->orderBy("l.id", "DESC")
             ->where("l.status = :status")
             ->setParameters([
             "status" => LogisticsService::LOGISTICS_STATUS_PROCESSING
@@ -175,6 +177,7 @@ class LogisticsController extends AbstractActionController
             ->leftJoin("l.user", "u")
             ->leftJoin("l.status", "sta")
             ->leftJoin("l.logisticsTransaction", "t")
+            ->orderBy("l.id","DESC")
             ->where("l.status = :status")
             ->andWhere("l.isActive = :active")
             ->setParameters([

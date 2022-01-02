@@ -26,6 +26,7 @@ use Logistics\Entity\LogisticsBikeRiders;
 use function GuzzleHttp\json_decode;
 use CsnUser\Entity\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use Logistics\Entity\LogisticsActivity;
 
 class LogisticsController extends AbstractActionController
 {
@@ -259,6 +260,7 @@ class LogisticsController extends AbstractActionController
             $response->setStatusCode(400);
             if ($request->isPost()) {
                 try {
+                    $this->apiAuthService->getIdentity();
                     $post = Json::decode(file_get_contents("php://input"));
                     
                     $data = $this->logisticsService->priceandDistanceCalculator(get_object_vars($post));
@@ -331,12 +333,37 @@ class LogisticsController extends AbstractActionController
     {
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
+        $em = $this->entityManager;
         $response = $this->getResponse();
         $response->setStatusCode(400);
         if ($request->isPost()) {
             try {
+                $id = $this->apiAuthService->getIdentity();
                 $post = Json::decode(file_get_contents("php://input"));
                 $data = $this->logisticsService->createRequest(get_object_vars($post));
+                $this->logisticsService->createLogisticsActivity($data["id"], "Dispatch Request Initiated");
+                
+                /**
+                 *
+                 * @var User $userEntity
+                 */
+                $userEntity = $em->find(User::class, $id);
+                
+                $generalService = $this->generalService;
+                $pointer["to"] = $userEntity->getEmail();
+                $pointer["fromName"] = "Bau Dispatch";
+                $pointer['subject'] = "Dispatch Request";
+                
+                $template['template'] = "logistics_create_request";
+                $template["var"] = [
+//                     "amount" => $data["amountPaid"],
+//                     "fullname" => $data["userFullname"],
+                    "logo" => "https://baucars.com/img/baulog.png"
+                    // "bookingUid" => $this->booking->getBookingUid()
+                ];
+                
+                $generalService->sendMails($pointer, $template);
+                
                 $response->setStatusCode(201);
                 $jsonModel->setVariables(array(
                     "data" => $data
@@ -349,21 +376,21 @@ class LogisticsController extends AbstractActionController
         }
         return $jsonModel;
     }
-    
-     /**
+
+    /**
      * @OA\POST( path="/logistics/logistics/deleterequest", tags={"Logistics"}, description="This Get a list of all active Logistics request",
-     * 
+     *
      * * @OA\RequestBody(
      * @OA\MediaType(
      * mediaType="application/json",
      * @OA\Schema(required={"id"},
      * @OA\Property(property="id", type="string", example="1", description="Identifier for the request to be deleted "),
-     * 
+     *
      * )
      * ),
      * ),
-     * 
-     * 
+     *
+     *
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="403", description="Error"),
      * security={{"bearerAuth":{}}}
@@ -372,33 +399,35 @@ class LogisticsController extends AbstractActionController
      *
      * @return JsonModel
      */
-    public function deleterequestAction(){
+    public function deleterequestAction()
+    {
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
-            try{
-            $post = Json::decode(file_get_contents("php://input"));
-            $post = get_object_vars($post);
-            /**
-             * 
-             * @var LogisticsRequest $requestEntity
-             */
-            $requestEntity  = $em->find(LogisticsRequest::class, $post["id"]);
-            if($requestEntity == null){
-                throw new \Exception("Absent Entity");
-            }
-            $requestEntity->setIsActive(FALSE)->setUpdatedOn(new \Datetime());
-            
-            $em->persist($requestEntity);
-            $em->flush();
-            
-            $response->setStatusCode(202);
-            }catch (\Exception $e){
-//                 var_dump($e->getMessage());
+            try {
+                $this->apiAuthService->getIdentity();
+                $post = Json::decode(file_get_contents("php://input"));
+                $post = get_object_vars($post);
+                /**
+                 *
+                 * @var LogisticsRequest $requestEntity
+                 */
+                $requestEntity = $em->find(LogisticsRequest::class, $post["id"]);
+                if ($requestEntity == null) {
+                    throw new \Exception("Absent Entity");
+                }
+                $requestEntity->setIsActive(FALSE)->setUpdatedOn(new \Datetime());
+                
+                $em->persist($requestEntity);
+                $em->flush();
+                
+                $response->setStatusCode(202);
+            } catch (\Exception $e) {
+                // var_dump($e->getMessage());
                 return $jsonModel->setVariables([
-                    "error"=>$e->getMessage()
+                    "error" => $e->getMessage()
                 ]);
             }
         }
@@ -417,38 +446,37 @@ class LogisticsController extends AbstractActionController
      */
     public function requestsAction()
     {
-        try{
-           $is =  $this->apiAuthService->getIdentity();
-        $jsonModel = new JsonModel();
-        $em = $this->entityManager;
-        $repo = $em->getRepository(LogisticsRequest::class);
-        $data = $repo->createQueryBuilder("s")
-            ->select(array(
-            "s",
-            "t",
-            "st",
+        try {
+            
+            $is = $this->apiAuthService->getIdentity();
+            $jsonModel = new JsonModel();
+            $em = $this->entityManager;
+            $repo = $em->getRepository(LogisticsRequest::class);
+            $data = $repo->createQueryBuilder("s")
+                ->select(array(
+                "s",
+                "t",
+                "st",
                 "u"
-        ))
-            ->leftJoin("s.serviceType", "t")
-            ->leftJoin("s.user", "u")
-            ->leftJoin("s.status", "st")
-            ->where("s.isActive = :active")
-            ->andWhere("s.user = :user")
-            ->orderBy("s.id", "DESC")
-            ->setParameters(array(
-            "active" => true,
-                "user"=>$is
-        ))
-            ->getQuery()
-            ->setHydrationMode(Query::HYDRATE_ARRAY)
-            ->getArrayResult();
-        $jsonModel->setVariables(array(
-            "data" => $data
-        ));
-        }catch (\Exception $e){
-            $jsonModel->setVariables([
-                "error"=>$e->getMessage()
-            ]);
+            ))
+                ->leftJoin("s.serviceType", "t")
+                ->leftJoin("s.user", "u")
+                ->leftJoin("s.status", "st")
+                ->where("s.isActive = :active")
+                ->andWhere("s.user = :user")
+                ->orderBy("s.id", "DESC")
+                ->setParameters(array(
+                "active" => true,
+                "user" => $is
+            ))
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY)
+                ->getArrayResult();
+            $jsonModel->setVariables(array(
+                "data" => $data
+            ));
+        } catch (\Exception $e) {
+            return Json::encode($e->getMessage());
         }
         return $jsonModel;
     }
@@ -536,7 +564,7 @@ class LogisticsController extends AbstractActionController
                     // "pm",
                     "ad",
                     "tr",
-                        "st"
+                    "st"
                 ))
                     ->leftJoin("s.serviceType", "t")
                     ->leftJoin("s.status", "st")
@@ -596,6 +624,24 @@ class LogisticsController extends AbstractActionController
             return Json::encode($e->getMessage());
         }
         
+        return $jsonModel;
+    }
+
+    public function activityHistoryAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $id = $this->params()->fromRoute("id");
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $data = $em->getRepository(LogisticsActivity::class)
+            ->createQueryBuilder('l')
+            ->where("l.dispatch = :dis")
+            ->setParameters([
+                "dis"=>$id
+            ])
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
         return $jsonModel;
     }
 
