@@ -341,7 +341,10 @@ class LogisticsController extends AbstractActionController
                 $id = $this->apiAuthService->getIdentity();
                 $post = Json::decode(file_get_contents("php://input"));
                 $data = $this->logisticsService->createRequest(get_object_vars($post));
+//                 var_dump($data["id"]);
+//                 var_dump($data["uid"]);
                 $this->logisticsService->createLogisticsActivity($data["id"], "Dispatch Request Initiated");
+//                 $this->logisticsService->createLogisticsActivity($data["id"], );
                 
                 /**
                  *
@@ -352,7 +355,7 @@ class LogisticsController extends AbstractActionController
                 $generalService = $this->generalService;
                 $pointer["to"] = $userEntity->getEmail();
                 $pointer["fromName"] = "Bau Dispatch";
-                $pointer['subject'] = "Dispatch Request";
+                $pointer['subject'] = "Bau Dispatch Request";
                 
                 $template['template'] = "logistics_create_request";
                 $template["var"] = [
@@ -464,10 +467,15 @@ class LogisticsController extends AbstractActionController
                 ->leftJoin("s.status", "st")
                 ->where("s.isActive = :active")
                 ->andWhere("s.user = :user")
+                
+                ->andWhere("s.status = :stat or s.status = :stat2 or s.status = :stat3")
                 ->orderBy("s.id", "DESC")
                 ->setParameters(array(
                 "active" => true,
-                "user" => $is
+                "user" => $is,
+                    "stat"=>LogisticsService::LOGISTICS_STATUS_ASSIGNED,
+                    "stat2"=>LogisticsService::LOGISTICS_STATUS_INITIATED,
+                    "stat3"=>LogisticsService::LOGISTICS_STATUS_PROCESSING,
             ))
                 ->getQuery()
                 ->setHydrationMode(Query::HYDRATE_ARRAY)
@@ -627,11 +635,24 @@ class LogisticsController extends AbstractActionController
         return $jsonModel;
     }
 
+    /**
+     * @OA\GET( path="/logistics/logistics/activity-history/{uid}", tags={"Logistics"}, description="All Activity on a specific ride",
+     * @OA\Parameter(in="path", name="uid", description="This is the unique identifier of the ride"),
+     * @OA\Response(response="200", description="Success"),
+     * @OA\Response(response="403", description="Error"),
+     * security={{"bearerAuth":{}}}
+     * )
+     *
+     * gets an information for an active ride
+     *
+     * @return JsonModel
+     */
     public function activityHistoryAction()
     {
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
-        $id = $this->params()->fromRoute("id");
+        $id = $this->params()->fromRoute("uid");
+//         var_dump($id);
         $response = $this->getResponse();
         $em = $this->entityManager;
         $data = $em->getRepository(LogisticsActivity::class)
@@ -642,6 +663,10 @@ class LogisticsController extends AbstractActionController
             ])
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
+            
+            $jsonModel->setVariables([
+                "data"=>$data
+            ]);
         return $jsonModel;
     }
 

@@ -101,6 +101,7 @@ class LogisticsService
 
     public function createLogisticsActivity(int $dispatchId, String $info)
     {
+//         var_dump("Got Here ");
         $em = $this->entityManager;
         $logisticsActivity = new LogisticsActivity();
         $logisticsActivity->setCreatedOn(new \Datetime())
@@ -108,7 +109,7 @@ class LogisticsService
             ->setInformation($info);
         
         $em->persist($logisticsActivity);
-//         $em->flush();
+        $em->flush();
     }
 
     /**
@@ -923,11 +924,13 @@ class LogisticsService
                     $transactionData["paymentmode"] = $post["payment_mode"];
                     $transactionData["user"] = $this->apiAuthService->getIdentity();
                     $data["uid"] = $logistics->getLogisticsUid();
+                    
                     $this->flutterwaveService->hydrateTransactionApi($transactionData, $logistics);
                     
                     // send email
                     
                     $em->flush();
+                    $data["id"] = $logistics->getId();
                     return $data;
                 } else {
                     throw new \Exception("The transaction was not successfull");

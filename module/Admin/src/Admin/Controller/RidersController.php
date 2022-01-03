@@ -262,9 +262,9 @@ class RidersController extends \Laminas\Mvc\Controller\AbstractActionController
                  */
                 $riderEntity = $em->find(Rider::class, $riderId);
                 //             $driverEntity->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_ASSIGNED));
-                $riderEntity->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_ASSIGNED));
+//                 $riderEntity->setDriverState($em->find(DriverState::class, DriverService::DRIVER_STATUS_ASSIGNED));
                 $info = "Assigned  rider {$riderEntity->getUser()->getFullName()}";
-                $this->logisticsService->createLogisticsActivity($requestId, $riderId);
+                $this->logisticsService->createLogisticsActivity($requestId, "Rider {$riderEntity->getUser()->getFullName()} has been assigned to service");
                 
                 $em->persist($riderEntity);
                 $em->persist($dispachEntity);
