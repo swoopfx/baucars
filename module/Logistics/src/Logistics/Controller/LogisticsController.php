@@ -27,6 +27,7 @@ use function GuzzleHttp\json_decode;
 use CsnUser\Entity\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Logistics\Entity\LogisticsActivity;
+use General\Service\GeneralService;
 
 class LogisticsController extends AbstractActionController
 {
@@ -361,6 +362,21 @@ class LogisticsController extends AbstractActionController
                 $template["var"] = [
 //                     "amount" => $data["amountPaid"],
 //                     "fullname" => $data["userFullname"],
+                    "logo" => "https://baucars.com/img/baulog.png"
+                    // "bookingUid" => $this->booking->getBookingUid()
+                ];
+                
+                $generalService->sendMails($pointer, $template);
+                
+                
+                $pointer["to"] = GeneralService::COMPANY_EMAIL;
+                $pointer["fromName"] = "Bau Dispatch";
+                $pointer['subject'] = "Bau Dispatch Request";
+                
+                $template['template'] = "logistics_create_request";
+                $template["var"] = [
+                //                     "amount" => $data["amountPaid"],
+                //                     "fullname" => $data["userFullname"],
                     "logo" => "https://baucars.com/img/baulog.png"
                     // "bookingUid" => $this->booking->getBookingUid()
                 ];

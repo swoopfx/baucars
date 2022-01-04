@@ -15,6 +15,7 @@ use Wallet\Service\WalletService;
 use General\Service\FlutterwaveService;
 use Logistics\Entity\LogisticsRequestStatus;
 use Logistics\Entity\LogisticsActivity;
+use Logistics\Entity\LogisticsPromo;
 
 /**
  *
@@ -30,12 +31,12 @@ class LogisticsService
 
     const LOGISTICS_PAYMENT_MODE_CARD = 20;
 
-    const LOGISTICS_MINIMUM_PRICE = 300;
+    const LOGISTICS_MINIMUM_PRICE = 500;
 
     const LOGISTICS_EXPRESS_FEE = 1000;
 
     // In Naira
-    const LOGISTICS_MINIMUM_DISTANCE = 5;
+    const LOGISTICS_MINIMUM_DISTANCE = 1.5;
 
     const LOGISTICS_SERVICE_TYPE_DELIVER = 10;
 
@@ -101,7 +102,7 @@ class LogisticsService
 
     public function createLogisticsActivity(int $dispatchId, String $info)
     {
-//         var_dump("Got Here ");
+        // var_dump("Got Here ");
         $em = $this->entityManager;
         $logisticsActivity = new LogisticsActivity();
         $logisticsActivity->setCreatedOn(new \Datetime())
@@ -155,8 +156,28 @@ class LogisticsService
     {
         if ($distanceValue < self::LOGISTICS_MINIMUM_DISTANCE) {
             return self::LOGISTICS_MINIMUM_PRICE;
+        } elseif ($distanceValue > self::LOGISTICS_MINIMUM_DISTANCE && $distanceValue < 3) {
+            return 1000;
+        } elseif ($distanceValue > 3 && $distanceValue < 8) {
+            return 1500;
+        } elseif ($distanceValue > 8 && $distanceValue < 13) {
+            return 2000;
+        } elseif ($distanceValue > 13 && $distanceValue < 20) {
+            return 2500;
+        } elseif ($distanceValue > 20 && $distanceValue < 30) {
+            return 3000;
+        } elseif ($distanceValue > 30 && $distanceValue < 40) {
+            return 3500;
+        } elseif ($distanceValue > 40 && $distanceValue < 50) {
+            return 5000;
+        } elseif ($distanceValue > 50 && $distanceValue < 60) {
+            return 6500;
+        } elseif ($distanceValue > 60 && $distanceValue < 70) {
+            return 8000;
+        } elseif ($distanceValue > 70 && $distanceValue < 80) {
+            return 10000;
         } else {
-            return $distanceValue * 100;
+            return 20000;
         }
     }
 
@@ -499,17 +520,29 @@ class LogisticsService
         if ($inputFilter->isValid()) {
             // var_dump("Something");
             $data = $inputFilter->getValues();
-            
+            $em = $this->entityManager;
             $dm = $this->distanceMatrix($data["pickUpPlaceId"], $data["destinationPlaceId"]);
-            
+            /**
+             *
+             * @var LogisticsPromo $promoEntity
+             */
+            $promoEntity = $em->find(LogisticsPromo::class, 1);
             $distanceValue = $dm->rows[0]->elements[0]->distance->value;
             // var_dump($distanceValue);
             $distanceText = $dm->rows[0]->elements[0]->distance->text;
             $dmDistance = $distanceValue / 1000;
             $price = $this->calculatePricing($dmDistance, $data["service_type"], $data["delivery_type"]);
+            // get Promo
+            // if ($promoEntity->getIsActive()){
+            // $price = $price *
+            // }
+            
             $data["price"] = $price;
+            $data["discountPrice"] = $promoEntity->getIsActive() ? ($price * ((100 - $promoEntity->getDiscountValue()) / 100)) : $price;
             $data['distance'] = $distanceText;
             $data["distanceValue"] = $distanceValue;
+            $data["isPromo"] = $promoEntity->getIsActive();
+            $data["promoValue"] = $promoEntity->getDiscountValue(); // in percentage
             $data["bauTxRef"] = $this->invoiceuid();
             return $data;
         } else {
@@ -914,7 +947,7 @@ class LogisticsService
                     // }
                     $logistics = $this->hydrateLogisticRequest($data);
                     $transactionData["logistics"] = $logistics->getId();
-                    $transactionData["amountPaid"] = ($post["amountPayed"] / 100);
+                    $transactionData["amountPaid"] = $post["payment_mode"] == self::LOGISTICS_PAYMENT_MODE_CARD ? ($post["amountPayed"] / 100) : $post["amountPayed"];
                     // $transactionData["amountPaid"] = $verifiedData->data->chargedamount;
                     // $transactionData["flwId"] = $verifiedData->data->txid;
                     $transactionData["flwRef"] = $post["txRef"];
